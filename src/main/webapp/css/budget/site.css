@@ -1,0 +1,152 @@
+* {
+    outline: none;
+    margin: 0 ;
+
+    padding:0;
+    font-family: 'Lato', Verdana, Geneva, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+#topleftblack,#Headerr1c1, #bottomleftblack, #toprightblack, #bottomrightblack,#footerimage,#headerimage{
+
+    background-color: green;
+}
+
+.button-icon {
+
+    color:green;
+    left: .5rem;
+    top: .9rem;
+    display: inline-flex
+    /* Keep icon in center of input, regardless of the input height */
+}
+
+
+
+
+
+#tabs {
+
+
+    background-color: white;
+    color:blue;
+
+
+
+
+}
+#tabs{border:none;
+    margin:0px}
+
+header {
+    background-color: black;
+
+
+}
+#rollerHeader{
+
+    background-color: green;
+
+}
+#address p{font-size :10pt
+
+}
+
+footer {
+    background-color: green;
+}
+
+#testform0{
+
+    align-items: center;
+}
+p {
+    color: black;
+}
+.errorText{
+
+    color:red;
+}
+.errorInput{
+    background-color: lightpink;
+}
+.goodText{
+    color:black;
+}
+.goodInput{
+    background-color: black;
+    color:lightgreen;
+}
+.errorBorder{
+    background-color: red;
+}
+#mainform{ padding: 0px}
+
+#left {
+    text-align: right;
+    padding: 0px
+}
+.text-left{
+    text-align: center;
+
+}
+
+.ui-button {
+    text-indent: 5px;
+}
+form .error {
+    color: #ff0000;
+    font-style: italic;
+}​
+
+     /* The Modal (background) */
+ .modal {
+     display: none; /* Hidden by default */
+     position: fixed; /* Stay in place */
+     z-index: 1; /* Sit on top */
+     left: 0;
+     top: 0;
+     width: 100%; /* Full width */
+     height: 100%; /* Full height */
+     overflow: auto; /* Enable scroll if needed */
+     background-color: rgb(0,0,0); /* Fallback color */
+     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+ }
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 900px){ html,body {min-width:900px} }
+
+
+
+
+
+
+
+
+
+
+

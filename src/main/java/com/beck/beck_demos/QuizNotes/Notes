@@ -1,0 +1,46 @@
+MVC - Model View controller
+Class = model
+Servlet - Controller, does the heavy lifting
+Java Server Page -  View - Generates HTML
+
+POM.xml adds dependencies and modules to our project, such as jakarta servlet
+
+CSS and javascript go inside the webapp folder
+
+Link tags can go in the head section
+Script tags can go in the head or at the end of the boxy
+
+/webapp/web-inf/web.xml is the deployment descriptor
+
+an include directive can be added manually to any jsp to include the content of another jsp
+at compile time. This prevents us from having to rewrite the same code
+
+to make an if else statement
+<c:choose>
+<c:when></c:when>
+<c:otherwise></c:otherwise>
+</c:choose>
+
+c:set tag creates a variable or updates an existing variable
+
+Azure offers MySQL and PostgreSQL
+
+A driver manager gest a connection object
+The connection object gets a callable statement object
+The callable statement object gets a result set object
+a result set object gets the acutal data
+
+Pattern.compile is used to create a regular expression
+A matcher class performs matching operations (ie, regex)
+
+lpad is used to add leading zeros as needed
+
+to declare a start variable in mysql SET @start=1;
+
+Web applications use sessions to relate each request to a specific user/browser
+and to track data
+
+Best practice to use cookies for session tracking
+The browser stores the cookies locally on a users computer
+the session will never expire of the timeout is 0 or negative
+

@@ -1,0 +1,79 @@
+body {
+    background-color: #f0f0f0;
+}
+
+li {
+    display: block;
+    width: 48%;
+    padding: 4px;
+    float: left;
+
+
+}
+ul .skill {
+    background-color: #A3A3A3;
+    color:#FFFFFF;
+    margin:2px
+}
+
+
+
+.project, .sample, .questionMark, .micro{
+
+    background-color: #EEEEEE;
+    border: 3px solid #CCCCCC;
+}
+
+.explanationContainer{
+    box-shadow: 12px 12px 12px rgba(0,0,0,0.1),
+    -10px -10px 10px white;
+    border:none;
+    color:black;
+
+    text-align: center;
+
+    width : 90%;
+    margin: 10px auto;
+    padding: 7px;
+}
+
+.icon:hover, ul .skill:hover, .project:hover, .sample:hover, .questionMark:hover, .micro:hover{
+
+    box-shadow: 12px 12px 12px rgba(0,0,0,0.1),
+-10px -10px 10px white;
+    border:none;
+    color:black;
+
+}
+.project:hover, .sample:hover, .questionMark:hover, .micro:hover {
+    margin: 4px
+}
+a.filldiv {
+    display: block;
+    height: 100%;
+    width: 100%;
+    text-decoration: none;
+}
+
+a{
+    color:black;
+    text-decoration: none;
+}
+
+.project-list{
+    box-shadow: 12px 12px 12px rgba(0,0,0,0.1) inset,
+-10px -10px 10px white inset;
+
+    padding: 30px;
+}
+
+.decription
+{
+    height :40px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    box-shadow: 12px 12px 12px rgba(0,0,0,0.1) ,
+    -10px -10px 10px white ;
+}

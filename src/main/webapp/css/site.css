@@ -1,0 +1,128 @@
+* {	
+	outline: none;
+	margin: 0 ;
+	background-color: white;
+	color:black;
+	padding:0;
+	font-family: 'Lato', Verdana, Geneva, sans-serif;
+	font-size: 14px;
+  line-height: 20px;
+}
+	
+
+	
+
+
+
+a {color:black !important; }
+
+#topleftblack,#Headerr1c1, #bottomleftblack, #toprightblack, #bottomrightblack,#footerimage,#headerimage{
+
+	background-color: black;
+}
+
+.button-icon {
+	
+	color:green;
+	left: .5rem;
+	top: .9rem;
+	display: inline-flex
+	/* Keep icon in center of input, regardless of the input height */
+  }
+
+
+
+
+
+#tabs {
+	
+	
+	background-color: white;
+	color:blue;
+	
+	
+	
+	
+}
+#tabs{border:none;
+margin:0px}
+
+header {
+background-color: black;
+
+
+}
+#rollerHeader{
+
+	background-color: black;
+
+}
+#address p{font-size :10pt
+	
+}
+
+footer {
+	background-color: black;
+}
+
+#testform0{
+	
+	align-items: center;
+}
+p {
+	color: black;
+}
+.errorText{
+
+	color:red;
+}
+.errorInput{
+	background-color: lightpink;
+}
+.goodText{
+color:green;
+}
+.goodInput{
+	background-color: black;
+	color:pink;
+}
+.errorBorder{
+	background-color: red;
+}
+#mainform{ padding: 0px}
+
+#left {
+	text-align: right;
+	padding: 0px
+}
+.text-left{
+	text-align: center;
+	
+}
+
+.ui-button {
+    text-indent: 5px;
+}
+li {
+	display: block;
+	width: 50%;
+	float: left;
+}
+
+form .error {
+	color: #ff0000;
+	font-style: italic;
+  }​
+
+@media screen and (max-width: 900px){ html,body {min-width:900px} }
+
+
+
+
+
+
+
+
+
+
+

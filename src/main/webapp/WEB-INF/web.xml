@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+
+    <jsp-config>
+        <jsp-property-group>
+            <url-pattern>*.jsp</url-pattern>
+            <page-encoding>UTF-8</page-encoding>
+            <include-prelude>/WEB-INF/Shared/Base.jsp</include-prelude>
+            <trim-directive-whitespaces>true</trim-directive-whitespaces>
+            <default-content-type>text/html</default-content-type>
+        </jsp-property-group>
+    </jsp-config>
+    <session-config>
+        <session-timeout>15</session-timeout>
+        <cookie-config>
+            <name>SESSIONID</name>
+            <http-only>true</http-only>
+            <secure>true</secure>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+
+    <context-param>
+        <param-name>appURLLocal</param-name>
+        <param-value>http://localhost:8080/beck_demos_war_exploded</param-value>
+    </context-param>
+    <context-param>
+        <description>Location to store uploaded file</description>
+        <param-name>file-upload</param-name>
+        <param-value>
+            c:\apache-tomcat-5.5.29\webapps\data\
+        </param-value>
+    </context-param>
+    <context-param>
+        <param-name>Foot</param-name>
+        <param-value>TwoFeet</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>appURLCloud</param-name>
+        <param-value>https://jjbeck.us/</param-value>
+    </context-param>
+
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error</location>
+    </error-page>
+    <error-page>
+        <error-code>405</error-code>
+        <location>/error</location>
+    </error-page>
+
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/error</location>
+    </error-page>
+
+
+
+
+
+</web-app>
+
+<!-- This is a deployment descriptor -->
