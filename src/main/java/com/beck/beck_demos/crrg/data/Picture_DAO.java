@@ -29,11 +29,13 @@ public class Picture_DAO implements iPicture_DAO{
   public int add(Picture _picture) {
     int numRowsAffected=0;try (Connection connection = getConnection()) {
       if (connection != null) {
-        try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Picture( ?, ?,? ,?)}")){
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Picture( ?, ?,? ,?,?,?)}")){
           statement.setInt(1,_picture.getAlbum_ID());
           statement.setInt(2,_picture.getContributor_ID());
           statement.setString(3,_picture.getWeb_Address());
           statement.setString(4,_picture.getdescription());
+          statement.setBoolean(5,_picture.getis_Approved());
+          statement.setBoolean(6,_picture.getIs_Active());
           numRowsAffected = statement.executeUpdate();
           if (numRowsAffected == 0) {
             throw new RuntimeException("Could not add Picture. Try again later");
@@ -214,5 +216,63 @@ public class Picture_DAO implements iPicture_DAO{
     }
     return rowsAffected;
   }
+
+  @Override
+  public List<Picture> getActivePicturebyAlbum(Integer Album_ID) throws SQLException {
+    List<Picture> result = new ArrayList<>();
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_active_Picture_by_Album(?)}")) {
+          statement.setInt(1,Album_ID);
+
+          try(ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {Integer Picture_ID = resultSet.getInt("Picture_Picture_ID");
+              Integer _Album_ID = resultSet.getInt("Picture_Album_ID");
+              Integer Contributor_ID = resultSet.getInt("Picture_Contributor_ID");
+              String Web_Address = resultSet.getString("Picture_Web_Address");
+              String description = resultSet.getString("Picture_description");
+              boolean Is_Active = resultSet.getBoolean("Picture_Is_Active");
+              boolean is_Approved = resultSet.getBoolean("Picture_is_Approved");
+              Integer Album_Album_ID = resultSet.getInt("Album_Album_ID");
+              String Album_Album_Name = resultSet.getString("Album_Album_Name");
+              boolean Album_Is_Active = resultSet.getBoolean("Album_Is_Active");
+              Integer Contributor_Contributor_ID = resultSet.getInt("Contributor_Contributor_ID");
+              String Contributor_First_Name = resultSet.getString("Contributor_First_Name");
+              String Contributor_Last_Name = resultSet.getString("Contributor_Last_Name");
+              String Contributor_email = resultSet.getString("Contributor_email");
+              //String Contributor_phone_number = resultSet.getString("Contributor_phone_number");
+              Picture _picture = new Picture( Picture_ID, _Album_ID, Contributor_ID, Web_Address, description, Is_Active, is_Approved);
+              result.add(_picture);
+            }
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not retrieve Pictures. Try again later");
+    }
+    return result;
+
   }
+
+  @Override
+  public int getPictureCount() throws SQLException {
+
+      int result = 0;
+      try (Connection connection = getConnection()) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_picture_count()}")) {
+
+
+          try (ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+              result = resultSet.getInt(1);
+            }
+          }
+        }
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+      return result;
+    }
+  }
+
 

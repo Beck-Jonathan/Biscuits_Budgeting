@@ -28,6 +28,9 @@ public class Album {
     return Album_ID;
   }
   public void setAlbum_ID(Integer Album_ID) {
+    if (Album_ID<0||Album_ID>10000){
+     throw new IllegalArgumentException();
+    }
     this.Album_ID = Album_ID;
   }
   public String getAlbum_Name() {

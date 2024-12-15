@@ -53,20 +53,30 @@ public class All_Picture extends HttpServlet {private iPicture_DAO pictureDAO;
       resp.sendError(HttpServletResponse.SC_FORBIDDEN);
       return;
     }
+    int page_number = 1;
+    int recordsPerPage = 20;
+    if(req.getParameter("page") != null) {
+      page_number = Integer.parseInt(req.getParameter("page"));
+    }
+    session.setAttribute("page_number",page_number);
 
     session.setAttribute("currentPage",req.getRequestURL());
     List<Picture_VM> pictures = null;
-
+    int picture_count=0;
     try {
-
-
-        pictures =pictureDAO.getAllPicture(20,0,AlbumID,contributorID);
-
+        pictures =pictureDAO.getAllPicture(20,(page_number-1)*recordsPerPage,AlbumID,contributorID);
+      picture_count = pictureDAO.getPictureCount();
 
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
 
+
+  int total_pages = 1+(picture_count/recordsPerPage);
+    req.setAttribute("noOfPages", total_pages);
+    req.setAttribute("numObjects",picture_count);
+    //fix current page
+    req.setAttribute("currentPage", page_number);
     req.setAttribute("Pictures", pictures);
     req.setAttribute("pageTitle", "All Pictures");
     req.getRequestDispatcher("WEB-INF/crrg/all-Pictures.jsp").forward(req,resp);

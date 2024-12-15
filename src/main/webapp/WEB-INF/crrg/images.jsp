@@ -1,19 +1,24 @@
 <%@include file="/WEB-INF/crrg/head.jsp"%>
-<div>
-    <select id="selectevent" onchange="change()">
-    <option value="ames">Ames</option>
-    <option value="wisconsin">Wisconsin</option>
-    <option value="stpats">St. Patrick's!</option>
-</select></div>
+
+<div class ="row" id = "row0">
+    <label for="selectevent" class="form-label">Album_ID</label>
+    <div class="input-group input-group-lg">
+        <select  class="" onchange="change()" placeholder="Album_ID" id="selectevent" name="inputpictureAlbum_ID" value="${fn:escapeXml(results.Album_ID)}">
+            <c:forEach items="${Albums}" var="Album">
+                <option value="${Album.album_ID}">${Album.album_Name}   </option>
+            </c:forEach>
+        </select>
+        <c:if test="${not empty results.pictureAlbum_IDerror}">
+            <div class="invalid-feedback">${results.pictureAlbum_IDerror}</div>
+        </c:if>
+    </div>
+</div>
 <div id="image-track" data-mouse-down-at="0" data-prev-percentage="0">
-    <img class="image" id="image1" src ="images/crrg/ames/1.jpg" draggable="false"/>
-    <img class="image" id="image2"  src ="images/crrg/ames/2.jpg" draggable="false"/>
-    <img class="image" id="image3" src ="images/crrg/ames/3.jpg" draggable="false"/>
-    <img class="image" id="image4" src ="images/crrg/ames/4.jpg" draggable="false"/>
-    <img class="image" id="image5" src ="images/crrg/ames/5.jpg" draggable="false"/>
-    <img class="image" id="image6" src ="images/crrg/ames/6.jpg" draggable="false"/>
-    <img class="image" id="image7" src ="images/crrg/ames/7.jpg" draggable="false"/>
-    <img class="image" id="image8" src ="images/crrg/ames/8.jpg" draggable="false"/>
+<c:forEach items="${Pictures}" var="picture" varStatus="counter">
+    <img class="image" id="image${counter.count}" src ="${picture.web_Address}" draggable="false"/>
+</c:forEach>
+
+
 
 </div>
 
@@ -40,7 +45,7 @@
     </div>
     </div>
     <!-- Modal Caption (Image Text) -->
-    <div id="caption"></div>
+    <div id="caption">Caption Test</div>
 </div>
 </div>
 <div id="credit">photos: Mark Young</div>

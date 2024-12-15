@@ -37,7 +37,7 @@
     </div>
     <div class="row mb-4">
         <div class="col-md-3"> </div>
-        <div class="col-md-6"> I was a Dedicated and passionate computer programmer with a knack for problem-solving
+        <div class="col-md-6">  I am  a Dedicated and passionate computer programmer with a knack for problem-solving
             and a drive for continuous learning. Proficient in multiple programming languages and experienced
             in developing innovative software solutions. Excels in collaborative environments and thrives on challenges
             that push the boundaries of my skills.</div>
@@ -53,19 +53,32 @@
         <div class="col-xs-12 col-sm-6 col-lg-5 mb-4 ">
             <h3>Noteworthy Projects</h3>
             <div class="list-group project-list">
-                <!-- start derby -->
+                <!-- start derby front -->
                 <div class ="container row" id="derby">
                     <div class="col-10 project">
-                        <a href="http://crrollerderby.com/" class="filldiv" >Cedar Rapids Roller Derby </a>
+                        <a href="http://crrollerderby.com/" class="filldiv" >Cedar Rapids Roller Derby (Front end) *new*</a>
                     </div>
                     <div class="col-1 questionMark" >
                         ?
                     </div>
                     <div class="explanationContainer">
-                        I maintain and update the website for the CRRD, using Joomla.
+                        I maintain and update the website for the CRRD, using Wordpress.
                     </div>
                 </div>
-                <!-- end derby -->
+                <!-- end derby front -->
+                <!-- start derby back -->
+                <div class ="container row" id="derby_back">
+                    <div class="col-10 project">
+                        <a href="https://github.com/Beck-Jonathan/crrg_git" class="filldiv" >Cedar Rapids Roller Derby (Back end) *new*</a>
+                    </div>
+                    <div class="col-1 questionMark" >
+                        ?
+                    </div>
+                    <div class="explanationContainer">
+                        A data driven, multi-user application to manage images for bouts, skaters, sponsors, etc.
+                    </div>
+                </div>
+                <!-- end derby back -->
                 <!-- start capstone -->
                 <div class ="container row" id="capstone">
                     <div class="col-10 project">

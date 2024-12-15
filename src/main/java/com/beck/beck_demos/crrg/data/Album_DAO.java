@@ -126,7 +126,8 @@ public class Album_DAO implements iAlbum_DAO{
       if (connection != null) {
         try(CallableStatement statement = connection.prepareCall("{CALL sp_select_distinct_and_active_Album_for_dropdown()}")) {
           try(ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {Integer Album_ID = resultSet.getInt("Album_ID");
+            while (resultSet.next()) {
+              Integer Album_ID = resultSet.getInt("Album_ID");
               String Album_Name = resultSet.getString("Album_Name");
               Album _album = new Album( Album_ID, Album_Name);
               result.add(_album);

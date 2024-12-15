@@ -81,7 +81,33 @@ $(document).ready(function() {
     }, function () {
         clearskills();
     });
-    //end select derby
+    //end select derby_back
+
+    //select derby
+    $("#derby_back").hover(function () {
+        $('.skill').finish();
+        addskill("AWS");
+        addskill("jakarta");
+        addskill("Servlets");
+        addskill("Servlets");
+        addskill("Framework");
+        addskill("Html");
+        addskill("CSS");
+        addskill("JavaScript");
+        addskill("Api");
+        addskill("Multi");
+        addskill("MySql");
+        addskill("Git");
+        addskill("Tech");
+        addskill("Solid");
+        addskill("Interfaces");
+        
+
+
+    }, function () {
+        clearskills();
+    });
+    //end select derby_back
 
     //select capstone
     $("#capstone").hover(function () {

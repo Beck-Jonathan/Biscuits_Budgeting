@@ -47,17 +47,23 @@ Create the JSP  For adding to The  Picture table
         <div class ="row" id = "row3">
             <label for="inputpictureis_Approved" class="form-label">is_Approved</label>
             <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.pictureis_Approvederror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="is_Approved" id="inputpictureis_Approved" name="inputpictureis_Approved" value="${fn:escapeXml(results.is_Approved)}">
-                <c:if test="${not empty results.pictureis_Approvederror}">
-                    <div class="invalid-feedback">${results.pictureis_Approvederror}</div>
-                </c:if>
+                <input type="radio" property="notify" name="inputpictureis_Approved" id ="inputpictureis_Approved" value="true" checked>Yes
+                <input type="radio" property="notify" name="inputpictureis_Approved" value="false" > No
+            </div>
+        </div>
+        <!-- is_Active -->
+        <div class ="row" id = "row4">
+            <label for="inputpictureis_Active" class="form-label">is_Approved</label>
+            <div class="input-group input-group-lg">
+                <input type="radio" property="notify" name="inputpictureis_Active" id ="inputpictureis_Active" value="true" checked>Yes
+                <input type="radio" property="notify" name="inputpictureis_Active" value="false" > No
             </div>
         </div>
         <!-- https://www.tutorialspoint.com/jsp/jsp_file_uploading.htm -->
-        <div class ="row" id = "row4">
+        <div class ="row" id = "row5">
             <label for="inputpictureWeb_Address" class="form-label">Logo</label>
             <div class="input-group input-group-lg">
-                <input type="file" size="50" accept=".jpg,.jpeg,.png" class="<c:if test="${not empty results.pictureWeb_Addresserror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Logo" id="inputpictureWeb_Address" name="inputpictureWeb_Address" value="${fn:escapeXml(results.Web_Address)}">
+                <input type="file" size="50" accept=".jpg,.jpeg,.png" class="<c:if test="${not empty results.pictureWeb_Addresserror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Logo" id="inputpictureWeb_Address" name="inputpictureWeb_Address" value="${fn:escapeXml(results.Web_Address)}" multiple>
                 <c:if test="${not empty results.pictureWeb_Addresserror}">
                     <div class="invalid-feedback">${results.teamLogoerror}</div>
                 </c:if>

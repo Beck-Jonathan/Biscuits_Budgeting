@@ -7,7 +7,7 @@ Create the JSP  For Viewing All of The  Picture table
     <div class="row">
         <div class="col-12">
             <h1>All Roller Pictures</h1>
-            <p>There ${Pictures.size() eq 1 ? "is" : "are"}&nbsp;${Pictures.size()} Picture${Pictures.size() ne 1 ? "s" : ""}</p>
+            <p>There ${numObjects eq 1 ? "is" : "are"}&nbsp;${numObjects} Picture${numObjects ne 1 ? "s" : ""}</p>
             Add Picture   <a href="addPicture">Add</a>
             <c:if test="${Pictures.size() > 0}">
                 <div class="table-responsive"><table class="table table-bordered">
@@ -48,6 +48,37 @@ Create the JSP  For Viewing All of The  Picture table
         </div>
     </div>
 </div>
+<c:if test="${currentPage != 1}">
+    <form action="all-Pictures" method="get">
+        <input type="hidden" name="page" value="${currentPage-1}">
+        <br/><br/>
+        <input type="submit" value="Previous Page" />
+    </form>
+</c:if>
+
+<%--For displaying Page numbers.
+The when condition does not display a link for the current page--%>
+<form action="all-Pictures" method="get" >
+
+    Select a page :
+    <select name="page" onchange="this.form.submit()">
+        <c:forEach var="i" begin="1" end="${noOfPages}">
+            <option value=${i}  ${currentPage == i ? ' selected' : ''} >${i}</option>
+        </c:forEach>
+
+    </select>
+    <br/><br/>
+    <input type="submit" value="Submit" />
+</form>
+
+<%--For displaying Next link --%>
+<c:if test="${currentPage lt noOfPages}">
+    <form action="all-Pictures" method="get">
+        <input type="hidden" name="page" value="${currentPage+1}">
+        <br/><br/>
+        <input type="submit" value="Next Page" />
+    </form>
+</c:if>
 </main>
 <%@include file="/WEB-INF/crrg/foot.jsp"%>
 

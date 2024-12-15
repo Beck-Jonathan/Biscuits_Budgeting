@@ -43,6 +43,12 @@ public interface iPicture_DAO {
   int changeActivation(int ObjectID, int mode) throws SQLException;
   int changeApproval(int ObjectID, int mode) throws SQLException;
 
+  /**
+   * DAO Method to retreive by Album Picture objects
+   * @return List of Picture
+   * @author Jonathan Beck
+   */
+  public List<Picture> getActivePicturebyAlbum(Integer Album_ID) throws SQLException;
 
-
+public int getPictureCount() throws SQLException;
 }

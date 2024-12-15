@@ -10,6 +10,7 @@ $(document).ready(function() {
     var grayscaleSlider = document.getElementById("grayscale");
     var hueRotateSlider = document.getElementById("hueRotate");
     var slidersDiv = document.getElementById("sliders");
+    let caption = document.getElementById('caption');
 
     var grayscale="grayscale(0%)";
     var blurry="blur(0px)";
@@ -148,27 +149,8 @@ $(document).ready(function() {
         }
     });
 
-    for (const image of images) {
+    applyOnClick();
 
-        image.onclick=(event)=>{
-            i=0;
-            while (true){
-                if (images[i].id===image.id){
-                    break;
-                }
-                i++;
-            }
-            modal.style.display = "block";
-            modalbg.style.display = "block";
-            modalImg.src = image.src;
-            checkArrows(i,images);
-            offsetCalculate();
-            modal.style.height = 10;
-            //modalImg.style.height = Math.Min(image.height,95);
-            //modalImg.style.width = Math.Min(image.width,95);
-            //captionText.innerHTML = this.alt;
-            }
-        }
 
     var right = document.getElementsByClassName("right")[0];
     right.onclick = function() {
@@ -248,28 +230,34 @@ window.ontouchmove = e => handleOnMove(e.touches[0]);
 })
 
 function change(){
-    const  images = document.getElementsByClassName("image");
+    var  imagetrack = document.getElementById("image-track");
+    console.log(imagetrack.innerHTML);
+    imagetrack.innerHTML="";
     var selected = document.getElementById("selectevent").value;
 
     var credits = document.getElementById("credit");
+    var currentUrl = window.location.href;
+    console.log(currentUrl);
+    var endSlash= currentUrl.indexOf("crrg");
+    currentUrl=currentUrl.substring(0,endSlash);
+    console.log(currentUrl);
+    getJSON(currentUrl+'/Picture_by_album?album='+selected,
+        function(err, data) {
+            if (err !== null) {
+                alert('Something went wrong: ' + err);
+            } else {
+                for(var i =0;i<data.length;i++){
+                    var image = data[i]
 
-    if(selected==="stpats"){
+                    var address=image['web_Address']
+                    var descripion = image['description']
+                    imagetrack.innerHTML+="<img class='image' alt='"+descripion+"' id='image"+i+"'src='"+address+"' draggable=false>\n";
+                }
+                console.log(imagetrack.innerHTML);
+                applyOnClick();
+            }
+        });
 
-        credits.style.display= "none";
-    }
-    else {
-
-        credits.style.display= "block";
-    }
-    for (const image of images) {
-    let currentsource = image.src;
-
-    let newsource = currentsource.replace("ames",selected);
-         newsource = newsource.replace("wisconsin",selected);
-         newsource = newsource.replace("stpats",selected)
-        image.src=newsource;
-
-    }
 
 }
 
@@ -285,6 +273,8 @@ function pageLeft(i,images,modalImg) {
 
     var newImage = images[i];
     modalImg.src = newImage.src;
+
+    caption.innerHTML=newImage.alt;
 }
 
 
@@ -292,6 +282,8 @@ function pageLeft(i,images,modalImg) {
 
         var newImage=images[i];
         modalImg.src=newImage.src;
+
+        caption.innerHTML=newImage.alt;
 
     }
     function checkArrows( i,images){
@@ -315,7 +307,7 @@ function pageLeft(i,images,modalImg) {
 
 function offsetCalculate(){
     var parent = document.getElementById('img01');
-    console.log (parent);
+
     var xLeft = parent.x
     var width = parent.clientWidth;
     var padding=20;
@@ -323,8 +315,7 @@ function offsetCalculate(){
     var rightLocation =xLeft+width-padding;
     var leftString = leftLocation+"px";
     var rightString = rightLocation+"px";
-    console.log(leftString);
-    console.log(rightString);
+
    // $('#close').css({
 
         //'right': rightString,
@@ -347,3 +338,49 @@ function updateStyle(modalImg,filters){
     modalImg.style.filter=filters;
 }
 
+var getJSON = function(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'json';
+    xhr.onload = function () {
+        var status = xhr.status;
+        if (status === 200) {
+            callback(null, xhr.response);
+        } else {
+            callback(status, xhr.response);
+        }
+    };
+    xhr.send();
+}
+function applyOnClick(){
+    var  images = document.getElementsByClassName("image");
+    var modal = document.getElementById("myModal");
+    var modalbg = document.getElementById("modalbg");
+    var modalImg = document.getElementById("img01");
+
+    for (const image of images) {
+
+        image.onclick=(event)=>{
+            i=0;
+            while (true){
+                if (images[i].id===image.id){
+                    break;
+                }
+                i++;
+            }
+
+            caption.innerHTML=image.alt;
+
+            modal.style.display = "block";
+            modalbg.style.display = "block";
+            modalImg.src = image.src;
+
+            checkArrows(i,images);
+            offsetCalculate();
+            modal.style.height = 10;
+            //modalImg.style.height = Math.Min(image.height,95);
+            //modalImg.style.width = Math.Min(image.width,95);
+
+        }
+    }
+}

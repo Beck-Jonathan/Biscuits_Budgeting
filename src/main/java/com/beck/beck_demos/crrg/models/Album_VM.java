@@ -4,7 +4,7 @@ public class Album_VM extends Album{
   private int album_size;
 
   public Album_VM(Album _album, int size){
-    super(_album.getAlbum_ID(),_album.getAlbum_Name());
+    super(_album.getAlbum_ID(),_album.getAlbum_Name(),_album.getIs_Active());
     this.album_size=size;
   }
   public int getAlbum_size() {
