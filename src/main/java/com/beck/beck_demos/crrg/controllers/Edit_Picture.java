@@ -147,7 +147,7 @@ public class Edit_Picture extends HttpServlet{
     }
 
     try {
-      _newPicture.setdescription(_description);
+      _newPicture.setDescription(_description);
     } catch(IllegalArgumentException e) {results.put("picturedescriptionerror", e.getMessage());
       errors++;
     }

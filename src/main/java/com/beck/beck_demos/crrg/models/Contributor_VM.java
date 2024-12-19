@@ -13,7 +13,7 @@ public class Contributor_VM  extends Contributor{
   private int album_size;
 
   public Contributor_VM(Contributor _contributor, int size){
-    super(_contributor.getContributor_ID(), _contributor.getFirst_Name(), _contributor.getFirst_Name(), _contributor.getemail());
+    super(_contributor.getContributor_ID(), _contributor.getFirst_Name(), _contributor.getFirst_Name(), _contributor.getEmail());
     this.album_size=size;
   }
 }

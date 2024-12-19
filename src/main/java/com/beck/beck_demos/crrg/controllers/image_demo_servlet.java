@@ -34,10 +34,34 @@ public class image_demo_servlet extends HttpServlet {
     HttpSession session = req.getSession();
     try {
       allAlbums = album_DAO.getDistinctAlbumForDropdown();
+      for (int i =0;i<allAlbums.size();i++ ) {
+        if (allAlbums.get(i).getAlbum_Name().equalsIgnoreCase("sponsor")) {
+          int spot = i;
+          Album sponsors = allAlbums.get(i);
+          Album temp = allAlbums.get(allAlbums.size() - 1);
+          allAlbums.set(allAlbums.size() - 1, sponsors);
+          allAlbums.set(spot, temp);
+          break;
+
+        }
+      }
+      for (int i =0;i<allAlbums.size();i++ ) {
+        if (allAlbums.get(i).getAlbum_Name().equalsIgnoreCase("teammembers")) {
+          int spot = i;
+          Album roster = allAlbums.get(i);
+          Album temp = allAlbums.get(allAlbums.size() - 2);
+          allAlbums.set(allAlbums.size() - 2, roster);
+          allAlbums.set(spot, temp);
+          break;
+        }
+      }
       allPictures = picture_DAO.getActivePicturebyAlbum(allAlbums.get(0).getAlbum_ID());
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+
+
+
     req.setAttribute("Albums", allAlbums);
     req.setAttribute("Pictures", allPictures);
     session.setAttribute("currentPage",req.getRequestURL());

@@ -103,7 +103,7 @@ public class Edit_Contributor extends HttpServlet{
       errors++;
     }
     try {
-      _newContributor.setemail(_email);
+      _newContributor.setEmail(_email);
     } catch(IllegalArgumentException e) {results.put("contributoremailerror", e.getMessage());
       errors++;
     }

@@ -24,7 +24,7 @@ public class All_Picture extends HttpServlet {private iPicture_DAO pictureDAO;
     pictureDAO = new Picture_DAO();
   }
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  public  void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 //To restrict this page based on privilege level
     int PRIVILEGE_NEEDED = 0;

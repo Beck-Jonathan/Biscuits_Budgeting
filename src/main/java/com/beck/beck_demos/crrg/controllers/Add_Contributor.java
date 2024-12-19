@@ -84,7 +84,7 @@ public class Add_Contributor extends HttpServlet {
       errors++;
     }
     try {
-      contributor.setemail(_email);
+      contributor.setEmail(_email);
     } catch(IllegalArgumentException e) {results.put("contributoremailerror", e.getMessage());
       errors++;
     }

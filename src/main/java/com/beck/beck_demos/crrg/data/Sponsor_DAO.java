@@ -21,9 +21,9 @@ public class Sponsor_DAO implements iSponsor_DAO {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Sponsor( ?, ?, ?, ?, ?)}")){
           statement.setString(1,_sponsor.getSponsor_ID());
           statement.setString(2,_sponsor.getTier_ID());
-          statement.setString(3,_sponsor.getwebsite());
+          statement.setString(3,_sponsor.getWebsite());
           statement.setString(4,_sponsor.getDescription());
-          statement.setBoolean(5,_sponsor.getis_active());
+          statement.setBoolean(5,_sponsor.getIs_Active());
           numRowsAffected = statement.executeUpdate();
           if (numRowsAffected == 0) {
             throw new RuntimeException("Could not add Sponsor. Try again later");
@@ -201,12 +201,12 @@ public class Sponsor_DAO implements iSponsor_DAO {
           statement.setString(1,oldSponsor.getSponsor_ID());
           statement.setString(2,oldSponsor.getTier_ID());
           statement.setString(3,newSponsor.getTier_ID());
-          statement.setString(4,oldSponsor.getwebsite());
-          statement.setString(5,newSponsor.getwebsite());
+          statement.setString(4,oldSponsor.getWebsite());
+          statement.setString(5,newSponsor.getWebsite());
           statement.setString(6,oldSponsor.getDescription());
           statement.setString(7,newSponsor.getDescription());
-          statement.setBoolean(8,oldSponsor.getis_active());
-          statement.setBoolean(9,newSponsor.getis_active());
+          statement.setBoolean(8,oldSponsor.getIs_Active());
+          statement.setBoolean(9,newSponsor.getIs_Active());
           result=statement.executeUpdate();
         } catch (SQLException e) {
           throw new RuntimeException("Could not update Sponsor . Try again later");

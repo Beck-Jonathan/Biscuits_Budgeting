@@ -15,22 +15,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
 
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.fileupload.servlet.ServletRequestContext;
 import org.apache.commons.fileupload2.core.DiskFileItem;
-import org.apache.commons.fileupload2.core.DiskFileItemFactory;
 import org.apache.commons.fileupload2.jakarta.JakartaServletDiskFileUpload;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
@@ -68,7 +59,7 @@ public class Add_Picture extends HttpServlet{
   }
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  public  void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 //To restrict this page based on privilege level
     int PRIVILEGE_NEEDED = 0;
@@ -97,7 +88,7 @@ public class Add_Picture extends HttpServlet{
   }
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     //To restrict this page based on privilege level
 
     List<String> ROLES_NEEDED = new ArrayList<>();
@@ -216,7 +207,7 @@ public class Add_Picture extends HttpServlet{
           }
 
           try {
-            picture.setdescription(description);
+            picture.setDescription(description);
           } catch(IllegalArgumentException e) {results.put("picturedescriptionerror", e.getMessage());
             errors++;
           }
@@ -256,6 +247,8 @@ public class Add_Picture extends HttpServlet{
       }
 
     int result=0;
+      int added = 0;
+      int notadded=0;
     if (errors==0) {
       for (Picture picture : pictures) {
         try {
@@ -264,15 +257,22 @@ public class Add_Picture extends HttpServlet{
           results.put("dbStatus", "Database Error");
         }
         if (result > 0) {
-          results.put("dbStatus", "Picture Added");
-          //resp.sendRedirect("all-Pictures");
-          //return;
+
+          added++;
+
         } else {
-          results.put("dbStatus", "Picture Not Added");
+          notadded++;
+
+
+        }
+        if (added==pictures.size()){
+          resp.sendRedirect("all-Pictures");
+          return;
 
         }
       }
     }
+    results.put("dbStatus", added+" Pictures Added. "+notadded+" Pictures Not Added.");
     //}
     req.setAttribute("results", results);
     req.setAttribute("pageTitle", "Add Picture");

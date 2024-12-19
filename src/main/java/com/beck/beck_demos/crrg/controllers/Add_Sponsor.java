@@ -2,7 +2,6 @@ package com.beck.beck_demos.crrg.controllers;
 
 
 import com.beck.beck_demos.crrg.data.Sponsor_DAO;
-import com.beck.beck_demos.crrg.data.Sponsor_DAO;
 import com.beck.beck_demos.crrg.models.Sponsor;
 import com.beck.beck_demos.crrg.models.User;
 import com.beck.beck_demos.crrg.data_interfaces.iSponsor_DAO;
@@ -39,7 +38,7 @@ public class Add_Sponsor extends HttpServlet{
   }
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  public  void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 //To restrict this page based on privilege level
     int PRIVILEGE_NEEDED = 0;
@@ -61,7 +60,7 @@ public class Add_Sponsor extends HttpServlet{
   }
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 //To restrict this page based on privilege level
     int PRIVILEGE_NEEDED = 0;
@@ -105,7 +104,7 @@ public class Add_Sponsor extends HttpServlet{
       errors++;
     }
     try {
-      sponsor.setwebsite(_website);
+      sponsor.setWebsite(_website);
     } catch(IllegalArgumentException e) {results.put("sponsorwebsiteerror", e.getMessage());
       errors++;
     }
@@ -115,7 +114,7 @@ public class Add_Sponsor extends HttpServlet{
       errors++;
     }
     try {
-      sponsor.setis_active(true);
+      sponsor.setIs_Active(true);
     } catch(IllegalArgumentException e) {results.put("sponsoris_activeerror", e.getMessage());
       errors++;
     }

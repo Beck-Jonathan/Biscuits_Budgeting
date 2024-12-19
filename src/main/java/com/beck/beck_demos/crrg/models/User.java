@@ -100,7 +100,7 @@ public class User {
     if (!matcher.matches()){
       throw new IllegalArgumentException("Invalid Email");
     }
-    if(Email.length()<4){
+    if(Email.length()<10){
       throw new IllegalArgumentException("Email is too short.");
     }
     if(Email.length()>100){
@@ -118,7 +118,13 @@ public class User {
     return Password;
   }
   public void setPassword(char[] User_PW) {
-    if (Password!=null) {
+    if (User_PW!=null) {
+      if(User_PW.length<10){
+        throw new IllegalArgumentException("Password is too short.");
+      }
+      if(User_PW.length>255){
+        throw new IllegalArgumentException("Password is too long, it must be under 101 characters");
+      }
 
       String passwordStr = String.valueOf(User_PW);
       Matcher matcher = MyValidators.passwordPattern.matcher(passwordStr);

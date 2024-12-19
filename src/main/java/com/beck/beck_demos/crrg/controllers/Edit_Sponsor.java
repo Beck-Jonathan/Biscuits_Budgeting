@@ -123,7 +123,7 @@ public class Edit_Sponsor extends HttpServlet{
       errors++;
     }
     try {
-      _newSponsor.setwebsite(_website);
+      _newSponsor.setWebsite(_website);
     } catch(IllegalArgumentException e) {results.put("sponsorwebsiteerror", e.getMessage());
       errors++;
     }
@@ -133,11 +133,11 @@ public class Edit_Sponsor extends HttpServlet{
       errors++;
     }
     try {
-      _newSponsor.setis_active(_oldSponsor.getis_active());
+      _newSponsor.setIs_Active(_oldSponsor.getIs_Active());
     } catch(IllegalArgumentException e) {results.put("sponsoris_activeerror", e.getMessage());
       errors++;
     }
-    _newSponsor.setis_active(true);
+    _newSponsor.setIs_Active(true);
 //to update the database
     int result=0;
     if (errors==0){

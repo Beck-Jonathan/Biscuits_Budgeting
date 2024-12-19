@@ -9,9 +9,9 @@ package com.beck.beck_demos.crrg.models;
 public class Sponsor {
   private String Sponsor_ID;
   private String Tier_ID;
-  private String website;
+  private String Website;
   private String Description;
-  private boolean is_active;
+  private boolean Is_Active;
 
   public Sponsor(){}
 
@@ -19,9 +19,9 @@ public class Sponsor {
 
     this.Sponsor_ID = Sponsor_ID;
     this.Tier_ID = Tier_ID;
-    this.website = website;
+    this.Website = website;
     this.Description = Description;
-    this.is_active = is_active;
+    this.Is_Active = is_active;
   }
 
   public Sponsor(String Sponsor_ID) {
@@ -54,10 +54,10 @@ public class Sponsor {
     }
     this.Tier_ID = Tier_ID;
   }
-  public String getwebsite() {
-    return website;
+  public String getWebsite() {
+    return Website;
   }
-  public void setwebsite(String website) {
+  public void setWebsite(String website) {
     website = website.replaceAll("^[A-Za-z0-9]+^/.*_","");
     if(website.length()<10){
       throw new IllegalArgumentException("website is too short.");
@@ -65,7 +65,7 @@ public class Sponsor {
     if(website.length()>100){
       throw new IllegalArgumentException("website is too long.");
     }
-    this.website = website;
+    this.Website = website;
   }
   public String getDescription() {
     return Description;
@@ -80,11 +80,11 @@ public class Sponsor {
     }
     this.Description = Description;
   }
-  public boolean getis_active() {
-    return is_active;
+  public boolean getIs_Active() {
+    return Is_Active;
   }
-  public void setis_active(boolean is_active) {
-    this.is_active = is_active;
+  public void setIs_Active(boolean is_Active) {
+    this.Is_Active = is_Active;
   }
 
 }

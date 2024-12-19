@@ -58,15 +58,15 @@ Create the JSP For Viuw/Edit from the Picture table
                 </c:if>
             </div>
         </div>
-        <!-- is_Approved -->
+        <!-- is_active -->
         <div class ="row" id = "row5">
-            <label for="inputpictureis_Approved" class="form-label">is_Approved</label>
-            <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.pictureis_Approvederror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="is_Approved" <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputpictureis_Approved" name="inputpictureis_Approved" value="${fn:escapeXml(picture.is_Approved)}">
-                <c:if test="${not empty results.pictureis_Approvederror}">
-                    <div class="invalid-feedback">${results.pictureis_Approvederror}</div>
-                </c:if>
-            </div>
+            <label for="${picture.picture_ID}" class="form-label">is_Approved</label>
+            <td><input type="checkbox" id="${picture.picture_ID}" class="Approval_Box" <c:if test="${picture.is_Active}">checked</c:if>><p  id="${picture.picture_ID}_status"></p></td>
+        </div>
+        <!-- is_Approved -->
+        <div class ="row" id = "row6">
+            <label for="${picture.picture_ID}_a" class="form-label">is_Approved</label>
+            <td><input type="checkbox" id="${picture.picture_ID}_a" class="Approval_Box" <c:if test="${picture.is_Approved}">checked</c:if>><p  id="${picture.picture_ID}_a_status"></p></td>
         </div>
         <div class="align-items-center mt-0">
             <div class="d-grid"><button class="btn btn-orange mb-0" type="submit">Edit Picture </button></div>

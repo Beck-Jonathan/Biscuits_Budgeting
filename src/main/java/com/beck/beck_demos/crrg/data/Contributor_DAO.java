@@ -26,7 +26,7 @@ public class Contributor_DAO implements iContributor_DAO{
         try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Contributor( ?, ?, ?)}")){
           statement.setString(1,_contributor.getFirst_Name());
           statement.setString(2,_contributor.getLast_Name());
-          statement.setString(3,_contributor.getemail());
+          statement.setString(3,_contributor.getEmail());
           numRowsAffected = statement.executeUpdate();
           if (numRowsAffected == 0) {
             throw new RuntimeException("Could not add Contributor. Try again later");
@@ -144,8 +144,8 @@ public class Contributor_DAO implements iContributor_DAO{
           statement.setString(3,newContributor.getFirst_Name());
           statement.setString(4,oldContributor.getLast_Name());
           statement.setString(5,newContributor.getLast_Name());
-          statement.setString(6,oldContributor.getemail());
-          statement.setString(7,newContributor.getemail());
+          statement.setString(6,oldContributor.getEmail());
+          statement.setString(7,newContributor.getEmail());
           result=statement.executeUpdate();
         } catch (SQLException e) {
           throw new RuntimeException("Could not update Contributor . Try again later");

@@ -155,6 +155,7 @@ $(document).ready(function() {
     var right = document.getElementsByClassName("right")[0];
     right.onclick = function() {
         i++;
+
         pageRight(i,images,modalImg);
         offsetCalculate();
         checkArrows(i,images);
@@ -164,6 +165,7 @@ $(document).ready(function() {
     var left = document.getElementsByClassName("left")[0];
     left.onclick = function(){
         i--;
+
         pageLeft(i,images,modalImg);
         offsetCalculate();
     checkArrows(i,images);
@@ -253,10 +255,12 @@ function change(){
                     var descripion = image['description']
                     imagetrack.innerHTML+="<img class='image' alt='"+descripion+"' id='image"+i+"'src='"+address+"' draggable=false>\n";
                 }
-                console.log(imagetrack.innerHTML);
+                //console.log(imagetrack.innerHTML);
                 applyOnClick();
             }
+
         });
+    images = document.getElementsByClassName("image");
 
 
 }

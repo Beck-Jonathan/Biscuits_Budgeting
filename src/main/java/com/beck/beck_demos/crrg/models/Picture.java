@@ -11,7 +11,7 @@ public class Picture {
   private Integer Album_ID;
   private Integer Contributor_ID;
   private String Web_Address;
-  private String description;
+  private String Description;
   private boolean Is_Active;
   private boolean is_Approved;
 
@@ -23,7 +23,7 @@ public class Picture {
     this.Album_ID = Album_ID;
     this.Contributor_ID = Contributor_ID;
     this.Web_Address = Web_Address;
-    this.description = description;
+    this.Description = description;
     this.Is_Active = Is_Active;
     this.is_Approved = is_Approved;
   }
@@ -33,21 +33,32 @@ public class Picture {
     this.Picture_ID = Picture_ID;
   }
   public Integer getPicture_ID() {
+
     return Picture_ID;
   }
   public void setPicture_ID(Integer Picture_ID) {
+    if (Picture_ID<0||Picture_ID>10000){
+      throw new IllegalArgumentException("Picture_ID Can Not Be Negative");
+    }
     this.Picture_ID = Picture_ID;
   }
   public Integer getAlbum_ID() {
+
     return Album_ID;
   }
   public void setAlbum_ID(Integer Album_ID) {
+    if (Album_ID<0||Album_ID>10000){
+      throw new IllegalArgumentException("Album_ID Can Not Be Negative");
+    }
     this.Album_ID = Album_ID;
   }
   public Integer getContributor_ID() {
     return Contributor_ID;
   }
   public void setContributor_ID(Integer Contributor_ID) {
+    if (Contributor_ID<0||Contributor_ID>10000){
+      throw new IllegalArgumentException("Contributor_ID Can Not Be Negative");
+    }
     this.Contributor_ID = Contributor_ID;
   }
   public String getWeb_Address() {
@@ -63,10 +74,10 @@ public class Picture {
     }
     this.Web_Address = Web_Address;
   }
-  public String getdescription() {
-    return description;
+  public String getDescription() {
+    return Description;
   }
-  public void setdescription(String description) {
+  public void setDescription(String description) {
     description = description.replaceAll("[^.\"'A-Za-z0-9 - ]","");
     if(description.length()<4&&!description.isEmpty()){
       throw new IllegalArgumentException("description is too short.");
@@ -74,7 +85,7 @@ public class Picture {
     if(description.length()>100){
       throw new IllegalArgumentException("description is too long.");
     }
-    this.description = description;
+    this.Description = description;
   }
   public boolean getIs_Active() {
     return Is_Active;

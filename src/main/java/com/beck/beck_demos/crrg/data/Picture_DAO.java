@@ -33,7 +33,7 @@ public class Picture_DAO implements iPicture_DAO{
           statement.setInt(1,_picture.getAlbum_ID());
           statement.setInt(2,_picture.getContributor_ID());
           statement.setString(3,_picture.getWeb_Address());
-          statement.setString(4,_picture.getdescription());
+          statement.setString(4,_picture.getDescription());
           statement.setBoolean(5,_picture.getis_Approved());
           statement.setBoolean(6,_picture.getIs_Active());
           numRowsAffected = statement.executeUpdate();
@@ -78,8 +78,8 @@ public class Picture_DAO implements iPicture_DAO{
           statement.setInt(5,newPicture.getContributor_ID());
           statement.setString(6,oldPicture.getWeb_Address());
           statement.setString(7,newPicture.getWeb_Address());
-          statement.setString(8,oldPicture.getdescription());
-          statement.setString(9,newPicture.getdescription());
+          statement.setString(8,oldPicture.getDescription());
+          statement.setString(9,newPicture.getDescription());
 
           statement.setBoolean(10,oldPicture.getis_Approved());
           statement.setBoolean(11,newPicture.getis_Approved());

@@ -13,16 +13,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 @WebServlet("/all-Albums")
 public class All_Album extends HttpServlet {
   private iAlbum_DAO albumDAO;
   @Override
   public void init() throws ServletException{
     albumDAO = new Album_DAO();
+  }
+  public void init(iAlbum_DAO _albumDAO) throws ServletException{
+    albumDAO = _albumDAO;
   }
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,11 +36,11 @@ public class All_Album extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      resp.sendRedirect("/crrgLogin");
       return;
     }
 
-    session.setAttribute("currentPage",req.getRequestURL());
+//    session.setAttribute("currentPage",req.getRequestURL());
     List<Album_VM> albums = null;
 
     try {
@@ -50,6 +51,8 @@ public class All_Album extends HttpServlet {
 
     req.setAttribute("Albums", albums);
     req.setAttribute("pageTitle", "All Albums");
+
+
     req.getRequestDispatcher("WEB-INF/crrg/all-Albums.jsp").forward(req,resp);
 
   }
