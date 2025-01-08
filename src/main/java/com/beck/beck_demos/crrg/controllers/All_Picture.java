@@ -23,6 +23,9 @@ public class All_Picture extends HttpServlet {private iPicture_DAO pictureDAO;
   public void init() throws ServletException{
     pictureDAO = new Picture_DAO();
   }
+  public void init(iPicture_DAO pictureDAO){
+    this.pictureDAO = pictureDAO;
+  }
   @Override
   public  void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -50,7 +53,7 @@ public class All_Picture extends HttpServlet {private iPicture_DAO pictureDAO;
     }
 
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      resp.sendRedirect("/crrgLogin");
       return;
     }
     int page_number = 1;

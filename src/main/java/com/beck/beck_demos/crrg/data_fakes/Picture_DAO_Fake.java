@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Picture_DAO_Fake implements iPicture_DAO {
-  private static List<Picture_VM> pictureVMs;
-  static{
+  private  List<Picture_VM> pictureVMs = new ArrayList<>();
+  public Picture_DAO_Fake(){
     Picture picture0 = new Picture(46, 35, 11, "SDrfoRma", "OiUqprGY", false, true);
     Picture picture1 = new Picture(37, 35, 24, "PCkmYIjf", "lnktvOjx", false, false);
     Picture picture2 = new Picture(44, 35, 40, "jCfZsjGa", "EmotBsUD", true, false);
@@ -105,17 +105,30 @@ public class Picture_DAO_Fake implements iPicture_DAO {
   }
 
   @Override
+
   public int add(Picture _picture) throws SQLException {
+    if (duplicateKey(_picture)){
+      return 0;
+    }
+    if (exceptionKey(_picture)){
+      throw new SQLException("error");
+    }
     int size = pictureVMs.size();
     Picture_VM picture_VM = new Picture_VM(_picture);
     pictureVMs.add(picture_VM);
     int newsize = pictureVMs.size();
-    return newsize - size;
+    return newsize-size;
   }
 
   @Override
   public int update(Picture oldPicture, Picture newPicture) throws SQLException{
     int location =-1;
+    if (exceptionKey(oldPicture)){
+      throw new SQLException("error");
+    }
+    if (duplicateKey(oldPicture)){
+      return 0;
+    }
     for (int i=0;i<pictureVMs.size();i++){
       if (pictureVMs.get(i).getPicture_ID().equals(oldPicture.getPicture_ID())){
         location =i;
@@ -136,8 +149,8 @@ public class Picture_DAO_Fake implements iPicture_DAO {
     List<Picture_VM> results = new ArrayList<>();
     for (Picture_VM picture : pictureVMs){
 
-      if ((picture.getAlbum_ID()!=null||picture.getAlbum_ID().equals(Album_ID))
-          &&(picture.getContributor_ID()!=null||picture.getContributor_ID().equals(Contributor_ID))
+      if ((Album_ID==0||picture.getAlbum_ID().equals(Album_ID))
+          &&(Contributor_ID==0||picture.getContributor_ID().equals(Contributor_ID))
       ){
         results.add(picture);
       }
@@ -163,6 +176,7 @@ public class Picture_DAO_Fake implements iPicture_DAO {
 
   @Override
   public int changeActivation(int Picture_ID, int mode) throws SQLException {
+    int result = 0;
     int location =-1;
     for (int i=0;i<pictureVMs.size();i++){
       if (pictureVMs.get(i).getPicture_ID().equals(Picture_ID)){
@@ -174,8 +188,17 @@ public class Picture_DAO_Fake implements iPicture_DAO {
       throw new SQLException();
     }
     boolean status = pictureVMs.get(location).getIs_Active();
-    pictureVMs.get(location).setIs_Active(!status);
-    return 1;
+    if (status&&mode==0) {
+      pictureVMs.get(location).setIs_Active(false);
+      result =1;
+    }
+    if (!status&&mode==1){
+      pictureVMs.get(location).setIs_Active(true);
+      result=1;
+
+    }
+
+    return result;
   }
 
   @Override
@@ -227,8 +250,11 @@ public class Picture_DAO_Fake implements iPicture_DAO {
     pictureVMs.get(location).setIs_Active(true);
     return 1;
   }
-
-
-
+  private boolean duplicateKey(Picture _picture){
+    return _picture.getWeb_Address().equals("DUPLICATE");
+  }
+  private boolean exceptionKey(Picture _picture){
+    return _picture.getWeb_Address().equals("EXCEPTION");
+  }
 
 }

@@ -23,6 +23,10 @@ public class All_Contributor extends HttpServlet {
   public void init() throws ServletException{
     contributorDAO = new Contributor_DAO();
   }
+
+  public void init(iContributor_DAO contributorDAO){
+    this.contributorDAO = contributorDAO;
+  }
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -34,7 +38,7 @@ public class All_Contributor extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      resp.sendRedirect("/crrgLogin");
       return;
     }
 

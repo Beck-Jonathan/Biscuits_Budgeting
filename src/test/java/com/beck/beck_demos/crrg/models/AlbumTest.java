@@ -36,6 +36,16 @@ class AlbumTest {
     Assertions.assertEquals("kGRWcLrAqNJAjfreflZZWshxhwBFcvRuruGkNsuJRerAjiKCxIQxedCuHTOxaaTwbMQnBSDKVNcMnHlbvtydHLxnoLTDQVlboh", _album.getAlbum_Name());
     Assertions.assertTrue(_album.getIs_Active());
   }
+  @Test
+  public void testAlbumKeyedParameterizedConstructorSetsKeyedVariables(){
+    Album _album= new Album(
+        9647,
+        "XQOBlqSdjGyPrUgBZZAyyMAiXlOfbPxpVdDmijgfwecrHowXlCAQIpLnhbWpDpvMQnUDsNGqGrLnFNatOMHODMByExBOHwelFv"
+    );
+    Assertions.assertEquals(9647,_album.getAlbum_ID());
+    Assertions.assertEquals("XQOBlqSdjGyPrUgBZZAyyMAiXlOfbPxpVdDmijgfwecrHowXlCAQIpLnhbWpDpvMQnUDsNGqGrLnFNatOMHODMByExBOHwelFv",_album.getAlbum_Name());
+    Assertions.assertFalse(_album.getIs_Active());
+  }
 
   @Test
   public void testAlbumThrowsIllegalArgumentExceptionIfAlbum_IDTooSmall() {

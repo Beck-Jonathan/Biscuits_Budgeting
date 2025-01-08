@@ -57,6 +57,11 @@ public class Add_Picture extends HttpServlet{
     contributorDAO = new Contributor_DAO();
     albumDAO = new Album_DAO();
   }
+  public void init(iPicture_DAO pictureDAO,iAlbum_DAO albumDAO,iContributor_DAO contributorDAO){
+    this.pictureDAO = pictureDAO;
+    this.albumDAO = albumDAO;
+    this.contributorDAO = contributorDAO;
+  }
 
   @Override
   public  void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -69,7 +74,7 @@ public class Add_Picture extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      resp.sendRedirect("/crrgLogin");
       return;
     }
 
@@ -97,7 +102,7 @@ public class Add_Picture extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      resp.sendRedirect("/crrgLogin");
       return;
     }
     try {
@@ -111,7 +116,7 @@ public class Add_Picture extends HttpServlet{
 
     List<File> files = new ArrayList<>();
     JakartaServletDiskFileUpload upload = new JakartaServletDiskFileUpload();
-    ServletContext servletContext = this.getServletConfig().getServletContext();
+    //ServletContext servletContext = this.getServletConfig().getServletContext();
     List<DiskFileItem> items = upload.parseRequest(req);
 
     String applicationPath = req.getServletContext().getRealPath("");
@@ -239,7 +244,7 @@ public class Add_Picture extends HttpServlet{
           file.delete();
         }
       } catch (Exception ex) {
-        results.put("dbStatus", ex.getMessage());
+        results.put("dbError", ex.getMessage());
         req.setAttribute("results", results);
         req.setAttribute("pageTitle", "Add Picture");
         req.getRequestDispatcher("WEB-INF/crrg/AddPicture.jsp").forward(req, resp);
@@ -254,7 +259,7 @@ public class Add_Picture extends HttpServlet{
         try {
           result = pictureDAO.add(picture);
         } catch (Exception ex) {
-          results.put("dbStatus", "Database Error");
+          results.put("dbError", "Database Error");
         }
         if (result > 0) {
 

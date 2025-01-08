@@ -28,6 +28,9 @@ public class All_Sponsor extends HttpServlet {
   public void init() throws ServletException{
     sponsorDAO = new Sponsor_DAO();
   }
+  public void init(iSponsor_DAO sponsorDAO){
+    this.sponsorDAO = sponsorDAO;
+  }
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -39,17 +42,20 @@ public class All_Sponsor extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      resp.sendRedirect("/crrgLogin");
       return;
+
     }
 
     session.setAttribute("currentPage",req.getRequestURL());
     String orderBy="";
     orderBy=req.getParameter("Order_By");
+    String Tier_ID ="";
+    Tier_ID=req.getParameter("Tier_ID");
     List<Sponsor> sponsors = null;
 
     try {
-      sponsors =sponsorDAO.getAllSponsor(orderBy);
+      sponsors =sponsorDAO.getAllSponsor(Tier_ID);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

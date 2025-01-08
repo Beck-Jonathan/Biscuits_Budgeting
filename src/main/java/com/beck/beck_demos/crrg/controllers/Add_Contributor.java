@@ -27,6 +27,7 @@ public class Add_Contributor extends HttpServlet {
   public void init() throws ServletException{
     contributorDAO = new Contributor_DAO();
   }
+  public void init(iContributor_DAO contributorDAO){ this.contributorDAO = contributorDAO; }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,16 +36,16 @@ public class Add_Contributor extends HttpServlet {
     int PRIVILEGE_NEEDED = 0;
     List<String> ROLES_NEEDED = new ArrayList<>();
     ROLES_NEEDED.add("Jonathan");
+//add roles here
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
-    if (user==null|!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-      return;
+    if (user==null||!user.isInRole(ROLES_NEEDED)){
+      resp.sendRedirect("/crrgLogin");return;
     }
 
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Add Contributor");
-    req.getRequestDispatcher("WEB-INF/crrg/AddContributor.jsp").forward(req, resp);
+    req.getRequestDispatcher("WEB-INF/WFTDA_debug/AddContributor.jsp").forward(req, resp);
   }
 
   @Override
@@ -54,38 +55,44 @@ public class Add_Contributor extends HttpServlet {
     int PRIVILEGE_NEEDED = 0;
     List<String> ROLES_NEEDED = new ArrayList<>();
     ROLES_NEEDED.add("Jonathan");
+//add roles here
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-      return;
+      resp.sendRedirect("/crrgLogin");return;
     }
 
     String _First_Name = req.getParameter("inputcontributorFirst_Name");
-    _First_Name=_First_Name.trim();
+    if (_First_Name!=null) {
+      _First_Name=_First_Name.trim();
+    }
     String _Last_Name = req.getParameter("inputcontributorLast_Name");
-    _Last_Name=_Last_Name.trim();
-    String _email = req.getParameter("inputcontributoremail");
-    _email=_email.trim();
+    if (_Last_Name!=null) {
+      _Last_Name=_Last_Name.trim();
+    }
+    String _Email = req.getParameter("inputcontributorEmail");
+    if (_Email!=null) {
+      _Email=_Email.trim();
+    }
     Map<String, String> results = new HashMap<>();
     results.put("First_Name",_First_Name);
     results.put("Last_Name",_Last_Name);
-    results.put("email",_email);
+    results.put("Email",_Email);
     Contributor contributor = new Contributor();
     int errors =0;
     try {
       contributor.setFirst_Name(_First_Name);
-    } catch(IllegalArgumentException e) {results.put("contributorFirst_Nameerror", e.getMessage());
+    } catch(Exception e) {results.put("contributorFirst_Nameerror", e.getMessage());
       errors++;
     }
     try {
       contributor.setLast_Name(_Last_Name);
-    } catch(IllegalArgumentException e) {results.put("contributorLast_Nameerror", e.getMessage());
+    } catch(Exception e) {results.put("contributorLast_Nameerror", e.getMessage());
       errors++;
     }
     try {
-      contributor.setEmail(_email);
-    } catch(IllegalArgumentException e) {results.put("contributoremailerror", e.getMessage());
+      contributor.setEmail(_Email);
+    } catch(Exception e) {results.put("contributorEmailerror", e.getMessage());
       errors++;
     }
     int result=0;
@@ -93,10 +100,11 @@ public class Add_Contributor extends HttpServlet {
       try{
         result=contributorDAO.add(contributor);
       }catch(Exception ex){
-        results.put("dbStatus","Database Error");
+        results.put("dbError","Database Error");
       }
       if (result>0){
         results.put("dbStatus","Contributor Added");
+        req.setAttribute("results",results);
         resp.sendRedirect("all-Contributors");
         return;
       } else {
@@ -105,8 +113,8 @@ public class Add_Contributor extends HttpServlet {
       }
     }
     req.setAttribute("results", results);
-    req.setAttribute("pageTitle", "Add Contributor");
-    req.getRequestDispatcher("WEB-INF/crrg/AddContributor.jsp").forward(req, resp);
+    req.setAttribute("pageTitle", "Create a Contributor ");
+    req.getRequestDispatcher("WEB-INF/WFTDA_debug/AddContributor.jsp").forward(req, resp);
 
   }
 }

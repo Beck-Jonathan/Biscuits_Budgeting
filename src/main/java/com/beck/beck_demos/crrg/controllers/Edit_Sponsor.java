@@ -37,128 +37,155 @@ public class Edit_Sponsor extends HttpServlet{
       throw new RuntimeException(e);
     }
   }
-
+  public void init(iSponsor_DAO sponsorDAO) throws SQLException {
+    this.sponsorDAO = sponsorDAO;
+    allTiers= sponsorDAO.selectAllTiersForDropDown();
+  }
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-//To restrict this page based on privilege level
-    int PRIVILEGE_NEEDED = 0;
-    List<String> ROLES_NEEDED = new ArrayList<>();
-//add roles here
-    ROLES_NEEDED.add("Jonathan");
-    HttpSession session = req.getSession();
-    User user = (User)session.getAttribute("User");
-    if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-      return;
-    }
-
-    String mode = req.getParameter("mode");
-    String primaryKey = req.getParameter("sponsorid");
-    Sponsor sponsor= new Sponsor();
-    sponsor.setSponsor_ID(primaryKey);
-    try{
-      sponsor=sponsorDAO.getSponsorByPrimaryKey(sponsor);
-    } catch (SQLException e) {
-      req.setAttribute("dbStatus",e.getMessage());
-    }
-
-    session.setAttribute("sponsor",sponsor);
-    req.setAttribute("mode",mode);
-    session.setAttribute("currentPage",req.getRequestURL());
-    req.setAttribute("pageTitle", "Add Sponsor");
-
-    req.setAttribute("Tiers", allTiers);
-    req.getRequestDispatcher("WEB-INF/crrg/EditSponsor.jsp").forward(req, resp);
+  //To restrict this page based on privilege level
+  int PRIVILEGE_NEEDED = 0;
+  List<String> ROLES_NEEDED = new ArrayList<>();
+  ROLES_NEEDED.add("Jonathan");
+  //add roles here
+  HttpSession session = req.getSession();
+  User user = (User)session.getAttribute("User");
+if (user==null||!user.isInRole(ROLES_NEEDED)){
+    resp.sendRedirect("/crrgLogin");return;
   }
-  @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+  String mode = req.getParameter("mode");
+  String primaryKey = "";
+try{
+    primaryKey = req.getParameter("sponsorid");
+  }catch (Exception e) {
+    req.setAttribute("dbStatus",e.getMessage());
+  }Sponsor sponsor= new Sponsor();
+try{
+    sponsor.setSponsor_ID(primaryKey);
+  } catch (Exception e){
+    req.setAttribute("dbStatus",e.getMessage());
+  }
+try{
+    sponsor=sponsorDAO.getSponsorByPrimaryKey(sponsor);
+  } catch (SQLException e) {
+    req.setAttribute("dbStatus",e.getMessage());
+  }
+
+session.setAttribute("sponsor",sponsor);
+req.setAttribute("mode",mode);
+session.setAttribute("currentPage",req.getRequestURL());
+req.setAttribute("pageTitle", "Edit Sponsor");
+    try {
+      allTiers = sponsorDAO.selectAllTiersForDropDown();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    req.setAttribute("Tiers", allTiers);
+req.getRequestDispatcher("WEB-INF/WFTDA_debug/EditSponsor.jsp").forward(req, resp);
+}
+@Override
+protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 //To restrict this page based on privilege level
-    int PRIVILEGE_NEEDED = 0;
-    List<String> ROLES_NEEDED = new ArrayList<>();
+  int PRIVILEGE_NEEDED = 0;
+  List<String> ROLES_NEEDED = new ArrayList<>();
+  ROLES_NEEDED.add("Jonathan");
 //add roles here
-    ROLES_NEEDED.add("Jonathan");
-    HttpSession session = req.getSession();
-    User user = (User)session.getAttribute("User");
-    if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-      return;
-    }
+  HttpSession session = req.getSession();
+  User user = (User)session.getAttribute("User");
+  if (user==null||!user.isInRole(ROLES_NEEDED)){
+    resp.sendRedirect("/crrgLogin");return;
+  }
 
-    Map<String, String> results = new HashMap<>();
-    String mode = req.getParameter("mode");
-    req.setAttribute("mode",mode);
+  Map<String, String> results = new HashMap<>();
+  String mode = req.getParameter("mode");
+  req.setAttribute("mode",mode);
 //to set the drop downs
-
-    req.setAttribute("Tiers", allTiers);
+  try {
+    allTiers = sponsorDAO.selectAllTiersForDropDown();
+  } catch (SQLException e) {
+    throw new RuntimeException(e);
+  }
+  req.setAttribute("Tiers", allTiers);
 //to get the old Sponsor
 
-    Sponsor _oldSponsor= (Sponsor)session.getAttribute("sponsor");
+  Sponsor _oldSponsor= (Sponsor)session.getAttribute("sponsor");
 //to get the new event's info
-    String _Sponsor_ID = _oldSponsor.getSponsor_ID();
-    String _Tier_ID = req.getParameter("inputsponsorTier_ID");
-    _Tier_ID=_Tier_ID.trim();
-    String _website = req.getParameter("inputsponsorwebsite");
-    _website=_website.trim();
-    String _Description = req.getParameter("inputsponsorDescription");
-    _Description=_Description.trim();
-   // String _is_active = req.getParameter("inputsponsoris_active");
-    //_is_active=_is_active.trim();
-    results.put("Sponsor_ID",_Sponsor_ID);
-    results.put("Tier_ID",_Tier_ID);
-    results.put("website",_website);
-    results.put("Description",_Description);
-    //results.put("is_active",_is_active);
-    Sponsor _newSponsor = new Sponsor();
-    int errors =0;
-    try {
-      _newSponsor.setSponsor_ID(_Sponsor_ID);
-    } catch(IllegalArgumentException e) {results.put("sponsorSponsor_IDerror", e.getMessage());
-      errors++;
-    }
-    try {
-      _newSponsor.setTier_ID(_Tier_ID);
-    } catch(IllegalArgumentException e) {results.put("sponsorTier_IDerror", e.getMessage());
-      errors++;
-    }
-    try {
-      _newSponsor.setWebsite(_website);
-    } catch(IllegalArgumentException e) {results.put("sponsorwebsiteerror", e.getMessage());
-      errors++;
-    }
-    try {
-      _newSponsor.setDescription(_Description);
-    } catch(IllegalArgumentException e) {results.put("sponsorDescriptionerror", e.getMessage());
-      errors++;
-    }
-    try {
-      _newSponsor.setIs_Active(_oldSponsor.getIs_Active());
-    } catch(IllegalArgumentException e) {results.put("sponsoris_activeerror", e.getMessage());
-      errors++;
-    }
-    _newSponsor.setIs_Active(true);
-//to update the database
-    int result=0;
-    if (errors==0){
-      try{
-        result=sponsorDAO.update(_oldSponsor,_newSponsor);
-      }catch(Exception ex){
-        results.put("dbStatus","Database Error");
-      }
-      if (result>0){
-        results.put("dbStatus","Sponsor updated");
-        resp.sendRedirect("all-Sponsors");
-        return;
-      } else {
-        results.put("dbStatus","Sponsor Not Updated");
-      }
-    }
-//standard
-    req.setAttribute("results", results);
-    req.setAttribute("pageTitle", "Edit a Sponsor ");
-    req.getRequestDispatcher("WEB-INF/crrg/EditSponsor.jsp").forward(req, resp);
+  String _Sponsor_ID = req.getParameter("inputsponsorSponsor_ID");
+  if (_Sponsor_ID!=null){
+    _Sponsor_ID=_Sponsor_ID.trim();
   }
+  String _Tier_ID = req.getParameter("inputsponsorTier_ID");
+  if (_Tier_ID!=null){
+    _Tier_ID=_Tier_ID.trim();
+  }
+  String _Website = req.getParameter("inputsponsorWebsite");
+  if (_Website!=null){
+    _Website=_Website.trim();
+  }
+  String _Description = req.getParameter("inputsponsorDescription");
+  if (_Description!=null){
+    _Description=_Description.trim();
+  }
+  String _Is_Active = req.getParameter("inputsponsorIs_Active");
+  if (_Is_Active!=null){
+    _Is_Active=_Is_Active.trim();
+  }
+  results.put("Sponsor_ID",_Sponsor_ID);
+  results.put("Tier_ID",_Tier_ID);
+  results.put("Website",_Website);
+  results.put("Description",_Description);
+  results.put("Is_Active",_Is_Active);
+  Sponsor _newSponsor = new Sponsor();
+  int errors =0;
+  try {
+    _newSponsor.setSponsor_ID(_Sponsor_ID);
+  } catch(Exception e) {results.put("sponsorSponsor_IDerror", e.getMessage());
+    errors++;
+  }
+  try {
+    _newSponsor.setTier_ID(_Tier_ID);
+  } catch(Exception e) {results.put("sponsorTier_IDerror", e.getMessage());
+    errors++;
+  }
+  try {
+    _newSponsor.setWebsite(_Website);
+  } catch(Exception e) {results.put("sponsorWebsiteerror", e.getMessage());
+    errors++;
+  }
+  try {
+    _newSponsor.setDescription(_Description);
+  } catch(Exception e) {results.put("sponsorDescriptionerror", e.getMessage());
+    errors++;
+  }
+  try {
+    _newSponsor.setIs_Active(Boolean.parseBoolean(_Is_Active));
+  } catch(Exception e) {results.put("sponsorIs_Activeerror", e.getMessage());
+    errors++;
+  }
+
+//to update the database
+  int result=0;
+  if (errors==0){
+    try{
+      result=sponsorDAO.update(_oldSponsor,_newSponsor);
+    }catch(Exception ex){
+      results.put("dbError","Database Error");
+    }
+    if (result>0){
+      results.put("dbStatus","Sponsor updated");
+      req.setAttribute("results",results);
+      resp.sendRedirect("all-Sponsors");
+      return;
+    } else {
+      results.put("dbStatus","Sponsor Not Updated");
+    }
+  }
+//standard
+  req.setAttribute("results", results);
+  req.setAttribute("pageTitle", "Edit a Sponsor ");
+  req.getRequestDispatcher("WEB-INF/WFTDA_debug/EditSponsor.jsp").forward(req, resp);
 }
-
-
+}

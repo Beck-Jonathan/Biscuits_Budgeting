@@ -24,98 +24,115 @@ import java.util.Map;
 
 @WebServlet("/addSponsor")
 public class Add_Sponsor extends HttpServlet{
+  private iSponsor_DAO sponsorDAO;
 
-  private static iSponsor_DAO sponsorDAO;
-  static List<String> allTiers;
   @Override
-  public void init() throws ServletException{
+  public void init() {
     sponsorDAO = new Sponsor_DAO();
+
+  }
+  public void init(iSponsor_DAO sponsorDAO){
+    this.sponsorDAO = sponsorDAO;
+
+  }
+
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+//To restrict this page based on privilege level
+    int PRIVILEGE_NEEDED = 0;
+    List<String> ROLES_NEEDED = new ArrayList<>();
+    ROLES_NEEDED.add("Jonathan");
+//add roles here
+    HttpSession session = req.getSession();
+    User user = (User)session.getAttribute("User");
+    if (user==null||!user.isInRole(ROLES_NEEDED)){
+      resp.sendRedirect("/crrgLogin");return;
+    }
+
+    session.setAttribute("currentPage",req.getRequestURL());
+    req.setAttribute("pageTitle", "Add Sponsor");
+    List<String> allTiers;
     try {
       allTiers = sponsorDAO.selectAllTiersForDropDown();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  @Override
-  public  void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-//To restrict this page based on privilege level
-    int PRIVILEGE_NEEDED = 0;
-    List<String> ROLES_NEEDED = new ArrayList<>();
-//add roles here
-    ROLES_NEEDED.add("Jonathan");
-    HttpSession session = req.getSession();
-    User user = (User)session.getAttribute("User");
-    if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-      return;
-    }
-
-    session.setAttribute("currentPage",req.getRequestURL());
-    req.setAttribute("pageTitle", "Add Sponsor");
-
     req.setAttribute("Tiers", allTiers);
     req.getRequestDispatcher("WEB-INF/crrg/AddSponsor.jsp").forward(req, resp);
   }
 
   @Override
-  public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 //To restrict this page based on privilege level
     int PRIVILEGE_NEEDED = 0;
     List<String> ROLES_NEEDED = new ArrayList<>();
-//add roles here
     ROLES_NEEDED.add("Jonathan");
+//add roles here
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-      return;
+      resp.sendRedirect("/crrgLogin");return;
     }
-
-
+    List<String> allTiers;
+    try {
+      allTiers = sponsorDAO.selectAllTiersForDropDown();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
     req.setAttribute("Tiers", allTiers);
     String _Sponsor_ID = req.getParameter("inputsponsorSponsor_ID");
-    _Sponsor_ID=_Sponsor_ID.trim();
+    if (_Sponsor_ID!=null) {
+      _Sponsor_ID=_Sponsor_ID.trim();
+    }
     String _Tier_ID = req.getParameter("inputsponsorTier_ID");
-    _Tier_ID=_Tier_ID.trim();
-    String _website = req.getParameter("inputsponsorwebsite");
-    _website=_website.trim();
+    if (_Tier_ID!=null) {
+      _Tier_ID=_Tier_ID.trim();
+    }
+    String _Website = req.getParameter("inputsponsorWebsite");
+    if (_Website!=null) {
+      _Website=_Website.trim();
+    }
     String _Description = req.getParameter("inputsponsorDescription");
-    _Description=_Description.trim();
-
+    if (_Description!=null) {
+      _Description=_Description.trim();
+    }
+    String _Is_Active = req.getParameter("inputsponsorIs_Active");
+    if (_Is_Active!=null) {
+      _Is_Active=_Is_Active.trim();
+    }
     Map<String, String> results = new HashMap<>();
     results.put("Sponsor_ID",_Sponsor_ID);
     results.put("Tier_ID",_Tier_ID);
-    results.put("website",_website);
+    results.put("Website",_Website);
     results.put("Description",_Description);
-
+    results.put("Is_Active",_Is_Active);
     Sponsor sponsor = new Sponsor();
     int errors =0;
     try {
       sponsor.setSponsor_ID(_Sponsor_ID);
-    } catch(IllegalArgumentException e) {results.put("sponsorSponsor_IDerror", e.getMessage());
+    } catch(Exception e) {results.put("sponsorSponsor_IDerror", e.getMessage());
       errors++;
     }
     try {
       sponsor.setTier_ID(_Tier_ID);
-    } catch(IllegalArgumentException e) {results.put("sponsorTier_IDerror", e.getMessage());
+    } catch(Exception e) {results.put("sponsorTier_IDerror", e.getMessage());
       errors++;
     }
     try {
-      sponsor.setWebsite(_website);
-    } catch(IllegalArgumentException e) {results.put("sponsorwebsiteerror", e.getMessage());
+      sponsor.setWebsite(_Website);
+    } catch(Exception e) {results.put("sponsorWebsiteerror", e.getMessage());
       errors++;
     }
     try {
       sponsor.setDescription(_Description);
-    } catch(IllegalArgumentException e) {results.put("sponsorDescriptionerror", e.getMessage());
+    } catch(Exception e) {results.put("sponsorDescriptionerror", e.getMessage());
       errors++;
     }
     try {
-      sponsor.setIs_Active(true);
-    } catch(IllegalArgumentException e) {results.put("sponsoris_activeerror", e.getMessage());
+      sponsor.setIs_Active(Boolean.parseBoolean(_Is_Active));
+    } catch(Exception e) {results.put("sponsorIs_Activeerror", e.getMessage());
       errors++;
     }
     int result=0;
@@ -123,10 +140,11 @@ public class Add_Sponsor extends HttpServlet{
       try{
         result=sponsorDAO.add(sponsor);
       }catch(Exception ex){
-        results.put("dbStatus","Database Error");
+        results.put("dbError","Database Error");
       }
       if (result>0){
         results.put("dbStatus","Sponsor Added");
+        req.setAttribute("results",results);
         resp.sendRedirect("all-Sponsors");
         return;
       } else {
@@ -140,5 +158,3 @@ public class Add_Sponsor extends HttpServlet{
 
   }
 }
-
-

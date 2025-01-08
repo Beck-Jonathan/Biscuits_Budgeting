@@ -49,6 +49,19 @@ class PictureTest {
     Assertions.assertTrue(_picture.getIs_Active());
     Assertions.assertTrue(_picture.getis_Approved());
   }
+  @Test
+  public void testPictureKeyedParameterizedConstructorSetsKeyedVariables(){
+    Picture _picture= new Picture(
+        9682
+    );
+    Assertions.assertEquals(9682,_picture.getPicture_ID());
+    Assertions.assertEquals(null,_picture.getAlbum_ID());
+    Assertions.assertEquals(null,_picture.getContributor_ID());
+    Assertions.assertNull(_picture.getWeb_Address());
+    Assertions.assertNull(_picture.getDescription());
+    Assertions.assertFalse(_picture.getIs_Active());
+    Assertions.assertFalse(_picture.getis_Approved());
+  }
 
   @Test
   public void testPictureThrowsIllegalArgumentExceptionIfPicture_IDTooSmall() {

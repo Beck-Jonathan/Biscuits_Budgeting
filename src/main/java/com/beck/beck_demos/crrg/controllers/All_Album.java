@@ -46,7 +46,7 @@ public class All_Album extends HttpServlet {
     try {
       albums =albumDAO.getAllAlbum(20,0);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      albums = new ArrayList<>();
     }
 
     req.setAttribute("Albums", albums);
