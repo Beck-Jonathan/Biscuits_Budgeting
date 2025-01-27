@@ -1,115 +1,91 @@
 $(document).ready(function() {
-    let address = $(location).attr('href');
-    address=address.replace("PieChart","");
-    console.log(address);
-    let userid=0;
-    $.get(address+"user_Id", function(response){
 
-        userid = response;
-    });
-    $('#inputtransactionYear').change(function()
-    {
-
-        let year = $('#inputtransactionYear').val();
-        $("#chartContainer").slideUp();
-
-       jQuery.ajax({
-           type:"get",
-           url: address+"category_by_year/",
-           data : {"sort":year,
-               "user_id" : userid,
-               "type":"pie"
-           },
-           success: function (request) {
-               var array = request;
-               var dps = [];
-               for(var i=0; i< array.length; i++) {
-                   var _label = array[i].category_ID;
-                   var number = array[i].amount;
-                   dps.push({label:_label, y: number});
-               }
-               var options2 = {
-                   title: {
-                       text: "Expense Breakddown for "+year
-                   },
-                   data: [{
-                       type: "pie",
-                       startAngle: 45,
-                       showInLegend: "true",
-                       legendText: "{label}",
-                       indexLabel: "{label} ({y})",
-                       yValueFormatString: "#,##0.#" % "",
-                       dataPoints: dps
-                   }]
-               };
-               $("#chartContainer").CanvasJSChart(options2);
-               $("#chartContainer").slideDown();
-           },
-           error: function (request, status, error) {
-               console.log("fail")
-               console.log(request.responseText);
-           }
-       });
-    }
-    );
+    // $('#inputtransactionYear').change(function()
+    // {
+    //     let year = $('#inputtransactionYear').val();
+    //            var datapoints = [];
+    //            var categories = document.getElementsByName('category[]')
+    //     console.log(categories);
+    //            for(var i=0; i< categories.length; i++) {
+    //                if (categories[i].checked) {
+    //                    var _label = categories[i].value;
+    //                    console.log(_label);
+    //                    var number = document.getElementById(year+_label+'amount').innerText;
+    //                    console.log(number);
+    //                    datapoints.push({label: _label, y: number});
+    //                }
+    //            }
+    //            var options2 = {
+    //                title: {
+    //                    text: "Expense Breakddown for "+year
+    //                },
+    //                data: [{
+    //                    type: "pie",
+    //                    startAngle: 45,
+    //                    showInLegend: "true",
+    //                    legendText: "{label}",
+    //                    indexLabel: "{label} ({y})",
+    //                    yValueFormatString: "#,##0.#" % "",
+    //                    dataPoints: datapoints
+    //                }]
+    //            };
+    //            $("#barContainer").CanvasJSChart(options2);
+    //
+    // }
+    // );
 
     $('#inputCategoryID').change(function()
         {
-            let category = $('#inputCategoryID').val();
-            $("#barContainer").slideUp();
-            jQuery.ajax({
-                type:"get",
-                url: address+"category_by_year/",
-                data : {"sort":category,
-                    "user_id" : userid,
-                    "type":"bar"
-                },
-                success: function (request) {
-                    var array = request;
-                    var dps = [];
-                    for(var i=0; i< array.length; i++) {
-                        var _label = array[i].category_ID;
-                        var number = array[i].amount;
-                        dps.push({label:_label, y: number});
-                    }
-                    var options3 = {
-                        title: {
-                            text: "Annualy Breakdown  for "+category
-                        },
-                        data: [{
-                            type: "bar",
 
-                            dataPoints: dps
-                        }]
-                    };
-                    $("#barContainer").CanvasJSChart(options3);
-                    $("#barContainer").slideDown();
-                },
-                error: function (request, status, error) {
-                    console.log("fail")
-                    console.log(request.responseText);
+            let year = $('#inputtransactionYear').val();
+            var datapoints = [];
+            var categories = document.getElementsByName('category[]')
+            for(var i=0; i< categories.length; i++) {
+                console.log(i);
+                if (categories[i].checked) {
+                    var _label = categories[i].value;
+                    _label = _label.replace(" ","");
+                    var number = document.getElementById(year+_label+'amount').innerText;
+                    var thisData = [];
+                    for (j=2017;j<2025;j++){
+                        var value = 5;
+                        var number = document.getElementById(j+_label+'amount').innerText.replace("-","");
+                        var number1= Number.parseFloat(number)
+
+                        thisData.push({x:j,y:number1});
+                    }
+
+                    datapoints.push({type:"stackedColumn",name: _label, dataPoints: thisData});
                 }
-            });
+            }
+            var options2 = {
+                animationEnabled: true,
+
+                title:{
+                    text: "Spending Breakdown"
+                },
+                axisX: {
+                    valueFormatString:"####"
+                },
+                axisY: {
+                    prefix: "$"
+                },
+                toolTip: {
+                    shared: true
+                },
+                legend:{
+                    cursor: "pointer",
+
+                },
+                data: datapoints
+            };
+            $("#barContainer").CanvasJSChart(options2);
+
         }
     );
 
 
-    var options = {
-        title: {
-            text: "No Data"
-        },
-        data: [{
-            type: "pie",
-            startAngle: 45,
-            showInLegend: "true",
-            legendText: "{label}",
-            indexLabel: "{label} ({y})",
-            yValueFormatString: "#,##0.#" % "",
-            dataPoints: [
 
-            ]
-        }]
-    };
     var bar = {
         title: {
             text: "No Data"

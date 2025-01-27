@@ -30,8 +30,8 @@ public class CalculateMortgageServlet extends HttpServlet{
     int PRIVILEGE_NEEDED = 0;
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
-    if (user==null){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+    if (user==null||!user.getRoles().contains("User")){
+      resp.sendRedirect("/budget_in");
       return;
     }
 

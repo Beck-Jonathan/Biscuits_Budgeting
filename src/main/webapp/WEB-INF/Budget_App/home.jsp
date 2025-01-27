@@ -8,7 +8,9 @@
         <p class="lead text-center">Let's make some money</p>
         <div class="row">
             <div class="col col-md-4">
-
+                <c:if test="${not empty results.AddedCount}">
+                    <div>${results.AddedCount}</div>
+                </c:if>
             </div>
             <div class="col col-md-4">
 

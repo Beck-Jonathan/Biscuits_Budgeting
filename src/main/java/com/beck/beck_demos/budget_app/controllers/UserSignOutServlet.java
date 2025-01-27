@@ -15,19 +15,12 @@ import java.io.IOException;
 public class UserSignOutServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    req.setAttribute("pageTitle", "Budget With Us");
-    resp.sendRedirect("budget_bome");
-  }
-
-  @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     HttpSession session = req.getSession();
-
-
-    String currentPage =  session.getAttribute("currentPage").toString();
     session.invalidate();
     req.setAttribute("pageTitle", "Budget With Us");
-    resp.sendRedirect("budget_bome");
+    resp.sendRedirect("budget_home");
 
   }
+
+
 }

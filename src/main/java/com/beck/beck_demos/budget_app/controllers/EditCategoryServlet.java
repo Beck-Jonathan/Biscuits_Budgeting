@@ -23,47 +23,60 @@ import java.util.Map;
 @WebServlet("/editCategory")
 public class EditCategoryServlet extends HttpServlet{
 
-  public static iCategoryDAO categoryDAO;
+  private iCategoryDAO categoryDAO;
+  @Override
+  public void init(){
+    this.categoryDAO = new CategoryDAO();
+  }
+  public void init(iCategoryDAO categoryDAO){
+    this.categoryDAO = categoryDAO;
+  }
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    if (categoryDAO==null){
-      categoryDAO = new CategoryDAO();
-    }
+
 //To restrict this page based on privilege level
     int PRIVILEGE_NEEDED = 0;
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
-    if (user==null){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+    if (user==null||!user.getRoles().contains("User")){
+      resp.sendRedirect("/budget_in");
       return;
     }
 
     String mode = req.getParameter("mode");
-    String primaryKey = req.getParameter("categoryid");
-    Category old_category= new Category();
-    old_category.setCategory_ID(primaryKey);
+    String primaryKey = "";
+    try{
+      primaryKey = req.getParameter("categoryid");
+    }catch (Exception e) {
+      req.setAttribute("dbStatus",e.getMessage());
+    }
+    Category category= new Category();
+    try{
+      category.setCategory_ID(primaryKey);
+      category.setUser_ID(user.getUser_ID());
+    } catch (Exception e){
+      req.setAttribute("dbStatus",e.getMessage());
+    }
 
-
-    session.setAttribute("category",old_category);
+    session.setAttribute("category",category);
     req.setAttribute("mode",mode);
     session.setAttribute("currentPage",req.getRequestURL());
-    req.setAttribute("pageTitle", "Add Category");
+    req.setAttribute("pageTitle", "Edit Category");
 
-    req.getRequestDispatcher("WEB-INF/Budget_App/edit_category.jsp").forward(req, resp);
+    req.getRequestDispatcher("WEB-INF/WFTDA_debug/EditCategory.jsp").forward(req, resp);
+
   }
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    if (categoryDAO==null){
-      categoryDAO = new CategoryDAO();
-    }
+
 //To restrict this page based on privilege level
     int PRIVILEGE_NEEDED = 0;
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
-    if (user==null){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+    if (user==null||!user.getRoles().contains("User")){
+      resp.sendRedirect("/budget_in");
       return;
     }
 
@@ -75,17 +88,25 @@ public class EditCategoryServlet extends HttpServlet{
 //to get the old Category
 
     Category _oldCategory= (Category)session.getAttribute("category");
+    int errors =0;
 //to get the new event's info
     String _Category_ID = req.getParameter("inputcategoryCategory_ID");
-    _Category_ID=_Category_ID.trim();
+    try {
+      _Category_ID = _Category_ID.trim();
+
+    } catch (Exception e){
+      errors++;
+      results.put("categoryCategory_IDerror", e.getMessage());
+    }
 
     results.put("Category_ID",_Category_ID);
 
     Category _newCategory = new Category();
-    int errors =0;
+
     try {
       _newCategory.setCategory_ID(_Category_ID);
-    } catch(IllegalArgumentException e) {results.put("categoryCategory_IDerror", e.getMessage());
+    } catch(Exception e) {
+      results.put("categoryCategory_IDerror", e.getMessage());
       errors++;
     }
 
@@ -93,12 +114,13 @@ public class EditCategoryServlet extends HttpServlet{
     int result=0;
     if (errors==0){
       try{
-        result=categoryDAO.update(_oldCategory,_newCategory,user);
+        result=categoryDAO.update(_oldCategory,_newCategory);
       }catch(Exception ex){
-        results.put("dbStatus","Database Error");
+        results.put("dbError","Database Error");
       }
       if (result>0){
         results.put("dbStatus","Category updated");
+        req.setAttribute("results", results);
         resp.sendRedirect("all-Categories");
         return;
       } else {

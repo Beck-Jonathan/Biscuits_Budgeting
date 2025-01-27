@@ -29,7 +29,7 @@
 
         </div>
         <div class="col-sm-2 " id="Headerr1c2" >
-            <a href="budget_bome"> <button type="button" value="Home" id="Home" ></button> </a>
+            <a href="budget_home"> <button type="button" value="Home" id="Home" ></button> </a>
         </div>
 
         <div class="col-sm-2 " id="Headerr1c3" >
@@ -50,7 +50,7 @@
 
         </div>
         <div class="col-sm-2 " id="Headerr1c6" >
-            <%@include file="/WEB-INF/Budget_App/Login.jsp"%>
+            <%@include file="/WEB-INF/Budget_App/UserSignIn.jsp"%>
 
         </div>
 

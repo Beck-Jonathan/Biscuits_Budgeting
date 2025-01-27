@@ -27,6 +27,9 @@ public class AllMortgagesServlet extends HttpServlet {
   public void init() throws ServletException {
     mortgageDAO = new MortgageDAO();
   }
+  public void init(iMortgageDAO mortgageDAO) {
+    this.mortgageDAO = mortgageDAO;
+  }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -34,9 +37,9 @@ public class AllMortgagesServlet extends HttpServlet {
 //To restrict this page based on privilege level
     int PRIVILEGE_NEEDED = 0;
     HttpSession session = req.getSession();
-    User user = (User) session.getAttribute("User_B");
-    if (user == null) {
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+    User user = (User)session.getAttribute("User_B");
+    if (user==null||!user.getRoles().contains("User")){
+      resp.sendRedirect("/budget_in");
       return;
     }
 

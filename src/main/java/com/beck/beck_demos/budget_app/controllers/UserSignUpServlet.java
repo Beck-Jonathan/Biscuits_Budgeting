@@ -38,7 +38,7 @@ public class UserSignUpServlet extends HttpServlet{
     req.setAttribute("pageTitle", "Join Us!");
 
 
-    req.getRequestDispatcher("WEB-INF/Budget_App/register.jsp").forward(req, resp);  }
+    req.getRequestDispatcher("WEB-INF/Budget_App/UserSignUp.jsp").forward(req, resp);  }
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -141,7 +141,7 @@ public class UserSignUpServlet extends HttpServlet{
           user.setRoles(roles);
           session.setAttribute("UserID",id);
           session.setAttribute("User_B",user);
-          resp.sendRedirect("budget_bome");
+          resp.sendRedirect("budget_home");
 
 
 
@@ -156,7 +156,7 @@ public class UserSignUpServlet extends HttpServlet{
     }
     req.setAttribute("results", results);
     req.setAttribute("pageTitle", "Budget With Us ");
-    resp.sendRedirect("budget_bome");
+    resp.sendRedirect("budget_home");
 
   }
 }

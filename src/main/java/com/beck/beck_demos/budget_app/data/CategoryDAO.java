@@ -63,7 +63,7 @@ public class CategoryDAO implements iCategoryDAO {
           statement.setInt(1,userID);
           try(ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {String Category_ID = resultSet.getString("Category_Category_ID");
-            Category _category = new Category( Category_ID);
+            Category _category = new Category( Category_ID,userID);
             result.add(_category);
           }
         }
@@ -92,7 +92,7 @@ public class CategoryDAO implements iCategoryDAO {
     }
     return rowsAffected;
   }
-  public int update(Category oldCategory, Category newCategory, User user) throws SQLException{
+  public int update(Category oldCategory, Category newCategory) throws SQLException{
     int result = 0;
     try (Connection connection = getConnection()) {
       if (connection !=null){
@@ -100,7 +100,7 @@ public class CategoryDAO implements iCategoryDAO {
         {
           statement.setString(1,oldCategory.getCategory_ID());
           statement.setString(2,newCategory.getCategory_ID());
-          statement.setInt(3,user.getUser_ID());
+          statement.setInt(3,oldCategory.getUser_ID());
           result=statement.executeUpdate();
         } catch (SQLException e) {
           throw new RuntimeException("Could not update Category . Try again later");

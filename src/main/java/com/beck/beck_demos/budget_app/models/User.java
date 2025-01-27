@@ -21,10 +21,12 @@ package com.beck.beck_demos.budget_app.models;
 
 import com.beck.beck_demos.shared.MyValidators;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.regex.Matcher;
+import org.jetbrains.annotations.NotNull;
 
-public class User {
+public class User implements Comparable<User>{
   private Integer User_ID;
   private String User_Name;
   private char[] User_PW;
@@ -53,6 +55,9 @@ public class User {
     return User_ID;
   }
   public void setUser_ID(Integer User_ID) {
+    if (User_ID < 0 || User_ID > 10000) {
+      throw new IllegalArgumentException("User_ID Can Not Be Negative");
+    }
     this.User_ID = User_ID;
   }
   public String getUser_Name() {
@@ -95,6 +100,14 @@ public class User {
       }
     }
     this.Email = Email;
+  }
+  @Override
+  public int compareTo(@NotNull User o) {
+    if (this.User_ID.compareTo(o.User_ID) < 0) {
+      return -1;
+    } else if (this.User_ID.compareTo(o.User_ID) > 0) {
+      return 1;
+    } else return 0;
   }
 
 }

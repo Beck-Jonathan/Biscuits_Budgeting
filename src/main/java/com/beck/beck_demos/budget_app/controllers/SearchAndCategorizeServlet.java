@@ -16,7 +16,6 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/search_transaction")
@@ -38,6 +37,10 @@ public class SearchAndCategorizeServlet extends HttpServlet {
       categoryDAO = new CategoryDAO();
     }
     User user = (User)session.getAttribute("User_B");
+    if (user==null||!user.getRoles().contains("User")){
+      resp.sendRedirect("/budget_in");
+      return;
+    }
     List<Category> allCategories = categoryDAO.getCategoryByUser(user.getUser_ID());
     req.setAttribute("Categories", allCategories);
     if (user==null){
@@ -86,7 +89,7 @@ public class SearchAndCategorizeServlet extends HttpServlet {
     else {
       String category = req.getParameter("category");
       try {
-        update = transactionDAO.bulkUpdate(user.getUser_ID(), category, query);
+        update = transactionDAO.bulkUpdateCategory(user.getUser_ID(), category, query);
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }

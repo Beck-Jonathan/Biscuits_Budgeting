@@ -1,31 +1,21 @@
 package com.beck.beck_demos.budget_app.models;
 
-/// <summary>
-///AUTHOR: Jonathan Beck
-///<br />
-///CREATED: 22/7/2024
-///< br />
-///An example class to show how code is expected to be written and documented.
-///This is where a description of what your file is supposed to contain goes.
-///e.g., "Class with helper methods for input validation.",
-///Class that defines Transaction Objects.
-///</summary>
-///< remarks>
-///UPDATER: updater_name
-///< br />
-/// UPDATED: yyyy-MM-dd
-/// < br />
-/// Update comments go here, include method or methods were changed or added
-/// A new remark should be added for each update.
-///</remarks>
+import java.util.Date;
+import org.jetbrains.annotations.NotNull;
 
-import java.sql.Date;
+/**
+ * @ author Jonathan Beck
+ * @ version 1.0
+ * @ since 1.0
+ * @ updated 1/22/2025 to allow accounts to be foreign keyed
+ */
 
-public class Transaction {
+
+public class Transaction implements Comparable<Transaction> {
   private Integer Transaction_ID;
   private Integer User_ID;
   private String Category_ID;
-  private String Account_Num;
+  private String Bank_Account_ID;
   private Date Post_Date;
   private Integer Check_No;
   private String Description;
@@ -35,12 +25,12 @@ public class Transaction {
 
   public Transaction(){}
 
-  public Transaction(Integer Transaction_ID, Integer User_ID,String Category_ID ,String Account_Num, Date Post_Date, Integer Check_No, String Description, Double Amount, String Type, String Status) {
+  public Transaction(Integer Transaction_ID, Integer User_ID, String Category_ID, String Bank_Account_ID, Date Post_Date, Integer Check_No, String Description, Double Amount, String Type, String Status) {
 
     this.Transaction_ID = Transaction_ID;
     this.User_ID = User_ID;
-    this.Category_ID=Category_ID;
-    this.Account_Num = Account_Num;
+    this.Category_ID = Category_ID;
+    this.Bank_Account_ID = Bank_Account_ID;
     this.Post_Date = Post_Date;
     this.Check_No = Check_No;
     this.Description = Description;
@@ -49,15 +39,16 @@ public class Transaction {
     this.Status = Status;
   }
 
+  public Transaction(Integer Transaction_ID) {
+
+    this.Transaction_ID = Transaction_ID;
+  }
   public Integer getTransaction_ID() {
     return Transaction_ID;
   }
   public void setTransaction_ID(Integer Transaction_ID) {
-    if(Transaction_ID<0){
-      throw new IllegalArgumentException("Transaction_ID is too short.");
-    }
-    if(Transaction_ID>1000000){
-      throw new IllegalArgumentException("Transaction_ID is too long.");
+    if (Transaction_ID<0||Transaction_ID>10000){
+      throw new IllegalArgumentException("Transaction_ID Can Not Be Negative");
     }
     this.Transaction_ID = Transaction_ID;
   }
@@ -65,6 +56,9 @@ public class Transaction {
     return User_ID;
   }
   public void setUser_ID(Integer User_ID) {
+    if (User_ID<0||User_ID>10000){
+      throw new IllegalArgumentException("User_ID Can Not Be Negative");
+    }
     this.User_ID = User_ID;
   }
   public String getCategory_ID() {
@@ -72,7 +66,7 @@ public class Transaction {
   }
   public void setCategory_ID(String Category_ID) {
     Category_ID = Category_ID.replaceAll("[^A-Za-z0-9 - ]","");
-    if(Category_ID.length()<3){
+    if(Category_ID.length()<4){
       throw new IllegalArgumentException("Category_ID is too short.");
     }
     if(Category_ID.length()>100){
@@ -80,19 +74,18 @@ public class Transaction {
     }
     this.Category_ID = Category_ID;
   }
-
-  public String getAccount_Num() {
-    return Account_Num;
+  public String getBank_Account_ID() {
+    return Bank_Account_ID;
   }
-  public void setAccount_Num(String Account_Num) {
-    Account_Num = Account_Num.replaceAll("[^A-Za-z0-9 - ]","");
-    if(Account_Num.length()<4){
-      throw new IllegalArgumentException("Account_Num is too short.");
+  public void setBank_Account_ID(String Bank_Account_ID) {
+    Bank_Account_ID = Bank_Account_ID.replaceAll("[^A-Za-z0-9 - ]","");
+    if(Bank_Account_ID.length()<4){
+      throw new IllegalArgumentException("Bank_Account_ID is too short.");
     }
-    if(Account_Num.length()>100){
-      throw new IllegalArgumentException("Account_Num is too long.");
+    if(Bank_Account_ID.length()>100){
+      throw new IllegalArgumentException("Bank_Account_ID is too long.");
     }
-    this.Account_Num = Account_Num;
+    this.Bank_Account_ID = Bank_Account_ID;
   }
   public Date getPost_Date() {
     return Post_Date;
@@ -104,6 +97,9 @@ public class Transaction {
     return Check_No;
   }
   public void setCheck_No(Integer Check_No) {
+    if (Check_No<0||Check_No>10000){
+      throw new IllegalArgumentException("Check_No Can Not Be Negative");
+    }
     this.Check_No = Check_No;
   }
   public String getDescription() {
@@ -123,6 +119,9 @@ public class Transaction {
     return Amount;
   }
   public void setAmount(Double Amount) {
+    if (Amount<0||Amount>10000){
+      throw new IllegalArgumentException("Amount Can Not Be Negative");
+    }
     this.Amount = Amount;
   }
   public String getType() {
@@ -151,7 +150,70 @@ public class Transaction {
     }
     this.Status = Status;
   }
+  @Override
+  public int compareTo(@NotNull Transaction o) {
+    if (this.Transaction_ID.compareTo(o.Transaction_ID)<0){
+      return -1;
+    }
+    else if(this.Transaction_ID.compareTo(o.Transaction_ID) > 0){
+      return 1;
+    }
+    if (this.User_ID.compareTo(o.User_ID)<0){
+      return -1;
+    }
+    else if(this.User_ID.compareTo(o.User_ID) > 0){
+      return 1;
+    }
+    if (this.Category_ID.compareTo(o.Category_ID)<0){
+      return -1;
+    }
+    else if(this.Category_ID.compareTo(o.Category_ID) > 0){
+      return 1;
+    }
+    if (this.Bank_Account_ID.compareTo(o.Bank_Account_ID)<0){
+      return -1;
+    }
+    else if(this.Bank_Account_ID.compareTo(o.Bank_Account_ID) > 0){
+      return 1;
+    }
+    if (this.Post_Date.compareTo(o.Post_Date)<0){
+      return -1;
+    }
+    else if(this.Post_Date.compareTo(o.Post_Date) > 0){
+      return 1;
+    }
+    if (this.Check_No.compareTo(o.Check_No)<0){
+      return -1;
+    }
+    else if(this.Check_No.compareTo(o.Check_No) > 0){
+      return 1;
+    }
+    if (this.Description.compareTo(o.Description)<0){
+      return -1;
+    }
+    else if(this.Description.compareTo(o.Description) > 0){
+      return 1;
+    }
+    if (this.Amount.compareTo(o.Amount)<0){
+      return -1;
+    }
+    else if(this.Amount.compareTo(o.Amount) > 0){
+      return 1;
+    }
+    if (this.Type.compareTo(o.Type)<0){
+      return -1;
+    }
+    else if(this.Type.compareTo(o.Type) > 0){
+      return 1;
+    }
+    if (this.Status.compareTo(o.Status)<0){
+      return -1;
+    }
+    else if(this.Status.compareTo(o.Status) > 0){
+      return 1;
+    }
+    return 0;
+  }
 
 }
-
 

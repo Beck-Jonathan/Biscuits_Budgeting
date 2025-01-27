@@ -37,7 +37,7 @@ public class UserDashServlet extends HttpServlet{
 
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      resp.sendRedirect("/budget_in");
       return;
     }
     session.setAttribute("currentPage",req.getRequestURL());

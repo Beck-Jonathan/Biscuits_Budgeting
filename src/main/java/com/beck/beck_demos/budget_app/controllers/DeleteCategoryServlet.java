@@ -21,40 +21,53 @@ import java.util.List;
 import java.util.Map;
 @WebServlet("/deleteBudgetCategory")
 public class DeleteCategoryServlet extends HttpServlet {
-  public static iCategoryDAO categoryDAO;
+  private iCategoryDAO categoryDAO;
+  @Override
+  public void init(){
+    this.categoryDAO = new CategoryDAO();
+  }
+  public void init(iCategoryDAO categoryDAO){
+    this.categoryDAO = categoryDAO;
+  }
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    if (categoryDAO==null){
-      categoryDAO = new CategoryDAO();
-    }
+
     Map<String, String> results = new HashMap<>();
 
 //To restrict this page based on privilege level
     int PRIVILEGE_NEEDED = 0;
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
-    if (user==null){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+    if (user==null||!user.getRoles().contains("User")){
+      resp.sendRedirect("/budget_in");
       return;
     }
+    int errors=0;
 
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Delete Category");
     String CategoryID = req.getParameter("categoryid");
+    if (CategoryID==null){
+      errors ++;
+    }
+    int result = -1;
 
-    int result = 0;
-
-    if (!CategoryID.equals("Uncategorized")) {
+    if (errors==0&&!CategoryID.equals("Uncategorized")) {
       try {
         result = categoryDAO.deleteCategory(CategoryID, user.getUser_ID());
       } catch (Exception ex) {
         results.put("dbStatus", ex.getMessage());
+        result=0;
       }
     }else {
       results.put("dbStatus", "unable to delete \"uncategorized\"");
     }
+    if (result ==0){
+      results.put("dbStatus", "Unable to delete "+CategoryID+".");
+    }
 
 
+    req.setAttribute("result", result);
     List<Category> categories = null;
     categories = categoryDAO.getCategoryByUser(user.getUser_ID());
     req.setAttribute("results",results);

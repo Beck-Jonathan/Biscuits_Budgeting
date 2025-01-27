@@ -32,6 +32,9 @@ public class add_transaction extends HttpServlet {
   public void init() throws ServletException {
     transactionDAO = new TransactionDAO();
   }
+  public void init(iTransactionDAO transactionDAO) {
+    this.transactionDAO = transactionDAO;
+  }
 
   @Override
 
@@ -42,7 +45,7 @@ public class add_transaction extends HttpServlet {
 
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      resp.sendRedirect("/budget_in");
       return;
     }
     session.setAttribute("currentPage",req.getRequestURL());
@@ -54,7 +57,10 @@ public class add_transaction extends HttpServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     HttpSession session = req.getSession();
     User user = (User) session.getAttribute("User_B");
-
+    if (user==null||!user.getRoles().contains("User")){
+      resp.sendRedirect("/budget_in");
+      return;
+    }
     String applicationPath = req.getServletContext().getRealPath("");
     String uploadFilePath = applicationPath + File.separator + UPLOAD_DIR;
     File fileSaveDir = new File(uploadFilePath);
@@ -84,25 +90,24 @@ public class add_transaction extends HttpServlet {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-    Integer NewTrans = 0;
-    Integer oldTrans = 0;
+    int NewTrans = 0;
+    int oldTrans = 0;
     int totalTrans = transactions.size();
-    ArrayList<Boolean> transExist = new ArrayList<>(totalTrans);
-    for (int i=0;i<totalTrans;i++){
-      transExist.add(false);
-    }
-    int index=0;
-    for (Transaction t : transactions) {
-      t.setUser_ID(user.getUser_ID());
-    }
+
+
     try {
-      transactionDAO.addBatch(transactions,transExist);
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
+      NewTrans = transactionDAO.addBatch(transactions, user.getUser_ID());
+    } catch (Exception e) {
+      results.put("dbStatus",e.getMessage());
     }
 
+    oldTrans=totalTrans-NewTrans;
+    int x = 0;
+
     uploadedFile.delete();
-    resp.sendRedirect("budget_bome");
+    results.put("AddedCount","You uploaded "+totalTrans+" transactions. "+NewTrans+" of them were new. "+ oldTrans+" of them were old, and not added to the database.");
+    session.setAttribute("results",results);
+    resp.sendRedirect("budget_home");
 
     //session.setAttribute("currentPage",req.getRequestURL());
     //req.setAttribute("pageTitle", "Budget Home");

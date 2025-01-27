@@ -35,9 +35,23 @@ public class UserSignInServlet extends HttpServlet{
   public void init() throws ServletException {
     userDAO = new UserDAO();
   }
+  public void init(iUserDAO userDAO){
+    this.userDAO = userDAO;
+  }
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    HttpSession session = req.getSession();
+    Object currentPageObject = session.getAttribute("currentPage");
+    String currentPage = "budget_home";
+    if (currentPageObject !=null) {
+      currentPage = session.getAttribute("currentPage").toString();
+    }
     req.setAttribute("pageTitle", "Log in!");
+    User user = (User)session.getAttribute("User_B");
+    if (user!=null){
+      resp.sendRedirect(currentPage);
+      return;
+    }
 
     req.getRequestDispatcher("WEB-INF/Budget_App/Login.jsp").forward(req, resp);
   }
@@ -45,25 +59,59 @@ public class UserSignInServlet extends HttpServlet{
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     HttpSession session = req.getSession();
+    Map<String, String> results = new HashMap<>();
+    Object currentPageObject = session.getAttribute("currentPage");
+    String currentPage = "budget_home";
+    if (currentPageObject !=null) {
+      currentPage = session.getAttribute("currentPage").toString();
+    }
+    req.setAttribute("pageTitle", "Log in!");
+    User _user = (User)session.getAttribute("User_B");
+    if (_user!=null){
+      resp.sendRedirect(currentPage);
+      return;
+    }
     req.setAttribute("pageTitle", "Log in!");
 
+
     String _User_Name = req.getParameter("inputuserUser_Name");
+    if (_User_Name!=null) {
+      _User_Name=_User_Name.trim();
+    }
     String _User_PW = req.getParameter("inputuserUser_PW");
+    if (_User_PW!=null) {
+      _User_PW=_User_PW.trim();
+    }
+    char[] _User_PWChar = new char[0];
+    if (_User_PW!=null && !_User_PW.isEmpty()) {
+       _User_PWChar = _User_PW.toCharArray();
 
-    char[] _User_PWChar = _User_PW.toCharArray();
+    }
+    User user = new User();
+    int errors =0;
+    try {
+      user.setUser_Name(_User_Name);
+    } catch(Exception e) {
+      results.put("userUser_Nameerror", e.getMessage());
+      errors++;
+    }
+    try {
+      user.setUser_PW(_User_PW.toCharArray());
+    } catch(Exception e) {
+      results.put("userUser_PWerror", e.getMessage());
+      errors++;
+    }
 
 
-    Map<String, String> results = new HashMap<>();
     results.put("User_Name",_User_Name);
     results.put("User_PW",_User_PW);
-    User user = new User();
+
 
     int id =0;
     try {
       String hashed = userDAO.get_pw(_User_Name);
       if(!BCrypt.checkpw(_User_PW,hashed)){
-
-        session.setAttribute("loginFail", "Login Failed, please verify your username and password");
+        results.put("loginFail", "Login Failed, please verify your username and password");
       }
       else{
         session.removeAttribute("loginFail");
@@ -76,8 +124,8 @@ public class UserSignInServlet extends HttpServlet{
         results.put("dbStatus",user.getEmail());
 
         session.setAttribute("User_B",user);
-        User XXXX = (User) session.getAttribute("User_B");
-        String currentPage =  session.getAttribute("currentPage").toString();
+
+        currentPage =  session.getAttribute("currentPage").toString();
 
         resp.sendRedirect(currentPage);
 
@@ -87,21 +135,13 @@ public class UserSignInServlet extends HttpServlet{
 
     }
     catch (Exception ex){
-      session.setAttribute("loginFail", "Login Failed, please verify your username and password");
+      results.put("loginFail", "Login Failed, please verify your username and password");
+      results.put("dbError", "Database Error");
     }
 
     if (id==0){
       results.put("dbStatus1","Login Failed, please verify your username and password");
-
     }
-    Object currentPageObject = session.getAttribute("currentPage");
-    String currentPage = "budget_home";
-    if (currentPageObject !=null) {
-      currentPage = session.getAttribute("currentPage").toString();
-    }
-
-
-
     session.setAttribute("dbStatus","Login Fail!");
     req.setAttribute("results", results);
     req.setAttribute("pageTitle", "Log in! ");

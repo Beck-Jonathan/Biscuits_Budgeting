@@ -56,10 +56,12 @@ public class ExportServlet extends HttpServlet {
     int PRIVILEGE_NEEDED = 0;
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
-    if (user==null){
-     resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-     return;
-     }
+
+    if (user==null||!user.getRoles().contains("User")){
+      resp.sendRedirect("/budget_in");
+      return;
+    }
+
     session.setAttribute("currentPage",req.getRequestURL());
     List<Transaction> transactions = null;
 
@@ -74,7 +76,7 @@ public class ExportServlet extends HttpServlet {
       writer.print(t.getTransaction_ID()+"\t");
       writer.print(t.getUser_ID()+"\t");
       writer.print(t.getCategory_ID()+"\t");
-      writer.print(t.getAccount_Num()+"\t");
+      writer.print(t.getBank_Account_ID()+"\t");
       writer.print(t.getPost_Date()+"\t");
       writer.print(t.getCheck_No()+"\t");
       writer.print(t.getDescription()+"\t");
@@ -115,7 +117,7 @@ public class ExportServlet extends HttpServlet {
 
     req.setAttribute("Transactions", transactions);
     req.setAttribute("pageTitle", "All Transactions");
-    //resp.sendRedirect("budget_bome");
+    //resp.sendRedirect("budget_home");
 
   }
 }

@@ -19,7 +19,9 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/MoneyBreakdown")
 public class MoneyBreakdownServlet extends HttpServlet {
@@ -40,70 +42,62 @@ public class MoneyBreakdownServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
     HttpSession session = req.getSession();
+    Map<String,String> results = new HashMap<>();
 
 
     User user = (User)session.getAttribute("User_B");
-
-    List<Category> allCategories = categoryDAO.getCategoryByUser(user.getUser_ID());
-
-    int year_range=0;
-    // new approach
-    try {
-       year_range = userDAO.yearRange(user.getUser_ID());
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-    int loop=0;
-    List<List<Category_VM>> years = new ArrayList<>(year_range+1);
-    for(int i=0;i<year_range+1;i++){
-      years.add(i, new ArrayList<>(allCategories.size()+2));
+    if (user==null||!user.getRoles().contains("User")){
+      resp.sendRedirect("/budget_in");
+      return;
     }
 
-    //add each year and category combo
-    for (int i=0;i<=year_range;i++) {
-      for (int k = 0; k < allCategories.size(); k++) {
-        Category_VM c = new Category_VM(allCategories.get(k).getCategory_ID(), 0);
-        years.get(i).add(k, c);
-      }
-    }
-
-    //add each year total, pos and neg
-    for (int i=0;i<=year_range;i++) {
-
-        Category_VM c = new Category_VM("Total In", 0,"pos");
-        years.get(i).add( c);
-      Category_VM d = new Category_VM("Total Out", 0,"neg");
-      years.get(i).add( d);
-
-    }
-
-    //add each category total, ignoring year
-    years.add( new ArrayList<>(allCategories.size()+2));
-      for (int k = 0; k < allCategories.size(); k++) {
-        Category_VM c = new Category_VM(allCategories.get(k).getCategory_ID(), 0);
-        years.get(years.size()-1).add(k, c);
-      }
-      //get each grand total
-    Category_VM total_in = new Category_VM("", 0,"pos");
-    years.get(years.size()-1).add(total_in);
-    Category_VM total_out = new Category_VM("", 0,"neg");
-    years.get(years.size()-1).add(total_out);
-
-int x=6;
-    //to add grand totals, pos and neg
-    //not implemented
-
+    List<List<Category_VM>> breakdown = new ArrayList<>();
 
 
     try {
-      int size = transactionDAO.getAnalysis(years, user.getUser_ID());
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
+      breakdown = transactionDAO.getAnalysis(breakdown, user.getUser_ID());
+    } catch (Exception e) {
+      results.put("dbError","database Error");
+    }
+
+    for (List<Category_VM> category_vms : breakdown) {
+      for (int i =0;i<category_vms.size();i++) {
+        if (category_vms.get(i).getCategory_ID().equals("total in")){
+          while (i<category_vms.size()-1) {
+            Category_VM temp = category_vms.get(i + 1);
+            category_vms.set(i + 1, category_vms.get(i));
+            category_vms.set(i, temp);
+            i++;
+          }
+        }
+      }
+    }
+    for (List<Category_VM> category_vms : breakdown) {
+      for (int i =0;i<category_vms.size();i++) {
+        if (category_vms.get(i).getCategory_ID().equals("total out")){
+          while (i<category_vms.size()-1) {
+            Category_VM temp = category_vms.get(i + 1);
+            category_vms.set(i + 1, category_vms.get(i));
+            category_vms.set(i, temp);
+            i++;
+          }
+        }
+      }
     }
 
 
+    int year_span = breakdown.size();
+    int category_count = 0;
+    for (List<Category_VM> year : breakdown) {
+      if (year.size()>category_count){
+        category_count = year.size();
+      }
+    }
 
-    session.setAttribute("categories",years);
+
+    session.setAttribute("breakdown",breakdown);
+    session.setAttribute("years",year_span);
+    session.setAttribute("category_count",category_count);
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Money Breakdown");
 

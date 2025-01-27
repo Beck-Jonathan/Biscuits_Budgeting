@@ -14,13 +14,13 @@ import static com.beck.beck_demos.budget_app.data.Database.getConnection;
 
 public interface iCategoryDAO {
 
-  int add(Category _category, int user_ID) ;
+  int add(Category _category, int user_ID) throws SQLException;
 
    List<Category> getCategoryByUser(int userID);
 
-   int deleteCategory(String categoryID, int User_ID);
+   int deleteCategory(String categoryID, int User_ID) throws SQLException;
 
-   int update(Category oldCategory, Category newCategory, User user) throws SQLException;
+   int update(Category oldCategory, Category newCategory) throws SQLException;
 
 
 }

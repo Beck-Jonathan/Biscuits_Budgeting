@@ -28,6 +28,9 @@ public class AddCategoryServlet extends HttpServlet{
   public void init() throws ServletException {
     categoryDAO = new CategoryDAO();
   }
+  public void init (iCategoryDAO categoryDAO) {
+    this.categoryDAO = categoryDAO;
+  }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -36,11 +39,11 @@ public class AddCategoryServlet extends HttpServlet{
 //To restrict this page based on privilege level
     int PRIVILEGE_NEEDED = 0;
     HttpSession session = req.getSession();
-    User user = (User)session.getAttribute("User");
-    //if (user==null||user.getPrivilege_ID()<PRIVILEGE_NEEDED){
-     // resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-      //return;
-    //}
+    User user = (User)session.getAttribute("User_B");
+    if (user==null||!user.getRoles().contains("User")){
+      resp.sendRedirect("/budget_in");
+      return;
+    }
 
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Add Category");
@@ -54,20 +57,22 @@ public class AddCategoryServlet extends HttpServlet{
     int PRIVILEGE_NEEDED = 0;
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
-    //if (user==null||user.getPrivilege_ID()<PRIVILEGE_NEEDED){
-     // resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-     // return;
-    //}
+    if (user==null||!user.getRoles().contains("User")){
+      resp.sendRedirect("/budget_in");
+      return;
+    }
 
     String _Category_ID = req.getParameter("inputcategoryCategory_ID");
-    _Category_ID=_Category_ID.trim();
+    if (_Category_ID!=null) {
+      _Category_ID=_Category_ID.trim();
+    }
     Map<String, String> results = new HashMap<>();
     results.put("Category_ID",_Category_ID);
     Category category = new Category();
     int errors =0;
     try {
       category.setCategory_ID(_Category_ID);
-    } catch(IllegalArgumentException e) {results.put("categoryCategory_IDerror", e.getMessage());
+    } catch(Exception e) {results.put("categoryCategory_IDerror", e.getMessage());
       errors++;
     }
     int result=0;
@@ -75,11 +80,12 @@ public class AddCategoryServlet extends HttpServlet{
       try{
         result=categoryDAO.add(category,user.getUser_ID());
       }catch(Exception ex){
-        results.put("dbStatus","Database Error");
+        results.put("dbError","Database Error");
       }
       if (result>0){
         results.put("dbStatus","Category Added");
         resp.sendRedirect("all-Categories");
+        req.setAttribute("results", results);
         return;
       } else {
         results.put("dbStatus","Category Not Added");

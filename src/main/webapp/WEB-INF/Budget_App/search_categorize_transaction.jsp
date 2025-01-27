@@ -5,7 +5,7 @@ Create the JSP  For Viewing All of The  Transaction table
 <%@include file="/WEB-INF/Budget_App/budget_top.jsp"%>
 <div class = "container">
     <div class="row">
-        <div class="col-12">
+        <div class="col-12" id="addr" addr="${appURL}">
             <%@include file="/WEB-INF/Budget_App/user_dash_buttons.jsp"%>
             <h1>All Roller Transactions</h1>
             <p>There ${Transactions.size() eq 1 ? "is" : "are"}&nbsp;${Transactions.size()} Transaction${Transactions.size() ne 1 ? "s" : ""}</p>
@@ -41,24 +41,32 @@ Create the JSP  For Viewing All of The  Transaction table
                         <tbody>
                         <c:forEach items="${Transactions}" var="transaction">
                         <tr>
-                            <td><a href = "edittransaction?transactionid=${transaction.transaction_ID}&mode=view">${fn:escapeXml(transaction.transaction_ID)}</a></td><td>${fn:escapeXml(transaction.account_Num)}</td>
+                            <td><a href = "editTransaction?transactionid=${transaction.transaction_ID}&mode=view">${fn:escapeXml(transaction.transaction_ID)}</a></td>
+                            <td>${fn:escapeXml(transaction.bank_Account_ID)}</td>
                             <td>${fn:escapeXml(transaction.post_Date)}</td>
                             <td>${fn:escapeXml(transaction.check_No)}</td>
                             <td>${fn:escapeXml(transaction.description)}</td>
                             <td>${fn:escapeXml(transaction.amount)}</td>
                             <td>${fn:escapeXml(transaction.type)}</td>
                             <td>${fn:escapeXml(transaction.status)}</td>
-                            <td>
-                                <div name ="change" >
-                                    <input type="hidden" name="t_id" value =${transaction.transaction_ID}>
-                                    <select  class="category" name="category">
-                                        <c:forEach items="${Categories}" var="category">
-                                            <option  value="${category.category_ID}"  ${category.category_ID == transaction.category_ID ? 'selected' : ''}>${category.category_ID}</option>
-                                        </c:forEach>
-                                    </select>
+                            <td id ="change+${transaction.transaction_ID}" >
+
+
+                                <input type="hidden" name="t_id" value =${transaction.transaction_ID}>
+                                <select  class="category" name="category" onchange="" id="${transaction.transaction_ID}">
+                                    <c:forEach items="${Categories}" var="category" >
+                                        <option  value="${category.category_ID}"  ${category.category_ID == transaction.category_ID ? 'selected' : ''}>${category.category_ID}</option>
+                                    </c:forEach>
+                                </select>
+
+
                             </td>
-                            <td><button  onclick="takevalues(${transaction.transaction_ID})">save</button></td>
-                </div>
+                            <td style="width:50px">
+
+                                <div id="${transaction.transaction_ID}_status"  style="border:none; display:none;"  > xx </div>
+
+                            </td>
+
 
 
 

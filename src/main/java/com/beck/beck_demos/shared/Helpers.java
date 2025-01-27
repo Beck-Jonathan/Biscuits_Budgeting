@@ -1,6 +1,6 @@
 package com.beck.beck_demos.shared;
 
-import com.beck.beck_demos.learnx.Models.User;
+import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.http.HttpSession;
 
 import java.time.LocalDate;
@@ -33,21 +33,7 @@ public class Helpers {
 
   }
 
-  public static Boolean isActive(User user){
-    return user.getStatus().equals("active");
-  }
 
-  public static Boolean isStudent(User user){
-    return user.getPrivileges().equals("student");
-  }
-
-  public static Boolean isTeacher(User user){
-    return user.getPrivileges().equals("teach");
-  }
-
-  public static Boolean isAdmin(User user){
-    return user.getPrivileges().equals("admin");
-  }
 
   public static Boolean noErrors(HashMap results, List<String> potentialErrors){
     Boolean result = true;

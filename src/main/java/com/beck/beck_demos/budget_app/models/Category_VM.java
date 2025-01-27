@@ -11,6 +11,16 @@ public class Category_VM extends Category {
   @Id
   private Long id;
 
+  public int getYear() {
+    return year;
+  }
+
+  public void setYear(int year) {
+    this.year = year;
+  }
+
+  private int year;
+
   public Category_VM() {
 
   }
@@ -46,10 +56,11 @@ public class Category_VM extends Category {
     this.sign=sign;
   }
 
-  public Category_VM(String category_ID,double amount, int count) {
+  public Category_VM(String category_ID,double amount, int count, int year) {
     this.setCategory_ID(category_ID);
     this.amount = amount;
     this.count=count;
+    this.year=year;
   }
 
   public void setId(Long id) {

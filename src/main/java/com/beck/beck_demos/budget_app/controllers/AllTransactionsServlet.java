@@ -23,13 +23,17 @@ import java.util.List;
 import java.util.Map;
 @WebServlet("/all-Transactions")
 public class AllTransactionsServlet extends HttpServlet {
-  public static iCategoryDAO categoryDAO;
+  private iCategoryDAO categoryDAO;
   private iTransactionDAO transactionDAO;
 
   @Override
   public void init() throws ServletException {
     transactionDAO = new TransactionDAO();
     categoryDAO = new CategoryDAO();
+  }
+  public void init (iTransactionDAO transactionDAO, iCategoryDAO categoryDAO) {
+    this.transactionDAO = transactionDAO;
+    this.categoryDAO = categoryDAO;
   }
 
   @Override
@@ -42,11 +46,11 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
 
   int PRIVILEGE_NEEDED = 0;
   HttpSession session = req.getSession();
-  User user = (User)session.getAttribute("User_B");
-  //if (user==null||user.getPrivilege_ID()<PRIVILEGE_NEEDED){
-   // resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-   // return;
- // }
+    User user = (User)session.getAttribute("User_B");
+    if (user==null||!user.getRoles().contains("User")){
+      resp.sendRedirect("/budget_in");
+      return;
+    }
    HashMap<String,String> parameters = new HashMap<>();
     Integer year = 0;
     try {
@@ -136,7 +140,7 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
 
     req.setAttribute("Transactions", transactions);
   req.setAttribute("pageTitle", "All Transactions");
-  req.getRequestDispatcher("WEB-INF/Budget_App/ViewAllTransactions.jsp").forward(req,resp);
+  req.getRequestDispatcher("WEB-INF/Budget_App/all_Transactions.jsp").forward(req,resp);
 
 }
 }

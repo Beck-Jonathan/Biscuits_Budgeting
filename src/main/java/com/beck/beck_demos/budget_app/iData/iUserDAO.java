@@ -26,7 +26,7 @@ public interface iUserDAO {
 
   String get_pw(String username) ;
 
-  int getUserIDByUserName(String username);
+  int getUserIDByUserName(String username) throws Exception;
 
   boolean usernameFree(String username) throws SQLException;
 
