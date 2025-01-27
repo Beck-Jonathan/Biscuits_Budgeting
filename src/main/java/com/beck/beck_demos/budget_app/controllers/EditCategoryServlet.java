@@ -64,7 +64,7 @@ public class EditCategoryServlet extends HttpServlet{
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Edit Category");
 
-    req.getRequestDispatcher("WEB-INF/WFTDA_debug/EditCategory.jsp").forward(req, resp);
+    req.getRequestDispatcher("WEB-INF/Budget_App/edit_category.jsp").forward(req, resp);
 
   }
   @Override

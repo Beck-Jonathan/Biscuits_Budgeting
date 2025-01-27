@@ -51,14 +51,14 @@ public class EditBank_AccountServlet extends HttpServlet{
     }
 
     String mode = req.getParameter("mode");
-    int primaryKey = -1;
+    String primaryKey = "";
     try{
-      primaryKey = Integer.parseInt(req.getParameter("bank_accountid"));
+      primaryKey = (req.getParameter("bank_accountid"));
     }catch (Exception e) {
       req.setAttribute("dbStatus",e.getMessage());
     }Bank_Account bank_account= new Bank_Account();
     try{
-      bank_account.setBank_Account_ID(String.valueOf(primaryKey));
+      bank_account.setBank_Account_ID(primaryKey);
     } catch (Exception e){
       req.setAttribute("dbStatus",e.getMessage());
     }
@@ -72,7 +72,7 @@ public class EditBank_AccountServlet extends HttpServlet{
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Edit Bank_Account");
 
-    req.getRequestDispatcher("WEB-INF/budget_app/EditBank_Account.jsp").forward(req, resp);
+    req.getRequestDispatcher("WEB-INF/Budget_App/EditBank_Account.jsp").forward(req, resp);
   }
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -168,7 +168,7 @@ public class EditBank_AccountServlet extends HttpServlet{
 //standard
     req.setAttribute("results", results);
     req.setAttribute("pageTitle", "Edit a Bank_Account ");
-    req.getRequestDispatcher("WEB-INF/budget_app/EditBank_Account.jsp").forward(req, resp);
+    req.getRequestDispatcher("WEB-INF/Budget_App/EditBank_Account.jsp").forward(req, resp);
   }
 }
 

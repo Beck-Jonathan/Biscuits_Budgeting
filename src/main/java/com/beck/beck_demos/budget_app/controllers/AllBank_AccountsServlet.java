@@ -56,13 +56,13 @@ public class AllBank_AccountsServlet extends HttpServlet {
     session.setAttribute("currentPage",req.getRequestURL());
     List<Bank_Account> bank_accounts = null;
     try {
-      bank_accounts =bank_accountDAO.getAllBank_Account(20,0, User_ID);
+      bank_accounts =bank_accountDAO.getAllBank_Account(0,20, User_ID);
     } catch (Exception e) {
       bank_accounts = new ArrayList<>();
     }
     req.setAttribute("Bank_Accounts", bank_accounts);
     req.setAttribute("pageTitle", "All Bank_Accounts");
-    req.getRequestDispatcher("WEB-INF/budget_app/all-Bank_Accounts.jsp").forward(req,resp);
+    req.getRequestDispatcher("WEB-INF/Budget_App/all-Bank_Accounts.jsp").forward(req,resp);
 
   }
 }

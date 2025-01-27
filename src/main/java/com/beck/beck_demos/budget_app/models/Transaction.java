@@ -47,7 +47,7 @@ public class Transaction implements Comparable<Transaction> {
     return Transaction_ID;
   }
   public void setTransaction_ID(Integer Transaction_ID) {
-    if (Transaction_ID<0||Transaction_ID>10000){
+    if (Transaction_ID<0||Transaction_ID>10000000){
       throw new IllegalArgumentException("Transaction_ID Can Not Be Negative");
     }
     this.Transaction_ID = Transaction_ID;

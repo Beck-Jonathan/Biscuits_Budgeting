@@ -35,7 +35,7 @@ Create the JSP For Viuw/Edit from the Bank_Account table
         <div class ="row" id = "row4">
             <label for="inputbank_accountBalance_Date" class="form-label">Balance_Date</label>
             <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.bank_accountBalance_Dateerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Balance_Date" <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputbank_accountBalance_Date" name="inputbank_accountBalance_Date" value="${fn:escapeXml(bank_account.balance_Date)}">
+                <input type="date" class="<c:if test="${not empty results.bank_accountBalance_Dateerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Balance_Date" <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputbank_accountBalance_Date" name="inputbank_accountBalance_Date" value="${fn:escapeXml(bank_account.balance_Date)}">
                 <c:if test="${not empty results.bank_accountBalance_Dateerror}">
                     <div class="invalid-feedback">${results.bank_accountBalance_Dateerror}</div>
                 </c:if>

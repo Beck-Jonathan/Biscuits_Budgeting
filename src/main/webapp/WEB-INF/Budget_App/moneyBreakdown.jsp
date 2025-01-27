@@ -31,12 +31,12 @@ Create the JSP  For Viewing All of The  Category table
                     <c:forEach var="l" begin="0" end="${breakdown.size()-2}">
 
                             <td>
-                                <a href="all-Transactions?category=${breakdown[0][k].category_ID}&year=${breakdown[0][0].year-l}" >   <fmt:formatNumber value="${breakdown[l][k].amount}" type="currency" maxFractionDigits="0"/>  <br/> Count:${breakdown[l][k].count}</a>
+                                <a href="all-Transactions?category=${breakdown[0][k].category_ID}&year=${breakdown[0][0].year-l}" > $ ${breakdown[l][k].amount}  <br/> Count:${breakdown[l][k].count}</a>
                             </td>
 
                     </c:forEach>
                             <td>
-                                <a href="all-Transactions?category=${breakdown[0][k].category_ID}" >   <fmt:formatNumber value="${breakdown[breakdown.size()-1][k].amount}" type="currency" maxFractionDigits="0"/>  <br/> Count:${breakdown[breakdown.size()-1][k].count}</a>
+                                <a href="all-Transactions?category=${breakdown[0][k].category_ID}" >  $ ${breakdown[breakdown.size()-1][k].amount}  <br/> Count:${breakdown[breakdown.size()-1][k].count}</a>
                             </td>
 
                             <td>  ${breakdown[0][k].category_ID}</td>

@@ -87,10 +87,10 @@ public class Bank_AccountDAO implements iBank_AccountDAO {
     List<Bank_Account> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       if (connection != null) {
-        try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_all_Bank_Account(?,?)}")) {
-          statement.setInt(1,limit)
-          ;statement.setInt(2,offset);
-          statement.setInt(3,User_ID);
+        try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Bank_Account_by_User(?,?,?)}")) {
+          statement.setInt(2,limit)
+          ;statement.setInt(3,offset);
+          statement.setInt(1,User_ID);
           try(ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {String Bank_Account_ID = resultSet.getString("Bank_Account_Bank_Account_ID");
               Integer _User_ID = resultSet.getInt("Bank_Account_User_ID");
@@ -111,6 +111,32 @@ public class Bank_AccountDAO implements iBank_AccountDAO {
       throw new RuntimeException("Could not retrieve Bank_Accounts. Try again later");
     }
     return result;
+  }
+  /**
+   * DAO Method to add Bank_Account objects
+   * @param Bank_Account the Bank_Account to be added
+   * @return number of records added
+   * @author Jonathan Beck
+   */
+  public int add(Bank_Account _bank_account) {
+    int numRowsAffected=0;try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Bank_Account( ?, ?, ?, ?, ?)}")){
+          statement.setString(1,_bank_account.getBank_Account_ID());
+          statement.setInt(2,_bank_account.getUser_ID());
+          statement.setString(3,_bank_account.getAccount_Nickname());
+          statement.setDouble(4,_bank_account.getBalance());
+          statement.setDate(5, (java.sql.Date) _bank_account.getBalance_Date());
+          numRowsAffected = statement.executeUpdate();
+          if (numRowsAffected == 0) {
+            throw new RuntimeException("Could not add Bank_Account. Try again later");
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not add Bank_Account. Try again later");
+    }
+    return numRowsAffected;
   }
 
 }

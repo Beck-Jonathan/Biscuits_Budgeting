@@ -35,7 +35,7 @@ public class Bank_Account implements Comparable<Bank_Account> {
     return Bank_Account_ID;
   }
   public void setBank_Account_ID(String Bank_Account_ID) {
-    Bank_Account_ID = Bank_Account_ID.replaceAll("[^A-Za-z0-9 - ]","");
+    Bank_Account_ID = Bank_Account_ID.replaceAll("[^-A-Za-z0-9 - ]","");
     if(Bank_Account_ID.length()<4){
       throw new IllegalArgumentException("Bank_Account_ID is too short.");
     }

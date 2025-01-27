@@ -25,7 +25,12 @@ console.log("ready on new version")
 	$("#Add").button();
 	$( "#Add" ).button( "option", "icon", "ui-icon-check" );
 	$( "#Add" ).button( "option", "showIcon", "true" );
-	$( "#Add" ).button( "option", "label", "Add" );
+	$( "#Add" ).button( "option", "label", "Add Transaction" );
+
+	$("#Accounts").button();
+	$( "#Accounts" ).button( "option", "icon", "ui-icon-check" );
+	$( "#Accounts" ).button( "option", "showIcon", "true" );
+	$( "#Accounts" ).button( "option", "label", "View Accounts" );
 
 	$("#View").button();
 	$( "#View" ).button( "option", "icon", "ui-icon-check" );

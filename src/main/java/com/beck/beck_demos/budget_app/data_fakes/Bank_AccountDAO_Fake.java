@@ -93,6 +93,20 @@ public class Bank_AccountDAO_Fake implements iBank_AccountDAO {
     }
     return results;
   }
+  @Override
+  public int add(Bank_Account _bank_account) throws SQLException {
+    if (duplicateKey(_bank_account)){
+      return 0;
+    }
+    if (exceptionKey(_bank_account)){
+      throw new SQLException("error");
+    }
+    int size = bank_accountVMs.size();
+
+    bank_accountVMs.add(_bank_account);
+    int newsize = bank_accountVMs.size();
+    return newsize-size;
+  }
 
   private boolean duplicateKey(Bank_Account _bank_account){
     return _bank_account.getBank_Account_ID().equals("DUPLICATE");

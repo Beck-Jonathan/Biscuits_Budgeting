@@ -8,6 +8,11 @@
 
     </div>
     <div class="col col-md-1">
+        <a href="all-Bank_Accounts">   <button type="button" value="Accounts" id="Accounts" ></button></a>
+
+    </div>
+
+    <div class="col col-md-1">
         <a href="all-Categories">   <button type="button" value="Category" id="Category" ></button></a>
     </div>
     <div class="col col-md-1">
