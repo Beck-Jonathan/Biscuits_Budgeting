@@ -81,6 +81,7 @@ public class AddBank_AccountServlet extends HttpServlet{
     String _Balance = req.getParameter("inputbank_accountBalance");
     if (_Balance!=null) {
       _Balance=_Balance.trim();
+      _Balance = _Balance.replace("$","");
     }
     String _Balance_Date = req.getParameter("inputbank_accountBalance_Date");
     if (_Balance_Date!=null) {
