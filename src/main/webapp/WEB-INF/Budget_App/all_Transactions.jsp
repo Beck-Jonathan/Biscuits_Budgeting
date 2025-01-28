@@ -6,7 +6,7 @@ Create the JSP  For Viewing All of The  Transaction table
 <div class = "container">
     <div class="row">
         <div class="col-12" id="addr" addr="${appURL}">
-            
+
             <h1>All ${User_B.email} Transactions</h1>
             <p>There ${Transactions.size() eq 1 ? "is" : "are"}&nbsp;${Transactions.size()} Transaction${Transactions.size() ne 1 ? "s" : ""}</p>
             Add Category   <a href="addTransactionCategory">Add</a> <br/>
@@ -33,7 +33,7 @@ Create the JSP  For Viewing All of The  Transaction table
                     </thead>
                     <tbody>
                     <c:forEach items="${Transactions}" var="transaction">
-                        <tr>
+                        <tr >
                             <td><a href = "editTransaction?transactionid=${transaction.transaction_ID}&mode=view">${fn:escapeXml(transaction.transaction_ID)}</a></td>
                             <td>${fn:escapeXml(transaction.bank_Account_ID)}</td>
                             <td>${fn:escapeXml(transaction.post_Date)}</td>

@@ -150,6 +150,13 @@ form .error {
     height : 100%
 }
 
+.xbutton {
+
+    border: none;
+
+
+}
+
 @media screen and (max-width: 900px){ html,body {min-width:900px} }
 
 

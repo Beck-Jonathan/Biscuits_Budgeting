@@ -65,8 +65,45 @@ console.log("ready on new version")
 	$( "#PieChart" ).button( "option", "label", "Pie Chart" );
 
 
+
+
 })
 
+function hiderow(row){
+	console.log(row);
+	var rowtohide = document.getElementById(row);
+	//rowtohide.setAttribute('display','none')
+	$(rowtohide).slideUp();
+
+}
+
+function hidecol(col_no) {
+	console.log(col_no);
+	var tbl = document.getElementById('moneyTable');
+	var rows = tbl.getElementsByTagName('tr');
+
+	for (var row = 0; row < rows.length; row++) {
+		var cols = rows[row].children;
+		var coll = cols[col_no];
+		$(coll).slideUp();
+
+
+	}
+}
+	function restorecells() {
+		var tbl = document.getElementById('moneyTable');
+		var rows = tbl.getElementsByTagName('tr');
+		for (var row = 0; row < rows.length; row++) {
+			$(rows[row]).slideDown();
+			var cols = rows[row].children;
+			for (var i =0; i<cols.length; i++){
+				var cell = cols[i];
+				$(cell).slideDown();
+			}
+		}
+
+
+}
 
 
 
