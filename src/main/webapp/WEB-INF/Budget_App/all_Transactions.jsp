@@ -6,8 +6,7 @@ Create the JSP  For Viewing All of The  Transaction table
 <div class = "container">
     <div class="row">
         <div class="col-12" id="addr" addr="${appURL}">
-            <%@include file="/WEB-INF/Budget_App/user_dash_buttons.jsp"%>
-            <%@include file="user_dash_buttons.jsp"%>
+            
             <h1>All ${User_B.email} Transactions</h1>
             <p>There ${Transactions.size() eq 1 ? "is" : "are"}&nbsp;${Transactions.size()} Transaction${Transactions.size() ne 1 ? "s" : ""}</p>
             Add Category   <a href="addTransactionCategory">Add</a> <br/>

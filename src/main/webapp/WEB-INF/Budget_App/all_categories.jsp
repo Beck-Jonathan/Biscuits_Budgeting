@@ -4,7 +4,7 @@ Create the JSP  For Viewing All of The  Category table
 **********--%>
 <%@include file="/WEB-INF/Budget_App/budget_top.jsp"%>
 <div class = "container">
-    <%@include file="/WEB-INF/Budget_App/user_dash_buttons.jsp"%>
+
     <div class="row">
         <div class="col-12">
             <h1>All Budget Categories</h1>

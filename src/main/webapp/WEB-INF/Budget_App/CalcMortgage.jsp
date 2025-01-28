@@ -3,6 +3,7 @@ Create the JSP  For adding to The  Mortgage table
  Created By Jonathan Beck 8/6/2024
 **********--%>
 <%@include file="/WEB-INF/Budget_App/budget_top.jsp"%>
+
 <div class = "container">
     <form method="post" action="${appURL}/calculateMortgage" id = "calculateMortgage" >
 

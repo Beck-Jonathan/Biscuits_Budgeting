@@ -1,7 +1,7 @@
 <%@include file="/WEB-INF/Budget_App/budget_top.jsp"%>
 
 <div class="table-responsive col-12">
-  <%@include file="/WEB-INF/Budget_App/user_dash_buttons.jsp"%>
+
   <table class="table table-bordered">
 
 

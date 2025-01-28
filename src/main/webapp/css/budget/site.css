@@ -145,6 +145,11 @@ form .error {
     background-repeat: no-repeat;
 }
 
+#tablespace {
+    min-height: 600px;
+    height : 100%
+}
+
 @media screen and (max-width: 900px){ html,body {min-width:900px} }
 
 

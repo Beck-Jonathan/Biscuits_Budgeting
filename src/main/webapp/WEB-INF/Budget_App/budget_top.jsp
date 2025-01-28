@@ -64,6 +64,9 @@
 
 </header>
 <main>
+    <c:if test="${not empty User_B}">
+            <%@include file="/WEB-INF/Budget_App/user_dash_buttons.jsp"%>
+    </c:if>
     <div class ="row">
 
         <div class = "col-md-1 ps-0 " id="left" alt="left Hand Border" ></div>

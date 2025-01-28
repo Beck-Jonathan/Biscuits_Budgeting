@@ -4,7 +4,7 @@ Create the JSP For Viuw/Edit from the Category table
 **********--%>
 <%@include file="/WEB-INF/Budget_App/budget_top.jsp"%>
 <div class = "container">
-    <%@include file="/WEB-INF/Budget_App/user_dash_buttons.jsp"%>
+
     <form method="post" action="${appURL}/editCategory" id = "editCategory" >
         <!-- Category_ID -->
         <div class ="row" id = "row0">

@@ -4,7 +4,7 @@ Create the JSP  For adding to The  Category table
 **********--%>
 <%@include file="/WEB-INF/Budget_App/budget_top.jsp"%>
 <div class = "container">
-    <%@include file="/WEB-INF/Budget_App/user_dash_buttons.jsp"%>
+
     <form method="post" action="${appURL}/addTransactionCategory" id = "addCategory" >
         <!-- Category_ID -->
         <div class ="row" id = "row0">

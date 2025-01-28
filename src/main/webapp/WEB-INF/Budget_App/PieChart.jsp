@@ -6,7 +6,7 @@
     <div class="container">
         <h2 class="display-4 text-center">Welcome to Biscuit's Budgeting</h2>
         <p class="lead text-center">Let's make some money</p>
-        <div class="row">
+        <div class="row" id="tablespace">
 
             <!--Start chart Container -->
             <div id="barContainer" class="col col-md-8">
