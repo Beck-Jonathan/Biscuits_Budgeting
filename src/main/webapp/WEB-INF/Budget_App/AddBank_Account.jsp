@@ -30,7 +30,7 @@ Create the JSP  For adding to The  Bank_Account table
         <div class ="row" id = "row3">
             <label for="inputbank_accountBalance" class="form-label">Balance</label>
             <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.bank_accountBalanceerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Balance" id="inputbank_accountBalance" name="inputbank_accountBalance" value="${fn:escapeXml(results.Balance)}">
+                <input type="number" step="any" class="<c:if test="${not empty results.bank_accountBalanceerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1 input-symbol-dollar" placeholder="Balance" id="inputbank_accountBalance" name="inputbank_accountBalance" value="${fn:escapeXml(results.Balance)}">
                 <c:if test="${not empty results.bank_accountBalanceerror}">
                     <div class="invalid-feedback">${results.bank_accountBalanceerror}</div>
                 </c:if>
