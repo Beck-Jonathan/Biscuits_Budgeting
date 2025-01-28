@@ -73,10 +73,7 @@ public class AddBank_AccountServlet extends HttpServlet{
     if (_Bank_Account_ID!=null) {
       _Bank_Account_ID=_Bank_Account_ID.trim();
     }
-    String _User_ID = req.getParameter("inputbank_accountUser_ID");
-    if (_User_ID!=null) {
-      _User_ID=_User_ID.trim();
-    }
+
     String _Account_Nickname = req.getParameter("inputbank_accountAccount_Nickname");
     if (_Account_Nickname!=null) {
       _Account_Nickname=_Account_Nickname.trim();
@@ -91,7 +88,7 @@ public class AddBank_AccountServlet extends HttpServlet{
     }
     Map<String, String> results = new HashMap<>();
     results.put("Bank_Account_ID",_Bank_Account_ID);
-    results.put("User_ID",_User_ID);
+
     results.put("Account_Nickname",_Account_Nickname);
     results.put("Balance",_Balance);
     results.put("Balance_Date",_Balance_Date);
@@ -103,7 +100,7 @@ public class AddBank_AccountServlet extends HttpServlet{
       errors++;
     }
     try {
-      bank_account.setUser_ID(Integer.valueOf(_User_ID));
+      bank_account.setUser_ID(user.getUser_ID());
     } catch(Exception e) {results.put("bank_accountUser_IDerror", e.getMessage());
       errors++;
     }

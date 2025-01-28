@@ -25,7 +25,7 @@ console.log("ready on new version")
 	$("#Add").button();
 	$( "#Add" ).button( "option", "icon", "ui-icon-check" );
 	$( "#Add" ).button( "option", "showIcon", "true" );
-	$( "#Add" ).button( "option", "label", "Add Transaction" );
+	$( "#Add" ).button( "option", "label", "Upload Transactions" );
 
 	$("#Accounts").button();
 	$( "#Accounts" ).button( "option", "icon", "ui-icon-check" );
@@ -35,19 +35,19 @@ console.log("ready on new version")
 	$("#View").button();
 	$( "#View" ).button( "option", "icon", "ui-icon-check" );
 	$( "#View" ).button( "option", "showIcon", "true" );
-	$( "#View" ).button( "option", "label", "View" );
+	$( "#View" ).button( "option", "label", "View Transactions" );
 
 
 	$("#Category").button();
 	$( "#Category" ).button( "option", "icon", "ui-icon-check" );
 	$( "#Category" ).button( "option", "showIcon", "true" );
-	$( "#Category" ).button( "option", "label", "Category Management" );
+	$( "#Category" ).button( "option", "label", "Categories" );
 
 
 	$("#MoneyBreakdown").button();
 	$( "#MoneyBreakdown" ).button( "option", "icon", "ui-icon-check" );
 	$( "#MoneyBreakdown" ).button( "option", "showIcon", "true" );
-	$( "#MoneyBreakdown" ).button( "option", "label", "BreakDown" );
+	$( "#MoneyBreakdown" ).button( "option", "label", "Yearly Summary" );
 
 	$("#Export").button();
 	$( "#Export" ).button( "option", "icon", "ui-icon-check" );

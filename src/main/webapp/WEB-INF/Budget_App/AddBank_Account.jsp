@@ -15,20 +15,7 @@ Create the JSP  For adding to The  Bank_Account table
                 </c:if>
             </div>
         </div>
-        <!-- User_ID -->
-        <div class ="row" id = "row1">
-            <label for="inputbank_accountUser_ID" class="form-label">User_ID</label>
-            <div class="input-group input-group-lg">
-                <select  class="<c:if test="${not empty results.bank_accountUser_IDerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="User_ID" id="inputbank_accountUser_ID" name="inputbank_accountUser_ID" value="${fn:escapeXml(results.User_ID)}">
-                    <c:forEach items="${Users}" var="User">
-                        <option value="${User.user_ID}">${User.name}   </option>
-                    </c:forEach>
-                </select>
-                <c:if test="${not empty results.bank_accountUser_IDerror}">
-                    <div class="invalid-feedback">${results.bank_accountUser_IDerror}</div>
-                </c:if>
-            </div>
-        </div>
+
         <!-- Account_Nickname -->
         <div class ="row" id = "row2">
             <label for="inputbank_accountAccount_Nickname" class="form-label">Account_Nickname</label>
@@ -53,7 +40,7 @@ Create the JSP  For adding to The  Bank_Account table
         <div class ="row" id = "row4">
             <label for="inputbank_accountBalance_Date" class="form-label">Balance_Date</label>
             <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.bank_accountBalance_Dateerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Balance_Date" id="inputbank_accountBalance_Date" name="inputbank_accountBalance_Date" value="${fn:escapeXml(results.Balance_Date)}">
+                <input type="date" class="<c:if test="${not empty results.bank_accountBalance_Dateerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Balance_Date" id="inputbank_accountBalance_Date" name="inputbank_accountBalance_Date" value="${fn:escapeXml(results.Balance_Date)}">
                 <c:if test="${not empty results.bank_accountBalance_Dateerror}">
                     <div class="invalid-feedback">${results.bank_accountBalance_Dateerror}</div>
                 </c:if>

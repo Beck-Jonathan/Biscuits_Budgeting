@@ -114,7 +114,7 @@ public class Bank_AccountDAO implements iBank_AccountDAO {
   }
   /**
    * DAO Method to add Bank_Account objects
-   * @param Bank_Account the Bank_Account to be added
+   * @param _bank_account the Bank_Account to be added
    * @return number of records added
    * @author Jonathan Beck
    */
@@ -126,7 +126,8 @@ public class Bank_AccountDAO implements iBank_AccountDAO {
           statement.setInt(2,_bank_account.getUser_ID());
           statement.setString(3,_bank_account.getAccount_Nickname());
           statement.setDouble(4,_bank_account.getBalance());
-          statement.setDate(5, (java.sql.Date) _bank_account.getBalance_Date());
+          java.sql.Date newDate = new java.sql.Date(_bank_account.getBalance_Date().getTime());
+          statement.setDate(5,newDate);
           numRowsAffected = statement.executeUpdate();
           if (numRowsAffected == 0) {
             throw new RuntimeException("Could not add Bank_Account. Try again later");
