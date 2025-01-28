@@ -244,7 +244,7 @@ public class TransactionDAO implements iTransactionDAO {
               int x = 0;
             }
           }
-          Double Amount = creditAmount - debitAmount;
+          Double Amount = creditAmount + debitAmount;
           String Type = Amount > 0 ? "Credit" : "Debit";
           String Status = "Posted";
           Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", accountNumber, Post_Date, Check_No, Description, Amount, Type, Status);
