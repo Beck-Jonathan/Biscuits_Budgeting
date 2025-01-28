@@ -16,7 +16,7 @@ Create the JSP  For Viewing All of The  Category table
                     <tr>
                         <c:forEach var="i" begin="0" end="${breakdown.size()-2}">
 
-                        <th>${breakdown[0][0].year-i}</th>
+                        <th>${breakdown[0][0].year+i}</th>
 
 
                     </c:forEach>
@@ -31,7 +31,7 @@ Create the JSP  For Viewing All of The  Category table
                     <c:forEach var="l" begin="0" end="${breakdown.size()-2}">
 
                             <td>
-                                <a href="all-Transactions?category=${breakdown[0][k].category_ID}&year=${breakdown[0][0].year-l}" > $ ${breakdown[l][k].amount}  <br/> Count:${breakdown[l][k].count}</a>
+                                <a href="all-Transactions?category=${breakdown[0][k].category_ID}&year=${breakdown[0][0].year+l}" > $ ${breakdown[l][k].amount}  <br/> Count:${breakdown[l][k].count}</a>
                             </td>
 
                     </c:forEach>
