@@ -19,7 +19,7 @@ Create the JSP  For adding to The  User table
         <div class ="row" id = "row1">
             <label for="inputuserUser_PW" class="form-label">User_PW</label>
             <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.userUser_PWerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="User_PW" id="inputuserUser_PW" name="inputuserUser_PW" value="${fn:escapeXml(results.User_PW)}">
+                <input type="password" class="<c:if test="${not empty results.userUser_PWerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="User_PW" id="inputuserUser_PW" name="inputuserUser_PW" value="${fn:escapeXml(results.User_PW)}">
                 <c:if test="${not empty results.userUser_PWerror}">
                     <div class="invalid-feedback">${results.userUser_PWerror}</div>
                 </c:if>
@@ -29,7 +29,7 @@ Create the JSP  For adding to The  User table
         <div class ="row" id = "row2">
             <label for="inputuserUser_PW2" class="form-label">User_PW</label>
             <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.userUser_PWerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="User_PW" id="inputuserUser_PW2" name="inputuserUser_PW2" value="${fn:escapeXml(results.User_PW)}">
+                <input type="password" class="<c:if test="${not empty results.userUser_PWerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="User_PW" id="inputuserUser_PW2" name="inputuserUser_PW2" value="${fn:escapeXml(results.User_PW)}">
                 <c:if test="${not empty results.userUser_PWerror}">
                     <div class="invalid-feedback">${results.userUser_PWerror}</div>
                 </c:if>
