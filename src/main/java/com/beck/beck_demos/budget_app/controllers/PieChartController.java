@@ -52,6 +52,12 @@ public class PieChartController extends HttpServlet {
     } catch (Exception e) {
       results.put("dbError","database Error");
     }
+    if (breakdown.isEmpty()) {
+      results.put("dbError","No data found");
+      req.setAttribute("pageTitle", "Pie Chart");
+      req.getRequestDispatcher("WEB-INF/Budget_App/PieChart.jsp").forward(req, resp);
+      return;
+    }
     for (List<Category_VM> category_vms : breakdown) {
       for (int i =0;i<category_vms.size();i++) {
         if (category_vms.get(i).getCategory_ID().equals("total in")){

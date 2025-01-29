@@ -139,6 +139,7 @@ class AddBank_AccountServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
+    user.setUser_ID(39);
     session.setAttribute("User_B",user);
     request.setSession(session);
     request.setParameter("inputbank_accountBank_Account_ID","TestValue");
@@ -161,6 +162,7 @@ class AddBank_AccountServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
+    user.setUser_ID(39);
     session.setAttribute("User_B",user);
     request.setSession(session);
     request.setParameter("inputbank_accountBank_Account_ID","EXCEPTION");
@@ -187,6 +189,7 @@ class AddBank_AccountServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
+    user.setUser_ID(39);
     session.setAttribute("User_B",user);
     request.setSession(session);
     request.setParameter("inputbank_accountBank_Account_ID","DUPLICATE");

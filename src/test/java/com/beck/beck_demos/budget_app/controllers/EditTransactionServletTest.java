@@ -87,6 +87,7 @@ class EditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
+    user.setUser_ID(39);
     session.setAttribute("User_B",user);
     request.setSession(session);
 //to set the old Transaction
@@ -123,6 +124,7 @@ class EditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
+    user.setUser_ID(39);
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doPost(request,response);
@@ -169,6 +171,7 @@ class EditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
+    user.setUser_ID(39);
     session.setAttribute("User_B",user);
     request.setSession(session);
 //to set the old Transaction
@@ -205,6 +208,7 @@ class EditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
+    user.setUser_ID(39);
     session.setAttribute("User_B",user);
     request.setSession(session);
 //to set the old Transaction

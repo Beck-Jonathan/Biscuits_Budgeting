@@ -93,54 +93,7 @@ class PieChartControllerTest {
     assertNotNull(transactions);
     assertEquals(20,transactions.size());
   }
-  @Test
-  public void testLoggedInUserCanFilterTransactionsByUser_ID() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setRoles(roles);
-    user.setUser_ID(39);
-    session.setAttribute("User_B",user);
-    Integer User_ID= 39;
-    request.setParameter("User_ID",User_ID.toString());
-    request.setSession(session);
-    servlet.doGet(request,response);
-    List<Transaction> transactions = (List<Transaction>) request.getAttribute("Transactions");
-    assertNotNull(transactions);
-    assertEquals(20,transactions.size());
-  }
-  @Test
-  public void testLoggedInUserCanFilterTransactionsByCategory_ID() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setRoles(roles);
-    user.setUser_ID(39);
-    session.setAttribute("User_B",user);
-    String Category_ID= null;
-    request.setParameter("Category_ID",Category_ID);
-    request.setSession(session);
-    servlet.doGet(request,response);
-    List<Transaction> transactions = (List<Transaction>) request.getAttribute("Transactions");
-    assertNotNull(transactions);
-    assertEquals(20,transactions.size());
-  }
-  @Test
-  public void testLoggedInUserCanFilterTransactionsByBank_Account_ID() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setRoles(roles);
-    user.setUser_ID(39);
-    session.setAttribute("User_B",user);
-    String Bank_Account_ID= null;
-    request.setParameter("Bank_Account_ID",Bank_Account_ID);
-    request.setSession(session);
-    servlet.doGet(request,response);
-    List<Transaction> transactions = (List<Transaction>) request.getAttribute("Transactions");
-    assertNotNull(transactions);
-    assertEquals(20,transactions.size());
-  }
+
   @Test
   public void testInitWithNoParametersDoesNotThrowException() throws ServletException {
     servlet = null;

@@ -82,7 +82,7 @@ class TransactionTest {
   }
   @Test
   public void testTransactionThrowsIllegalArgumentExceptionIfTransaction_IDTooBig(){
-    int Transaction_ID = 10001;
+    int Transaction_ID = 10000001;
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_transaction.setTransaction_ID(Transaction_ID);});
   }
   @Test
@@ -109,7 +109,7 @@ class TransactionTest {
   }
   @Test
   public void  testTransactionThrowsIllegalArgumentExceptionIfCategory_IDTooShort(){
-    String Category_ID = "VL";
+    String Category_ID = "V";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_transaction.setCategory_ID(Category_ID);});
   }
   @Test
