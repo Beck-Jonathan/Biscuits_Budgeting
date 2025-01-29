@@ -32,6 +32,8 @@ public class BudgetHomeServlet extends HttpServlet{
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     HttpSession session = req.getSession();
     session.setAttribute("currentPage",req.getRequestURL());
+
+
     req.setAttribute("pageTitle", "Budget Home");
 
     req.getRequestDispatcher("WEB-INF/Budget_App/home.jsp").forward(req, resp);

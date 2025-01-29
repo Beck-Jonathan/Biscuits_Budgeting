@@ -36,6 +36,12 @@ public class UserSignUpServlet extends HttpServlet{
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     req.setAttribute("pageTitle", "Join Us!");
+    HttpSession session = req.getSession();
+    User user = (User)session.getAttribute("User_B");
+    if (user!=null){
+      resp.sendRedirect("/budget_home");
+      return;
+    }
 
 
     req.getRequestDispatcher("WEB-INF/Budget_App/UserSignUp.jsp").forward(req, resp);  }
@@ -44,6 +50,12 @@ public class UserSignUpServlet extends HttpServlet{
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     int id;
     req.setAttribute("pageTitle", "Join Us!");
+    HttpSession session = req.getSession();
+    User _user = (User)session.getAttribute("User_B");
+    if (_user!=null){
+      resp.sendRedirect("/budget_home");
+      return;
+    }
 
     String _User_Name = req.getParameter("inputuserUser_Name");
     String _User_PW = req.getParameter("inputuserUser_PW");
@@ -113,7 +125,7 @@ public class UserSignUpServlet extends HttpServlet{
     if (errors==0){
       try{
         result=userDAO.add(user);
-        HttpSession session = req.getSession();
+
         session.setAttribute("User_B",user);
       }catch(Exception ex){
         results.put("dbStatus","Database Error");
@@ -130,10 +142,6 @@ public class UserSignUpServlet extends HttpServlet{
           //String code = TwoFADAO.getTwoFAById(id);
           //EmailService.send2faCode_Roller(code,_Email);
 
-          HttpSession session = req.getSession();
-
-
-
           user.setUser_ID(id);
           user=userDAO.getUserByPrimaryKey(user);
           user.setUser_PW(null);
@@ -142,9 +150,6 @@ public class UserSignUpServlet extends HttpServlet{
           session.setAttribute("UserID",id);
           session.setAttribute("User_B",user);
           resp.sendRedirect("budget_home");
-
-
-
           return;
         } catch (SQLException e) {
           throw new RuntimeException(e);
@@ -156,7 +161,8 @@ public class UserSignUpServlet extends HttpServlet{
     }
     req.setAttribute("results", results);
     req.setAttribute("pageTitle", "Budget With Us ");
-    resp.sendRedirect("budget_home");
+    req.getRequestDispatcher("WEB-INF/Budget_App/UserSignUp.jsp").forward(req, resp);
+
 
   }
 }
