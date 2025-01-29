@@ -458,11 +458,13 @@ public class TransactionDAO implements iTransactionDAO {
                 int Year = resultSet.getInt(1);
                 String Category_ID = resultSet.getString(2);
                 int count = resultSet.getInt(3);
+
                 if (resultSet.wasNull()){
                   count = 0;
                 }
                 Double amount=resultSet.getDouble(4);
                 if (resultSet.wasNull()){
+                  count=0;
                   amount=0d;
                 }
                 if (Year!=startingYear){
