@@ -109,9 +109,9 @@ public class Bank_AccountDAO_Fake implements iBank_AccountDAO {
   }
 
   private boolean duplicateKey(Bank_Account _bank_account){
-    return _bank_account.getBank_Account_ID().equals("DUPLICATE");
+    return _bank_account.getBank_Account_ID().equals("xxxxxCATE");
   }
   private boolean exceptionKey(Bank_Account _bank_account){
-    return _bank_account.getBank_Account_ID().equals("EXCEPTION");
+    return _bank_account.getBank_Account_ID().equals("xxxxxTION");
   }
 }

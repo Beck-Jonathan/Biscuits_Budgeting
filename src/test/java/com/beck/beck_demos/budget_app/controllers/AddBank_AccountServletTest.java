@@ -166,7 +166,7 @@ class AddBank_AccountServletTest {
     session.setAttribute("User_B",user);
     request.setSession(session);
     request.setParameter("inputbank_accountBank_Account_ID","EXCEPTION");
-    request.setParameter("inputbank_accountUser_ID","406");
+
     request.setParameter("inputbank_accountAccount_Nickname","EXCEPTION");
     request.setParameter("inputbank_accountBalance","406.23");
     request.setParameter("inputbank_accountBalance_Date","2024-4-4");
