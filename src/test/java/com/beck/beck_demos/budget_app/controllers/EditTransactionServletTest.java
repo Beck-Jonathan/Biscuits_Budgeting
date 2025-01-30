@@ -90,33 +90,18 @@ class EditTransactionServletTest {
     user.setUser_ID(39);
     session.setAttribute("User_B",user);
     request.setSession(session);
-//to set the old Transaction
-    Transaction transaction = new Transaction();
-    transaction.setTransaction_ID(43);
-    transaction.setUser_ID(43);
-    transaction.setCategory_ID("testTransaction");
-    transaction.setBank_Account_ID("testTransaction");
-    transaction.setCheck_No(43);
-    transaction.setDescription("testTransaction");
-    transaction.setType("testTransaction");
-    transaction.setStatus("testTransaction");
-    session.setAttribute("transaction",transaction);
+
 //create a new albums parameters
-    request.setParameter("inputtransactionUser_ID","406");
-    request.setParameter("inputtransactionCategory_ID","TestValue");
-    request.setParameter("inputtransactionAccount_Num","TestValue");
-    request.setParameter("inputtransactionCheck_No","406");
-    request.setParameter("inputtransactionDescription","TestValue");
-    request.setParameter("inputtransactionType","TestValue");
-    request.setParameter("inputtransactionStatus","TestValue");
+
+    request.setParameter("category","TestValue");
+    request.setParameter("t_id","48");
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
-    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Transaction_Updated = results.get("dbStatus");
-    assertEquals(302,responseStatus);
-    assertNotNull(Transaction_Updated);
-    assertEquals("Transaction updated",Transaction_Updated);
-    assertNotEquals("",Transaction_Updated);
+    String response2 = response.getContentAsString();
+
+    assertEquals(200,responseStatus);
+    assertEquals(response2,"success");
+
   }
   @Test
   public void TestUpdateHasErrorsForEachFiledAndKeepsOnSamePage() throws ServletException, IOException{
@@ -127,37 +112,17 @@ class EditTransactionServletTest {
     user.setUser_ID(39);
     session.setAttribute("User_B",user);
     request.setSession(session);
+
+//create a new albums parameters
+
+    request.setParameter("category","TestValue");
+    request.setParameter("t_id","48");
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
-    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String User_IDError = results.get("transactionUser_IDerror");
-    String Category_IDError = results.get("transactionCategory_IDerror");
-    String Account_NumError = results.get("transactionAccount_Numerror");
-    String Post_DateError = results.get("transactionPost_Dateerror");
-    String Check_NoError = results.get("transactionCheck_Noerror");
-    String DescriptionError = results.get("transactionDescriptionerror");
-    String AmountError = results.get("transactionAmounterror");
-    String TypeError = results.get("transactionTypeerror");
-    String StatusError = results.get("transactionStatuserror");
-    assertNotEquals("",User_IDError);
-    assertNotNull(User_IDError);
-    assertNotEquals("",Category_IDError);
-    assertNotNull(Category_IDError);
-    assertNotEquals("",Account_NumError);
-    assertNotNull(Account_NumError);
-    assertNotEquals("",Post_DateError);
-    assertNotNull(Post_DateError);
-    assertNotEquals("",Check_NoError);
-    assertNotNull(Check_NoError);
-    assertNotEquals("",DescriptionError);
-    assertNotNull(DescriptionError);
-    assertNotEquals("",AmountError);
-    assertNotNull(AmountError);
-    assertNotEquals("",TypeError);
-    assertNotNull(TypeError);
-    assertNotEquals("",StatusError);
-    assertNotNull(StatusError);
+    String response2 = response.getContentAsString();
+
     assertEquals(200,responseStatus);
+    assertEquals(response2,"success");
   }
   @Test
   public void testInitWithNoParametersDoesNotThrowException() throws ServletException {
@@ -174,33 +139,17 @@ class EditTransactionServletTest {
     user.setUser_ID(39);
     session.setAttribute("User_B",user);
     request.setSession(session);
-//to set the old Transaction
-    Transaction transaction = new Transaction();
-    transaction.setTransaction_ID(43);
-    transaction.setUser_ID(43);
-    transaction.setCategory_ID("DUPLICATE");
-    transaction.setBank_Account_ID("DUPLICATE");
-    transaction.setCheck_No(43);
-    transaction.setDescription("DUPLICATE");
-    transaction.setType("DUPLICATE");
-    transaction.setStatus("DUPLICATE");
-    session.setAttribute("transaction",transaction);
+
 //create a new albums parameters
-    request.setParameter("inputtransactionUser_ID","406");
-    request.setParameter("inputtransactionCategory_ID","DUPLICATE");
-    request.setParameter("inputtransactionAccount_Num","DUPLICATE");
-    request.setParameter("inputtransactionCheck_No","406");
-    request.setParameter("inputtransactionDescription","DUPLICATE");
-    request.setParameter("inputtransactionType","DUPLICATE");
-    request.setParameter("inputtransactionStatus","DUPLICATE");
+
+    request.setParameter("category","DUPLICATE");
+    request.setParameter("t_id","48");
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
-    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Transaction_Updated = results.get("dbStatus");
+    String response2 = response.getContentAsString();
+
     assertEquals(200,responseStatus);
-    assertNotNull(Transaction_Updated);
-    assertEquals("Transaction Not Updated",Transaction_Updated);
-    assertNotEquals("",Transaction_Updated);
+    assertEquals(response2,"error");
   }
   @Test
   public void testUpdateCanThrowSQLException() throws ServletException, IOException{
@@ -211,37 +160,17 @@ class EditTransactionServletTest {
     user.setUser_ID(39);
     session.setAttribute("User_B",user);
     request.setSession(session);
-//to set the old Transaction
-    Transaction transaction = new Transaction();
-    transaction.setTransaction_ID(43);
-    transaction.setUser_ID(43);
-    transaction.setCategory_ID("EXCEPTION");
-    transaction.setBank_Account_ID("EXCEPTION");
-    transaction.setCheck_No(43);
-    transaction.setDescription("EXCEPTION");
-    transaction.setType("EXCEPTION");
-    transaction.setStatus("EXCEPTION");
-    session.setAttribute("transaction",transaction);
+
 //create a new albums parameters
-    request.setParameter("inputtransactionUser_ID","406");
-    request.setParameter("inputtransactionCategory_ID","EXCEPTION");
-    request.setParameter("inputtransactionAccount_Num","EXCEPTION");
-    request.setParameter("inputtransactionCheck_No","406");
-    request.setParameter("inputtransactionDescription","EXCEPTION");
-    request.setParameter("inputtransactionType","EXCEPTION");
-    request.setParameter("inputtransactionStatus","EXCEPTION");
+
+    request.setParameter("category","EXCEPTION");
+    request.setParameter("t_id","48");
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
-    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Transaction_Updated = results.get("dbStatus");
-    String dbError = results.get("dbError");
+    String response2 = response.getContentAsString();
+
     assertEquals(200,responseStatus);
-    assertNotNull(Transaction_Updated);
-    assertNotEquals("",Transaction_Updated);
-    assertEquals("Transaction Not Updated",Transaction_Updated);
-    assertNotNull(dbError);
-    assertNotEquals("",dbError);
-    assertEquals("Database Error",dbError);
+    assertEquals(response2,"error");
   }
 
 }

@@ -82,7 +82,21 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   }
   @Override
   public int update_category(Transaction oldTransaction, Transaction newTransaction) throws SQLException {
-    return 0;
+    if (duplicateKey(newTransaction)){
+      return 0;
+    }
+    if (exceptionKey(newTransaction)){
+      throw new SQLException("error");
+    }
+    int result =0;
+    for (Transaction transaction : transactionVMs) {
+      if (transaction.getUser_ID().equals(oldTransaction.getUser_ID()) && transaction.getTransaction_ID().equals(oldTransaction.getTransaction_ID())) {
+        transaction.setCategory_ID(newTransaction.getCategory_ID());
+        result = 1;
+        break;
+      }
+    }
+    return result;
   }
 
   @Override
@@ -241,5 +255,11 @@ public class TransactionDAO_Fake implements iTransactionDAO {
     }
     transactionVMs.set(location, newTransaction);
     return result;
+  }
+  private boolean duplicateKey(Transaction _transaction){
+    return _transaction.getCategory_ID().equals("DUPLICATE");
+  }
+  private boolean exceptionKey(Transaction _transaction){
+    return _transaction.getCategory_ID().equals("EXCEPTION");
   }
 }
