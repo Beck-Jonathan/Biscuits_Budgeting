@@ -23,7 +23,7 @@ public class Bank_Account implements Comparable<Bank_Account> {
 
   public Bank_Account(String Bank_Account_ID, Integer User_ID, String Account_Nickname, Double Balance, Date Balance_Date) {
 
-    this.Bank_Account_ID = Bank_Account_ID;
+    setBank_Account_ID(Bank_Account_ID);
     this.User_ID = User_ID;
     this.Account_Nickname = Account_Nickname;
     this.Balance = Balance;

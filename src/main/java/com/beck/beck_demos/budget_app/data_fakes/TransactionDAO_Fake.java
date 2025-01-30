@@ -3,11 +3,14 @@ package com.beck.beck_demos.budget_app.data_fakes;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
 import com.beck.beck_demos.budget_app.models.Category_VM;
 import com.beck.beck_demos.budget_app.models.Transaction;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.io.File;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class TransactionDAO_Fake implements iTransactionDAO {
@@ -15,10 +18,10 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   public TransactionDAO_Fake(){
     transactionVMs = new ArrayList<>();
     Transaction transaction0 = new Transaction(48, 39, "VYGHLkTb", "QpdcuMNh", new Date(104,4,4), 33, "VgODYmMt", 27.39, "jxXIlhEk", "rEnyujbY");
-    Transaction transaction1 = new Transaction(51, 39, "VOjBYhTG", "wGVgUyqC", new Date(104,4,4), 62, "SYitpUcb", 40.71, "ZvgdjWwV", "aiinejwU");
-    Transaction transaction2 = new Transaction(21, 39, "joHsrOAN", "gUhOfpFp", new Date(104,4,4), 50, "AZkwwBJm", 53.18, "fEJrGJrm", "VEXdjchS");
-    Transaction transaction3 = new Transaction(12, 39, "icxwjdNm", "mfXhQabL", new Date(104,4,4), 58, "IwSZGvBH", 36.77, "MYmIGDGh", "GZTvEyiI");
-    Transaction transaction4 = new Transaction(32, 39, "vSuHXsKk", "QqmnUsOb", new Date(104,4,4), 34, "JskerTkw", 43.43, "EnEBtxaR", "pJPfqAHe");
+    Transaction transaction1 = new Transaction(51, 39, "VOjBYhTG", "wGVgUyqC", new Date(103,4,4), 62, "SYitpUcb", 40.71, "ZvgdjWwV", "aiinejwU");
+    Transaction transaction2 = new Transaction(21, 39, "joHsrOAN", "gUhOfpFp", new Date(102,4,4), 50, "AZkwwBJm", 53.18, "fEJrGJrm", "VEXdjchS");
+    Transaction transaction3 = new Transaction(12, 39, "icxwjdNm", "mfXhQabL", new Date(101,4,4), 58, "IwSZGvBH", 36.77, "MYmIGDGh", "GZTvEyiI");
+    Transaction transaction4 = new Transaction(32, 39, "vSuHXsKk", "QqmnUsOb", new Date(100,4,4), 34, "JskerTkw", 43.43, "EnEBtxaR", "pJPfqAHe");
     Transaction transaction5 = new Transaction(41, 10, "ptnICffX", "rwmsMYgP", new Date(104,4,4), 38, "SxPBFTiM", 15.37, "deXThtDl", "eYVZYrWV");
     Transaction transaction6 = new Transaction(36, 35, "ptnICffX", "TrDRqemY", new Date(104,4,4), 58, "SZansbOr", 59.61, "rBnCwofS", "pfKQQWCX");
     Transaction transaction7 = new Transaction(68, 17, "ptnICffX", "pIynhxtd", new Date(104,4,4), 41, "xSDBTUoS", 56.12, "TActccBN", "qoXkKeCJ");
@@ -152,7 +155,38 @@ public class TransactionDAO_Fake implements iTransactionDAO {
 
   @Override
   public List<List<Category_VM>> getAnalysis(List<List<Category_VM>> years, int user_ID) throws SQLException {
-    return new ArrayList<List<Category_VM>>();
+     ArrayList<List<Category_VM>> analysis = new ArrayList<List<Category_VM>>();
+     ArrayList<Transaction> transactions = new ArrayList<>();
+    HashSet<String> categories = new HashSet<>();
+    int minYear = 9999;
+    int maxYear = 0;
+     for (Transaction t : transactionVMs) {
+       if (t.getUser_ID().equals(user_ID)) {
+         transactions.add(t);
+         categories.add(t.getCategory_ID());
+       }
+       if (t.getPost_Date().getYear()<minYear){
+         minYear = t.getPost_Date().getYear();
+       }
+       if (t.getPost_Date().getYear()>maxYear){
+         maxYear = t.getPost_Date().getYear();
+       }
+     }
+     List<Integer> useryears = new ArrayList<>();
+     for (int i = minYear; i <= maxYear; i++) {
+       useryears.add(i);
+     }
+     for (int i = 0; i<useryears.size(); i++) {
+       List<Category_VM> category_vms = new ArrayList<>();
+       for (String category : categories) {
+          Category_VM category_vm = new Category_VM();
+          category_vm.setCategory_ID(category);
+         category_vms.add(category_vm);
+       }
+       analysis.add(category_vms);
+     }
+
+     return analysis;
   }
 
   @Override

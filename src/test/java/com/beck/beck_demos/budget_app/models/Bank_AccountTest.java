@@ -47,10 +47,18 @@ class Bank_AccountTest {
   }
   @Test
   public void testBank_AccountKeyedParameterizedConstructorSetsKeyedVariables(){
+    String id = "KcAkSkHQeSTQCyIWBGOebpUWSyKCcywlCTPtDIotDObTAMYVuZBJVuXIGbuSVyesXxZkamCoxwdNCRSFceyiRHuLoUTvrFvAmb";
     Bank_Account _bank_account= new Bank_Account(
-        "KcAkSkHQeSTQCyIWBGOebpUWSyKCcywlCTPtDIotDObTAMYVuZBJVuXIGbuSVyesXxZkamCoxwdNCRSFceyiRHuLoUTvrFvAmb"
+        id
     );
-    Assertions.assertEquals("KcAkSkHQeSTQCyIWBGOebpUWSyKCcywlCTPtDIotDObTAMYVuZBJVuXIGbuSVyesXxZkamCoxwdNCRSFceyiRHuLoUTvrFvAmb",_bank_account.getBank_Account_ID());
+    char[] censored_id = id.toCharArray();
+    for (int i =0; i<censored_id.length-4;i++){
+      censored_id[i]='x';
+    }
+    String _censored_id = new String(censored_id);
+
+
+    Assertions.assertEquals(_censored_id,_bank_account.getBank_Account_ID());
     Assertions.assertNull(_bank_account.getUser_ID());
     Assertions.assertNull(_bank_account.getAccount_Nickname());
     Assertions.assertNull(_bank_account.getBalance());
@@ -69,8 +77,14 @@ class Bank_AccountTest {
   @Test
   public void testSetBank_Account_IDSetsBank_Account_ID(){
     String Bank_Account_ID = "DybwUFsVmjLFBsJFpvFxxAnpaTxJLDfQZJPnumhittGSYNCExgkVrkuLMfCUbdfgfbKDNOHqwZDCNmRAaSshmXlriaBCgKSQfl";
+    char[] censored_id = Bank_Account_ID.toCharArray();
+    for (int i =0; i<censored_id.length-4;i++){
+      censored_id[i]='x';
+    }
+    String _censored_id = new String(censored_id);
+
     _bank_account.setBank_Account_ID(Bank_Account_ID);
-    Assertions.assertEquals(Bank_Account_ID,_bank_account.getBank_Account_ID());
+    Assertions.assertEquals(_censored_id,_bank_account.getBank_Account_ID());
   }
   @Test
   public void testBank_AccountThrowsIllegalArgumentExceptionIfUser_IDTooSmall(){

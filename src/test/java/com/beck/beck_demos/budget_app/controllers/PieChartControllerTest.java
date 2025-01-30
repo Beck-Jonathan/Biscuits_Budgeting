@@ -7,6 +7,7 @@ import java.util.*;
 import com.beck.beck_demos.budget_app.data_fakes.CategoryDAO_Fake;
 import com.beck.beck_demos.budget_app.data_fakes.TransactionDAO_Fake;
 import com.beck.beck_demos.budget_app.data_fakes.UserDAO_Fake;
+import com.beck.beck_demos.budget_app.models.Category_VM;
 import com.beck.beck_demos.budget_app.models.Transaction;
 
 import com.beck.beck_demos.budget_app.models.User;
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PieChartControllerTest {
 
-  private static final String PAGE="WEB-INF/budget_app/All_Transaction.jsp";
+  private static final String PAGE="WEB-INF/Budget_App/PieChart.jsp";
   PieChartController servlet;
   MockHttpServletRequest request;
   MockHttpServletResponse response;
@@ -89,9 +90,16 @@ class PieChartControllerTest {
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doGet(request,response);
-    List<Transaction> transactions = (List<Transaction>) request.getAttribute("Transactions");
-    assertNotNull(transactions);
-    assertEquals(20,transactions.size());
+    ArrayList<List<Category_VM>> breakdown = (ArrayList<List<Category_VM>>) session.getAttribute("Breakdown");
+    ArrayList<Integer> allYears = (ArrayList<Integer>) session.getAttribute("yearRange");
+    List<String> Categories = (List) session.getAttribute("Categories");
+    assertNotNull(breakdown);
+    assertNotNull(allYears);
+    assertNotNull(Categories);
+    assertEquals(5,breakdown.size());
+    assertEquals(5,allYears.size());
+    assertEquals(5,Categories.size());
+
   }
 
   @Test
