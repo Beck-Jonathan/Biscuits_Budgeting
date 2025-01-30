@@ -3,6 +3,9 @@ package com.beck.beck_demos.budget_app.models;
 import java.util.Date;
 import org.jetbrains.annotations.NotNull;
 
+import static java.lang.Character.isAlphabetic;
+import static java.lang.Character.isDigit;
+
 /**
  * @ author Jonathan Beck
  * @ version 1.0
@@ -30,7 +33,7 @@ public class Transaction implements Comparable<Transaction> {
     this.Transaction_ID = Transaction_ID;
     this.User_ID = User_ID;
     this.Category_ID = Category_ID;
-    this.Bank_Account_ID = Bank_Account_ID;
+    setBank_Account_ID(Bank_Account_ID);
     this.Post_Date = Post_Date;
     this.Check_No = Check_No;
     this.Description = Description;
@@ -78,13 +81,22 @@ public class Transaction implements Comparable<Transaction> {
     return Bank_Account_ID;
   }
   public void setBank_Account_ID(String Bank_Account_ID) {
-    Bank_Account_ID = Bank_Account_ID.replaceAll("[^A-Za-z0-9 - ]","");
+    Bank_Account_ID=Bank_Account_ID.trim();
+    Bank_Account_ID = Bank_Account_ID.replaceAll("[^-A-Za-z0-9 - ]","");
     if(Bank_Account_ID.length()<4){
       throw new IllegalArgumentException("Bank_Account_ID is too short.");
     }
     if(Bank_Account_ID.length()>100){
       throw new IllegalArgumentException("Bank_Account_ID is too long.");
     }
+    int size = Bank_Account_ID.length();
+    char[] account_no = Bank_Account_ID.toCharArray();
+    for (int i=0;i<size-4;i++){
+      if(isDigit(account_no[i])||isAlphabetic(account_no[i])){
+        account_no[i]='x';
+      }
+    }
+    Bank_Account_ID = new String(account_no);
     this.Bank_Account_ID = Bank_Account_ID;
   }
   public Date getPost_Date() {

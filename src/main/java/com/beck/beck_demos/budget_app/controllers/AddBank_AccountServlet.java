@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static java.lang.Character.isAlphabetic;
+import static java.lang.Character.isDigit;
+
 /******************
  Create the Servlet  For adding to The  Bank_Account table
  Created By Jonathan Beck 1/22/2025
@@ -72,6 +75,7 @@ public class AddBank_AccountServlet extends HttpServlet{
     String _Bank_Account_ID = req.getParameter("inputbank_accountBank_Account_ID");
     if (_Bank_Account_ID!=null) {
       _Bank_Account_ID=_Bank_Account_ID.trim();
+
     }
 
     String _Account_Nickname = req.getParameter("inputbank_accountAccount_Nickname");

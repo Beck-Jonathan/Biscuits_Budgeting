@@ -3,6 +3,9 @@ package com.beck.beck_demos.budget_app.models;
 import java.util.Date;
 import org.jetbrains.annotations.NotNull;
 
+import static java.lang.Character.isAlphabetic;
+import static java.lang.Character.isDigit;
+
 /**
  * @ author Jonathan Beck
  * @ version 1.0
@@ -29,12 +32,13 @@ public class Bank_Account implements Comparable<Bank_Account> {
 
   public Bank_Account(String Bank_Account_ID) {
 
-    this.Bank_Account_ID = Bank_Account_ID;
+    setBank_Account_ID(Bank_Account_ID);
   }
   public String getBank_Account_ID() {
     return Bank_Account_ID;
   }
   public void setBank_Account_ID(String Bank_Account_ID) {
+    Bank_Account_ID=Bank_Account_ID.trim();
     Bank_Account_ID = Bank_Account_ID.replaceAll("[^-A-Za-z0-9 - ]","");
     if(Bank_Account_ID.length()<4){
       throw new IllegalArgumentException("Bank_Account_ID is too short.");
@@ -42,6 +46,14 @@ public class Bank_Account implements Comparable<Bank_Account> {
     if(Bank_Account_ID.length()>100){
       throw new IllegalArgumentException("Bank_Account_ID is too long.");
     }
+    int size = Bank_Account_ID.length();
+    char[] account_no = Bank_Account_ID.toCharArray();
+    for (int i=0;i<size-4;i++){
+      if(isDigit(account_no[i])||isAlphabetic(account_no[i])){
+        account_no[i]='x';
+      }
+    }
+    Bank_Account_ID = new String(account_no);
     this.Bank_Account_ID = Bank_Account_ID;
   }
   public Integer getUser_ID() {
@@ -51,6 +63,7 @@ public class Bank_Account implements Comparable<Bank_Account> {
     if (User_ID<0||User_ID>10000){
       throw new IllegalArgumentException("User_ID Can Not Be Negative");
     }
+
     this.User_ID = User_ID;
   }
   public String getAccount_Nickname() {
