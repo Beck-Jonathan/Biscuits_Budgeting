@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,20 +32,28 @@ class Bank_AccountTest {
     Assertions.assertNull(_bank_account.getBalance_Date());
   }
   @Test
-  public void testBank_AccountParameterizedConstructorSetsAllVariables(){
+  public void testBank_AccountParameterizedConstructorSetsAllVariables() throws ParseException {
+    String bankAccountID = "VpCMGxsGTTXxOISJHwFRiDGJZenGfykNEgWBdoenSDvjyUTpDQSJyoZXgXMBYvHHMfbJZZPQdJeuJmUNCoVIPuVCiitaUwLVaD";
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    Date date = (Date) sdf.parse("2024-11-11");
     Bank_Account _bank_account= new Bank_Account(
-        "VpCMGxsGTTXxOISJHwFRiDGJZenGfykNEgWBdoenSDvjyUTpDQSJyoZXgXMBYvHHMfbJZZPQdJeuJmUNCoVIPuVCiitaUwLVaD",
+        bankAccountID,
         6778,
         "aoVyLNnmRreFiFilRMQPZjsUjOMYbigfMZVwCHrPXqunrPOYDUmXBUeFqQTlPuYCrPWUKJWQCsxryxANvPeqnPFbaueayVoWxC",
         71d,
-        new Date()
+        date
 
     );
-    Assertions.assertEquals("VpCMGxsGTTXxOISJHwFRiDGJZenGfykNEgWBdoenSDvjyUTpDQSJyoZXgXMBYvHHMfbJZZPQdJeuJmUNCoVIPuVCiitaUwLVaD",_bank_account.getBank_Account_ID());
+    char[] censored_id = bankAccountID.toCharArray();
+    for (int i =0; i<censored_id.length-4;i++){
+      censored_id[i]='x';
+    }
+    String _censored_id = new String(censored_id);
+    Assertions.assertEquals(_censored_id,_bank_account.getBank_Account_ID());
     Assertions.assertEquals(6778,_bank_account.getUser_ID());
     Assertions.assertEquals("aoVyLNnmRreFiFilRMQPZjsUjOMYbigfMZVwCHrPXqunrPOYDUmXBUeFqQTlPuYCrPWUKJWQCsxryxANvPeqnPFbaueayVoWxC",_bank_account.getAccount_Nickname());
     Assertions.assertEquals(71,_bank_account.getBalance());
-    Assertions.assertEquals(new Date(),_bank_account.getBalance_Date());
+    Assertions.assertEquals(date,_bank_account.getBalance_Date());
   }
   @Test
   public void testBank_AccountKeyedParameterizedConstructorSetsKeyedVariables(){
