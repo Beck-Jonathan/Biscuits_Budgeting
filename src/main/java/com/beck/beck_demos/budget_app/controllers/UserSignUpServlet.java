@@ -32,6 +32,9 @@ public class UserSignUpServlet extends HttpServlet{
   public void init() throws ServletException {
     userDAO = new UserDAO();
   }
+  public void init(iUserDAO userDAO){
+    this.userDAO = userDAO;
+  }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -51,8 +54,8 @@ public class UserSignUpServlet extends HttpServlet{
     int id;
     req.setAttribute("pageTitle", "Join Us!");
     HttpSession session = req.getSession();
-    User _user = (User)session.getAttribute("User_B");
-    if (_user!=null){
+    User _user = (User) session.getAttribute("User_B");
+    if (_user != null) {
       resp.sendRedirect("/budget_home");
       return;
     }
@@ -60,7 +63,10 @@ public class UserSignUpServlet extends HttpServlet{
     String _User_Name = req.getParameter("inputuserUser_Name");
     String _User_PW = req.getParameter("inputuserUser_PW");
     String _User_PW2 = req.getParameter("inputuserUser_PW2");
-    char[] _User_PWChar = _User_PW.toCharArray();
+    char[] _User_PWChar = new char[0];
+    if (_User_PW != null) {
+    _User_PWChar = _User_PW.toCharArray();
+   }
 
     String _Email = req.getParameter("inputuserEmail");
 
@@ -79,7 +85,8 @@ public class UserSignUpServlet extends HttpServlet{
 
     try {
       user.setUser_Name(_User_Name);
-    } catch(IllegalArgumentException e) {results.put("userUser_Nameerror3", e.getMessage());
+    } catch(Exception e) {
+      results.put("userUser_Nameerror3", e.getMessage());
       errors++;
     }
     boolean usernameFree = false;
@@ -95,12 +102,15 @@ public class UserSignUpServlet extends HttpServlet{
     }
     try {
       user.setUser_PW(_User_PWChar);
-    } catch(IllegalArgumentException e) {results.put("userUser_PWerror3", e.getMessage());
+    } catch(IllegalArgumentException e) {
+      results.put("userUser_PWerror3", e.getMessage());
       errors++;
     }
-    if (!_User_PW.equals(_User_PW2)){
-      results.put("userUser_PW2error", "Passwords do not match");
-      errors++;
+    if (_User_PW2 != null && _User_PW != null) {
+      if (!_User_PW.equals(_User_PW2)) {
+        results.put("userUser_PW2error", "Passwords do not match");
+        errors++;
+      }
     }
 
     try {
@@ -128,7 +138,7 @@ public class UserSignUpServlet extends HttpServlet{
 
         session.setAttribute("User_B",user);
       }catch(Exception ex){
-        results.put("dbStatus","Database Error");
+        results.put("dbError","Database Error");
       }
       if (result>0){
         results.put("dbStatus","User Added");
@@ -147,8 +157,10 @@ public class UserSignUpServlet extends HttpServlet{
           user.setUser_PW(null);
           List<String> roles = userDAO.getUser_Roles(user);
           user.setRoles(roles);
+          results.put("dbStatus","User Added");
           session.setAttribute("UserID",id);
           session.setAttribute("User_B",user);
+          req.setAttribute("results",results);
           resp.sendRedirect("budget_home");
           return;
         } catch (SQLException e) {
@@ -158,6 +170,9 @@ public class UserSignUpServlet extends HttpServlet{
         results.put("dbStatus","User Not Added");
 
       }
+    }
+    else {
+      results.put("dbStatus","User Not Added");
     }
     req.setAttribute("results", results);
     req.setAttribute("pageTitle", "Budget With Us ");

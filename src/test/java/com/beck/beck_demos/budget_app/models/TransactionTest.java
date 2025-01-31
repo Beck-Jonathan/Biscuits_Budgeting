@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,13 +36,21 @@ class TransactionTest {
     Assertions.assertNull(_transaction.getStatus());
   }
   @Test
-  public void testTransactionParameterizedConstructorSetsAllVariables(){
+  public void testTransactionParameterizedConstructorSetsAllVariables() throws ParseException {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    Date date = (Date) sdf.parse("2024-11-11");
+    String BankAccountID = "OMONHIdRyXaUEXWKPlsuMDHmKQiVqMlDUZMWrTMhaEAaUIVZdEeJlRBKyhxTbceLnRjxJnWYfnTICaYBtPklacQDXCXKVsFwZo";
+    char[] censored_id = BankAccountID.toCharArray();
+    for (int i =0; i<censored_id.length-4;i++){
+      censored_id[i]='x';
+    }
+    String _censored_id = new String(censored_id);
     Transaction _transaction= new Transaction(
         754,
         1081,
         "rDfKssjDroTwjtpyewSRUKBvmtSALiIRbDOjJuTDariNWtufwgmkgCiWyajqJgBVgfGpidPjnPXFKKdnRahZUqAaYHjNnpoTXC",
-        "OMONHIdRyXaUEXWKPlsuMDHmKQiVqMlDUZMWrTMhaEAaUIVZdEeJlRBKyhxTbceLnRjxJnWYfnTICaYBtPklacQDXCXKVsFwZo",
-        new Date()
+        BankAccountID,
+        date
         ,
         7670,
         "DYXPphMxwsHXPwYSrsdLAgHVMClhWhMnVbAuEUFSFtAtXmFaLaCkqHZJjPKtctUuRvnPFgaBNVRdRuQHBNSqfscKUDUyWADIluUKpsEJYUPCsVaPXLEkdBfOxQamZIVFmxgpyWYeviPRGBZODgqjjIJeFrxetGgmccqZYElYnukUHwqBWoOCNfUQagRnJeSYqhoecmYuoWoHAvHfqUSmDmLkGbinATilrBpGXHqrJkJPmnrUBaobgYhnFhbAb",
@@ -51,8 +61,8 @@ class TransactionTest {
     Assertions.assertEquals(754,_transaction.getTransaction_ID());
     Assertions.assertEquals(1081,_transaction.getUser_ID());
     Assertions.assertEquals("rDfKssjDroTwjtpyewSRUKBvmtSALiIRbDOjJuTDariNWtufwgmkgCiWyajqJgBVgfGpidPjnPXFKKdnRahZUqAaYHjNnpoTXC",_transaction.getCategory_ID());
-    Assertions.assertEquals("OMONHIdRyXaUEXWKPlsuMDHmKQiVqMlDUZMWrTMhaEAaUIVZdEeJlRBKyhxTbceLnRjxJnWYfnTICaYBtPklacQDXCXKVsFwZo",_transaction.getBank_Account_ID());
-    Assertions.assertEquals(new Date(),_transaction.getPost_Date());
+    Assertions.assertEquals(_censored_id,_transaction.getBank_Account_ID());
+    Assertions.assertEquals(date,_transaction.getPost_Date());
     Assertions.assertEquals(7670,_transaction.getCheck_No());
     Assertions.assertEquals("DYXPphMxwsHXPwYSrsdLAgHVMClhWhMnVbAuEUFSFtAtXmFaLaCkqHZJjPKtctUuRvnPFgaBNVRdRuQHBNSqfscKUDUyWADIluUKpsEJYUPCsVaPXLEkdBfOxQamZIVFmxgpyWYeviPRGBZODgqjjIJeFrxetGgmccqZYElYnukUHwqBWoOCNfUQagRnJeSYqhoecmYuoWoHAvHfqUSmDmLkGbinATilrBpGXHqrJkJPmnrUBaobgYhnFhbAb",_transaction.getDescription());
     Assertions.assertEquals(42.36,_transaction.getAmount());
@@ -134,10 +144,16 @@ class TransactionTest {
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_transaction.setBank_Account_ID(Account_Num);});
   }
   @Test
-  public void testSetAccount_NumSetsAccount_Num(){
-    String Account_Num = "mqyPJBQoPhkxBErbTELbiQxUChvmfriPTaNubFWeohOyPppiQOPxLfllblkEFRcbOuFdSeIgPDHfvpJYLAUUaIkATeaiVeXRTj";
-    _transaction.setBank_Account_ID(Account_Num);
-    Assertions.assertEquals(Account_Num,_transaction.getBank_Account_ID());
+  public void testSetBankAccountIDSetsBankAccountID(){
+    String BankAccountID = "mqyPJBQoPhkxBErbTELbiQxUChvmfriPTaNubFWeohOyPppiQOPxLfllblkEFRcbOuFdSeIgPDHfvpJYLAUUaIkATeaiVeXRTj";
+    char[] censored_id = BankAccountID.toCharArray();
+    for (int i =0; i<censored_id.length-4;i++){
+      censored_id[i]='x';
+    }
+    String _censored_id = new String(censored_id);
+
+    _transaction.setBank_Account_ID(BankAccountID);
+    Assertions.assertEquals(_censored_id,_transaction.getBank_Account_ID());
   }
   @Test
   public void testTransactionThrowsIllegalArgumentExceptionIfCheck_NoTooSmall(){

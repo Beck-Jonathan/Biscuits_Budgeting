@@ -99,6 +99,9 @@ public class User implements Comparable<User>{
         throw new IllegalArgumentException("Invalid Email");
       }
     }
+    else {
+      throw new IllegalArgumentException("Invalid Email");
+    }
     this.Email = Email;
   }
   @Override

@@ -19,7 +19,7 @@ import static com.beck.beck_demos.budget_app.data.Database.getConnection;
  */
 
 public interface iUserDAO {
-  int add(User _user);
+  int add(User _user) throws SQLException;
   int getUserID(String email) throws SQLException;
 
   User getUserByPrimaryKey(User _user) throws SQLException ;

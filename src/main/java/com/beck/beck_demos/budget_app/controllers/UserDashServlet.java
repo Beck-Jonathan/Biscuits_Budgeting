@@ -41,26 +41,10 @@ public class UserDashServlet extends HttpServlet{
       return;
     }
     session.setAttribute("currentPage",req.getRequestURL());
-    req.setAttribute("pageTitle", "User Dash");
 
     req.getRequestDispatcher("WEB-INF/Budget_App/user_dash.jsp").forward(req, resp);
   }
 
-  @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    HttpSession session = req.getSession();
-    String Role = "User";
-
-    User user = (User)session.getAttribute("User_B");
-    if (user==null||!user.getRoles().contains("User")){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-      return;
-    }
-    session.setAttribute("currentPage",req.getRequestURL());
-    req.setAttribute("pageTitle", "User Dash");
-    req.getRequestDispatcher("WEB-INF/Budget_App/user_dash.jsp").forward(req, resp);
-
-  }
 }
 

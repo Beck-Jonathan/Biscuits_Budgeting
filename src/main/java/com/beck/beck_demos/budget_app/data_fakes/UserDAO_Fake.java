@@ -20,7 +20,7 @@ public class UserDAO_Fake implements iUserDAO {
     User user1 = new User(64, "xHDApUMY", "jNQFPWTR".toCharArray(), "ekektUmd@gmail.com");
     User user2 = new User(36, "xOqYpDHU", "jahcUHBA".toCharArray(), "vRmtjGFI@gmail.com");
     User user3 = new User(30, "eRceDjmK", "soBHCkld".toCharArray(), "CWZkwrDf@gmail.com");
-    User user4 = new User(101, "EXCEPTION", "soBHCkld!!".toCharArray(), "error@gmail.com");
+    User user4 = new User(101, "eRceDjmKdd", "soBHCkld!!".toCharArray(), "error@gmail.com");
     users.add(user0);
     users.add(user1);
     users.add(user2);
@@ -29,7 +29,27 @@ public class UserDAO_Fake implements iUserDAO {
     Collections.sort(users);
   }
   @Override
-  public int add(User _user) {
+  public int add(User _user) throws SQLException {
+    if (duplicateKey(_user)){
+      return 0;
+    }
+    if (exceptionKey(_user)){
+      throw new SQLException("error");
+    }
+    int user_id=1;
+    while (true){
+      boolean free = true;
+      for (User user : users) {
+        if (user.getUser_ID()==user_id){
+          free=false;
+          break;
+        }
+      }
+      user_id++;
+      break;
+
+    }
+    _user.setUser_ID(user_id);
     int startsize = users.size();
     users.add(_user);
     int endsize = users.size();
@@ -139,5 +159,11 @@ public class UserDAO_Fake implements iUserDAO {
   @Override
   public int yearRange(int user_ID) throws SQLException {
     return 0;
+  }
+  private boolean duplicateKey(User _user){
+    return _user.getUser_Name().equals("DUPLICATE");
+  }
+  private boolean exceptionKey(User _user){
+    return _user.getUser_Name().equals("EXCEPTION");
   }
 }

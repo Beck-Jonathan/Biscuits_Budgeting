@@ -1,3 +1,4 @@
+/*
 package com.beck.beck_demos.budget_app.controllers;
 
 import com.beck.beck_demos.budget_app.models.User;
@@ -33,4 +34,4 @@ public class UserIDController extends HttpServlet {
       pw.close();
     }
   }
-}
+}*/

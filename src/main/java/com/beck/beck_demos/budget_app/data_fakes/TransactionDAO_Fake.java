@@ -155,7 +155,8 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   public List<Transaction> getTransactionByUser(int userID, String category, int year, int pagesize, int offset, String sortBy, int order) throws SQLException {
     List<Transaction> results = new ArrayList<>();
     for (Transaction t : transactionVMs) {
-      if (t.getUser_ID().equals(userID)&&(category.equals("")||t.getCategory_ID().equals(category))) {
+
+      if (t.getUser_ID().equals(userID)&&(category.equals("")||t.getCategory_ID().equals(category))&&(year==0||t.getPost_Date().getYear()==year)) {
         results.add(t);
       }
     }
@@ -207,7 +208,7 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   public int getTransactionCountByUser(int userID, String category, int year) throws SQLException {
     int count = 0;
     for (Transaction t : transactionVMs) {
-      if (t.getUser_ID().equals(userID)) {
+      if (t.getUser_ID().equals(userID)&&(year==0 || t.getPost_Date().getYear()==year)) {
         count++;
       }
     }
