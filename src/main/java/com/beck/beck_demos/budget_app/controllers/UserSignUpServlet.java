@@ -164,7 +164,7 @@ public class UserSignUpServlet extends HttpServlet{
           resp.sendRedirect("budget_home");
           return;
         } catch (SQLException e) {
-          throw new RuntimeException(e);
+          results.put("dbError","User Not Added");
         }
       } else {
         results.put("dbStatus","User Not Added");
