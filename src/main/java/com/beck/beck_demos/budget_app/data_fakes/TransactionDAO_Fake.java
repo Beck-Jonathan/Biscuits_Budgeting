@@ -106,7 +106,16 @@ public class TransactionDAO_Fake implements iTransactionDAO {
 
   @Override
   public List<Transaction> getTransactionForExportByUser(int userID) throws SQLException {
-    return List.of();
+    List<Transaction> transactions = new ArrayList<>();
+    for (Transaction t : transactionVMs){
+      if (t.getUser_ID().equals(userID)){
+        transactions.add(t);
+      }
+    }
+    if (transactions.isEmpty()){
+      throw new SQLException("error");
+    }
+    return transactions;
   }
 
   @Override

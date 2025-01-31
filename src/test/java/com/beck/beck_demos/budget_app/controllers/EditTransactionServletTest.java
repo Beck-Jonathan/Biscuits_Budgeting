@@ -52,7 +52,6 @@ class EditTransactionServletTest {
     user.setRoles(roles);
     user.setUser_ID(39);
     session.setAttribute("User_B",user);
-
     request.setSession(session);
     servlet.doPost(request,response);
     int status = response.getStatus();

@@ -40,6 +40,10 @@ public class ExportServlet extends HttpServlet {
     transactionDAO =  new TransactionDAO();
   }
 
+  public void init(iTransactionDAO transactionDAO) {
+    this.transactionDAO = transactionDAO;
+  }
+
   @Override
   public void init() throws ServletException{
     DiskFileItemFactory fileFactory = new DiskFileItemFactory();
@@ -64,32 +68,33 @@ public class ExportServlet extends HttpServlet {
 
     session.setAttribute("currentPage",req.getRequestURL());
     List<Transaction> transactions = null;
-
+    boolean error = false;
     try {
       transactions = transactionDAO.getTransactionForExportByUser(user.getUser_ID());
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      error = true;
     }
     PrintWriter writer = new PrintWriter(uploadFilePath+"/the-file-name.txt", StandardCharsets.UTF_8);
-    writer.print("T_ID\tU_ID\tCategory\tAccount\tPost_Date\tCheck#\tDescription\tAmount\tType\tStatus");
-    for (Transaction t : transactions){
-      writer.print(t.getTransaction_ID()+"\t");
-      writer.print(t.getUser_ID()+"\t");
-      writer.print(t.getCategory_ID()+"\t");
-      writer.print(t.getBank_Account_ID()+"\t");
-      writer.print(t.getPost_Date()+"\t");
-      writer.print(t.getCheck_No()+"\t");
-      writer.print(t.getDescription()+"\t");
-      writer.print(t.getAmount()+"\t");
-      writer.print(t.getType()+"\t");
-      writer.print(t.getStatus()+"\t");
-      writer.print("\n");
+    if (!error) {
+      writer.print("T_ID\tU_ID\tCategory\tAccount\tPost_Date\tCheck#\tDescription\tAmount\tType\tStatus");
+      for (Transaction t : transactions) {
+        writer.print(t.getTransaction_ID() + "\t");
+        writer.print(t.getUser_ID() + "\t");
+        writer.print(t.getCategory_ID() + "\t");
+        writer.print(t.getBank_Account_ID() + "\t");
+        writer.print(t.getPost_Date() + "\t");
+        writer.print(t.getCheck_No() + "\t");
+        writer.print(t.getDescription() + "\t");
+        writer.print(t.getAmount() + "\t");
+        writer.print(t.getType() + "\t");
+        writer.print(t.getStatus() + "\t");
+        writer.print("\n");
+      }
     }
-
-
+    else {
+      writer.print("error");
+    }
     writer.close();
-
-
     //https://www.geeksforgeeks.org/jsp-file-downloading/
     String filename = "the-file-name.txt";
     //String filepath = "c:\\Table_Gen\\";
@@ -101,23 +106,16 @@ public class ExportServlet extends HttpServlet {
     java.io.FileInputStream fileInputStream = new java.io.FileInputStream(uploadFilePath +File.separator+ filename);
 
     // Read file content and stream it to the response output stream
-
     int i;
     while ((i=fileInputStream.read()) != -1) {
       resp.getOutputStream().write(i);
     }
-
     // Close the FileInputStream to release resources
     fileInputStream.close();
     File myObj = new File(uploadFilePath+File.separator+filename);
     myObj.delete();
-
-
-
-
     req.setAttribute("Transactions", transactions);
     req.setAttribute("pageTitle", "All Transactions");
     //resp.sendRedirect("budget_home");
-
   }
 }

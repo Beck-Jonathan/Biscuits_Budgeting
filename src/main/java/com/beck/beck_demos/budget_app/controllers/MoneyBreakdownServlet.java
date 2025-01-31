@@ -25,17 +25,16 @@ import java.util.Map;
 
 @WebServlet("/MoneyBreakdown")
 public class MoneyBreakdownServlet extends HttpServlet {
-  private  iCategoryDAO categoryDAO;
   private iTransactionDAO transactionDAO;
-  private iUserDAO userDAO;
 
 
 
   @Override
   public void init() throws ServletException {
-    categoryDAO = new CategoryDAO();
     transactionDAO = new TransactionDAO();
-    userDAO = new UserDAO();
+  }
+  public void init(iTransactionDAO transactionDAO){
+    this.transactionDAO = transactionDAO;
   }
 
   @Override
@@ -43,23 +42,17 @@ public class MoneyBreakdownServlet extends HttpServlet {
 
     HttpSession session = req.getSession();
     Map<String,String> results = new HashMap<>();
-
-
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
       resp.sendRedirect("/budget_in");
       return;
     }
-
     List<List<Category_VM>> breakdown = new ArrayList<>();
-
-
     try {
       breakdown = transactionDAO.getAnalysis(breakdown, user.getUser_ID());
     } catch (Exception e) {
       results.put("dbError","database Error");
     }
-
     for (List<Category_VM> category_vms : breakdown) {
       for (int i =0;i<category_vms.size();i++) {
         if (category_vms.get(i).getCategory_ID().equals("total in")){
@@ -85,7 +78,6 @@ public class MoneyBreakdownServlet extends HttpServlet {
       }
     }
 
-
     int year_span = breakdown.size();
     int category_count = 0;
     for (List<Category_VM> year : breakdown) {
@@ -93,7 +85,6 @@ public class MoneyBreakdownServlet extends HttpServlet {
         category_count = year.size();
       }
     }
-
 
     session.setAttribute("breakdown",breakdown);
     session.setAttribute("years",year_span);
@@ -104,14 +95,6 @@ public class MoneyBreakdownServlet extends HttpServlet {
     req.getRequestDispatcher("WEB-INF/Budget_App/moneyBreakdown.jsp").forward(req, resp);
   }
 
-  @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    HttpSession session = req.getSession();
-    session.setAttribute("currentPage",req.getRequestURL());
-    req.setAttribute("pageTitle", "Budget Home");
-    req.getRequestDispatcher("WEB-INF/Budget_App/home.jsp").forward(req, resp);
-
-  }
 }
 

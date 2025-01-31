@@ -51,12 +51,9 @@ public class EditBank_AccountServlet extends HttpServlet{
     }
 
     String mode = req.getParameter("mode");
-    String primaryKey = "";
-    try{
-      primaryKey = (req.getParameter("bank_accountid"));
-    }catch (Exception e) {
-      req.setAttribute("dbStatus",e.getMessage());
-    }Bank_Account bank_account= new Bank_Account();
+    String primaryKey = req.getParameter("bank_accountid");
+
+    Bank_Account bank_account= new Bank_Account();
     try{
       bank_account.setBank_Account_ID(primaryKey);
     } catch (Exception e){
