@@ -71,6 +71,23 @@ class CategoryTest {
     _category.setUser_ID(User_ID);
     Assertions.assertEquals(User_ID, _category.getUser_ID());
   }
+  @Test
+      public void testcompoareto(){
+  Category smaller = new Category();
+  Category bigger = new Category();
+smaller.setCategory_ID("aaaa");
+bigger.setCategory_ID("bbbbb");
+Assertions.assertTrue(smaller.compareTo(bigger)<0);
+Assertions.assertTrue(bigger.compareTo(smaller)>0);
+smaller.setCategory_ID("bbbbb");
+smaller.setUser_ID(1);
+bigger.setUser_ID(2);
+Assertions.assertTrue(smaller.compareTo(bigger)<0);
+Assertions.assertTrue(bigger.compareTo(smaller)>0);
+smaller.setUser_ID(2);
+int x = 0;
+Assertions.assertTrue(bigger.compareTo(smaller)==0);
+}
 
 }
 

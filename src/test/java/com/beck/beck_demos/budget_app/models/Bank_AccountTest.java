@@ -54,6 +54,7 @@ class Bank_AccountTest {
     Assertions.assertEquals("aoVyLNnmRreFiFilRMQPZjsUjOMYbigfMZVwCHrPXqunrPOYDUmXBUeFqQTlPuYCrPWUKJWQCsxryxANvPeqnPFbaueayVoWxC",_bank_account.getAccount_Nickname());
     Assertions.assertEquals(71,_bank_account.getBalance());
     Assertions.assertEquals(date,_bank_account.getBalance_Date());
+
   }
   @Test
   public void testBank_AccountKeyedParameterizedConstructorSetsKeyedVariables(){
