@@ -33,4 +33,11 @@ public interface iSaved_Search_OrderDAO {
    * @author Jonathan Beck
    */
   int update(Saved_Search_Order oldSaved_Search_Order, Saved_Search_Order newSaved_Search_Order) throws SQLException;
+  /**
+   * DAO Method to delete Saved_Search_Order objects
+   * @param Saved_Search_Order_ID the Saved_Search_Order to be deleted
+   * @return number of records deleted
+   * @author Jonathan Beck
+   */
+  int delete( int Saved_Search_Order_ID, int user_id) throws SQLException;
 }

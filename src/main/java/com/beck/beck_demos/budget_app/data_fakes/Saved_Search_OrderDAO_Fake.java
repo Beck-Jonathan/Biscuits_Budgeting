@@ -116,6 +116,23 @@ public class Saved_Search_OrderDAO_Fake implements iSaved_Search_OrderDAO {
     saved_search_orderVMs.set(location,newSaved_Search_Order);
     return 1;
   }
+  @Override
+  public int delete(int Saved_Search_Order_ID, int user_ID) throws SQLException{
+    int size = saved_search_orderVMs.size();
+    int location =-1;
+    for (int i=0;i<saved_search_orderVMs.size();i++){
+      if (saved_search_orderVMs.get(i).getSaved_Search_Order_ID().equals(Saved_Search_Order_ID) && saved_search_orderVMs.get(i).getOwned_User().equals(user_ID)){
+        location =i;
+        break;
+      }
+    }
+    if (location==-1){
+      throw new SQLException("Unable To Find Saved_Search_Order.");
+    }
+    saved_search_orderVMs.remove(location);
+    int newsize = saved_search_orderVMs.size();
+    return size-newsize;
+  }
 
 
   private boolean duplicateKey(Saved_Search_Order _saved_search_order){

@@ -144,6 +144,31 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
     return result;
   }
 
+  /**
+   * DAO Method to delete Saved_Search_Order objects
+   * @param Saved_Search_Order_ID the Saved_Search_Order to be deleted
+   * @return number of records deleted
+   * @author Jonathan Beck
+   */
+ public int delete( int Saved_Search_Order_ID, int user_id) throws SQLException{
+    int rowsAffected=0;
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_Delete_Saved_Search_Order( ?)}")){
+          statement.setInt(1,Saved_Search_Order_ID);
+          statement.setInt(2,user_id);
+          rowsAffected = statement.executeUpdate();
+          if (rowsAffected == 0) {
+            throw new RuntimeException("Could not Delete Saved_Search_Order. Try again later");
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not Delete Saved_Search_Order. Try again later");
+    }
+    return rowsAffected;
+  }
+
 
 
 }
