@@ -65,4 +65,64 @@ public class Saved_Search_OrderDAO_Fake implements iSaved_Search_OrderDAO {
     }
     return results;
   }
+  @Override
+  public int add(Saved_Search_Order _saved_search_order) throws SQLException {
+    if (duplicateKey(_saved_search_order)){
+      return 0;
+    }
+    if (exceptionKey(_saved_search_order)){
+      throw new SQLException("error");
+    }
+    int size = saved_search_orderVMs.size();
+    saved_search_orderVMs.add(_saved_search_order);
+
+    int newsize = saved_search_orderVMs.size();
+    return newsize-size;
+  }
+
+  @Override
+  public Saved_Search_Order getSaved_Search_OrderByPrimaryKey(Saved_Search_Order _saved_search_order) throws SQLException {
+    Saved_Search_Order result = null;
+    for (Saved_Search_Order saved_search_order : saved_search_orderVMs) {
+      if (saved_search_order.getSaved_Search_Order_ID().equals(_saved_search_order.getSaved_Search_Order_ID())){
+        result = saved_search_order;
+        break;
+      }
+    }
+    if (result == null){
+      throw new SQLException("Saved_Search_Order not found");
+    }
+    return result;
+  }
+  @Override
+  public int update(Saved_Search_Order oldSaved_Search_Order, Saved_Search_Order newSaved_Search_Order) throws SQLException{
+    int location =-1;
+    if (duplicateKey(oldSaved_Search_Order)){
+      return 0;
+    }
+    if (exceptionKey(oldSaved_Search_Order)){
+      throw new SQLException("error");
+    }
+    for (int i=0;i<saved_search_orderVMs.size();i++){
+      if (saved_search_orderVMs.get(i).getSaved_Search_Order_ID().equals(oldSaved_Search_Order.getSaved_Search_Order_ID())){
+        location =i;
+        break;
+      }
+    }
+    if (location==-1){
+      throw new SQLException();
+    }
+
+    saved_search_orderVMs.set(location,newSaved_Search_Order);
+    return 1;
+  }
+
+
+  private boolean duplicateKey(Saved_Search_Order _saved_search_order){
+    return _saved_search_order.getNickname().equals("DUPLICATE");
+  }
+  private boolean exceptionKey(Saved_Search_Order _saved_search_order){
+    return _saved_search_order.getNickname().equals("EXCEPTION");
+  }
+
 }
