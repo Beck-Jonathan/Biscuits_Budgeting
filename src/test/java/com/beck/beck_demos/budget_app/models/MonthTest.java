@@ -152,5 +152,53 @@ class MonthTest {
     _month.setEnding_Bal(Ending_Bal);
     Assertions.assertEquals(Ending_Bal, _month.getEnding_Bal());
   }
+  @Test
+  public void testCompareToCanCompareForEachDateField() {
+    Month smaller = new Month();
+    Month bigger = new Month();
+//to compare a smaller and larger Mortgage_ID
+    smaller.setMortgage_ID(10);
+    bigger.setMortgage_ID(20);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Mortgage_ID as equal.
+    smaller.setMortgage_ID(20);
+//to compare a smaller and larger Month
+    smaller.setMonth(10);
+    bigger.setMonth(20);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Month as equal.
+    smaller.setMonth(20);
+//to compare a smaller and larger Begin_Bal
+    smaller.setBegin_Bal(10.23d);
+    bigger.setBegin_Bal(14.12d);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Begin_Bal as equal.
+    smaller.setBegin_Bal(14.12d);
+//to compare a smaller and larger Rate
+    smaller.setRate(10.23d);
+    bigger.setRate(14.12d);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Rate as equal.
+    smaller.setRate(14.12d);
+//to compare a smaller and larger Payment
+    smaller.setPayment(10.23d);
+    bigger.setPayment(14.12d);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Payment as equal.
+    smaller.setPayment(14.12d);
+//to compare a smaller and larger Ending_Bal
+    smaller.setEnding_Bal(10.23d);
+    bigger.setEnding_Bal(14.12d);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Ending_Bal as equal.
+    smaller.setEnding_Bal(14.12d);
+    Assertions.assertTrue(bigger.compareTo(smaller)==0);
+  }
 
 }

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -144,6 +145,48 @@ class Bank_AccountTest {
     double Balance = 6182;
     _bank_account.setBalance(Balance);
     Assertions.assertEquals(Balance, _bank_account.getBalance());
+  }
+  @Test
+  public void testCompareToCanCompareForEachDateField() throws ParseException {
+    Bank_Account smaller = new Bank_Account();
+    Bank_Account bigger = new Bank_Account();
+    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+//to compare a smaller and larger Bank_Account_ID
+    smaller.setBank_Account_ID("aaaa");
+    bigger.setBank_Account_ID("bbbb");
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Bank_Account_ID as equal.
+    smaller.setBank_Account_ID("bbbb");
+//to compare a smaller and larger User_ID
+    smaller.setUser_ID(10);
+    bigger.setUser_ID(20);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the User_ID as equal.
+    smaller.setUser_ID(20);
+//to compare a smaller and larger Account_Nickname
+    smaller.setAccount_Nickname("aaaa");
+    bigger.setAccount_Nickname("bbbb");
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Account_Nickname as equal.
+    smaller.setAccount_Nickname("bbbb");
+//to compare a smaller and larger Balance
+    smaller.setBalance(10.23d);
+    bigger.setBalance(14.12d);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Balance as equal.
+    smaller.setBalance(14.12d);
+//to compare a smaller and larger Balance_Date
+    smaller.setBalance_Date(df.parse("01/01/2023"));
+    bigger.setBalance_Date(df.parse("01/01/2024"));
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Balance_Date as equal.
+    smaller.setBalance_Date(df.parse("01/01/2024"));
+    Assertions.assertTrue(bigger.compareTo(smaller)==0);
   }
 
 }

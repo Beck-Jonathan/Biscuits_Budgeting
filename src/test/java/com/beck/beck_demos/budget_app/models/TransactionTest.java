@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -234,6 +235,83 @@ class TransactionTest {
     String Status = "YZNZbiHCfNwbcoUuQW";
     _transaction.setStatus(Status);
     Assertions.assertEquals(Status,_transaction.getStatus());
+  }
+  @Test
+  public void testCompareToCanCompareForEachDateField()throws ParseException {
+    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    Transaction smaller = new Transaction();
+    Transaction bigger = new Transaction();
+//to compare a smaller and larger Transaction_ID
+    smaller.setTransaction_ID(10);
+    bigger.setTransaction_ID(20);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Transaction_ID as equal.
+    smaller.setTransaction_ID(20);
+//to compare a smaller and larger User_ID
+    smaller.setUser_ID(10);
+    bigger.setUser_ID(20);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the User_ID as equal.
+    smaller.setUser_ID(20);
+//to compare a smaller and larger Category_ID
+    smaller.setCategory_ID("aaaa");
+    bigger.setCategory_ID("bbbb");
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Category_ID as equal.
+    smaller.setCategory_ID("bbbb");
+//to compare a smaller and larger Bank_Account_ID
+    smaller.setBank_Account_ID("aaaa");
+    bigger.setBank_Account_ID("bbbb");
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Bank_Account_ID as equal.
+    smaller.setBank_Account_ID("bbbb");
+//to compare a smaller and larger Post_Date
+    smaller.setPost_Date(df.parse("01/01/2023"));
+    bigger.setPost_Date(df.parse("01/01/2024"));
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Post_Date as equal.
+    smaller.setPost_Date(df.parse("01/01/2024"));
+//to compare a smaller and larger Check_No
+    smaller.setCheck_No(10);
+    bigger.setCheck_No(20);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Check_No as equal.
+    smaller.setCheck_No(20);
+//to compare a smaller and larger Description
+    smaller.setDescription("aaaa");
+    bigger.setDescription("bbbb");
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Description as equal.
+    smaller.setDescription("bbbb");
+//to compare a smaller and larger Amount
+    smaller.setAmount(10.23d);
+    bigger.setAmount(14.12d);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Amount as equal.
+    smaller.setAmount(14.12d);
+//to compare a smaller and larger Type
+    smaller.setType("aaaa");
+    bigger.setType("bbbb");
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Type as equal.
+    smaller.setType("bbbb");
+//to compare a smaller and larger Status
+    smaller.setStatus("aaaa");
+    bigger.setStatus("bbbb");
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Status as equal.
+    smaller.setStatus("bbbb");
+    Assertions.assertTrue(bigger.compareTo(smaller)==0);
   }
 
 }

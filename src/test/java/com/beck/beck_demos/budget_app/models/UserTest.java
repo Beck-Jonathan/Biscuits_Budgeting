@@ -104,6 +104,38 @@ class UserTest {
     _user.setEmail(Email);
     Assertions.assertEquals(Email,_user.getEmail());
   }
+  @Test
+  public void testParamaterOfNullOnSetEmailThrowsIllegalArgumentException(){
+    String email = null;
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {_user.setEmail(email);});
+  }
+  @Test
+  public void testCompareToCanCompareForEachDateField() {
+    User smaller = new User();
+    User bigger = new User();
+//to compare a smaller and larger User_ID
+    smaller.setUser_ID(10);
+    bigger.setUser_ID(20);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the User_ID as equal.
+    smaller.setUser_ID(20);
+//to compare a smaller and larger User_Name
+    smaller.setUser_Name("aaaa");
+    bigger.setUser_Name("bbbb");
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the User_Name as equal.
+    smaller.setUser_Name("bbbb");
+//to compare a smaller and larger Email
+    smaller.setEmail("aaaa@gmail.com");
+    bigger.setEmail("bbbb@gmail.com");
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Email as equal.
+    smaller.setEmail("bbbb@gmail.com");
+    Assertions.assertTrue(bigger.compareTo(smaller)==0);
+  }
 
 }
 

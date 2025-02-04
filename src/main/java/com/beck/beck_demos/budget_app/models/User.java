@@ -106,11 +106,26 @@ public class User implements Comparable<User>{
   }
   @Override
   public int compareTo(@NotNull User o) {
-    if (this.User_ID.compareTo(o.User_ID) < 0) {
+    if (this.User_ID.compareTo(o.User_ID)<0){
       return -1;
-    } else if (this.User_ID.compareTo(o.User_ID) > 0) {
+    }
+    else if(this.User_ID.compareTo(o.User_ID) > 0){
       return 1;
-    } else return 0;
+    }
+    if (this.User_Name.compareTo(o.User_Name)<0){
+      return -1;
+    }
+    else if(this.User_Name.compareTo(o.User_Name) > 0){
+      return 1;
+    }
+
+    if (this.Email.compareTo(o.Email)<0){
+      return -1;
+    }
+    else if(this.Email.compareTo(o.Email) > 0){
+      return 1;
+    }
+    return 0;
   }
 
 }

@@ -191,5 +191,67 @@ class MortgageTest {
     _mortgage.setRemaining_Term(Remaining_Term);
     Assertions.assertEquals(Remaining_Term, _mortgage.getRemaining_Term());
   }
+  @Test
+  public void testCompareToCanCompareForEachDateField() {
+    Mortgage smaller = new Mortgage();
+    Mortgage bigger = new Mortgage();
+//to compare a smaller and larger Mortgage_ID
+    smaller.setMortgage_ID(10);
+    bigger.setMortgage_ID(20);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Mortgage_ID as equal.
+    smaller.setMortgage_ID(20);
+//to compare a smaller and larger User_ID
+    smaller.setUser_ID(10);
+    bigger.setUser_ID(20);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the User_ID as equal.
+    smaller.setUser_ID(20);
+//to compare a smaller and larger Present_Value
+    smaller.setPresent_Value(10.23d);
+    bigger.setPresent_Value(14.12d);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Present_Value as equal.
+    smaller.setPresent_Value(14.12d);
+//to compare a smaller and larger Future_Value
+    smaller.setFuture_Value(10.23d);
+    bigger.setFuture_Value(14.12d);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Future_Value as equal.
+    smaller.setFuture_Value(14.12d);
+//to compare a smaller and larger Interest_Rate
+    smaller.setInterest_Rate(10.23d);
+    bigger.setInterest_Rate(14.12d);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Interest_Rate as equal.
+    smaller.setInterest_Rate(14.12d);
+//to compare a smaller and larger Monthly_Payment
+    smaller.setMonthly_Payment(10.23d);
+    bigger.setMonthly_Payment(14.12d);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Monthly_Payment as equal.
+    smaller.setMonthly_Payment(14.12d);
+//to compare a smaller and larger Extra_Payment
+    smaller.setExtra_Payment(10.23d);
+    bigger.setExtra_Payment(14.12d);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Extra_Payment as equal.
+    smaller.setExtra_Payment(14.12d);
+//to compare a smaller and larger Remaining_Term
+    smaller.setRemaining_Term(10);
+    bigger.setRemaining_Term(20);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Remaining_Term as equal.
+    smaller.setRemaining_Term(20);
+    Assertions.assertTrue(bigger.compareTo(smaller)==0);
+  }
 
 }
