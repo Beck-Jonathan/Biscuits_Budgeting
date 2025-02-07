@@ -4,6 +4,10 @@
 
     </div>
     <div class="col col-md-1">
+        <a href="all-Saved_Search_Orders">   <button type="button" value="View" id="search" ></button></a>
+
+    </div>
+    <div class="col col-md-1">
         <a href="all-Transactions">   <button type="button" value="View" id="View" ></button></a>
 
     </div>

@@ -10,6 +10,7 @@
                 <div class="input-group input-group-lg">
                     <input type="hidden" id="currentpage" name="currentpage" value=${requestScope['javax.servlet.forward.request_uri']}/>
                     <input type="text" class="<c:if test="${not empty results.userUser_Nameerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="User_Name" id="inputuserUser_Name" name="inputuserUser_Name" value="${results.User_Name}">
+
                     <c:if test="${not empty results.userUser_Nameerror}">
                         <div class="invalid-feedback">${results.userUser_Nameerror}</div>
                     </c:if>

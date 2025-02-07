@@ -27,17 +27,15 @@ Create the JSP  For Viewing All of The  Saved_Search_Order table
                     <tbody>
                     <c:forEach items="${Saved_Search_Orders}" var="saved_search_order">
                         <tr>
-                            <td><a href = "editsaved_search_order?saved_search_orderid=${saved_search_order.saved_search_order_ID}&mode=view">${fn:escapeXml(saved_search_order.saved_search_order_ID)}</a></td><td>${fn:escapeXml(saved_search_order.owned_User)}</td>
+                            <td><a href = "editSaved_Search_Order?saved_search_orderid=${saved_search_order.saved_Search_Order_ID}&mode=view">${fn:escapeXml(saved_search_order.saved_Search_Order_ID)}</a></td>
+                            <td>${fn:escapeXml(saved_search_order.owned_User)}</td>
                             <td>${fn:escapeXml(saved_search_order.nickname)}</td>
                             <td>${fn:escapeXml(saved_search_order.description)}</td>
                             <td>${fn:escapeXml(saved_search_order.last_Used)}</td>
                             <td>${fn:escapeXml(saved_search_order.last_Updated)}</td>
                             <td>${fn:escapeXml(saved_search_order.times_Ran)}</td>
-                            <td><a href = "editsaved_search_order?saved_search_orderid=${saved_search_order.saved_search_order_ID}&mode=edit" > Edit </a></td>
-                            <td><a href = "deletesaved_search_order?saved_search_orderid=${saved_search_order.saved_search_order_ID}&mode=<c:choose><c:when test="${saved_search_order.is_active}">0</c:when>
-						<c:otherwise>1</c:otherwise>
-						</c:choose>">
-                                <c:if test="${!saved_search_order.is_active}">un</c:if>Delete </a></td>
+                            <td><a href = "editSaved_Search_Order?saved_search_orderid=${saved_search_order.saved_Search_Order_ID}&mode=edit" > Edit </a></td>
+                            <td><a href = "deletesaved_search_order?saved_search_orderid=${saved_search_order.saved_Search_Order_ID}"> Delete </a></td>
                         </tr>
                     </c:forEach>
                     </tbody>

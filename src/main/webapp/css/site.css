@@ -9,12 +9,6 @@
   line-height: 20px;
 }
 
-
-
-	
-
-
-
 a {color:black !important; }
 
 #topleftblack,#Headerr1c1, #bottomleftblack, #toprightblack, #bottomrightblack,#footerimage,#headerimage{
@@ -40,10 +34,7 @@ a {color:black !important; }
 	
 	background-color: white;
 	color:blue;
-	
-	
-	
-	
+
 }
 #tabs{border:none;
 margin:0px}
@@ -113,7 +104,8 @@ li {
 form .error {
 	color: #ff0000;
 	font-style: italic;
-  }​
+  }
+
 
 @media screen and (max-width: 900px){ html,body {min-width:900px} }
 

@@ -2,6 +2,9 @@ package com.beck.beck_demos.budget_app.data;
 
 import com.beck.beck_demos.budget_app.iData.iSaved_Search_OrderDAO;
 import com.beck.beck_demos.budget_app.models.Saved_Search_Order;
+import com.beck.beck_demos.budget_app.models.Saved_Search_Order_Line;
+import com.beck.beck_demos.budget_app.models.Saved_Search_Order_VM;
+import com.beck.beck_demos.budget_app.models.User;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -21,8 +24,8 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
    */
 
   @Override
-  public  List<Saved_Search_Order> getSaved_Search_OrderbyUser(Integer User_ID,int pagesize, int offset) {
-    List<Saved_Search_Order> result = new ArrayList<>();
+  public  List<Saved_Search_Order_VM> getSaved_Search_OrderbyUser(Integer User_ID, int pagesize, int offset) {
+    List<Saved_Search_Order_VM> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Saved_Search_Order_by_User(?,?,?)}")) {
@@ -37,12 +40,14 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
               Date Last_Used = resultSet.getDate("Saved_Search_Order_Last_Used");
               Date Last_Updated = resultSet.getDate("Saved_Search_Order_Last_Updated");
               Integer Times_Ran = resultSet.getInt("Saved_Search_Order_Times_Ran");
-              Integer User_User_ID = resultSet.getInt("User_User_ID");
+
               String User_User_Name = resultSet.getString("User_User_Name");
-              String User_User_PW = resultSet.getString("User_User_PW");
-              String User_Email = resultSet.getString("User_Email");
+              User user = new User();
+              user.setUser_Name(User_User_Name);
               Saved_Search_Order _saved_search_order = new Saved_Search_Order( Saved_Search_Order_ID, Owned_User, Nickname, Description, Last_Used, Last_Updated, Times_Ran);
-              result.add(_saved_search_order);
+              Saved_Search_Order_VM _saved_search_order_vm = new Saved_Search_Order_VM(_saved_search_order,user);
+              result.add(_saved_search_order_vm);
+
             }
           }
         }
@@ -88,14 +93,17 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
 * @return List of Saved_Search_Order
 * @author Jonathan Beck
  */
-  public Saved_Search_Order getSaved_Search_OrderByPrimaryKey(Saved_Search_Order _saved_search_order) throws SQLException{
+  public Saved_Search_Order_VM getSaved_Search_OrderByPrimaryKey(Saved_Search_Order _saved_search_order) throws SQLException{
     Saved_Search_Order result = null;
+    Saved_Search_Order_VM resultVM = null;
+    List<Saved_Search_Order_Line> lines = new ArrayList<>();
     try(Connection connection = getConnection()) {
       try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_pk_Saved_Search_Order(?)}")) {
         statement.setString(1, _saved_search_order.getSaved_Search_Order_ID().toString());
 
         try (ResultSet resultSet = statement.executeQuery()){
-          if(resultSet.next()){Integer Saved_Search_Order_ID = resultSet.getInt("Saved_Search_Order_Saved_Search_Order_ID");
+          if(resultSet.next()) {
+            Integer Saved_Search_Order_ID = resultSet.getInt("Saved_Search_Order_Saved_Search_Order_ID");
             Integer Owned_User = resultSet.getInt("Saved_Search_Order_Owned_User");
             String Nickname = resultSet.getString("Saved_Search_Order_Nickname");
             String Description = resultSet.getString("Saved_Search_Order_Description");
@@ -106,13 +114,38 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
             String User_User_Name = resultSet.getString("User_User_Name");
 
             String User_Email = resultSet.getString("User_Email");
-            result = new Saved_Search_Order( Saved_Search_Order_ID, Owned_User, Nickname, Description, Last_Used, Last_Updated, Times_Ran);}
+            User _user = new User();
+            _user.setUser_ID(User_User_ID);
+            _user.setUser_Name(User_User_Name);
+            _user.setEmail(User_Email);
+            result = new Saved_Search_Order(Saved_Search_Order_ID, Owned_User, Nickname, Description, Last_Used, Last_Updated, Times_Ran);
+            resultVM = new Saved_Search_Order_VM(result, _user);
+          }
+        }
+      }
+
+      try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Saved_Search_Order_Line_bySaved_Search_Order(?)}")) {
+        statement.setInt(1,_saved_search_order.getSaved_Search_Order_ID());
+
+        try(ResultSet resultSet = statement.executeQuery()) {
+          while (resultSet.next()) {Integer Saved_Search_Order_ID = resultSet.getInt("Saved_Search_Order_Line_Saved_Search_Order_ID");
+            Integer Line_No = resultSet.getInt("Saved_Search_Order_Line_Line_No");
+            String Category_ID = resultSet.getString("Saved_Search_Order_Line_Category_ID");
+            Integer User_ID = resultSet.getInt("Saved_Search_Order_Line_User_ID");
+            String Search_Phrase = resultSet.getString("Saved_Search_Order_Line_Search_Phrase");
+            boolean Is_Active = resultSet.getBoolean("Saved_Search_Order_Line_Is_Active");
+
+            Saved_Search_Order_Line _saved_search_order_line = new Saved_Search_Order_Line( Saved_Search_Order_ID, Line_No, Category_ID, User_ID, Search_Phrase, Is_Active);
+            lines.add(_saved_search_order_line);
+
         }
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-    return result;
+    }
+      resultVM.setSaved_Search_Order_Lines(lines);
+    return resultVM;
   }
   /**
    * DAO Method to update Saved_Search_Order objects
@@ -169,6 +202,52 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
     return rowsAffected;
   }
 
+  @Override
+  public int addLine(Saved_Search_Order_Line _saved_search_order_line) throws SQLException {
+    int numRowsAffected=0;try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Saved_Search_Order_Line( ?, ?, ?, ?, ?)}")){
+          statement.setInt(1,_saved_search_order_line.getSaved_Search_Order_ID());
+          statement.setInt(2,_saved_search_order_line.getLine_No());
+          statement.setString(3,_saved_search_order_line.getCategory_ID());
+          statement.setInt(4,_saved_search_order_line.getUser_ID());
+          statement.setString(5,_saved_search_order_line.getSearch_Phrase());
+          numRowsAffected = statement.executeUpdate();
+          if (numRowsAffected == 0) {
+            throw new RuntimeException("Could not add Saved_Search_Order_Line. Try again later");
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not add Saved_Search_Order_Line. Try again later");
+    }
+    return numRowsAffected;
+  }
+
+  @Override
+  public int updateLine(Saved_Search_Order_Line oldSaved_Search_Order_Line, Saved_Search_Order_Line newSaved_Search_Order_Line) throws SQLException {
+    int result = 0;
+    try (Connection connection = getConnection()) {
+      if (connection !=null){
+        try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Saved_Search_Order_Line(? ,? ,?,?,?,?,?,?,?)}"))
+        {
+          statement.setInt(1,oldSaved_Search_Order_Line.getSaved_Search_Order_ID());
+          statement.setInt(2,oldSaved_Search_Order_Line.getLine_No());
+          statement.setString(3,oldSaved_Search_Order_Line.getCategory_ID());
+          statement.setString(4,newSaved_Search_Order_Line.getCategory_ID());
+          statement.setInt(5,oldSaved_Search_Order_Line.getUser_ID());
+          statement.setString(6,oldSaved_Search_Order_Line.getSearch_Phrase());
+          statement.setString(7,newSaved_Search_Order_Line.getSearch_Phrase());
+          statement.setBoolean(8,oldSaved_Search_Order_Line.getIs_Active());
+          statement.setBoolean(9,newSaved_Search_Order_Line.getIs_Active());
+          result=statement.executeUpdate();
+        } catch (SQLException e) {
+          throw new RuntimeException("Could not update Saved_Search_Order_Line . Try again later");
+        }
+      }
+    }
+    return result;
+  }
 
 
 }

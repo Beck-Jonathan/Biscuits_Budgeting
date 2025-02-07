@@ -2,6 +2,8 @@ package com.beck.beck_demos.budget_app.controllers;
 
 import java.io.IOException;
 import java.util.*;
+
+import com.beck.beck_demos.budget_app.data_fakes.CategoryDAO_Fake;
 import com.beck.beck_demos.budget_app.data_fakes.Saved_Search_OrderDAO_Fake;
 import com.beck.beck_demos.budget_app.models.Saved_Search_Order;
 
@@ -28,7 +30,7 @@ class EditSaved_Search_OrderServletTest {
   public void setup() throws ServletException{
 
     servlet = new EditSaved_Search_OrderServlet();
-    servlet.init(new Saved_Search_OrderDAO_Fake());
+    servlet.init(new Saved_Search_OrderDAO_Fake(), new CategoryDAO_Fake());
     request =  new MockHttpServletRequest();
     response = new MockHttpServletResponse();
     session = new MockHttpSession();

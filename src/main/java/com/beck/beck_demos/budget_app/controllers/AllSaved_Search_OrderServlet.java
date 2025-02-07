@@ -7,6 +7,7 @@ package com.beck.beck_demos.budget_app.controllers;
 
 import com.beck.beck_demos.budget_app.data.Saved_Search_OrderDAO;
 import com.beck.beck_demos.budget_app.models.Saved_Search_Order;
+import com.beck.beck_demos.budget_app.models.Saved_Search_Order_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import com.beck.beck_demos.budget_app.iData.iSaved_Search_OrderDAO;
 import jakarta.servlet.ServletException;
@@ -49,7 +50,7 @@ public class AllSaved_Search_OrderServlet  extends HttpServlet {
     }
 
     session.setAttribute("currentPage",req.getRequestURL());
-    List<Saved_Search_Order> saved_search_orders = null;
+    List<Saved_Search_Order_VM> saved_search_orders = null;
     try {
       saved_search_orders =saved_search_orderDAO.getSaved_Search_OrderbyUser(user.getUser_ID(),20,0);
     } catch (Exception e) {

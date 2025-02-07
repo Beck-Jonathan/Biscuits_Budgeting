@@ -22,10 +22,12 @@ console.log("ready on new version")
 	$( "#user-dash" ).button( "option", "showIcon", "true" );
 	$( "#user-dash" ).button( "option", "label", "User Dash" );
 
-	$("#Add").button();
-	$( "#Add" ).button( "option", "icon", "ui-icon-check" );
-	$( "#Add" ).button( "option", "showIcon", "true" );
-	$( "#Add" ).button( "option", "label", "Upload Transactions" );
+
+
+	$("#search").button();
+	$( "#search" ).button( "option", "icon", "ui-icon-check" );
+	$( "#search" ).button( "option", "showIcon", "true" );
+	$( "#search" ).button( "option", "label", "Search And Categorize" );
 
 	$("#Accounts").button();
 	$( "#Accounts" ).button( "option", "icon", "ui-icon-check" );

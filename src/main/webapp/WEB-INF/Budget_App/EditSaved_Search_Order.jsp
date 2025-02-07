@@ -69,5 +69,6 @@ Create the JSP For Viuw/Edit from the Saved_Search_Order table
         </div>
     </form>
 </div>
+<%@include file="/WEB-INF/Budget_App/all-Saved_Search_Order_Lines.jsp"%>
 <%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>
 

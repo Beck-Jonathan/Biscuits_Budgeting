@@ -1,7 +1,10 @@
 package com.beck.beck_demos.budget_app.controllers;
 
 
+import com.beck.beck_demos.budget_app.data.CategoryDAO;
 import com.beck.beck_demos.budget_app.data.Saved_Search_OrderDAO;
+import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
+import com.beck.beck_demos.budget_app.models.Category;
 import com.beck.beck_demos.budget_app.models.Saved_Search_Order;
 import com.beck.beck_demos.budget_app.models.User;
 import com.beck.beck_demos.budget_app.iData.iSaved_Search_OrderDAO;
@@ -26,14 +29,16 @@ import java.util.Map;
 public class EditSaved_Search_OrderServlet extends HttpServlet{
 
   private iSaved_Search_OrderDAO saved_search_orderDAO;
-
+  private iCategoryDAO categoryDAO;
   @Override
   public void init(){
     saved_search_orderDAO = new Saved_Search_OrderDAO();
+    categoryDAO = new CategoryDAO();
 
   }
-  public void init(iSaved_Search_OrderDAO saved_search_orderDAO){
+  public void init(iSaved_Search_OrderDAO saved_search_orderDAO, iCategoryDAO categoryDAO){
     this.saved_search_orderDAO = saved_search_orderDAO;
+    this.categoryDAO = categoryDAO;
 
   }
 
@@ -57,7 +62,9 @@ public class EditSaved_Search_OrderServlet extends HttpServlet{
       primaryKey = Integer.parseInt(req.getParameter("saved_search_orderid"));
     }catch (Exception e) {
       req.setAttribute("dbStatus",e.getMessage());
-    }Saved_Search_Order saved_search_order= new Saved_Search_Order();
+    }
+    Saved_Search_Order saved_search_order= new Saved_Search_Order();
+    List<Category> allCategorys = new ArrayList<>();
     try{
       saved_search_order.setSaved_Search_Order_ID(primaryKey);
     } catch (Exception e){
@@ -65,9 +72,11 @@ public class EditSaved_Search_OrderServlet extends HttpServlet{
     }
     try{
       saved_search_order=saved_search_orderDAO.getSaved_Search_OrderByPrimaryKey(saved_search_order);
+      allCategorys = categoryDAO.getCategoryByUser(user.getUser_ID());
     } catch (SQLException e) {
       req.setAttribute("dbStatus",e.getMessage());
     }
+    req.setAttribute("Categorys", allCategorys);
     session.setAttribute("saved_search_order",saved_search_order);
     req.setAttribute("mode",mode);
     session.setAttribute("currentPage",req.getRequestURL());
