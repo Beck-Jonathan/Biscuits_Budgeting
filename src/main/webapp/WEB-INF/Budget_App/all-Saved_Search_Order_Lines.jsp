@@ -125,6 +125,13 @@ Create the JSP  For Viewing All of The  Saved_Search_Order_Line table
                     </tbody>
                 </table>
                 </div>
+            <div>
+                <form method="post" action="${appURL}/apply-Saved_Search_Order" id = "editSaved_Search_Order_Line${fn:escapeXml(saved_search_order_line.line_No)}">
+
+            <input type="hidden" name="saved_search_orderid" value="${saved_search_order.saved_Search_Order_ID}">
+            <button class="btn btn-orange mb-0" type="submit">Apply Sorting!  </button>
+            </form>
+            </div>
 
         </div>
     </div>

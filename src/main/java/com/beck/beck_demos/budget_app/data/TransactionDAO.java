@@ -19,6 +19,7 @@ package com.beck.beck_demos.budget_app.data;
 /// A new remark should be added for each update.
 ///</remarks>
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
+import com.beck.beck_demos.budget_app.models.Category;
 import com.beck.beck_demos.budget_app.models.Category_VM;
 import com.beck.beck_demos.budget_app.models.Transaction;
 
@@ -103,12 +104,17 @@ public class TransactionDAO implements iTransactionDAO {
 
           statement.setString(3, query);
 
-          result = statement.executeUpdate();
-        } catch (SQLException e) {
-          throw new RuntimeException("Could not update Transaction . Try again later");
+          try (ResultSet resultSet = statement.executeQuery()){
+            result=statement.getUpdateCount();
+          } catch (SQLException e) {
+            throw new RuntimeException("Could not update Transaction . Try again later");
+          }
         }
       }
     }
+
+
+
     return result;
   }
 
