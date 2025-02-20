@@ -10,7 +10,7 @@ Create the JSP  For Viewing All of The  Category table
             <h1>Budget Breakdown</h1>
             <p>There ${breakdown.size() eq 1 ? "is" : "are"}&nbsp;${breakdown.size()} Year${breakdown.size() ne 1 ? "s" : ""}</p>
             <p id="restore" onclick="restorecells()">restore</p>
-            Add Category   <a href="addCategory">Add</a>
+            Add Category   <a href="addTransactionCategory">Add</a>
             <c:if test="${breakdown.size() > 0}">
                 <div  class="table-responsive"><table id="moneyTable" class="table table-bordered">
                     <thead>
