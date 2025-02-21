@@ -23,6 +23,10 @@ console.log("ready on new version")
 	$( "#user-dash" ).button( "option", "label", "User Dash" );
 
 
+	$("#Add").button();
+	$( "#Add" ).button( "option", "icon", "ui-icon-check" );
+	$( "#Add" ).button( "option", "showIcon", "true" );
+	$( "#Add" ).button( "option", "label", "upload" );
 
 	$("#search").button();
 	$( "#search" ).button( "option", "icon", "ui-icon-check" );

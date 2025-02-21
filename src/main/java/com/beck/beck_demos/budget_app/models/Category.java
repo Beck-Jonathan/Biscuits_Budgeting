@@ -21,7 +21,7 @@ public class Category implements Comparable<Category> {
     return Category_ID;
   }
   public void setCategory_ID(String Category_ID) {
-    Category_ID = Category_ID.replaceAll("[^A-Za-z0-9 - ]","");
+    Category_ID = Category_ID.replaceAll("[^&A-Za-z0-9 - ]","");
     if(Category_ID.length()<3){
       throw new IllegalArgumentException("Category_ID is too short.");
     }
