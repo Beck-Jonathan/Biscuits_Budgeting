@@ -89,16 +89,6 @@ public class Transaction_CommentDAO_Fake implements iTransaction_CommentDAO {
     return newsize-size;
   }
 
-  @Override
-  public List<Transaction_Comment> getTransaction_CommentbyTransaction(Integer Transaction_ID) throws SQLException {
-    List<Transaction_Comment> results = new ArrayList<>();
-    for (Transaction_Comment transaction_comment : transaction_comments){
-      if (transaction_comment.getTransaction_ID().equals(Transaction_ID)){
-        results.add(transaction_comment);
-      }
-    }
-    return results;
-  }
 
 
   @Override

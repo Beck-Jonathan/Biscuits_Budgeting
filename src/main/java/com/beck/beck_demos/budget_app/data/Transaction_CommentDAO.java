@@ -47,46 +47,20 @@ public class Transaction_CommentDAO implements iTransaction_CommentDAO {
   }
 
 
-  @Override
-  public List<Transaction_Comment> getTransaction_CommentbyTransaction(Integer _Transaction_ID) throws SQLException {
-
-      List<Transaction_Comment> result = new ArrayList<>();
-      try (Connection connection = getConnection()) {
-        if (connection != null) {
-          try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_Comment_byTransaction(?)}")) {
-            statement.setInt(1,_Transaction_ID);
-            try(ResultSet resultSet = statement.executeQuery()) {
-              while (resultSet.next()) {Integer User_ID = resultSet.getInt("Transaction_Comment_User_ID");
-                Integer Transaction_ID = resultSet.getInt("Transaction_Comment_Transaction_ID");
-                Integer Transaction_Comment_ID = resultSet.getInt("Transaction_Comment_Transaction_Comment_ID");
-                String Content = resultSet.getString("Transaction_Comment_Content");
-                Date Post_Date = resultSet.getDate("Transaction_Comment_Post_Date");
-
-                Transaction_Comment _transaction_comment = new Transaction_Comment( User_ID, Transaction_ID, Transaction_Comment_ID, Content, Post_Date);
-                result.add(_transaction_comment);
-              }
-            }
-          }
-        }
-      } catch (SQLException e) {
-        throw new RuntimeException("Could not retrieve Transaction_Comments. Try again later");
-      }
-      return result;
-    }
 
   @Override
   public int update(Transaction_Comment oldTransaction_Comment, Transaction_Comment newTransaction_Comment) throws SQLException {
     int result = 0;
     try (Connection connection = getConnection()) {
       if (connection !=null){
-        try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Transaction_Comment(? ,? ,? ,?,?,?,?)}"))
+        try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Transaction_Comment(? ,? ,? ,?,?)}"))
         {
           statement.setInt(1,oldTransaction_Comment.getUser_ID());
           statement.setInt(2,oldTransaction_Comment.getTransaction_ID());
           statement.setInt(3,oldTransaction_Comment.getTransaction_Comment_ID());
           statement.setString(4,oldTransaction_Comment.getContent());
           statement.setString(5,newTransaction_Comment.getContent());
-          
+
          result=statement.executeUpdate();
         } catch (SQLException e) {
           throw new RuntimeException("Could not update Transaction_Comment . Try again later");

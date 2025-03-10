@@ -12,12 +12,7 @@ public interface iTransaction_CommentDAO {
    * @author Jonathan Beck
    */
   int add (Transaction_Comment _transaction_comment) throws SQLException;
-  /**
-   * DAO Method to retreive by Foreign Key Transaction_Comment objects
-   * @return List of Transaction_Comment
-   * @author Jonathan Beck
-   */
-  public List<Transaction_Comment> getTransaction_CommentbyTransaction(Integer Transaction_ID) throws SQLException;
+
   /**
    * DAO Method to update Transaction_Comment objects
    * @param oldTransaction_Comment the Transaction_Comment to be updated

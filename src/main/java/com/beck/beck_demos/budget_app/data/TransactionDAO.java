@@ -19,9 +19,7 @@ package com.beck.beck_demos.budget_app.data;
 /// A new remark should be added for each update.
 ///</remarks>
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-import com.beck.beck_demos.budget_app.models.Category;
-import com.beck.beck_demos.budget_app.models.Category_VM;
-import com.beck.beck_demos.budget_app.models.Transaction;
+import com.beck.beck_demos.budget_app.models.*;
 
 import java.io.*;
 import java.sql.*;
@@ -364,20 +362,20 @@ public class TransactionDAO implements iTransactionDAO {
 
   }
 
-  public  List<Transaction> getTransactionByUser(Integer User_ID) throws SQLException {
+  public  List<Transaction_VM> getTransactionByUser(Integer User_ID) throws SQLException {
     return getTransactionByUser(User_ID, "", 0, 10, 0, "", 0);
   }
 
-  public  List<Transaction> getTransactionByUser(int User_ID, int pagesize) throws SQLException {
+  public  List<Transaction_VM> getTransactionByUser(int User_ID, int pagesize) throws SQLException {
     return getTransactionByUser(User_ID, "", 0, pagesize, 0, "", 0);
   }
 
-  public  List<Transaction> getTransactionByUser(Integer User_ID, int pagesize, int offset) throws SQLException {
+  public  List<Transaction_VM> getTransactionByUser(Integer User_ID, int pagesize, int offset) throws SQLException {
     return getTransactionByUser(User_ID, "", 0, pagesize, offset, "", 0);
   }
 
-  public  List<Transaction> getTransactionByUser(int userID, String category, int year, int pagesize, int offset, String sortBy, int order) throws SQLException {
-    List<Transaction> result = new ArrayList<>();
+  public  List<Transaction_VM> getTransactionByUser(int userID, String category, int year, int pagesize, int offset, String sortBy, int order) throws SQLException {
+    List<Transaction_VM> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User(?,?,?,?,?,?,?)}")) {
         statement.setInt(1, userID);
@@ -400,13 +398,10 @@ public class TransactionDAO implements iTransactionDAO {
             Double Amount = resultSet.getDouble("Transaction_Amount");
             String Type = resultSet.getString("Transaction_Type");
             String Status = resultSet.getString("Transaction_Status");
-            Integer User_User_ID = resultSet.getInt("User_User_ID");
-            String User_User_Name = resultSet.getString("User_User_Name");
-            //String User_User_PW = resultSet.getString("User_User_PW");
-            String User_Email = resultSet.getString("User_Email");
-            //String Category_Category_ID = resultSet.getString("Category_Category_ID");
+            int count = resultSet.getInt("Comment_Count");
             Transaction _result = new Transaction(Transaction_ID, User_ID, Category_ID, Account_Num, Post_Date, Check_No, Description, Amount, Type, Status);
-            result.add(_result);
+            Transaction_VM __result = new Transaction_VM(_result,count);
+            result.add(__result);
           }
         }
       }
@@ -416,8 +411,8 @@ public class TransactionDAO implements iTransactionDAO {
     return result;
   }
 
-  public  List<Transaction> searchTransactionByUser(int userID, String query) throws SQLException {
-    List<Transaction> result = new ArrayList<>();
+  public  List<Transaction_VM> searchTransactionByUser(int userID, String query) throws SQLException {
+    List<Transaction_VM> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       try (CallableStatement statement = connection.prepareCall("{CALL sp_find_transaction(?,?)}")) {
         statement.setInt(1, userID);
@@ -435,13 +430,10 @@ public class TransactionDAO implements iTransactionDAO {
             Double Amount = resultSet.getDouble("Transaction_Amount");
             String Type = resultSet.getString("Transaction_Type");
             String Status = resultSet.getString("Transaction_Status");
-            Integer User_User_ID = resultSet.getInt("User_User_ID");
-            String User_User_Name = resultSet.getString("User_User_Name");
-            //String User_User_PW = resultSet.getString("User_User_PW");
-            String User_Email = resultSet.getString("User_Email");
-            //String Category_Category_ID = resultSet.getString("Category_Category_ID");
+            int count = resultSet.getInt("Comment_Count");
             Transaction _result = new Transaction(Transaction_ID, User_ID, Category_ID, Account_Num, Post_Date, Check_No, Description, Amount, Type, Status);
-            result.add(_result);
+            Transaction_VM __result = new Transaction_VM(_result,count);
+            result.add(__result);
           }
         }
       }
@@ -566,8 +558,8 @@ public class TransactionDAO implements iTransactionDAO {
     }
     return result;
   }
-  public Transaction getTransactionByPrimaryKey(Transaction _transaction) throws SQLException{
-    Transaction result = null;
+  public Transaction_VM getTransactionByPrimaryKey(Transaction _transaction) throws SQLException{
+    Transaction_VM result = new Transaction_VM();
     try(Connection connection = getConnection()) {
       try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_pk_Transaction(?,?)}")) {
         statement.setInt(1, _transaction.getTransaction_ID());
@@ -590,12 +582,36 @@ public class TransactionDAO implements iTransactionDAO {
             String User_Email = resultSet.getString("User_Email");
             String Category_Category_ID = resultSet.getString("Category_Category_ID");
             Integer Category_User_ID = resultSet.getInt("Category_User_ID");
-            result = new Transaction( Transaction_ID, User_ID, Category_ID, Account_Num, Post_Date, Check_No, Description, Amount, Type, Status);}
+            Transaction _result = new Transaction( Transaction_ID, User_ID, Category_ID, Account_Num, Post_Date, Check_No, Description, Amount, Type, Status);
+            result = new Transaction_VM(_result);
+        }
+          }
+      }
+      List<Transaction_Comment> _comments = new ArrayList<>();
+      result.setTransaction_Comments(_comments);
+      try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_Comment_by_Transaction(?)}")) {
+        statement.setInt(1, _transaction.getTransaction_ID());
+        try(ResultSet resultSet = statement.executeQuery()) {
+
+          while (resultSet.next()) {
+            Integer User_ID = resultSet.getInt("Transaction_Comment_User_ID");
+            Integer Transaction_ID = resultSet.getInt("Transaction_Comment_Transaction_ID");
+            Integer Transaction_Comment_ID = resultSet.getInt("Transaction_Comment_Transaction_Comment_ID");
+            String Content = resultSet.getString("Transaction_Comment_Content");
+            java.util.Date Post_Date = resultSet.getDate("Transaction_Comment_Post_Date");
+
+            Transaction_Comment _transaction_comment = new Transaction_Comment( User_ID, Transaction_ID, Transaction_Comment_ID, Content, Post_Date);
+            _comments.add(_transaction_comment);
+          }
+
         }
       }
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+
+  } catch (SQLException e) {
+    throw new RuntimeException("Could not retrieve Transaction_Comments. Try again later");
+  }
+
+
     return result;
   }
 

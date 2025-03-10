@@ -3,18 +3,16 @@ package com.beck.beck_demos.budget_app.data_fakes;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
 import com.beck.beck_demos.budget_app.models.Category_VM;
 import com.beck.beck_demos.budget_app.models.Transaction;
+import com.beck.beck_demos.budget_app.models.Transaction_VM;
 import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.io.File;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class TransactionDAO_Fake implements iTransactionDAO {
-  private  List<Transaction> transactionVMs;
+  private  List<Transaction_VM> transactionVMs;
   public TransactionDAO_Fake(){
     transactionVMs = new ArrayList<>();
     Transaction transaction0 = new Transaction(48, 39, "VYGHLkTb", "QpdcuMNh", new Date(104,4,4), 33, "VgODYmMt", 27.39, "jxXIlhEk", "rEnyujbY");
@@ -48,37 +46,69 @@ public class TransactionDAO_Fake implements iTransactionDAO {
     Transaction transaction28 = new Transaction(45, 64, "qgiMFYEd", "kJHNFths", new Date(104,4,4), 56, "SqkJwOUf", 41.64, "anriHeEs", "oJNVaLPB");
     Transaction transaction29 = new Transaction(33, 57, "qgiMFYEd", "BCCGEZpv", new Date(104,4,4), 13, "DEovADUv", 27.55, "YFooEcFK", "xgNJhSdj");
 
-    transactionVMs.add(transaction0);
-    transactionVMs.add(transaction1);
-    transactionVMs.add(transaction2);
-    transactionVMs.add(transaction3);
-    transactionVMs.add(transaction4);
-    transactionVMs.add(transaction5);
-    transactionVMs.add(transaction6);
-    transactionVMs.add(transaction7);
-    transactionVMs.add(transaction8);
-    transactionVMs.add(transaction9);
-    transactionVMs.add(transaction10);
-    transactionVMs.add(transaction11);
-    transactionVMs.add(transaction12);
-    transactionVMs.add(transaction13);
-    transactionVMs.add(transaction14);
-    transactionVMs.add(transaction15);
-    transactionVMs.add(transaction16);
-    transactionVMs.add(transaction17);
-    transactionVMs.add(transaction18);
-    transactionVMs.add(transaction19);
-    transactionVMs.add(transaction20);
-    transactionVMs.add(transaction21);
-    transactionVMs.add(transaction22);
-    transactionVMs.add(transaction23);
-    transactionVMs.add(transaction24);
-    transactionVMs.add(transaction25);
-    transactionVMs.add(transaction26);
-    transactionVMs.add(transaction27);
-    transactionVMs.add(transaction28);
-    transactionVMs.add(transaction29);
-   // Collections.sort(transactionVMs);
+    Transaction_VM transaction_VM0= new Transaction_VM(transaction0);
+    Transaction_VM transaction_VM1= new Transaction_VM(transaction1);
+    Transaction_VM transaction_VM2= new Transaction_VM(transaction2);
+    Transaction_VM transaction_VM3= new Transaction_VM(transaction3);
+    Transaction_VM transaction_VM4= new Transaction_VM(transaction4);
+    Transaction_VM transaction_VM5= new Transaction_VM(transaction5);
+    Transaction_VM transaction_VM6= new Transaction_VM(transaction6);
+    Transaction_VM transaction_VM7= new Transaction_VM(transaction7);
+    Transaction_VM transaction_VM8= new Transaction_VM(transaction8);
+    Transaction_VM transaction_VM9= new Transaction_VM(transaction9);
+    Transaction_VM transaction_VM10= new Transaction_VM(transaction10);
+    Transaction_VM transaction_VM11= new Transaction_VM(transaction11);
+    Transaction_VM transaction_VM12= new Transaction_VM(transaction12);
+    Transaction_VM transaction_VM13= new Transaction_VM(transaction13);
+    Transaction_VM transaction_VM14= new Transaction_VM(transaction14);
+    Transaction_VM transaction_VM15= new Transaction_VM(transaction15);
+    Transaction_VM transaction_VM16= new Transaction_VM(transaction16);
+    Transaction_VM transaction_VM17= new Transaction_VM(transaction17);
+    Transaction_VM transaction_VM18= new Transaction_VM(transaction18);
+    Transaction_VM transaction_VM19= new Transaction_VM(transaction19);
+    Transaction_VM transaction_VM20= new Transaction_VM(transaction20);
+    Transaction_VM transaction_VM21= new Transaction_VM(transaction21);
+    Transaction_VM transaction_VM22= new Transaction_VM(transaction22);
+    Transaction_VM transaction_VM23= new Transaction_VM(transaction23);
+    Transaction_VM transaction_VM24= new Transaction_VM(transaction24);
+    Transaction_VM transaction_VM25= new Transaction_VM(transaction25);
+    Transaction_VM transaction_VM26= new Transaction_VM(transaction26);
+    Transaction_VM transaction_VM27= new Transaction_VM(transaction27);
+    Transaction_VM transaction_VM28= new Transaction_VM(transaction28);
+    Transaction_VM transaction_VM29= new Transaction_VM(transaction29);
+
+    transactionVMs.add(transaction_VM0);
+    transactionVMs.add(transaction_VM1);
+    transactionVMs.add(transaction_VM2);
+    transactionVMs.add(transaction_VM3);
+    transactionVMs.add(transaction_VM4);
+    transactionVMs.add(transaction_VM5);
+    transactionVMs.add(transaction_VM6);
+    transactionVMs.add(transaction_VM7);
+    transactionVMs.add(transaction_VM8);
+    transactionVMs.add(transaction_VM9);
+    transactionVMs.add(transaction_VM10);
+    transactionVMs.add(transaction_VM11);
+    transactionVMs.add(transaction_VM12);
+    transactionVMs.add(transaction_VM13);
+    transactionVMs.add(transaction_VM14);
+    transactionVMs.add(transaction_VM15);
+    transactionVMs.add(transaction_VM16);
+    transactionVMs.add(transaction_VM17);
+    transactionVMs.add(transaction_VM18);
+    transactionVMs.add(transaction_VM19);
+    transactionVMs.add(transaction_VM20);
+    transactionVMs.add(transaction_VM21);
+    transactionVMs.add(transaction_VM22);
+    transactionVMs.add(transaction_VM23);
+    transactionVMs.add(transaction_VM24);
+    transactionVMs.add(transaction_VM25);
+    transactionVMs.add(transaction_VM26);
+    transactionVMs.add(transaction_VM27);
+    transactionVMs.add(transaction_VM28);
+    transactionVMs.add(transaction_VM29);
+
+    Collections.sort(transactionVMs);
   }
   @Override
   public int update_category(Transaction oldTransaction, Transaction newTransaction) throws SQLException {
@@ -134,14 +164,14 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   }
 
   @Override
-  public List<Transaction> getTransactionByUser(Integer User_ID) throws SQLException {
+  public List<Transaction_VM> getTransactionByUser(Integer User_ID) throws SQLException {
     return List.of();
   }
 
   @Override
-  public List<Transaction> getTransactionByUser(int User_ID, int pagesize) throws SQLException {
-    List<Transaction> results = new ArrayList<>();
-    for (Transaction t : transactionVMs) {
+  public List<Transaction_VM> getTransactionByUser(int User_ID, int pagesize) throws SQLException {
+    List<Transaction_VM> results = new ArrayList<>();
+    for (Transaction_VM t : transactionVMs) {
       if (t.getUser_ID().equals(User_ID)) {
         results.add(t);
       }
@@ -150,9 +180,9 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   }
 
   @Override
-  public List<Transaction> getTransactionByUser(Integer User_ID, int pagesize, int offset) throws SQLException {
-    List<Transaction> results = new ArrayList<>();
-    for (Transaction t : transactionVMs) {
+  public List<Transaction_VM> getTransactionByUser(Integer User_ID, int pagesize, int offset) throws SQLException {
+    List<Transaction_VM> results = new ArrayList<>();
+    for (Transaction_VM t : transactionVMs) {
       if (t.getUser_ID().equals(User_ID)) {
         results.add(t);
       }
@@ -161,9 +191,9 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   }
 
   @Override
-  public List<Transaction> getTransactionByUser(int userID, String category, int year, int pagesize, int offset, String sortBy, int order) throws SQLException {
-    List<Transaction> results = new ArrayList<>();
-    for (Transaction t : transactionVMs) {
+  public List<Transaction_VM> getTransactionByUser(int userID, String category, int year, int pagesize, int offset, String sortBy, int order) throws SQLException {
+    List<Transaction_VM> results = new ArrayList<>();
+    for (Transaction_VM t : transactionVMs) {
 
       if (t.getUser_ID().equals(userID)&&(category.equals("")||t.getCategory_ID().equals(category))&&(year==0||t.getPost_Date().getYear()==year)) {
         results.add(t);
@@ -173,7 +203,7 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   }
 
   @Override
-  public List<Transaction> searchTransactionByUser(int userID, String query) throws SQLException {
+  public List<Transaction_VM> searchTransactionByUser(int userID, String query) throws SQLException {
     return List.of();
   }
 
@@ -235,9 +265,9 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   }
 
   @Override
-  public Transaction getTransactionByPrimaryKey(Transaction _transaction) throws SQLException {
-    Transaction result = null;
-    for (Transaction t : transactionVMs) {
+  public Transaction_VM getTransactionByPrimaryKey(Transaction _transaction) throws SQLException {
+    Transaction_VM result = null;
+    for (Transaction_VM t : transactionVMs) {
       if (t.getUser_ID().equals(_transaction.getUser_ID())&&t.getTransaction_ID().equals(_transaction.getTransaction_ID())){
         result = t;
         break;
@@ -263,7 +293,8 @@ public class TransactionDAO_Fake implements iTransactionDAO {
         break;
       }
     }
-    transactionVMs.set(location, newTransaction);
+    Transaction_VM _newTransaction = new Transaction_VM(newTransaction);
+    transactionVMs.set(location, _newTransaction);
     return result;
   }
   private boolean duplicateKey(Transaction _transaction){

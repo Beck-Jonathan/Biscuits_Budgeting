@@ -27,6 +27,7 @@ Create the JSP  For Viewing All of The  Transaction table
                         <th scope="col">Type</th>
                         <th scope="col">Status</th>
                         <th scope="col">Category</th>
+                        <th scope="col"><a href="${appURL}/all-Transactions?sort=Comments&direction=${direction}&category=${category}&year=${year}">Comment Count</a></th>
                         <th scope="col"></th>
 
                     </tr>
@@ -50,6 +51,9 @@ Create the JSP  For Viewing All of The  Transaction table
                                     </c:forEach>
                                 </select>
                                 </td>
+                            <td>
+                                    ${fn:escapeXml(transaction.comment_count)}
+                            </td>
                                 <td style="width:50px">
                                     <div id="${transaction.transaction_ID}_status"  style="border:none; display:none;"  > xx </div>
                                 </td>

@@ -103,5 +103,85 @@ Create the JSP For Viuw/Edit from the Transaction table
         </div>
     </form>
 </div>
+<div class = "container">
+    <div class="row">
+        <div class="col-12">
+            <h1>All Transaction Comments</h1>
+            <p>There ${transaction.transaction_Comments.size() eq 1 ? "is" : "are"}&nbsp;${transaction.transaction_Comments.size()} Transaction Comment${transaction.transaction_Comments.size() ne 1 ? "s" : ""}</p>
+            Add Transaction_Comment   <a href="addTransaction_Comment">Add</a>
+
+                <tr class="table-responsive"><table class="table table-bordered">
+                    <thead>
+                    <tr>
+
+                        <th scope="col">Content</th>
+                        <th scope="col">Post_Date</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${transaction.transaction_Comments}" var="transaction_comment">
+                        <tr>
+
+                            <form method="post" action="${appURL}/deletetransaction_comment">
+
+                                <input type="hidden" name="transaction_commentid" value="${transaction_comment.transaction_Comment_ID}">
+                                <input type="hidden" name="transaction_id" value="${transaction.transaction_ID}">
+                                    
+                            <td>${fn:escapeXml(transaction_comment.content)}</td>
+                            <td>${fn:escapeXml(transaction_comment.post_Date)}</td>
+                            <td><a href = "edittransaction_comment?transaction_commentid=${transaction_comment.transaction_Comment_ID}&mode=edit" > Edit </a></td>
+                            <td><button class="btn btn-orange mb-0" type="submit">Delete  </button> </td>
+                            </form>
+
+                        </tr>
+                    </c:forEach>
+
+                    <tr>
+                        <form method="post" action="${appURL}/addTransaction_Comment" id = "addTransaction_Comment" >
+
+
+                            <!-- Transaction_Comment_ID -->
+
+
+                                <input type="hidden" name="inputtransaction_commentTransaction_ID" value="${transaction.transaction_ID}">
+                                <input type="hidden" name="inputtransaction_commentTransaction_Comment_ID" value="${commentID}">
+
+
+                            <!-- Content -->
+                            <td>
+                                <div class="input-group input-group-lg">
+                                    <input type="text" class="<c:if test="${not empty results.transaction_commentContenterror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Content" id="inputtransaction_commentContent" name="inputtransaction_commentContent" value="${fn:escapeXml(results.Content)}">
+                                    <c:if test="${not empty results.transaction_commentContenterror}">
+                                        <div class="invalid-feedback">${results.transaction_commentContenterror}</div>
+                                    </c:if>
+                                </div>
+                            </td>
+                            <!-- Post_Date -->
+                            <td>
+
+                                <div class="input-group input-group-lg">
+                                    <input type="date" value="<fmt:formatDate value="<%= new java.util.Date()%>" pattern="yyyy-MM-dd" />" disabled class="<c:if test="${not empty results.transaction_commentPost_Dateerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Post_Date" id="inputtransaction_commentPost_Date" name="inputtransaction_commentPost_Date" value="${fn:escapeXml(results.Post_Date)}">
+                                    <c:if test="${not empty results.transaction_commentPost_Dateerror}">
+                                        <div class="invalid-feedback">${results.transaction_commentPost_Dateerror}</div>
+                                    </c:if>
+                                </div>
+                            </td>
+                            <td colspan="2" class="align-items-center mt-0">
+                                <div class="d-grid"><button class="btn btn-orange mb-0" type="submit">Create Transaction Comment  </button></div>
+                                <c:if test="${not empty results.dbStatus}"
+                                ><p>${results.dbStatus}</p>
+                                </c:if>
+                            </td>
+                        </form>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+
+        </div>
+    </div>
+</div>
 <%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>
 

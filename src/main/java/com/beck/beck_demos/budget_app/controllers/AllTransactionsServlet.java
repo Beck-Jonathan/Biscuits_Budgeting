@@ -9,6 +9,7 @@ import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
 import com.beck.beck_demos.budget_app.models.Category;
 import com.beck.beck_demos.budget_app.models.Transaction;
+import com.beck.beck_demos.budget_app.models.Transaction_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -103,7 +104,7 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
 
 
   session.setAttribute("currentPage",req.getRequestURL());
-  List<Transaction> transactions = null;
+  List<Transaction_VM> transactions = null;
   int transaction_count=0;
 
   int page_size=20;
