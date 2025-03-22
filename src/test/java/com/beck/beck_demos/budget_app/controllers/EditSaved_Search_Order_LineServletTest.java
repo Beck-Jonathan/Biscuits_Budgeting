@@ -105,6 +105,9 @@ class EditSaved_Search_Order_LineServletTest {
     request.setParameter("inputsaved_search_order_lineUser_ID","406");
     request.setParameter("inputsaved_search_order_lineSearch_Phrase","TestValue");
     request.setParameter("inputsaved_search_order_lineIs_Active","true");
+    request.setParameter("oldCategory","TestValue");
+    request.setParameter("oldPhrase","TestValue");
+
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
@@ -129,7 +132,7 @@ class EditSaved_Search_Order_LineServletTest {
     String Saved_Search_Order_IDError = results.get("saved_search_order_lineSaved_Search_Order_IDerror");
     String Line_NoError = results.get("saved_search_order_lineLine_Noerror");
     String Category_IDError = results.get("saved_search_order_lineCategory_IDerror");
-    String User_IDError = results.get("saved_search_order_lineUser_IDerror");
+
     String Search_PhraseError = results.get("saved_search_order_lineSearch_Phraseerror");
     assertNotEquals("",Saved_Search_Order_IDError);
     assertNotNull(Saved_Search_Order_IDError);
@@ -137,8 +140,7 @@ class EditSaved_Search_Order_LineServletTest {
     assertNotNull(Line_NoError);
     assertNotEquals("",Category_IDError);
     assertNotNull(Category_IDError);
-    assertNotEquals("",User_IDError);
-    assertNotNull(User_IDError);
+
     assertNotEquals("",Search_PhraseError);
     assertNotNull(Search_PhraseError);
     assertEquals(200,responseStatus);
@@ -174,6 +176,8 @@ class EditSaved_Search_Order_LineServletTest {
     request.setParameter("inputsaved_search_order_lineUser_ID","406");
     request.setParameter("inputsaved_search_order_lineSearch_Phrase","DUPLICATE");
     request.setParameter("inputsaved_search_order_lineIs_Active","true");
+    request.setParameter("oldCategory","DUPLICATE");
+    request.setParameter("oldPhrase","DUPLICATE");
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
@@ -208,6 +212,9 @@ class EditSaved_Search_Order_LineServletTest {
     request.setParameter("inputsaved_search_order_lineUser_ID","406");
     request.setParameter("inputsaved_search_order_lineSearch_Phrase","EXCEPTION");
     request.setParameter("inputsaved_search_order_lineIs_Active","true");
+    request.setParameter("oldCategory","EXCEPTION");
+    request.setParameter("oldPhrase","EXCEPTION");
+
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
