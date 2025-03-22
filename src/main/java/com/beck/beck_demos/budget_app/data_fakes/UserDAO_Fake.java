@@ -79,7 +79,13 @@ public class UserDAO_Fake implements iUserDAO {
   }
 
   @Override
-  public String get_pw(String username) {
+  public String get_pw(String username) throws SQLException {
+    User _user = new User();
+    _user.setUser_Name(username);
+    if (exceptionKey(_user)){
+      throw new SQLException("error");
+    }
+
     String result = "";
     for (User user : users) {
       if (user.getUser_Name().equals(username)) {

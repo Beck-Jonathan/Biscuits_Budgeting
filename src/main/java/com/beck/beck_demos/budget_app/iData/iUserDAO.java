@@ -24,7 +24,7 @@ public interface iUserDAO {
 
   User getUserByPrimaryKey(User _user) throws SQLException ;
 
-  String get_pw(String username) ;
+  String get_pw(String username) throws SQLException;
 
   int getUserIDByUserName(String username) throws Exception;
 
