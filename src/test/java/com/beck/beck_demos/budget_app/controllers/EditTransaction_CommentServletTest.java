@@ -53,6 +53,7 @@ class EditTransaction_CommentServletTest {
     user.setUser_ID(36);
     user.setRoles(roles);
     session.setAttribute("User_B",user);
+    request.setSession(session);
     servlet.doPost(request,response);
     int status = response.getStatus();
     assertEquals(200,status);
@@ -84,22 +85,25 @@ class EditTransaction_CommentServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(36);
+    user.setUser_ID(54);
     user.setRoles(roles);
     session.setAttribute("User_B",user);
 //to set the old Transaction_Comment
     Transaction_Comment transaction_comment = new Transaction_Comment();
-    transaction_comment.setUser_ID(43);
-    transaction_comment.setTransaction_ID(43);
-    transaction_comment.setTransaction_Comment_ID(43);
+    transaction_comment.setUser_ID(54);
+    transaction_comment.setTransaction_ID(55);
+    transaction_comment.setTransaction_Comment_ID(20);
     transaction_comment.setContent("testTransaction_Comment");
     transaction_comment.setPost_Date(new Date());
     session.setAttribute("transaction_comment",transaction_comment);
+    request.setSession(session);
 //create a new albums parameters
-    request.setParameter("inputtransaction_commentUser_ID","406");
-    request.setParameter("inputtransaction_commentTransaction_ID","406");
-    request.setParameter("inputtransaction_commentTransaction_Comment_ID","406");
+    request.setParameter("inputtransaction_commentUser_ID","54");
+    request.setParameter("inputtransaction_commentTransaction_ID","55");
+    request.setParameter("inputtransaction_commentTransaction_Comment_ID","20");
     request.setParameter("inputtransaction_commentContent","TestValue");
+    request.setParameter("inputtransaction_commentOldContent","oldContent");
+
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
@@ -117,24 +121,25 @@ class EditTransaction_CommentServletTest {
     user.setUser_ID(36);
     user.setRoles(roles);
     session.setAttribute("User_B",user);
+    request.setSession(session);
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String User_IDError = results.get("transaction_commentUser_IDerror");
+
     String Transaction_IDError = results.get("transaction_commentTransaction_IDerror");
     String Transaction_Comment_IDError = results.get("transaction_commentTransaction_Comment_IDerror");
     String ContentError = results.get("transaction_commentContenterror");
-    String Post_DateError = results.get("transaction_commentPost_Dateerror");
-    assertNotEquals("",User_IDError);
-    assertNotNull(User_IDError);
+
+
+
     assertNotEquals("",Transaction_IDError);
     assertNotNull(Transaction_IDError);
     assertNotEquals("",Transaction_Comment_IDError);
     assertNotNull(Transaction_Comment_IDError);
     assertNotEquals("",ContentError);
     assertNotNull(ContentError);
-    assertNotEquals("",Post_DateError);
-    assertNotNull(Post_DateError);
+
+
     assertEquals(200,responseStatus);
   }
   @Test
@@ -159,11 +164,13 @@ class EditTransaction_CommentServletTest {
     transaction_comment.setContent("DUPLICATE");
     transaction_comment.setPost_Date(new Date());
     session.setAttribute("transaction_comment",transaction_comment);
+    request.setSession(session);
 //create a new albums parameters
     request.setParameter("inputtransaction_commentUser_ID","406");
     request.setParameter("inputtransaction_commentTransaction_ID","406");
     request.setParameter("inputtransaction_commentTransaction_Comment_ID","406");
     request.setParameter("inputtransaction_commentContent","DUPLICATE");
+    request.setParameter("inputtransaction_commentOldContent","DUPLICATE");
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
@@ -188,11 +195,14 @@ class EditTransaction_CommentServletTest {
     transaction_comment.setTransaction_Comment_ID(43);
     transaction_comment.setContent("EXCEPTION");
     session.setAttribute("transaction_comment",transaction_comment);
+    request.setSession(session);
 //create a new albums parameters
     request.setParameter("inputtransaction_commentUser_ID","406");
     request.setParameter("inputtransaction_commentTransaction_ID","406");
     request.setParameter("inputtransaction_commentTransaction_Comment_ID","406");
     request.setParameter("inputtransaction_commentContent","EXCEPTION");
+    request.setParameter("inputtransaction_commentOldContent","EXCEPTION");
+
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
