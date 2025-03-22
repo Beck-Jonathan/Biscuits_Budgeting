@@ -70,6 +70,10 @@ public class add_transaction extends HttpServlet {
     Part filePart = req.getPart("upload_transactions");
     Map<String, String> results = new HashMap<>();
     String fileName = filePart.getSubmittedFileName();
+    File checkFile = new File(uploadFilePath + File.separator + fileName);
+    if (checkFile.exists()) {
+      checkFile.delete();
+    }
     try {
       for (Part part : req.getParts()) {
         part.write(uploadFilePath + File.separator + fileName);
@@ -88,7 +92,12 @@ public class add_transaction extends HttpServlet {
     try {
       transactions = transactionDAO.getTransactionFromFile(uploadedFile,"Altra");
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      results.put("dbError",e.getMessage());
+      session.setAttribute("currentPage",req.getRequestURL());
+      req.setAttribute("pageTitle", "Budget Home");
+      req.getRequestDispatcher("WEB-INF/Budget_App/add_transaction.jsp").forward(req, resp);
+
+      return;
     }
     int NewTrans = 0;
     int oldTrans = 0;

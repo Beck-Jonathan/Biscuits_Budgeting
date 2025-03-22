@@ -296,7 +296,7 @@ public class TransactionDAO implements iTransactionDAO {
       reader.close();
 
     } catch (Exception e) {
-      throw new RuntimeException("Could not retrieve Transactions. Try again later");
+      throw new RuntimeException(e.getMessage()+"\n\nCould not add Transactions. Try again later");
     }
     return result;
   }

@@ -16,10 +16,18 @@ public class Category implements Comparable<Category> {
     this.User_ID = User_ID;
   }
 
-
+  /**
+   * <p> Gets the Category_ID of the associated Category object </p>
+   * @return the Category_ID of this Category object.
+   */
   public String getCategory_ID() {
     return Category_ID;
   }
+  /**
+   * <p> Sets the Category_ID of the associated Category object </p>
+   *@param Category_ID the category_id of the category,
+   * throws IllegalArgumentException if Category_ID under 3 characters or longer than 100 characters
+   */
   public void setCategory_ID(String Category_ID) {
     Category_ID = Category_ID.replaceAll("[^&A-Za-z0-9 - ]","");
     if(Category_ID.length()<3){
@@ -30,15 +38,27 @@ public class Category implements Comparable<Category> {
     }
     this.Category_ID = Category_ID;
   }
+  /**
+   * <p> Gets the User_ID of the associated Category object </p>
+   * @return the User_ID of this Category object.
+   */
   public Integer getUser_ID() {
     return User_ID;
   }
+
+  /**
+   * <p> Sets the User_ID of the associated Category object </p>
+   *@param User_ID the user_id of the category,
+   * throws IllegalArgumentException if User_ID is negative or greater than 10,000
+   */
   public void setUser_ID(Integer User_ID) {
     if (User_ID<0||User_ID>10000){
       throw new IllegalArgumentException("User_ID Can Not Be Negative");
     }
     this.User_ID = User_ID;
   }
+
+
   @Override
   public int compareTo(@NotNull Category o) {
     if (this.Category_ID.compareTo(o.Category_ID)<0){

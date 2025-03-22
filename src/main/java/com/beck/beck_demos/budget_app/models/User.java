@@ -31,15 +31,6 @@ public class User implements Comparable<User>{
   private String User_Name;
   private char[] User_PW;
   private String Email;
-
-  public List<String> getRoles() {
-    return roles;
-  }
-
-  public void setRoles(List<String> roles) {
-    this.roles = roles;
-  }
-
   private List<String> roles;
 
   public User(){}
@@ -51,18 +42,36 @@ public class User implements Comparable<User>{
     this.User_PW = User_PW;
     this.Email = Email;
   }
+  /**
+   * <p> Gets the User_ID of the associated User object </p>
+   * @return the User_ID of this User object.
+   */
   public Integer getUser_ID() {
     return User_ID;
   }
+  /**
+   * <p> Sets the User_ID of the associated User object </p>
+   *@param User_ID the user_id of the user,
+   * throws IllegalArgumentException if User_ID is negative or greater than 10,000
+   */
   public void setUser_ID(Integer User_ID) {
     if (User_ID < 0 || User_ID > 10000) {
       throw new IllegalArgumentException("User_ID Can Not Be Negative");
     }
     this.User_ID = User_ID;
   }
+  /**
+   * <p> Gets the User_Name of the associated User object </p>
+   * @return the User_Name of this User object.
+   */
   public String getUser_Name() {
     return User_Name;
   }
+  /**
+   * <p> Sets the User_Name of the associated User object </p>
+   *@param User_Name the user_name of the user,
+   * throws IllegalArgumentException if User_Name under 3 characters or longer than 100 characters
+   */
   public void setUser_Name(String User_Name) {
     User_Name = User_Name.replaceAll("[^A-Za-z0-9_ - ]","");
     if(User_Name.length()<4){
@@ -73,9 +82,18 @@ public class User implements Comparable<User>{
     }
     this.User_Name = User_Name;
   }
+  /**
+   * <p> Gets the User_PW of the associated User object </p>
+   * @return the User_PW of this User object.
+   */
   public char[] getUser_PW() {
     return User_PW;
   }
+  /**
+   * <p> Sets the User_PW of the associated User object </p>
+   *@param User_PW the user_pw of the user,
+   * throws IllegalArgumentException if User_PW does not match a standard password regex
+   */
   public void setUser_PW(char[] User_PW) {
     if (User_PW!=null) {
 
@@ -87,9 +105,18 @@ public class User implements Comparable<User>{
     }
     this.User_PW = User_PW;
   }
+  /**
+   * <p> Gets the Email of the associated User object </p>
+   * @return the Email of this User object.
+   */
   public String getEmail() {
     return Email;
   }
+  /**
+   * <p> Sets the Email of the associated User object </p>
+   *@param Email the email of the user,
+   * throws IllegalArgumentException if Email does not match a standard email regex
+   */
   public void setEmail(String Email) {
     if (Email!=null) {
 
@@ -104,6 +131,15 @@ public class User implements Comparable<User>{
     }
     this.Email = Email;
   }
+  public List<String> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(List<String> roles) {
+    this.roles = roles;
+  }
+
+
   @Override
   public int compareTo(@NotNull User o) {
     if (this.User_ID.compareTo(o.User_ID)<0){
