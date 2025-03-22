@@ -120,7 +120,7 @@ public class EditSaved_Search_Order_LineServlet extends HttpServlet {
       _oldSaved_Search_Order_Line.setSearch_Phrase(old_Search_Phrase);
     } catch(Exception e) {
       session.setAttribute("SearchTooShort",e.getMessage());
-
+      results.put("SearchTooShort", e.getMessage());
       errors++;
     }
     try {
@@ -148,7 +148,7 @@ public class EditSaved_Search_Order_LineServlet extends HttpServlet {
         results.put("dbStatus","Saved_Search_Order_Line Not Updated");
       }
     }
-
+    req.setAttribute("results",results);
     resp.sendRedirect(req.getContextPath()+"/editSaved_Search_Order?saved_search_orderid="+_newSaved_Search_Order_Line.getSaved_Search_Order_ID());
     return;
 //standard

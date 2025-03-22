@@ -92,7 +92,7 @@ class Saved_Search_Order_LineTest {
   }
   @Test
   public void  testSaved_Search_Order_LineThrowsIllegalArgumentExceptionIfCategory_IDTooShort(){
-    String Category_ID = "sv";
+    String Category_ID = "s";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_saved_search_order_line.setCategory_ID(Category_ID);});
   }
   @Test

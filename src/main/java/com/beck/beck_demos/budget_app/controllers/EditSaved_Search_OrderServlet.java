@@ -76,6 +76,7 @@ public class EditSaved_Search_OrderServlet extends HttpServlet{
       allCategorys = categoryDAO.getCategoryByUser(user.getUser_ID());
     } catch (Exception e) {
       req.setAttribute("dbStatus",e.getMessage());
+
       resp.sendRedirect(req.getContextPath()+"/budget_home");
       return;
     }

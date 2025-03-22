@@ -176,6 +176,7 @@ class AddCategoryServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
+    user.setUser_ID(39);
     session.setAttribute("User_B",user);
     request.setSession(session);
     request.setParameter("inputcategoryCategory_ID","EXCEPTION");
@@ -199,6 +200,7 @@ class AddCategoryServletTest {
   @Test
   public void testDuplicateKeyReturnsZero() throws ServletException, IOException{
     User user = new User();
+    user.setUser_ID(34);
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);

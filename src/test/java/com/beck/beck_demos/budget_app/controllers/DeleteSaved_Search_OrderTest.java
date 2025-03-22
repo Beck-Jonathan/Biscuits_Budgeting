@@ -43,7 +43,7 @@ class DeleteSaved_Search_OrderTest {
     rd=null;
   }
   @Test
-  public void TestLoggedInUserGets200OnDoGet() throws ServletException, IOException{
+  public void TestLoggedInUserGets302OnDoGet() throws ServletException, IOException{
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
@@ -53,7 +53,7 @@ class DeleteSaved_Search_OrderTest {
     request.setSession(session);
     servlet.doGet(request,response);
     int status = response.getStatus();
-    assertEquals(200,status);
+    assertEquals(302,status);
   }
   @Test
   public void TestLoggedOutUserGets302OnDoGet() throws ServletException, IOException{

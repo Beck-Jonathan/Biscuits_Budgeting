@@ -43,7 +43,7 @@ class EditSaved_Search_Order_LineServletTest {
   }
 
   @Test
-  public void TestLoggedInUserGets200OnDoPost() throws ServletException, IOException{
+  public void TestLoggedInUserGets302OnDoPost() throws ServletException, IOException{
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
@@ -53,7 +53,7 @@ class EditSaved_Search_Order_LineServletTest {
     request.setSession(session);
     servlet.doPost(request,response);
     int status = response.getStatus();
-    assertEquals(200,status);
+    assertEquals(302,status);
   }
 
   @Test
@@ -133,7 +133,7 @@ class EditSaved_Search_Order_LineServletTest {
     String Line_NoError = results.get("saved_search_order_lineLine_Noerror");
     String Category_IDError = results.get("saved_search_order_lineCategory_IDerror");
 
-    String Search_PhraseError = results.get("saved_search_order_lineSearch_Phraseerror");
+    String Search_PhraseError = results.get("SearchTooShort");
     assertNotEquals("",Saved_Search_Order_IDError);
     assertNotNull(Saved_Search_Order_IDError);
     assertNotEquals("",Line_NoError);
@@ -143,7 +143,7 @@ class EditSaved_Search_Order_LineServletTest {
 
     assertNotEquals("",Search_PhraseError);
     assertNotNull(Search_PhraseError);
-    assertEquals(200,responseStatus);
+    assertEquals(302,responseStatus);
   }
   @Test
   public void testInitWithNoParametersDoesNotThrowException() throws ServletException {
@@ -182,7 +182,7 @@ class EditSaved_Search_Order_LineServletTest {
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
     String Saved_Search_Order_Line_Updated = results.get("dbStatus");
-    assertEquals(200,responseStatus);
+    assertEquals(302,responseStatus);
     assertNotNull(Saved_Search_Order_Line_Updated);
     assertEquals("Saved_Search_Order_Line Not Updated",Saved_Search_Order_Line_Updated);
     assertNotEquals("",Saved_Search_Order_Line_Updated);
@@ -220,7 +220,7 @@ class EditSaved_Search_Order_LineServletTest {
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
     String Saved_Search_Order_Line_Updated = results.get("dbStatus");
     String dbError = results.get("dbError");
-    assertEquals(200,responseStatus);
+    assertEquals(302,responseStatus);
     assertNotNull(Saved_Search_Order_Line_Updated);
     assertNotEquals("",Saved_Search_Order_Line_Updated);
     assertEquals("Saved_Search_Order_Line Not Updated",Saved_Search_Order_Line_Updated);

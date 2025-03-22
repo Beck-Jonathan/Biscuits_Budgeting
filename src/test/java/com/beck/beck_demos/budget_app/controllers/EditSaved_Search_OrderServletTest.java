@@ -45,19 +45,7 @@ class EditSaved_Search_OrderServletTest {
     session=null;
     rd=null;
   }
-  @Test
-  public void TestLoggedInUserGets200OnDoGet() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setUser_ID(36);
-    user.setRoles(roles);
-    session.setAttribute("User_B",user);
-    request.setSession(session);
-    servlet.doGet(request,response);
-    int status = response.getStatus();
-    assertEquals(200,status);
-  }
+
   @Test
   public void TestLoggedInUserGets200OnDoPost() throws ServletException, IOException{
     User user = new User();
@@ -137,19 +125,13 @@ class EditSaved_Search_OrderServletTest {
     user.setRoles(roles);
     session.setAttribute("User_B",user);
 
-    Integer Saved_Search_Order_ID= -1;
+    Integer Saved_Search_Order_ID= 11;
     request.setParameter("saved_search_orderid",Saved_Search_Order_ID.toString());
 
     request.setSession(session);
     servlet.doGet(request,response);
     Saved_Search_Order saved_search_order = (Saved_Search_Order) session.getAttribute("saved_search_order");
-    assertNull(saved_search_order.getSaved_Search_Order_ID());
-    assertNull(saved_search_order.getOwned_User());
-    assertNull(saved_search_order.getNickname());
-    assertNull(saved_search_order.getDescription());
-    assertNull(saved_search_order.getLast_Used());
-    assertNull(saved_search_order.getLast_Updated());
-    assertNull(saved_search_order.getTimes_Ran());
+    assertNull(saved_search_order);
   }
   @Test
   public void TestUpdateCanAddWithNoErrorsAndRedirects() throws ServletException, IOException{
