@@ -64,7 +64,7 @@ public class User implements Comparable<User>{
     return User_Name;
   }
   public void setUser_Name(String User_Name) {
-    User_Name = User_Name.replaceAll("[^A-Za-z0-9 - ]","");
+    User_Name = User_Name.replaceAll("[^A-Za-z0-9_ - ]","");
     if(User_Name.length()<4){
       throw new IllegalArgumentException("User_Name is too short.");
     }
