@@ -7,6 +7,7 @@ import com.beck.beck_demos.budget_app.data_fakes.CategoryDAO_Fake;
 import com.beck.beck_demos.budget_app.data_fakes.TransactionDAO_Fake;
 import com.beck.beck_demos.budget_app.models.Transaction;
 
+import com.beck.beck_demos.budget_app.models.Transaction_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -161,7 +162,7 @@ class ViewEditTransactionServletTest {
     session.setAttribute("User_B",user);
     request.setSession(session);
 //to set the old Transaction
-    Transaction transaction = new Transaction();
+    Transaction_VM transaction = new Transaction_VM();
     transaction.setTransaction_ID(48);
     transaction.setUser_ID(39);
     transaction.setCategory_ID("testTransaction");
@@ -246,7 +247,7 @@ class ViewEditTransactionServletTest {
     session.setAttribute("User_B",user);
     request.setSession(session);
 //to set the old Transaction
-    Transaction transaction = new Transaction();
+    Transaction_VM transaction = new Transaction_VM();
     transaction.setTransaction_ID(43);
     transaction.setUser_ID(43);
     transaction.setCategory_ID("DUPLICATE");
@@ -285,7 +286,7 @@ class ViewEditTransactionServletTest {
     session.setAttribute("User_B",user);
     request.setSession(session);
 //to set the old Transaction
-    Transaction transaction = new Transaction();
+    Transaction_VM transaction = new Transaction_VM();
     transaction.setTransaction_ID(43);
     transaction.setUser_ID(43);
     transaction.setCategory_ID("EXCEPTION");

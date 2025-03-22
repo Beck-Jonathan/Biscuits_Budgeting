@@ -102,7 +102,7 @@ Create the JSP for the tutorial
             Assign each transaction to it's proper category.
         </div>
         <div class = "col-8">
-            <a href="${pageContext.request.contextPath}/images/categorize.png.png">   <img  width="636"  src="${pageContext.request.contextPath}/images/categorize.png"> </a>
+            <a href="${pageContext.request.contextPath}/images/categorize.png">   <img  width="636"  src="${pageContext.request.contextPath}/images/categorize.png"> </a>
         </div>
 
     </div>

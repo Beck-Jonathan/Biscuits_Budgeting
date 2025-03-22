@@ -75,9 +75,11 @@ public class ViewEditTransactionServlet extends HttpServlet{
     }
     // tp find next available comment id
     int comment_id=1;
-    for (Transaction_Comment comment : transaction.getTransaction_Comments()){
-      if (comment.getTransaction_Comment_ID()>=comment_id){
-        comment_id=comment.getTransaction_Comment_ID()+1;
+    if (transaction.getTransaction_Comments()!=null&& !transaction.getTransaction_Comments().isEmpty()) {
+      for (Transaction_Comment comment : transaction.getTransaction_Comments()) {
+        if (comment.getTransaction_Comment_ID() >= comment_id) {
+          comment_id = comment.getTransaction_Comment_ID() + 1;
+        }
       }
     }
 

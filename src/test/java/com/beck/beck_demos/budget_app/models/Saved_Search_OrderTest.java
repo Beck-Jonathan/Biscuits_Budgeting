@@ -35,23 +35,23 @@ class Saved_Search_OrderTest {
   }
   @Test
   public void testSaved_Search_OrderParameterizedConstructorSetsAllVariables(){
+    Date date1 = new Date();
+    Date date2 = new Date();
     Saved_Search_Order _saved_search_order= new Saved_Search_Order(
         1774,
         4584,
         "CbBxFLoYyknxhlJYaTMRWiRoCqpgCVOGFEfwsshtUtvxlcGONfrjICUyukwOXjaRETuWTYhovTHtrnJYWGAbVvcctwvwGDKVgg",
         "IhiuowDmouZGGbrRiGiiXRnZlqpPwLHAkgKKbGhImqUYOkOwxkVuULLwxuuyalKGcKGQdefcWYaPNIPUkioRRebjNqqmgDevflrZlQoknmVAegqRWZWiQsisXnldlscPpctDObNbKAPdNNUsWkrsAyJBrGwBLanyemTMGfodkIteQObsEjbsETWQxZyejcaJdMDVOBwfmcgWDWcZqpfUPeQJAPuggDjoRwYydmVmcXNGCHhTwqnkwrhaxGwvr",
-        new Date()
-        ,
-        new Date()
-        ,
+        date1,
+        date2,
         1054
     );
     Assertions.assertEquals(1774,_saved_search_order.getSaved_Search_Order_ID());
     Assertions.assertEquals(4584,_saved_search_order.getOwned_User());
     Assertions.assertEquals("CbBxFLoYyknxhlJYaTMRWiRoCqpgCVOGFEfwsshtUtvxlcGONfrjICUyukwOXjaRETuWTYhovTHtrnJYWGAbVvcctwvwGDKVgg",_saved_search_order.getNickname());
     Assertions.assertEquals("IhiuowDmouZGGbrRiGiiXRnZlqpPwLHAkgKKbGhImqUYOkOwxkVuULLwxuuyalKGcKGQdefcWYaPNIPUkioRRebjNqqmgDevflrZlQoknmVAegqRWZWiQsisXnldlscPpctDObNbKAPdNNUsWkrsAyJBrGwBLanyemTMGfodkIteQObsEjbsETWQxZyejcaJdMDVOBwfmcgWDWcZqpfUPeQJAPuggDjoRwYydmVmcXNGCHhTwqnkwrhaxGwvr",_saved_search_order.getDescription());
-    Assertions.assertEquals(new Date(),_saved_search_order.getLast_Used());
-    Assertions.assertEquals(new Date(),_saved_search_order.getLast_Updated());
+    Assertions.assertEquals(date1,_saved_search_order.getLast_Used());
+    Assertions.assertEquals(date2,_saved_search_order.getLast_Updated());
     Assertions.assertEquals(1054,_saved_search_order.getTimes_Ran());
   }
   @Test
