@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	const category ="";
 
-console.log("ready on new version")
+////console.log("ready on new version")
 	$("#Home").button();
 	$( "#Home" ).button( "option", "icon", "ui-icon-check" );
 	$( "#Home" ).button( "option", "showIcon", "true" );
@@ -76,7 +76,7 @@ console.log("ready on new version")
 })
 
 function hiderow(row){
-	console.log(row);
+	//console.log(row);
 	var rowtohide = document.getElementById(row);
 	//rowtohide.setAttribute('display','none')
 	$(rowtohide).slideUp();
@@ -84,7 +84,7 @@ function hiderow(row){
 }
 
 function hidecol(col_no) {
-	console.log(col_no);
+	//console.log(col_no);
 	var tbl = document.getElementById('moneyTable');
 	var rows = tbl.getElementsByTagName('tr');
 

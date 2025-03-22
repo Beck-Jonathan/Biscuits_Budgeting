@@ -19,16 +19,16 @@ public class Database {
     try {
       Class.forName(db_driver);
     } catch (ClassNotFoundException e) {
-      System.out.println("driver not found");
+      ////System.out.println("driver not found");
     }
     try {
       connection = DriverManager.getConnection(db_connection, db_user, db_password);
       if (connection.isValid(2)) {
-        System.out.println("connected!");
+        ////System.out.println("connected!");
         return connection;
       }
     } catch (SQLException e) {
-      System.out.println("unable to connect");
+      ////System.out.println("unable to connect");
     }
     return null;
 

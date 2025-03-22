@@ -15,79 +15,122 @@ class CategoryTest {
   public void teardown(){
     _category = null;
   }
+
+  /**
+   <p> Tests That the default constructor for the Category object works </p>
+   */
   @Test
   public void testCategoryDefaultConstructorSetsNoVariables(){
     Category _category= new Category();
     Assertions.assertNull(_category.getCategory_ID());
     Assertions.assertNull(_category.getUser_ID());
   }
+
+  /**
+   <p> Tests That the Parameterized Constructor for the Category object works </p>
+   */
   @Test
   public void testCategoryParameterizedConstructorSetsAllVariables(){
     Category _category= new Category(
-        "TOvVfrhfSJMFxjTgNvIaUVtJMJivdrRDhIIcdgjQdJmmvyDrGOltaSdePeUqBcWTTtdEQylYNiZEUUGWMfpHHDFBynukTglkrP",
-        4955
+        "oMlOpGePhFrUEEEAXemZMSyNCKMVmSXFqtSSMhPJgPWRrSdAxTNctmBnQsOUbZONKhEXFJCejpjRslOSErOfHQvnBgSgwDenZp",
+        9184
     );
-    Assertions.assertEquals("TOvVfrhfSJMFxjTgNvIaUVtJMJivdrRDhIIcdgjQdJmmvyDrGOltaSdePeUqBcWTTtdEQylYNiZEUUGWMfpHHDFBynukTglkrP",_category.getCategory_ID());
-    Assertions.assertEquals(4955,_category.getUser_ID());
+    Assertions.assertEquals("oMlOpGePhFrUEEEAXemZMSyNCKMVmSXFqtSSMhPJgPWRrSdAxTNctmBnQsOUbZONKhEXFJCejpjRslOSErOfHQvnBgSgwDenZp",_category.getCategory_ID());
+    Assertions.assertEquals(9184,_category.getUser_ID());
   }
+
+  /**
+   <p> Tests That the Parameterized Constructor for the Category object works </p>
+   */
   @Test
   public void testCategoryKeyedParameterizedConstructorSetsKeyedVariables(){
     Category _category= new Category(
-        "KaBOtKLQAkeFSjLVpDQKpgtOmbdNGACIPGsItoinJGNHvAaUBkYsRjUUfXehVFPbOFhdNbWffGpBPLUaIplKAXfcHrUkrTHLQu",
-        589
+        "aNEOCKDxyMCDVWxrDWQIUSCsggFSYXwpniXEFwnPdbffvVYUFwuKuyRWRtJneFcPxQFdtCYQAAIvyCrsrEmEfsTfeCDWXHOaZR",
+        2765
     );
-    Assertions.assertEquals("KaBOtKLQAkeFSjLVpDQKpgtOmbdNGACIPGsItoinJGNHvAaUBkYsRjUUfXehVFPbOFhdNbWffGpBPLUaIplKAXfcHrUkrTHLQu",_category.getCategory_ID());
-    Assertions.assertEquals(589,_category.getUser_ID());
+    Assertions.assertEquals("aNEOCKDxyMCDVWxrDWQIUSCsggFSYXwpniXEFwnPdbffvVYUFwuKuyRWRtJneFcPxQFdtCYQAAIvyCrsrEmEfsTfeCDWXHOaZR",_category.getCategory_ID());
+    Assertions.assertEquals(2765,_category.getUser_ID());
   }
+
+  /**
+   <p> Tests That the Setters for the Category.Category_ID field can throw exceptions with invalid inputs </p>
+   */
   @Test
   public void  testCategoryThrowsIllegalArgumentExceptionIfCategory_IDTooShort(){
-    String Category_ID = "nh";
+    String Category_ID = "ra";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_category.setCategory_ID(Category_ID);});
   }
+
+  /**
+   <p> Tests That the Setters for the Category.Category_ID field can throw exceptions with invalid inputs </p>
+   */
   @Test
   public void  testCategoryThrowsIllegalArgumentExceptionIfCategory_IDTooLong(){
-    String Category_ID = "bEgGRIHkiTwLICbyAwOnWrNUquxqwsGTQUbjdCHuIyJiuDpJQHPGjYtKPoMVGNOvOievplYjOLIyYHgflpMvXZnolotjMZMXTNlQhO";
+    String Category_ID = "AVQkNobMfjkytBqcPOXsOwcgqmRYaNclhUIGqDSWSfdNiqBBhlYhDhwntMJWWkSZJWUaqewLBMbaMHoAPgEXsOXKIIFFstMWrdGGun";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_category.setCategory_ID(Category_ID);});
   }
+
+  /**
+   <p> Tests That the Setters for the Category.Category_ID field work </p>
+   */
   @Test
   public void testSetCategory_IDSetsCategory_ID(){
-    String Category_ID = "hfxHonNYbFBIivECvffpxhmAmYsRRNtYSxBVRNGYEiWjhNbBbrHAZCnyhAmpCEkDuIQQqPhRViLNjjUlYsvMDVdMSuNNUevKfs";
+    String Category_ID = "krfkOSedQObkDpVkFIgnFvSeVKgbBhEvMkHAFrqIqWBGGAxOSvmjXcvvhMtfasJyVFDHvvNYKmyJAjpJAYAjXIEcJdcPrHjutG";
     _category.setCategory_ID(Category_ID);
     Assertions.assertEquals(Category_ID,_category.getCategory_ID());
   }
+
+  /**
+   <p> Tests That the Setters for the Category.User_ID field can throw exceptions with invalid inputs </p>
+   */
   @Test
   public void testCategoryThrowsIllegalArgumentExceptionIfUser_IDTooSmall(){
     int User_ID = -1;
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_category.setUser_ID(User_ID);});
   }
+
+  /**
+   <p> Tests That the Setters for the Category.User_ID field can throw exceptions with invalid inputs </p>
+   */
   @Test
   public void testCategoryThrowsIllegalArgumentExceptionIfUser_IDTooBig(){
     int User_ID = 10001;
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_category.setUser_ID(User_ID);});
   }
+
+  /**
+   <p> Tests That the Setters for the Category.User_ID field work </p>
+   */
   @Test
   public void testCategorySetsUser_ID(){
-    int User_ID = 3055;
+    int User_ID = 3822;
     _category.setUser_ID(User_ID);
     Assertions.assertEquals(User_ID, _category.getUser_ID());
   }
+
+
+  /**
+   <p> Tests That the CompareTo Method for the Category object works </p>
+   */
   @Test
-      public void testcompoareto(){
-  Category smaller = new Category();
-  Category bigger = new Category();
-smaller.setCategory_ID("aaaa");
-bigger.setCategory_ID("bbbbb");
-Assertions.assertTrue(smaller.compareTo(bigger)<0);
-Assertions.assertTrue(bigger.compareTo(smaller)>0);
-smaller.setCategory_ID("bbbbb");
-smaller.setUser_ID(1);
-bigger.setUser_ID(2);
-Assertions.assertTrue(smaller.compareTo(bigger)<0);
-Assertions.assertTrue(bigger.compareTo(smaller)>0);
-smaller.setUser_ID(2);
-int x = 0;
-Assertions.assertTrue(bigger.compareTo(smaller)==0);
-}
+  public void testCompareToCanCompareForEachDateField() {
+    Category smaller = new Category();
+    Category bigger = new Category();
+//to compare a smaller and larger Category_ID
+    smaller.setCategory_ID("aaaa");
+    bigger.setCategory_ID("bbbb");
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Category_ID as equal.
+    smaller.setCategory_ID("bbbb");
+//to compare a smaller and larger User_ID
+    smaller.setUser_ID(10);
+    bigger.setUser_ID(20);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the User_ID as equal.
+    smaller.setUser_ID(20);
+    Assertions.assertTrue(bigger.compareTo(smaller)==0);
+  }
 
 }
-

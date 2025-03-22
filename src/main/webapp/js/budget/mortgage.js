@@ -93,17 +93,17 @@ $(document).ready(function() {
         payment.addEventListener('click', function () {
 
 
-            console.log(document.getElementsByClassName("ui-state-error").length);
+            //console.log(document.getElementsByClassName("ui-state-error").length);
             if (document.getElementsByClassName("ui-state-error").length === 0) {
                 p = Present_Value_input.value;
                 i = Interest_Rate_input.value * 1.00 / 100 / 12;
                 fv = Future_Value_input.value;
                 n = Remaining_Term_input.value;
                 var payment_bpx = document.getElementById("inputmortgageMonthly_Payment");
-                console.log("Pricipal:" + p + "\n Interest Rate: " + i + "\n Nper: " + n + " ")
+                //console.log("Pricipal:" + p + "\n Interest Rate: " + i + "\n Nper: " + n + " ")
                 var monthly_payment = Math.round(p * i * (Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1) * 100) / 100;
                 var month = 1;
-                console.log((monthly_payment));
+                //console.log((monthly_payment));
                 submit_mortgage.removeAttribute("disabled");
                 submit_mortgage.setAttribute("enabled", "true");
                 amortization = document.getElementById("amortization");
@@ -146,7 +146,7 @@ $(document).ready(function() {
 
                 }
                 document.getElementById('amortization').appendChild(table);
-                console.log(amortization.innerHTML)
+                //console.log(amortization.innerHTML)
             }
 
 

@@ -23,6 +23,9 @@ class AddCategoryServletTest {
   MockHttpServletResponse response;
   HttpSession session;
   RequestDispatcher rd;
+  /**
+   <p> setup the tests by creating a new instance of the servlet and setting some standard variablges </p>
+   */
   @BeforeEach
   public void setup() throws ServletException{
 
@@ -33,7 +36,9 @@ class AddCategoryServletTest {
     session = new MockHttpSession();
     rd = new MockRequestDispatcher(PAGE);
   }
-
+  /**
+   <p> tear down by setting all variablges to null. </p>
+   */
   @AfterEach
   public void teardown(){
     servlet=null;
@@ -42,6 +47,9 @@ class AddCategoryServletTest {
     session=null;
     rd=null;
   }
+  /**
+   <p> Tests That the user will received a 200 status on doGet if they are logged in </p>
+   */
   @Test
   public void TestLoggedInUserGets200OnDoGet() throws ServletException, IOException{
     User user = new User();
@@ -54,6 +62,9 @@ class AddCategoryServletTest {
     int status = response.getStatus();
     assertEquals(200,status);
   }
+  /**
+   <p> Tests That the user will received a 200 status on doPost if they are logged in </p>
+   */
   @Test
   public void TestLoggedInUserGets200OnDoPost() throws ServletException, IOException{
     User user = new User();
@@ -73,6 +84,9 @@ class AddCategoryServletTest {
     int status = response.getStatus();
     assertEquals(302,status);
   }
+  /**
+   <p> Tests That the user will received a 302 status on doPost if they are logged out  </p>
+   */
   @Test
   public void TestLoggedOutUserGets302OnDoPost() throws ServletException, IOException{
     request.setSession(session);
@@ -80,6 +94,9 @@ class AddCategoryServletTest {
     int status = response.getStatus();
     assertEquals(302,status);
   }
+  /**
+   <p> Tests That the user will received a 302 status on doGet if they are logged out  </p>
+   */
   @Test
   public void TestWrongRoleGets302onDoGet() throws ServletException, IOException{
     User user = new User();
@@ -92,6 +109,9 @@ class AddCategoryServletTest {
     int status = response.getStatus();
     assertEquals(302,status);
   }
+  /**
+   <p> Test that a user in the wrong role will get a 302 on a doGet </p>
+   */
   @Test
   public void TestWrongRoleGets302onDoPost() throws ServletException, IOException{
     User user = new User();
@@ -104,6 +124,9 @@ class AddCategoryServletTest {
     int status = response.getStatus();
     assertEquals(302,status);
   }
+  /**
+   <p> Test that error messages are sent for each field for adding Category objects. That is to say, testing serverside validation </p>
+   */
   @Test
   public void TestAddHasErrorsForEachFieldAndKeepsOnSamePage() throws ServletException, IOException{
     User user = new User();
@@ -122,6 +145,9 @@ class AddCategoryServletTest {
 
     assertEquals(200,responseStatus);
   }
+  /**
+   <p> Tests That We can add to the database if all input fields are validated  </p>
+   */
   @Test
   public void TestAddCanAddWithNoErrorsAndRedirects() throws ServletException, IOException{
     User user = new User();
@@ -141,7 +167,9 @@ class AddCategoryServletTest {
     assertNotNull(Category_Added);
     assertEquals("Category Added",Category_Added);
     assertNotEquals("",Category_Added);
-  }
+  }/**
+   <p> Tests SQL exceptions are gracefully handled. </p>
+   */
   @Test
   public void testExceptionKeyThrowsException() throws ServletException, IOException{
     User user = new User();
@@ -165,6 +193,9 @@ class AddCategoryServletTest {
     assertNotEquals("",dbError);
     assertEquals("Database Error",dbError);
   }
+  /**
+   <p> Test that Category objects with duplicate primary keys don't get added, and proper error handling exists. </p>
+   */
   @Test
   public void testDuplicateKeyReturnsZero() throws ServletException, IOException{
     User user = new User();
@@ -184,6 +215,9 @@ class AddCategoryServletTest {
     assertEquals("Category Not Added",Category_Added);
     assertNotEquals("",Category_Added);
   }
+  /**
+   <p> Test That initializing the Servlet Does Not Crash or cause an exception </p>
+   */
   @Test
   public void testInitWithNoParametersDoesNotThrowException() throws ServletException {
     servlet = null;

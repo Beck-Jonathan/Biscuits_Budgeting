@@ -23,6 +23,8 @@ class AllCategoriesServletTest {
   MockHttpServletResponse response;
   HttpSession session;
   RequestDispatcher rd;
+
+
   @BeforeEach
   public void setup() throws ServletException{
 
@@ -42,6 +44,8 @@ class AllCategoriesServletTest {
     session=null;
     rd=null;
   }
+
+
   @Test
   public void TestLoggedInUserGets200OnDoGet() throws ServletException, IOException{
     User user = new User();

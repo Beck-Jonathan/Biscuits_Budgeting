@@ -28,7 +28,7 @@ function takevalues(x,url) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState == XMLHttpRequest.DONE) {
-            console.log(xhr.responseText);
+            //console.log(xhr.responseText);
 
             document.getElementById(x + "_status").innerHTML = "<h5>&#x2705</h5>";
             document.getElementById(x+"_status").style.color="green";

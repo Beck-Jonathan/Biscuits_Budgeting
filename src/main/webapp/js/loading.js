@@ -1,6 +1,6 @@
 $(document).ready(function() {
     main();
-    console.log("ready in the top");
+    //console.log("ready in the top");
     NProgress.configure({ showSpinner: false, trickle: false });
     $('a[href]').click(showBar);
     $('form').submit(showBar);
@@ -47,7 +47,7 @@ $(document).ready(function() {
 
 });
 function main(){
-    console.log("ready from the long way");
+    //console.log("ready from the long way");
 }
 function showBar2() {
     NProgress.start();

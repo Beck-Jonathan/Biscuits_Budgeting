@@ -5,13 +5,13 @@ $(document).ready(function() {
     //     let year = $('#inputtransactionYear').val();
     //            var datapoints = [];
     //            var categories = document.getElementsByName('category[]')
-    //     console.log(categories);
+    //     //console.log(categories);
     //            for(var i=0; i< categories.length; i++) {
     //                if (categories[i].checked) {
     //                    var _label = categories[i].value;
-    //                    console.log(_label);
+    //                    //console.log(_label);
     //                    var number = document.getElementById(year+_label+'amount').innerText;
-    //                    console.log(number);
+    //                    //console.log(number);
     //                    datapoints.push({label: _label, y: number});
     //                }
     //            }
@@ -36,18 +36,19 @@ $(document).ready(function() {
 
     $('#inputCategoryID').change(function()
         {
-
+            var minyear = parseInt(document.getElementById("FirstYear").innerText);
+            var maxyear = new Date().getFullYear();
             let year = $('#inputtransactionYear').val();
             var datapoints = [];
             var categories = document.getElementsByName('category[]')
             for(var i=0; i< categories.length; i++) {
-                console.log(i);
+                //console.log(i);
                 if (categories[i].checked) {
                     var _label = categories[i].value;
                     _label = _label.replace(" ","");
                     var number = document.getElementById(year+_label+'amount').innerText;
                     var thisData = [];
-                    for (j=2017;j<2025;j++){
+                    for (j=minyear;j<maxyear;j++){
                         var value = 5;
                         var number = document.getElementById(j+_label+'amount').innerText.replace("-","");
                         var number1= Number.parseFloat(number)

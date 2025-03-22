@@ -39,6 +39,7 @@
 
     </div>
 </div>
+<p hidden id="FirstYear">${Breakdown[0][0].year}</p>
 <p hidden >
     <table hidden>
     <th></th>

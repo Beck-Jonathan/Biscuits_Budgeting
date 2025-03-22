@@ -7,7 +7,7 @@ const websocket = new WebSocket(wsUri);
 
 websocket.onopen = function(event) {
     $("#errorText").addClass("d-none");
-    console.log("WS Open: " + wsUri);
+    //console.log("WS Open: " + wsUri);
 }
 
 websocket.onclose = function(event) {
@@ -57,7 +57,7 @@ function isOpen(websocket){
     return websocket.readyState ===websocket.OPEN;
 }
 function  sendJson(json){
-    console.log(json)
+    //console.log(json)
     if (isOpen(websocket)){
         websocket.send(json);
     }
@@ -82,7 +82,7 @@ function updateTextArea(data, inOut) {
     // The effectiveness of this varies by browser
     textArea.scrollTop = textArea.scrollHeight;
     // Logging only helps when you have the browser's developer tools open
-    console.log("Writing: " + data);
+    //console.log("Writing: " + data);
 }
 
 function prepMessageBox() {

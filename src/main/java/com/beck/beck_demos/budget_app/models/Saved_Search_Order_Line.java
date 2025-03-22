@@ -54,7 +54,7 @@ public class Saved_Search_Order_Line implements Comparable<Saved_Search_Order_Li
   }
   public void setCategory_ID(String Category_ID) {
     Category_ID = Category_ID.replaceAll("[^A-Za-z0-9 - ]","");
-    if(Category_ID.length()<4){
+    if(Category_ID.length()<2){
       throw new IllegalArgumentException("Category_ID is too short.");
     }
     if(Category_ID.length()>100){

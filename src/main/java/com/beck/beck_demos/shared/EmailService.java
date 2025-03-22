@@ -60,10 +60,10 @@ public class EmailService
           // configuration set
           //.withConfigurationSetName(CONFIGSET);
       emailClient.sendEmail(request);
-      System.out.println("Email sent!");
+      //System.out.println("Email sent!");
 
     } catch (Exception ex) {
-      System.out.println(ex.getMessage());
+      //System.out.println(ex.getMessage());
       return false;
     }
     return true;
