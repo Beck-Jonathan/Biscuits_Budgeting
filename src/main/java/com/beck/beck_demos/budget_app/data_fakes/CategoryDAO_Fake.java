@@ -46,8 +46,12 @@ public class CategoryDAO_Fake implements iCategoryDAO {
     categories.add(category14);
     Collections.sort(categories);
   }
+  /**
+   * @param _category The category to be added to the database
+   * @return number of rows effected
+   */
   @Override
-  public int add(Category _category, int user_ID) throws SQLException {
+  public int add(Category _category) throws SQLException {
     if (duplicateKey(_category)){
       return 0;
     }

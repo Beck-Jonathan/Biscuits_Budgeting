@@ -66,6 +66,8 @@ public class DeleteSaved_Search_Order extends HttpServlet {
     req.setAttribute("results",results);
 
     req.setAttribute("pageTitle", "All Saved_Search_Order");
-    req.getRequestDispatcher("WEB-INF/Budget_App/all-Saved_Search_Orders.jsp").forward(req, resp);
+    resp.sendRedirect(req.getContextPath()+"/all-Saved_Search_Orders");
+    return;
+    
   }
 }

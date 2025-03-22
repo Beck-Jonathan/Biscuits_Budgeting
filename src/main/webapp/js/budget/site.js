@@ -68,7 +68,7 @@ $(document).ready(function() {
 	$("#PieChart").button();
 	$( "#PieChart" ).button( "option", "icon", "ui-icon-check" );
 	$( "#PieChart" ).button( "option", "showIcon", "true" );
-	$( "#PieChart" ).button( "option", "label", "Pie Chart" );
+	$( "#PieChart" ).button( "option", "label", "Bar Chart" );
 
 
 

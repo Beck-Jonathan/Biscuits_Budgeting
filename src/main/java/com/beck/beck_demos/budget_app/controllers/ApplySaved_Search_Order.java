@@ -16,7 +16,9 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @WebServlet("/apply-Saved_Search_Order")
@@ -69,6 +71,21 @@ public class ApplySaved_Search_Order extends HttpServlet {
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
+    }
+    Saved_Search_Order new_Order = new Saved_Search_Order();
+    new_Order.setDescription(saved_search_order.getDescription());
+    new_Order.setNickname(saved_search_order.getNickname());
+    new_Order.setTimes_Ran(saved_search_order.getTimes_Ran()+1);
+    try {
+      new_Order.setLast_Used(new Date());
+    } catch (ParseException e) {
+
+    }
+    try {
+      int x = saved_search_orderDAO.update(saved_search_order,new_Order);
+    }
+    catch (Exception e){
+    int y = 0;
     }
 
     req.setAttribute("updates", result);

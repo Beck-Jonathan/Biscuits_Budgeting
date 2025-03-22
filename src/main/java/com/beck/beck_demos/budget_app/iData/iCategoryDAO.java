@@ -14,7 +14,7 @@ import static com.beck.beck_demos.budget_app.data.Database.getConnection;
 
 public interface iCategoryDAO {
 
-  int add(Category _category, int user_ID) throws SQLException;
+  int add(Category _category) throws SQLException;
 
    List<Category> getCategoryByUser(int userID);
 

@@ -159,7 +159,7 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
     int result = 0;
     try (Connection connection = getConnection()) {
       if (connection !=null){
-        try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Saved_Search_Order(?,?,?,?,?,?)}"))
+        try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Saved_Search_Order(?,?,?,?,?,?,?,?)}"))
         {
           statement.setInt(1,oldSaved_Search_Order.getSaved_Search_Order_ID());
           statement.setInt(2,oldSaved_Search_Order.getOwned_User());
@@ -167,9 +167,12 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
           statement.setString(4,newSaved_Search_Order.getNickname());
           statement.setString(5,oldSaved_Search_Order.getDescription());
           statement.setString(6,newSaved_Search_Order.getDescription());
+          statement.setInt(7,newSaved_Search_Order.getTimes_Ran());
+          java.sql.Date Last_Updated = new java.sql.Date(new Date().getTime());
+          statement.setDate(8,Last_Updated);
 
           result=statement.executeUpdate();
-        } catch (SQLException e) {
+        } catch (Exception e) {
           throw new RuntimeException("Could not update Saved_Search_Order . Try again later");
         }
       }
@@ -187,7 +190,7 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
     int rowsAffected=0;
     try (Connection connection = getConnection()) {
       if (connection != null) {
-        try (CallableStatement statement = connection.prepareCall("{CALL sp_Delete_Saved_Search_Order( ?)}")){
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_Delete_Saved_Search_Order( ?,?)}")){
           statement.setInt(1,Saved_Search_Order_ID);
           statement.setInt(2,user_id);
           rowsAffected = statement.executeUpdate();

@@ -31,18 +31,15 @@ import java.time.LocalDate;
 import static com.beck.beck_demos.budget_app.data.Database.getConnection;
 public class CategoryDAO implements iCategoryDAO {
   /**
-   *
-   * @param _category dafda fda
-   * @param user_ID dfaadfa
+   * @param _category The category to be added to the database
    * @return number of rows effected
-   * @
    */
-  public int add(Category _category, int user_ID) {
+  public int add(Category _category) {
     int numRowsAffected=0;try (Connection connection = getConnection()) {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Category( ?,?)}")){
           statement.setString(1,_category.getCategory_ID());
-          statement.setInt(2,user_ID);
+          statement.setInt(2,_category.getUser_ID());
           numRowsAffected = statement.executeUpdate();
           if (numRowsAffected == 0) {
             throw new RuntimeException("Could not add Category. Try again later");

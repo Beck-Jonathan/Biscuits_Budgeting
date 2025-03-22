@@ -20,7 +20,7 @@ Create the JSP  For Viewing All of The  Saved_Search_Order table
                         <th scope="col">Last_Used</th>
                         <th scope="col">Last_Updated</th>
                         <th scope="col">Times_Ran</th>
-                        <th scope="col">Edit</th>
+
                         <th scope="col">Delete</th>
                     </tr>
                     </thead>
@@ -34,7 +34,6 @@ Create the JSP  For Viewing All of The  Saved_Search_Order table
                             <td>${fn:escapeXml(saved_search_order.last_Used)}</td>
                             <td>${fn:escapeXml(saved_search_order.last_Updated)}</td>
                             <td>${fn:escapeXml(saved_search_order.times_Ran)}</td>
-                            <td><a href = "editSaved_Search_Order?saved_search_orderid=${saved_search_order.saved_Search_Order_ID}&mode=edit" > Edit </a></td>
                             <td><a href = "deletesaved_search_order?saved_search_orderid=${saved_search_order.saved_Search_Order_ID}"> Delete </a></td>
                         </tr>
                     </c:forEach>

@@ -84,9 +84,6 @@ $(document).ready(function() {
 
         }
     );
-
-
-
     var bar = {
         title: {
             text: "No Data"

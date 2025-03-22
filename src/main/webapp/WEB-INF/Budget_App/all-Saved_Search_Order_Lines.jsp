@@ -8,7 +8,7 @@ Create the JSP  For Viewing All of The  Saved_Search_Order_Line table
         <div class="col-12">
             <h1>All Roller Saved_Search_Order_Lines</h1>
             <p>There ${saved_search_order.saved_Search_Order_Lines.size() eq 1 ? "is" : "are"}&nbsp;${saved_search_order.saved_Search_Order_Lines.size()} Saved_Search_Order_Line${saved_search_order.saved_Search_Order_Lines.size() ne 1 ? "s" : ""}</p>
-            Add Saved_Search_Order_Line   <a href="addSaved_Search_Order_Line">Add</a>
+            <p color="red">${SearchTooShort}</p>
 
                 <div class="table-responsive"><table class="table table-bordered">
                     <thead>
@@ -17,9 +17,9 @@ Create the JSP  For Viewing All of The  Saved_Search_Order_Line table
                         <th scope="col">Line_No</th>
                         <th scope="col">Category_ID</th>
                         <th scope="col">Search_Phrase</th>
-                        <th scope="col">is Active</th>
-                        <th scope="col">Delete</th>
-                        <th scope="col">Edit</th>
+
+
+                        <th scope="col">Edit/Create</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -59,12 +59,8 @@ Create the JSP  For Viewing All of The  Saved_Search_Order_Line table
                                 </div>
                             </td>
                             <!-- end search prhase -->
-                                <!-- start active -->
-                            <td></td>
-                                <!-- end active-->
-                                <!-- start delete -->
-                            <td></td>
-                                <!-- end delete -->
+
+
                             <!-- start button -->
                             <td>
                                 <div class="d-grid"><button class="btn btn-orange mb-0" type="submit">Edit Line </button></div>
@@ -106,8 +102,7 @@ Create the JSP  For Viewing All of The  Saved_Search_Order_Line table
                                 </c:if>
                             </div>
                         </td>
-                            <!-- is aciive -->
-                        <td></td>
+                           
                         <!-- submit -->
 
                         <td>

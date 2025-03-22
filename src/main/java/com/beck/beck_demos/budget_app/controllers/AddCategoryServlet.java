@@ -72,13 +72,14 @@ public class AddCategoryServlet extends HttpServlet{
     int errors =0;
     try {
       category.setCategory_ID(_Category_ID);
+      category.setUser_ID(user.getUser_ID());
     } catch(Exception e) {results.put("categoryCategory_IDerror", e.getMessage());
       errors++;
     }
     int result=0;
     if (errors==0){
       try{
-        result=categoryDAO.add(category,user.getUser_ID());
+        result=categoryDAO.add(category);
       }catch(Exception ex){
         results.put("dbError","Database Error");
       }
