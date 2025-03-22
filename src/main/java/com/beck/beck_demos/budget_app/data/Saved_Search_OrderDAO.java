@@ -98,8 +98,9 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
     Saved_Search_Order_VM resultVM = null;
     List<Saved_Search_Order_Line> lines = new ArrayList<>();
     try(Connection connection = getConnection()) {
-      try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_pk_Saved_Search_Order(?)}")) {
+      try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_pk_Saved_Search_Order(?,?)}")) {
         statement.setString(1, _saved_search_order.getSaved_Search_Order_ID().toString());
+        statement.setInt(2,_saved_search_order.getOwned_User());
 
         try (ResultSet resultSet = statement.executeQuery()){
           if(resultSet.next()) {

@@ -67,14 +67,17 @@ public class EditSaved_Search_OrderServlet extends HttpServlet{
     List<Category> allCategorys = new ArrayList<>();
     try{
       saved_search_order.setSaved_Search_Order_ID(primaryKey);
+      saved_search_order.setOwned_User(user.getUser_ID());
     } catch (Exception e){
       req.setAttribute("dbStatus",e.getMessage());
     }
     try{
       saved_search_order=saved_search_orderDAO.getSaved_Search_OrderByPrimaryKey(saved_search_order);
       allCategorys = categoryDAO.getCategoryByUser(user.getUser_ID());
-    } catch (SQLException e) {
+    } catch (Exception e) {
       req.setAttribute("dbStatus",e.getMessage());
+      resp.sendRedirect(req.getContextPath()+"/budget_home");
+      return;
     }
     req.setAttribute("Categorys", allCategorys);
     session.setAttribute("saved_search_order",saved_search_order);
