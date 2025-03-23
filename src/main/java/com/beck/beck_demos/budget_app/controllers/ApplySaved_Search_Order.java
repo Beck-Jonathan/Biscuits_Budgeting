@@ -59,6 +59,7 @@ public class ApplySaved_Search_Order extends HttpServlet {
 
     try{
       saved_search_order.setSaved_Search_Order_ID(primaryKey);
+      saved_search_order.setOwned_User(user.getUser_ID());
       saved_search_order = saved_search_orderDAO.getSaved_Search_OrderByPrimaryKey(saved_search_order);
     } catch (Exception e){
       req.setAttribute("dbStatus",e.getMessage());

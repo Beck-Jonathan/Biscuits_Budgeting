@@ -14,6 +14,10 @@ import static com.beck.beck_demos.budget_app.data.Database.getConnection;
 
 public interface iCategoryDAO {
 
+  /**
+   * @param _category The category to be added to the database
+   * @return number of rows effected
+   */
   int add(Category _category) throws SQLException;
 
    List<Category> getCategoryByUser(int userID);

@@ -24,7 +24,7 @@ class AddCategoryServletTest {
   HttpSession session;
   RequestDispatcher rd;
   /**
-   <p> setup the tests by creating a new instance of the servlet and setting some standard variablges </p>
+   <p> setup the tests by creating a new instance of the servlet and setting some standard variables </p>
    */
   @BeforeEach
   public void setup() throws ServletException{
@@ -37,7 +37,7 @@ class AddCategoryServletTest {
     rd = new MockRequestDispatcher(PAGE);
   }
   /**
-   <p> tear down by setting all variablges to null. </p>
+   <p> tear down by setting all variables to null. </p>
    */
   @AfterEach
   public void teardown(){
@@ -77,6 +77,9 @@ class AddCategoryServletTest {
     int status = response.getStatus();
     assertEquals(200,status);
   }
+  /**
+   <p> Tests That the user will received a 302 status on doGet if they are logged out </p>
+   */
   @Test
   public void TestLoggedOutUserGets302OnDoGet() throws ServletException, IOException{
     request.setSession(session);
@@ -125,7 +128,8 @@ class AddCategoryServletTest {
     assertEquals(302,status);
   }
   /**
-   <p> Test that error messages are sent for each field for adding Category objects. That is to say, testing serverside validation </p>
+   <p> Test that error messages are sent for each field for adding Category objects.
+   That is to say, testing serverside validation </p>
    */
   @Test
   public void TestAddHasErrorsForEachFieldAndKeepsOnSamePage() throws ServletException, IOException{

@@ -133,8 +133,13 @@ public class AddSaved_Search_Order_LineServlet extends HttpServlet {
         return;
       } else {
         results.put("dbStatus","Saved_Search_Order_Line Not Added");
-
+        resp.sendRedirect(req.getContextPath()+"/editSaved_Search_Order?saved_search_orderid="+_Saved_Search_Order_ID+"&mode=view");
       }
+    }
+    else {
+      results.put("dbStatus","Saved_Search_Order_Line Not Added");
+      resp.sendRedirect(req.getContextPath()+"/editSaved_Search_Order?saved_search_orderid="+_Saved_Search_Order_ID+"&mode=view");
+      return;
     }
     req.setAttribute("results", results);
     req.setAttribute("pageTitle", "Create a Saved_Search_Order_Line ");

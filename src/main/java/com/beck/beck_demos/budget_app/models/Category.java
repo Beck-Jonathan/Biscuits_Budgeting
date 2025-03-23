@@ -4,6 +4,8 @@ import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 
 
+/// Since 12/5/2024
+/// Jonathan Beck
 public class Category implements Comparable<Category> {
   private String Category_ID;
   private Integer User_ID;
@@ -12,8 +14,8 @@ public class Category implements Comparable<Category> {
 
   public Category(String Category_ID, Integer User_ID) {
 
-    this.Category_ID = Category_ID;
-    this.User_ID = User_ID;
+    setCategory_ID(Category_ID);
+    setUser_ID(User_ID);
   }
 
   /**
@@ -52,8 +54,11 @@ public class Category implements Comparable<Category> {
    * throws IllegalArgumentException if User_ID is negative or greater than 10,000
    */
   public void setUser_ID(Integer User_ID) {
-    if (User_ID<0||User_ID>10000){
+    if (User_ID<0){
       throw new IllegalArgumentException("User_ID Can Not Be Negative");
+    }
+    if (User_ID>10000){
+      throw new IllegalArgumentException("User_ID Can Not Be greater than 10,000");
     }
     this.User_ID = User_ID;
   }

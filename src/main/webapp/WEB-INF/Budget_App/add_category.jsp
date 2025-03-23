@@ -16,12 +16,15 @@ Create the JSP  For adding to The  Category table
                 </c:if>
             </div>
         </div>
+        <!-- end Category_ Id -->
+        <!-- start button -->
         <div class="align-items-center mt-0">
             <div class="d-grid"><button class="btn btn-orange mb-0" type="submit">Create Category  </button></div>
             <c:if test="${not empty results.dbStatus}"
             ><p>${results.dbStatus}</p>
             </c:if>
         </div>
+        <!-- end button -->
     </form>
 </div>
 <%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>

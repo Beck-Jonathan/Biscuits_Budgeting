@@ -4,20 +4,8 @@ package com.beck.beck_demos.budget_app.data;
 ///AUTHOR: Jonathan Beck
 ///<br />
 ///CREATED: 24/7/2024
-///< br />
-///An example class to show how code is expected to be written and documented.
-///This is where a description of what your file is supposed to contain goes.
-///e.g., "Class with helper methods for input validation.",
-///Class that defines CategoryDAO Objects.
-///</summary>
-///< remarks>
-///UPDATER: updater_name
-///< br />
-/// UPDATED: yyyy-MM-ddcedar
-/// < br />
-/// Update comments go here, include method or methods were changed or added
-/// A new remark should be added for each update.
-///</remarks>
+
+
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
 import com.beck.beck_demos.budget_app.models.Category;
 import com.beck.beck_demos.budget_app.models.User;
