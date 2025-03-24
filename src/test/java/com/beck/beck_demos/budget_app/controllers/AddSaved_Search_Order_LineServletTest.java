@@ -56,7 +56,7 @@ class AddSaved_Search_Order_LineServletTest {
     assertEquals(200,status);
   }
   @Test
-  public void TestLoggedInUserGets200OnDoPost() throws ServletException, IOException{
+  public void TestLoggedInUserGets302OnDoPost() throws ServletException, IOException{
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
@@ -66,7 +66,7 @@ class AddSaved_Search_Order_LineServletTest {
     request.setSession(session);
     servlet.doPost(request,response);
     int status = response.getStatus();
-    assertEquals(200,status);
+    assertEquals(302,status);
   }
   @Test
   public void TestLoggedOutUserGets302OnDoGet() throws ServletException, IOException{
@@ -107,7 +107,7 @@ class AddSaved_Search_Order_LineServletTest {
     assertEquals(302,status);
   }
   @Test
-  public void TestAddHasErrorsForEachFieldAndKeepsOnSamePage() throws ServletException, IOException{
+  public void TestAddHasErrorsForEachFieldAndRedirects() throws ServletException, IOException{
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
@@ -133,7 +133,7 @@ class AddSaved_Search_Order_LineServletTest {
     //assertNotNull(User_IDError);
     assertNotEquals("",Search_PhraseError);
     assertNotNull(Search_PhraseError);
-    assertEquals(200,responseStatus);
+    assertEquals(302,responseStatus);
   }
   @Test
   public void TestAddCanAddWithNoErrorsAndRedirects() throws ServletException, IOException{
@@ -179,7 +179,7 @@ class AddSaved_Search_Order_LineServletTest {
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
     String Saved_Search_Order_Line_Added = results.get("dbStatus");
     String dbError = results.get("dbError");
-    assertEquals(200,responseStatus);
+    assertEquals(302,responseStatus);
     assertNotNull(Saved_Search_Order_Line_Added);
     assertEquals("Saved_Search_Order_Line Not Added",Saved_Search_Order_Line_Added);
     assertNotEquals("",Saved_Search_Order_Line_Added);
@@ -206,7 +206,7 @@ class AddSaved_Search_Order_LineServletTest {
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
     String Saved_Search_Order_Line_Added = results.get("dbStatus");
-    assertEquals(200,responseStatus);
+    assertEquals(302,responseStatus);
     assertNotNull(Saved_Search_Order_Line_Added);
     assertEquals("Saved_Search_Order_Line Not Added",Saved_Search_Order_Line_Added);
     assertNotEquals("",Saved_Search_Order_Line_Added);
