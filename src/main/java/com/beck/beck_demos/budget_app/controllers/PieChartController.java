@@ -46,50 +46,57 @@ public class PieChartController extends HttpServlet {
     }
     Map<String,String> results = new HashMap<>();
     List<List<Category_VM>> breakdown = new ArrayList<>();
+    List<Integer> allYears = new ArrayList<>();
+    List<String> allCategories = new ArrayList<>();
 
     try {
       breakdown = transactionDAO.getAnalysis(breakdown, user.getUser_ID());
     } catch (Exception e) {
       results.put("dbError","database Error");
-    }
-    if (breakdown.isEmpty()) {
-      results.put("dbError","No data found");
-      req.setAttribute("pageTitle", "Pie Chart");
-      req.getRequestDispatcher("WEB-INF/Budget_App/PieChart.jsp").forward(req, resp);
-      return;
-    }
-    for (List<Category_VM> category_vms : breakdown) {
-      for (int i =0;i<category_vms.size();i++) {
-        if (category_vms.get(i).getCategory_ID().equals("total in")){
-          while (i<category_vms.size()-1) {
-            Category_VM temp = category_vms.get(i + 1);
-            category_vms.set(i + 1, category_vms.get(i));
-            category_vms.set(i, temp);
-            i++;
+    }try {
+      if (breakdown.isEmpty()) {
+        results.put("dbError", "No data found");
+        req.setAttribute("pageTitle", "Pie Chart");
+        req.getRequestDispatcher("WEB-INF/Budget_App/PieChart.jsp").forward(req, resp);
+        return;
+      }
+      for (List<Category_VM> category_vms : breakdown) {
+        for (int i = 0; i < category_vms.size(); i++) {
+          if (category_vms.get(i).getCategory_ID().equals("total in")) {
+            while (i < category_vms.size() - 1) {
+              Category_VM temp = category_vms.get(i + 1);
+              category_vms.set(i + 1, category_vms.get(i));
+              category_vms.set(i, temp);
+              i++;
+            }
           }
         }
       }
-    }
-    for (List<Category_VM> category_vms : breakdown) {
-      for (int i =0;i<category_vms.size();i++) {
-        if (category_vms.get(i).getCategory_ID().equals("total out")){
-          while (i<category_vms.size()-1) {
-            Category_VM temp = category_vms.get(i + 1);
-            category_vms.set(i + 1, category_vms.get(i));
-            category_vms.set(i, temp);
-            i++;
+      for (List<Category_VM> category_vms : breakdown) {
+        for (int i = 0; i < category_vms.size(); i++) {
+          if (category_vms.get(i).getCategory_ID().equals("total out")) {
+            while (i < category_vms.size() - 1) {
+              Category_VM temp = category_vms.get(i + 1);
+              category_vms.set(i + 1, category_vms.get(i));
+              category_vms.set(i, temp);
+              i++;
+            }
           }
         }
       }
-    }
-    List<Integer> allYears = new ArrayList<>();
-    for (List<Category_VM> categories: breakdown) {
-      allYears.add(categories.get(0).getYear());
-    }
 
-    List<String> allCategories = new ArrayList<>();
-    for (Category_VM category : breakdown.get(0)) {
-      allCategories.add(category.getCategory_ID());
+      for (List<Category_VM> categories : breakdown) {
+        allYears.add(categories.get(0).getYear());
+      }
+
+
+      for (Category_VM category : breakdown.get(0)) {
+        allCategories.add(category.getCategory_ID());
+      }
+    }
+    catch (Exception e){
+      resp.sendRedirect("budget-in");
+      return;
     }
 
     session.setAttribute("Breakdown", breakdown);

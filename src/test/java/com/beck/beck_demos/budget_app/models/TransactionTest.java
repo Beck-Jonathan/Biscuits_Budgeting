@@ -47,7 +47,7 @@ class TransactionTest {
     }
     String _censored_id = new String(censored_id);
     Transaction _transaction= new Transaction(
-        754,
+        "XxtdYmVM",
         1081,
         "rDfKssjDroTwjtpyewSRUKBvmtSALiIRbDOjJuTDariNWtufwgmkgCiWyajqJgBVgfGpidPjnPXFKKdnRahZUqAaYHjNnpoTXC",
         BankAccountID,
@@ -59,7 +59,7 @@ class TransactionTest {
         "lnohYwKvLdfASpFvAg",
         "ygKCZIhiTkJaIkiwGZ"
     );
-    Assertions.assertEquals(754,_transaction.getTransaction_ID());
+    Assertions.assertEquals("XxtdYmVM",_transaction.getTransaction_ID());
     Assertions.assertEquals(1081,_transaction.getUser_ID());
     Assertions.assertEquals("rDfKssjDroTwjtpyewSRUKBvmtSALiIRbDOjJuTDariNWtufwgmkgCiWyajqJgBVgfGpidPjnPXFKKdnRahZUqAaYHjNnpoTXC",_transaction.getCategory_ID());
     Assertions.assertEquals(_censored_id,_transaction.getBank_Account_ID());
@@ -73,9 +73,9 @@ class TransactionTest {
   @Test
   public void testTransactionKeyedParameterizedConstructorSetsKeyedVariables(){
     Transaction _transaction= new Transaction(
-        5235
+        "XxtdYmVM"
     );
-    Assertions.assertEquals(5235,_transaction.getTransaction_ID());
+    Assertions.assertEquals("XxtdYmVM",_transaction.getTransaction_ID());
     Assertions.assertNull(_transaction.getUser_ID());
     Assertions.assertNull(_transaction.getCategory_ID());
     Assertions.assertNull(_transaction.getBank_Account_ID());
@@ -88,17 +88,17 @@ class TransactionTest {
   }
   @Test
   public void testTransactionThrowsIllegalArgumentExceptionIfTransaction_IDTooSmall(){
-    int Transaction_ID = -1;
+    String Transaction_ID = "aa";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_transaction.setTransaction_ID(Transaction_ID);});
   }
   @Test
   public void testTransactionThrowsIllegalArgumentExceptionIfTransaction_IDTooBig(){
-    int Transaction_ID = 10000001;
+    String Transaction_ID = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_transaction.setTransaction_ID(Transaction_ID);});
   }
   @Test
   public void testTransactionSetsTransaction_ID(){
-    int Transaction_ID = 1698;
+    String Transaction_ID = "XxtdYmVMXxtdYmVMXxtdYmVMXxtdYmVMXxtd";
     _transaction.setTransaction_ID(Transaction_ID);
     Assertions.assertEquals(Transaction_ID, _transaction.getTransaction_ID());
   }
@@ -242,12 +242,12 @@ class TransactionTest {
     Transaction smaller = new Transaction();
     Transaction bigger = new Transaction();
 //to compare a smaller and larger Transaction_ID
-    smaller.setTransaction_ID(10);
-    bigger.setTransaction_ID(20);
+    smaller.setTransaction_ID("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    bigger.setTransaction_ID("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the Transaction_ID as equal.
-    smaller.setTransaction_ID(20);
+    smaller.setTransaction_ID("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
 //to compare a smaller and larger User_ID
     smaller.setUser_ID(10);
     bigger.setUser_ID(20);

@@ -42,20 +42,14 @@ public class EditTransactionServlet extends HttpServlet {
     }
     Map<String, String> results = new HashMap<>();
     int errors=0;
-    String id =req.getParameter("t_id");
-    int Transaction_id =-1;
-    try {
-      Transaction_id = Integer.parseInt(id);
-    } catch (Exception ex) {
-      errors++;
-      results.put("categoryTransaction_IDerror", ex.getMessage());
-    }
+    String Transaction_id =req.getParameter("t_id");
+
 
     String category = req.getParameter("category");
     //Transaction old_t= (Transaction)session.getAttribute("transaction");
     Transaction old_t = new Transaction();
     old_t.setUser_ID(user.getUser_ID());
-    if (Transaction_id > 0) {
+    if (Transaction_id!=null&&!Transaction_id.equals("")) {
       old_t.setTransaction_ID(Transaction_id);
     }
     Transaction new_t = new Transaction();

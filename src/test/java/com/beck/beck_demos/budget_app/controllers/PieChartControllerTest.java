@@ -53,7 +53,7 @@ class PieChartControllerTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID(41);
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doGet(request,response);
@@ -86,7 +86,7 @@ class PieChartControllerTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID(41);
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doGet(request,response);
@@ -96,9 +96,9 @@ class PieChartControllerTest {
     assertNotNull(breakdown);
     assertNotNull(allYears);
     assertNotNull(Categories);
-    assertEquals(5,breakdown.size());
-    assertEquals(5,allYears.size());
-    assertEquals(5,Categories.size());
+    assertEquals(2,breakdown.size());
+    assertEquals(2,allYears.size());
+    assertEquals(4,Categories.size());
 
   }
 

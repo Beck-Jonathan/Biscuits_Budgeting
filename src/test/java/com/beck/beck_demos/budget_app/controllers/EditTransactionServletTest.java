@@ -86,14 +86,14 @@ class EditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID(41);
     session.setAttribute("User_B",user);
     request.setSession(session);
 
 //create a new albums parameters
 
     request.setParameter("category","TestValue");
-    request.setParameter("t_id","48");
+    request.setParameter("t_id","XxtdYmVMXxtdYmVMXxtdYmVMXxtdYmVMXxtd");
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     String response2 = response.getContentAsString();
@@ -108,14 +108,14 @@ class EditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID(41);
     session.setAttribute("User_B",user);
     request.setSession(session);
 
 //create a new albums parameters
 
     request.setParameter("category","TestValue");
-    request.setParameter("t_id","48");
+    request.setParameter("t_id","XxtdYmVMXxtdYmVMXxtdYmVMXxtdYmVMXxtd");
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     String response2 = response.getContentAsString();
@@ -135,14 +135,14 @@ class EditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID(41);
     session.setAttribute("User_B",user);
     request.setSession(session);
 
 //create a new albums parameters
 
     request.setParameter("category","DUPLICATE");
-    request.setParameter("t_id","48");
+    request.setParameter("t_id","XxtdYmVMXxtdYmVMXxtdYmVMXxtdYmVMXxtd");
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     String response2 = response.getContentAsString();
@@ -163,7 +163,7 @@ class EditTransactionServletTest {
 //create a new albums parameters
 
     request.setParameter("category","EXCEPTION");
-    request.setParameter("t_id","48");
+    request.setParameter("t_id","XxtdYmVMXxtdYmVMXxtdYmVMXxtdYmVMXxtd");
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     String response2 = response.getContentAsString();

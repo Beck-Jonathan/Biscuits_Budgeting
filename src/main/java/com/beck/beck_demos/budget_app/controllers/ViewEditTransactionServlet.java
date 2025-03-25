@@ -55,9 +55,9 @@ public class ViewEditTransactionServlet extends HttpServlet{
 //To restrict this page based on privilege level
 
     String mode = req.getParameter("mode");
-    int primaryKey = -1;
+    String primaryKey = "";
     try{
-      primaryKey = Integer.parseInt(req.getParameter("transactionid"));
+      primaryKey = req.getParameter("transactionid");
     }catch (Exception e) {
       req.setAttribute("dbStatus",e.getMessage());
     }

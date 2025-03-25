@@ -81,13 +81,13 @@ class AllTransactionsServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID(41);
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doGet(request,response);
     List<Transaction> transactions = (List<Transaction>) request.getAttribute("Transactions");
     assertNotNull(transactions);
-    assertEquals(5,transactions.size());
+    assertEquals(4,transactions.size());
   }
 
   @Test
@@ -96,9 +96,9 @@ class AllTransactionsServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID(41);
     session.setAttribute("User_B",user);
-    String category = "VYGHLkTb";
+    String category = "mMvMlyeB";
     request.setParameter("category",category);
 
     String Category_ID= null;
@@ -122,7 +122,7 @@ class AllTransactionsServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID(41);
     session.setAttribute("User_B",user);
     String year = "103";
     request.setParameter("year",year);

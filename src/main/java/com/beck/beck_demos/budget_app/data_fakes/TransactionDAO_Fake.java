@@ -15,37 +15,42 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   private  List<Transaction_VM> transactionVMs;
   public TransactionDAO_Fake(){
     transactionVMs = new ArrayList<>();
-    Transaction transaction0 = new Transaction(48, 39, "VYGHLkTb", "QpdcuMNh", new Date(104,4,4), 33, "VgODYmMt", 27.39, "jxXIlhEk", "rEnyujbY");
-    Transaction transaction1 = new Transaction(51, 39, "VOjBYhTG", "wGVgUyqC", new Date(103,4,4), 62, "SYitpUcb", 40.71, "ZvgdjWwV", "aiinejwU");
-    Transaction transaction2 = new Transaction(21, 39, "joHsrOAN", "gUhOfpFp", new Date(102,4,4), 50, "AZkwwBJm", 53.18, "fEJrGJrm", "VEXdjchS");
-    Transaction transaction3 = new Transaction(12, 39, "icxwjdNm", "mfXhQabL", new Date(101,4,4), 58, "IwSZGvBH", 36.77, "MYmIGDGh", "GZTvEyiI");
-    Transaction transaction4 = new Transaction(32, 39, "vSuHXsKk", "QqmnUsOb", new Date(100,4,4), 34, "JskerTkw", 43.43, "EnEBtxaR", "pJPfqAHe");
-    Transaction transaction5 = new Transaction(41, 10, "ptnICffX", "rwmsMYgP", new Date(104,4,4), 38, "SxPBFTiM", 15.37, "deXThtDl", "eYVZYrWV");
-    Transaction transaction6 = new Transaction(36, 35, "ptnICffX", "TrDRqemY", new Date(104,4,4), 58, "SZansbOr", 59.61, "rBnCwofS", "pfKQQWCX");
-    Transaction transaction7 = new Transaction(68, 17, "ptnICffX", "pIynhxtd", new Date(104,4,4), 41, "xSDBTUoS", 56.12, "TActccBN", "qoXkKeCJ");
-    Transaction transaction8 = new Transaction(58, 25, "ptnICffX", "kqnPhdxP", new Date(104,4,4), 13, "hcfUIWsE", 67.32, "vgmhIoHX", "xKpBLSMy");
-    Transaction transaction9 = new Transaction(47, 42, "ptnICffX", "wnHnoWhf", new Date(104,4,4), 26, "jREEFHLo", 60.94, "EQrHCpTA", "vDgFTXix");
-    Transaction transaction10 = new Transaction(30, 43, "fXZtSupN", "PvXFKAJm", new Date(104,4,4), 37, "fvylyDgb", 45.95, "exIUFmWX", "JxwRnWbp");
-    Transaction transaction11 = new Transaction(62, 43, "fuawCBab", "gUlTjSKP", new Date(104,4,4), 17, "bSaXlUPh", 69.05, "hwYgFjiv", "iXLSDxLs");
-    Transaction transaction12 = new Transaction(13, 43, "epNeHYoP", "PLJLgUCs", new Date(104,4,4), 48, "NggdBVqv", 25.8, "OcLaijZZ", "TaXAroZN");
-    Transaction transaction13 = new Transaction(54, 43, "MwBEfVxL", "MOfgBgPd", new Date(104,4,4), 36, "MthSMMoq", 20.82, "mdueXRNe", "uTlOMFuk");
-    Transaction transaction14 = new Transaction(41, 43, "SnmxGGkQ", "DSlTYGAZ", new Date(104,4,4), 47, "jBENnIdi", 16.18, "ixgcWiCW", "nosGNtkR");
-    Transaction transaction15 = new Transaction(10, 47, "neNmKiZE", "UXACSViU", new Date(104,4,4), 61, "jCEdeGuH", 66.93, "AsWRMRDj", "tIMlOYCl");
-    Transaction transaction16 = new Transaction(36, 15, "neNmKiZE", "oqnrLWZl", new Date(104,4,4), 54, "adHTPaEH", 23.97, "CLhxcaIF", "dBqLBGQI");
-    Transaction transaction17 = new Transaction(17, 51, "neNmKiZE", "ArZaFlnw", new Date(104,4,4), 21, "kUuWsGsK", 33.79, "eNTQGmuS", "JQTvYMKl");
-    Transaction transaction18 = new Transaction(17, 38, "neNmKiZE", "ilKujPGR", new Date(104,4,4), 59, "HyWxjClI", 36.71, "wRqnsXXR", "LHyXghrC");
-    Transaction transaction19 = new Transaction(35, 44, "neNmKiZE", "qXFLJsVL", new Date(104,4,4), 33, "ZfcgLqQW", 11.78, "RqeydyAy", "QCJiFabq");
-    Transaction transaction20 = new Transaction(26, 54, "dyBLEqRs", "pbfWOAmL", new Date(104,4,4), 19, "tEJMkaCF", 68.55, "UGAmCPeI", "EhFoLaDi");
-    Transaction transaction21 = new Transaction(28, 54, "blVPEFwC", "rGxMuHjb", new Date(104,4,4), 62, "UxUMSWin", 25.62, "xegrjMxq", "uRvScgBG");
-    Transaction transaction22 = new Transaction(10, 54, "KhyKTSMC", "rUyQhENZ", new Date(104,4,4), 16, "kiiIsfaX", 49.39, "lRQiycae", "WQguxSee");
-    Transaction transaction23 = new Transaction(41, 54, "ZbAOmbSd", "ugZAkafA", new Date(104,4,4), 50, "HbbwbTXB", 23.27, "tFOlBNFj", "QZMHBtSr");
-    Transaction transaction24 = new Transaction(45, 54, "jqfKXtSx", "wrdXtVZS", new Date(104,4,4), 51, "MVIeMuBQ", 21.69, "mFgOEydU", "CLvnQMFs");
-    Transaction transaction25 = new Transaction(55, 19, "qgiMFYEd", "HiXXPcXQ", new Date(104,4,4), 58, "EQLBYUHv", 51.41, "uXevsWIb", "avdsVWWG");
-    Transaction transaction26 = new Transaction(11, 47, "qgiMFYEd", "PBbXBEDE", new Date(104,4,4), 67, "gDMiDbAn", 36.65, "wqkrWoCw", "AuDVvVtQ");
-    Transaction transaction27 = new Transaction(68, 37, "qgiMFYEd", "EbPffXor", new Date(104,4,4), 16, "MKccJGBL", 41.76, "BGvkyqmh", "gNBTUYVI");
-    Transaction transaction28 = new Transaction(45, 64, "qgiMFYEd", "kJHNFths", new Date(104,4,4), 56, "SqkJwOUf", 41.64, "anriHeEs", "oJNVaLPB");
-    Transaction transaction29 = new Transaction(33, 57, "qgiMFYEd", "BCCGEZpv", new Date(104,4,4), 13, "DEovADUv", 27.55, "YFooEcFK", "xgNJhSdj");
-
+    Transaction transaction0 = new Transaction("XxtdYmVMXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 41, "mMvMlyeB", "xAwAtNYh", new Date(103,4,4), 50, "nCYTHrPO", 43.94, "VpNtaCaw", "ZPHFJIYd");
+    Transaction transaction1 = new Transaction("ukukySnYXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 41, "EEgjEfHm", "DZruQsNI", new Date(104,4,4), 41, "tSKeiGeS", 59.31, "tuuNNIrl", "ADZCjFxl");
+    Transaction transaction2 = new Transaction("AbgcYOYUXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 41, "aqWOkMQH", "MdlXXIxq", new Date(104,4,4), 62, "HudIsSUR", 24.12, "snltZGLJ", "InhoYwkH");
+    Transaction transaction3 = new Transaction("OCKMacGkXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 41, "YwEsYxXg", "YrrxQPxo", new Date(104,4,4), 13, "KRfWlDSH", 11.36, "YwMJnuUm", "LEtOqAPS");
+    Transaction transaction4 = new Transaction("BFBLAaRwXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 69, "PVEswhXn", "jLiECvmj", new Date(104,4,4), 18, "vVDgNOEv", 26.08, "hlysPkyD", "SwsBHRBv");
+    Transaction transaction5 = new Transaction("hwVSiwiSXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 29, "PVEswhXn", "CsCZwEIf", new Date(104,4,4), 53, "nfoybZov", 65.91, "VMRcORSQ", "gTnPkAuA");
+    Transaction transaction6 = new Transaction("yFdcNrQjXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 64, "PVEswhXn", "QakFsBmw", new Date(104,4,4), 16, "jPmIJfXo", 16.21, "vuoEajRS", "HTBrTAln");
+    Transaction transaction7 = new Transaction("uNflmsKjXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 22, "PVEswhXn", "wZvoDKnV", new Date(104,4,4), 32, "lXJeJiol", 52.11, "WZHXraZJ", "BIuspOlq");
+    Transaction transaction8 = new Transaction("VkbDBwHTXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 55, "oCESkdTM", "VSQpEweA", new Date(104,4,4), 60, "TWWqErRX", 39.51, "kxwGAKmW", "woRyoFcX");
+    Transaction transaction9 = new Transaction("JqXLFMvfXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 47, "BPRebbnT", "VSQpEweA", new Date(104,4,4), 12, "CHpsZCmf", 55.61, "qsFNeSmq", "tEjHmMeK");
+    Transaction transaction10 = new Transaction("jXRRwPVGXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 53, "aSfJIwAr", "VSQpEweA", new Date(104,4,4), 21, "WMWvOjvc", 25.87, "RuTUfnqD", "FTZsciHu");
+    Transaction transaction11 = new Transaction("kZLjumHuXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 27, "pXnmIbVT", "VSQpEweA", new Date(104,4,4), 10, "EKVMfqSE", 61.11, "fXQmOAPj", "sTnYEpVD");
+    Transaction transaction12 = new Transaction("wlEcdvnUXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 26, "WpvyCtle", "RfZfaVvH", new Date(104,4,4), 59, "OntsTkKs", 29.34, "ZxUbTuFm", "RYFvDdXx");
+    Transaction transaction13 = new Transaction("sIBBbJNrXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 26, "ALSgpQxI", "xCACCyjQ", new Date(104,4,4), 46, "YtfNolpT", 38.51, "llquSLdd", "IHmFdUvt");
+    Transaction transaction14 = new Transaction("XjYIPbdLXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 26, "ZGTodgXQ", "OKGWFxnl", new Date(104,4,4), 41, "ZjOMLauk", 17.9, "cPQPsiPT", "FgMVKoWA");
+    Transaction transaction15 = new Transaction("eZTCJKPuXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 26, "nNhvQhku", "pNWYBUDC", new Date(104,4,4), 60, "AjKuGgOy", 23.2, "GnhYbFoJ", "VdOyINxo");
+    Transaction transaction16 = new Transaction("CmpcYkijXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 36, "DBoXIYtE", "owsDSMKg", new Date(104,4,4), 41, "MlkCXriZ", 65.73, "LQWAgWCB", "SmErOigP");
+    Transaction transaction17 = new Transaction("FlknekdMXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 18, "DBoXIYtE", "SAUwtypY", new Date(104,4,4), 12, "OwLfQKqt", 35.82, "ULSjbcgK", "WffvnEBg");
+    Transaction transaction18 = new Transaction("VrFCCpfYXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 29, "DBoXIYtE", "sFZdmpLq", new Date(104,4,4), 66, "qhdUQReG", 56.88, "WSJgaOBT", "RJffRPjb");
+    Transaction transaction19 = new Transaction("jmsokvbMXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 30, "DBoXIYtE", "CAbmXuCP", new Date(104,4,4), 15, "JLLFQoql", 21.68, "BRFjtTta", "bMFTtYtN");
+    Transaction transaction20 = new Transaction("sWoBSjuBXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 12, "bIivGJRd", "cVMGDgbA", new Date(104,4,4), 58, "VQebeFxB", 50.8, "UfRaipPS", "bkXWfgiK");
+    Transaction transaction21 = new Transaction("XsMDmdbkXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 27, "ZgevAUIu", "cVMGDgbA", new Date(104,4,4), 59, "HnFpqjsO", 68.53, "mOrHwWnc", "nIcvHFxr");
+    Transaction transaction22 = new Transaction("tGdWIOjeXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 42, "uFaBKenY", "cVMGDgbA", new Date(104,4,4), 29, "iOIWaASQ", 21.64, "gArypmda", "eAHYiBme");
+    Transaction transaction23 = new Transaction("YyQSbKqAXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 45, "NXTTNEiC", "cVMGDgbA", new Date(104,4,4), 50, "WtEJQpQm", 36.79, "UmUtRtTX", "RYeuJaCl");
+    Transaction transaction24 = new Transaction("IENdRkxBXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 53, "FMIFPjsE", "BensCZsg", new Date(104,4,4), 34, "cBkGjgMp", 13.03, "CVsLgKRC", "hkpHvOrM");
+    Transaction transaction25 = new Transaction("GeTvtHwTXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 53, "jCViDgKb", "kdpmhVUu", new Date(104,4,4), 26, "fcarqTbL", 63.48, "IuYTrwIv", "TeEQvTVc");
+    Transaction transaction26 = new Transaction("QqeaMgsjXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 53, "JJVFTRZp", "DQxpZBPL", new Date(104,4,4), 31, "fMUjPjaS", 46.29, "ilZHmxXw", "HxwetfRS");
+    Transaction transaction27 = new Transaction("SBFHvDvnXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 53, "BeNVmxpH", "RppCaBDI", new Date(104,4,4), 23, "WBRiKXvh", 38.11, "LFlQuDqJ", "WSsbKgDy");
+    Transaction transaction28 = new Transaction("FqNRhRlkXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 31, "yFZmNHCd", "AtmLWekO", new Date(104,4,4), 48, "MUOJKuhv", 16.26, "fyCmAMDF", "bsstSKxb");
+    Transaction transaction29 = new Transaction("inHhcuhVXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 66, "yFZmNHCd", "fRpAUfEV", new Date(104,4,4), 68, "HlySFegk", 30.3, "uyLTksne", "wZrSpHrm");
+    Transaction transaction30 = new Transaction("ksNNnAZwXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 59, "yFZmNHCd", "oVCqqbNw", new Date(104,4,4), 37, "xFGaBHtP", 35.88, "IKMruqpM", "hKKsnEyP");
+    Transaction transaction31 = new Transaction("tcbQFVKXXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 58, "yFZmNHCd", "flwLGtKf", new Date(104,4,4), 47, "IKuAlAlm", 26.51, "FQCalMRw", "yTmAoDPF");
+    Transaction transaction32 = new Transaction("UGjhbEcXXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 18, "hUiVZscL", "sBbQihPX", new Date(104,4,4), 20, "rcTGftry", 21.19, "aXAeMecU", "OKcgUtVa");
+    Transaction transaction33 = new Transaction("hhKFllcCXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 50, "fFXuaQUE", "sBbQihPX", new Date(104,4,4), 19, "oVyJkvhy", 50.41, "kkVXnVvu", "GZrsahnI");
+    Transaction transaction34 = new Transaction("lhFEQTlSXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 51, "BjJplFqQ", "sBbQihPX", new Date(104,4,4), 18, "QhuGKUZx", 52.52, "vXvmuRag", "LNBeJFUL");
+    Transaction transaction35 = new Transaction("kPhlBQapXxtdYmVMXxtdYmVMXxtdYmVMXxtm", 44, "uiFSepoQ", "sBbQihPX", new Date(104,4,4), 43, "mVuKEsOC", 55.51, "BoJhhBJH", "tXSEjfwF");
     Transaction_VM transaction_VM0= new Transaction_VM(transaction0);
     Transaction_VM transaction_VM1= new Transaction_VM(transaction1);
     Transaction_VM transaction_VM2= new Transaction_VM(transaction2);
@@ -76,7 +81,12 @@ public class TransactionDAO_Fake implements iTransactionDAO {
     Transaction_VM transaction_VM27= new Transaction_VM(transaction27);
     Transaction_VM transaction_VM28= new Transaction_VM(transaction28);
     Transaction_VM transaction_VM29= new Transaction_VM(transaction29);
-
+    Transaction_VM transaction_VM30= new Transaction_VM(transaction30);
+    Transaction_VM transaction_VM31= new Transaction_VM(transaction31);
+    Transaction_VM transaction_VM32= new Transaction_VM(transaction32);
+    Transaction_VM transaction_VM33= new Transaction_VM(transaction33);
+    Transaction_VM transaction_VM34= new Transaction_VM(transaction34);
+    Transaction_VM transaction_VM35= new Transaction_VM(transaction35);
     transactionVMs.add(transaction_VM0);
     transactionVMs.add(transaction_VM1);
     transactionVMs.add(transaction_VM2);
@@ -107,8 +117,14 @@ public class TransactionDAO_Fake implements iTransactionDAO {
     transactionVMs.add(transaction_VM27);
     transactionVMs.add(transaction_VM28);
     transactionVMs.add(transaction_VM29);
-
+    transactionVMs.add(transaction_VM30);
+    transactionVMs.add(transaction_VM31);
+    transactionVMs.add(transaction_VM32);
+    transactionVMs.add(transaction_VM33);
+    transactionVMs.add(transaction_VM34);
+    transactionVMs.add(transaction_VM35);
     Collections.sort(transactionVMs);
+
   }
   @Override
   public int update_category(Transaction oldTransaction, Transaction newTransaction) throws SQLException {

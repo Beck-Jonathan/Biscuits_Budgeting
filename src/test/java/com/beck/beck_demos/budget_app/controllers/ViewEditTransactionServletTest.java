@@ -117,10 +117,10 @@ class ViewEditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID(41);
     session.setAttribute("User_B",user);
-    Integer Transaction_ID= 48;
-    request.setParameter("transactionid",Transaction_ID.toString());
+    String Transaction_ID= "XxtdYmVMXxtdYmVMXxtdYmVMXxtdYmVMXxtd";
+    request.setParameter("transactionid",Transaction_ID);
     request.setSession(session);
     servlet.doGet(request,response);
     Transaction transaction = (Transaction) session.getAttribute("transaction");
@@ -135,8 +135,8 @@ class ViewEditTransactionServletTest {
     user.setRoles(roles);
     user.setUser_ID(39);
     session.setAttribute("User_B",user);
-    Integer Transaction_ID= -1;
-    request.setParameter("transactionid",Transaction_ID.toString());
+    String Transaction_ID= "";
+    request.setParameter("transactionid",Transaction_ID);
 
     request.setSession(session);
     servlet.doGet(request,response);
@@ -163,8 +163,8 @@ class ViewEditTransactionServletTest {
     request.setSession(session);
 //to set the old Transaction
     Transaction_VM transaction = new Transaction_VM();
-    transaction.setTransaction_ID(48);
-    transaction.setUser_ID(39);
+    transaction.setTransaction_ID("XxtdYmVMXxtdYmVMXxtdYmVMXxtdYmVMXxtd");
+    transaction.setUser_ID(41);
     transaction.setCategory_ID("testTransaction");
     transaction.setBank_Account_ID("testTransaction");
     transaction.setCheck_No(43);
@@ -248,7 +248,7 @@ class ViewEditTransactionServletTest {
     request.setSession(session);
 //to set the old Transaction
     Transaction_VM transaction = new Transaction_VM();
-    transaction.setTransaction_ID(43);
+    transaction.setTransaction_ID("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
     transaction.setUser_ID(43);
     transaction.setCategory_ID("DUPLICATE");
     transaction.setBank_Account_ID("DUPLICATE");
@@ -287,7 +287,7 @@ class ViewEditTransactionServletTest {
     request.setSession(session);
 //to set the old Transaction
     Transaction_VM transaction = new Transaction_VM();
-    transaction.setTransaction_ID(43);
+    transaction.setTransaction_ID("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
     transaction.setUser_ID(43);
     transaction.setCategory_ID("EXCEPTION");
     transaction.setBank_Account_ID("EXCEPTION");

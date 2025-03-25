@@ -35,7 +35,7 @@ public class TransactionDAO implements iTransactionDAO {
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_update_Transaction_category(?,?,?)}")) {
-          statement.setInt(1, oldTransaction.getTransaction_ID());
+          statement.setString(1, oldTransaction.getTransaction_ID());
           statement.setInt(2, oldTransaction.getUser_ID());
 
           statement.setString(3, newTransaction.getCategory_ID());
@@ -62,7 +62,7 @@ public class TransactionDAO implements iTransactionDAO {
       if (connection !=null){
         try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Transaction(? ,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}"))
         {
-          statement.setInt(1,oldTransaction.getTransaction_ID());
+          statement.setString(1,oldTransaction.getTransaction_ID());
           statement.setInt(2,oldTransaction.getUser_ID());
           statement.setInt(3,newTransaction.getUser_ID());
           statement.setString(4,oldTransaction.getCategory_ID());
@@ -125,7 +125,7 @@ public class TransactionDAO implements iTransactionDAO {
 
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
-            Integer Transaction_ID = resultSet.getInt("Transaction_Transaction_ID");
+            String Transaction_ID = resultSet.getString("Transaction_Transaction_ID");
             Integer User_ID = resultSet.getInt("Transaction_User_ID");
             String Category_ID = resultSet.getString("Transaction_Category_ID");
             String Account_Num = resultSet.getString("Transaction_Bank_Account_ID");
@@ -171,7 +171,7 @@ public class TransactionDAO implements iTransactionDAO {
       if (type.equals("GreenState")) {
         while (line != null) {
           ArrayList parts = new ArrayList(List.of(line.split("\t")));
-          Integer Transaction_ID = 0;
+          String Transaction_ID = "";
           String Account_Num = (String) parts.get(0);
           Integer userID = 1;
           //Date Post_Date = new Date(2024, 5, 5);
@@ -210,7 +210,7 @@ public class TransactionDAO implements iTransactionDAO {
       if (type.equals("custom")) {
         while (line != null) {
           ArrayList parts = new ArrayList(List.of(line.split("\t")));
-          Integer Transaction_ID = 0;
+          String Transaction_ID = "";
 
           Integer userID = 1;
 
@@ -272,7 +272,7 @@ public class TransactionDAO implements iTransactionDAO {
 
           ArrayList parts = new ArrayList(List.of(line.split("\t")));
           Integer userID = 1;
-          Integer Transaction_ID = 0;
+          String Transaction_ID = "";
           String Post_Date_String = ((String) parts.get(1));
           java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(Post_Date_String);
           java.sql.Date Post_Date = new java.sql.Date(utilDate.getTime());
@@ -388,7 +388,7 @@ public class TransactionDAO implements iTransactionDAO {
 
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
-            Integer Transaction_ID = resultSet.getInt("Transaction_Transaction_ID");
+            String Transaction_ID = resultSet.getString("Transaction_Transaction_ID");
             Integer User_ID = resultSet.getInt("Transaction_User_ID");
             String Category_ID = resultSet.getString("Transaction_Category_ID");
             String Account_Num = resultSet.getString("Transaction_Bank_Account_ID");
@@ -420,7 +420,7 @@ public class TransactionDAO implements iTransactionDAO {
 
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
-            Integer Transaction_ID = resultSet.getInt("Transaction_Transaction_ID");
+            String Transaction_ID = resultSet.getString("Transaction_Transaction_ID");
             Integer User_ID = resultSet.getInt("Transaction_User_ID");
             String Category_ID = resultSet.getString("Transaction_Category_ID");
             String Account_Num = resultSet.getString("Transaction_Bank_Account_ID");
@@ -533,7 +533,7 @@ public class TransactionDAO implements iTransactionDAO {
 
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
-            Integer Transaction_ID = resultSet.getInt("Transaction_Transaction_ID");
+            String Transaction_ID = resultSet.getString("Transaction_Transaction_ID");
             Integer User_ID = resultSet.getInt("Transaction_User_ID");
             String Category_ID = resultSet.getString("Transaction_Category_ID");
             String Account_Num = resultSet.getString("Transaction_Bank_Account_ID");
@@ -562,11 +562,12 @@ public class TransactionDAO implements iTransactionDAO {
     Transaction_VM result = new Transaction_VM();
     try(Connection connection = getConnection()) {
       try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_pk_Transaction(?,?)}")) {
-        statement.setInt(1, _transaction.getTransaction_ID());
+        statement.setString(1, _transaction.getTransaction_ID());
         statement.setInt(2, _transaction.getUser_ID());
 
         try (ResultSet resultSet = statement.executeQuery()){
-          if(resultSet.next()){Integer Transaction_ID = resultSet.getInt("Transaction_Transaction_ID");
+          if(resultSet.next()){
+            String Transaction_ID = resultSet.getString("Transaction_Transaction_ID");
             Integer User_ID = resultSet.getInt("Transaction_User_ID");
             String Category_ID = resultSet.getString("Transaction_Category_ID");
             String Account_Num = resultSet.getString("Transaction_Bank_Account_ID");
@@ -590,7 +591,7 @@ public class TransactionDAO implements iTransactionDAO {
       List<Transaction_Comment> _comments = new ArrayList<>();
       result.setTransaction_Comments(_comments);
       try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_Comment_by_Transaction(?)}")) {
-        statement.setInt(1, _transaction.getTransaction_ID());
+        statement.setString(1, _transaction.getTransaction_ID());
         try(ResultSet resultSet = statement.executeQuery()) {
 
           while (resultSet.next()) {

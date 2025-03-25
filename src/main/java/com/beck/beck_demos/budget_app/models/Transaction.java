@@ -15,7 +15,7 @@ import static java.lang.Character.isDigit;
 
 
 public class Transaction implements Comparable<Transaction> {
-  private Integer Transaction_ID;
+  private String Transaction_ID;
   private Integer User_ID;
   private String Category_ID;
   private String Bank_Account_ID;
@@ -28,7 +28,7 @@ public class Transaction implements Comparable<Transaction> {
 
   public Transaction(){}
 
-  public Transaction(Integer Transaction_ID, Integer User_ID, String Category_ID, String Bank_Account_ID, Date Post_Date, Integer Check_No, String Description, Double Amount, String Type, String Status) {
+  public Transaction(String Transaction_ID, Integer User_ID, String Category_ID, String Bank_Account_ID, Date Post_Date, Integer Check_No, String Description, Double Amount, String Type, String Status) {
 
     this.Transaction_ID = Transaction_ID;
     this.User_ID = User_ID;
@@ -42,7 +42,7 @@ public class Transaction implements Comparable<Transaction> {
     this.Status = Status;
   }
 
-  public Transaction(Integer Transaction_ID) {
+  public Transaction(String Transaction_ID) {
 
     this.Transaction_ID = Transaction_ID;
   }
@@ -50,7 +50,7 @@ public class Transaction implements Comparable<Transaction> {
    * <p> Gets the Transaction_ID of the associated Transaction object </p>
    * @return the Transaction_ID of this Transaction object.
    */
-  public Integer getTransaction_ID() {
+  public String getTransaction_ID() {
     return Transaction_ID;
   }
   /**
@@ -58,9 +58,9 @@ public class Transaction implements Comparable<Transaction> {
    *@param Transaction_ID the transaction_id of the transaction,
    * throws IllegalArgumentException if Transaction_ID is negative or greater than 10,000
    */
-  public void setTransaction_ID(Integer Transaction_ID) {
-    if (Transaction_ID<0||Transaction_ID>10000000){
-      throw new IllegalArgumentException("Transaction_ID Can Not Be Negative");
+  public void setTransaction_ID(String Transaction_ID) {
+    if (Transaction_ID.length() != 36){
+      throw new IllegalArgumentException("Transaction_ID invalid");
     }
     this.Transaction_ID = Transaction_ID;
   }
@@ -113,7 +113,7 @@ public class Transaction implements Comparable<Transaction> {
   }
   /**
    * <p> Sets the Bank_Account_ID of the associated Transaction object
-   * Replaces all but hte last 4 chararacters with "x"</p>
+   * Replaces all but hte last 4 characters with "x"</p>
    *@param Bank_Account_ID the bank_account_id of the transaction,
    * throws IllegalArgumentException if Bank_Account_ID under 3 characters or longer than 100 characters
    */
@@ -146,7 +146,7 @@ public class Transaction implements Comparable<Transaction> {
   /**
    * <p> Sets the Post_Date of the associated Transaction object </p>
    *@param Post_Date the post_date of the transaction,
-   * throws IllegalArgumentException if Post_Date is outside of a logical range
+   * throws IllegalArgumentException if Post_Date is outside a logical range
    */
   public void setPost_Date(Date Post_Date) {
     this.Post_Date = Post_Date;
@@ -202,7 +202,7 @@ public class Transaction implements Comparable<Transaction> {
   /**
    * <p> Sets the Amount of the associated Transaction object </p>
    *@param Amount the amount of the transaction,
-   * throws IllegalArgumentException if Amount is outside of a logical range
+   * throws IllegalArgumentException if Amount is outside a logical range
    */
   public void setAmount(Double Amount) {
     if (Amount<0||Amount>10000){
