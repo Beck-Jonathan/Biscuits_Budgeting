@@ -1,6 +1,5 @@
 package com.beck.beck_demos.budget_app.models;
 
-import org.joda.time.DateTime;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,8 +9,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class Transaction_CommentTest {
 
@@ -37,14 +34,14 @@ class Transaction_CommentTest {
   public void testTransaction_CommentParameterizedConstructorSetsAllVariables(){
     Transaction_Comment _transaction_comment= new Transaction_Comment(
         4543,
-        5557,
+        "lwIFwDnklwIFwDnklwIFwDnk521212312322",
         1601,
         "SrRmbRlEMspZgtAPFxXwmgRgRDwOvaxCbNpLvKANSYFQdlZPDUUAsPeZBPPwxrqIfJDJmWiZNMIBZKnfcaNUaaJkxVMBYFQLtaDeeDYaEROtddRbgdekElyGcxFZcCbxiEDbgDyxHnqnhiMwXtsDVpcywqqMWBebEYdBxNAlAynHQokVFFhpZhMygMIljlMLcPcuZfGCVBhHGGRSHlejWCQhndOOBtEMmJfCCjWRLyYFgeYYEZxLrIwgnHyacufhvfQFBOYLRPiwcpcpeOvaREVNbKLwVZxhlIxYiGATphwLQWjxfiGeILjmfNyavlPxtDZqMoawgWXjWtoMWqjrDdwOeDrBmsuhQNvslHshnSDOTJTuGqZbawKmiKGfsTdipSVIIvanqYTAIYZnYQKfvAhScsIgQAuLinQUfAgXhkZlgrZDYDsSroSheqaYYnZdwEdKxRlNrDGnqvIpcpTRBHRBgGHiVVYOETAFMwPaIDjvecIUfQsvxKZMLvymYNEdbEjrWoEByTipIUHUoeylSbVdNyhaHgqCwLIDmeHJZyYjeUrvGfqdolIsIpVZVSfrvMDsBAqbrbvtcdpdAAyYIZyacdoljDgvDmXesNdqmMsaxLoVRNjMPWLFrotypoMKklVIfuaYydEcLthUYpDtXVwMfgUEfaIjxUDcvUbnvnfSbswGaAlRlUoIxamYTeqpEYDOOxdsRsDmWwFAIxfbinmrcMZADKywCGCGlTIOYKKhXSUxOHQfLeBdoHtGkPuyWSZNQZYCuSfqeynylQGofVUSZtchtvtentyHlMxcRJPOHvQJMPxvatJGxIRdkujTAElTtMMGFLdZKgfuGqSExeNpQgXTmvMWKgVRjFnDurZEOoNIkgVtffvElaYaWCyAQYoHNPtilRXNTFjmiomipVKACuHoZDxVXBXKtTQjgqsmuSKMacZvMNXMpKbmPGTHlxRTcnqtQUedILPqWlxEPJDwDJuZakAwBpdmHb",
         new Date()
 
     );
     Assertions.assertEquals(4543,_transaction_comment.getUser_ID());
-    Assertions.assertEquals(5557,_transaction_comment.getTransaction_ID());
+    Assertions.assertEquals("lwIFwDnklwIFwDnklwIFwDnk521212312322",_transaction_comment.getTransaction_ID());
     Assertions.assertEquals(1601,_transaction_comment.getTransaction_Comment_ID());
     Assertions.assertEquals("SrRmbRlEMspZgtAPFxXwmgRgRDwOvaxCbNpLvKANSYFQdlZPDUUAsPeZBPPwxrqIfJDJmWiZNMIBZKnfcaNUaaJkxVMBYFQLtaDeeDYaEROtddRbgdekElyGcxFZcCbxiEDbgDyxHnqnhiMwXtsDVpcywqqMWBebEYdBxNAlAynHQokVFFhpZhMygMIljlMLcPcuZfGCVBhHGGRSHlejWCQhndOOBtEMmJfCCjWRLyYFgeYYEZxLrIwgnHyacufhvfQFBOYLRPiwcpcpeOvaREVNbKLwVZxhlIxYiGATphwLQWjxfiGeILjmfNyavlPxtDZqMoawgWXjWtoMWqjrDdwOeDrBmsuhQNvslHshnSDOTJTuGqZbawKmiKGfsTdipSVIIvanqYTAIYZnYQKfvAhScsIgQAuLinQUfAgXhkZlgrZDYDsSroSheqaYYnZdwEdKxRlNrDGnqvIpcpTRBHRBgGHiVVYOETAFMwPaIDjvecIUfQsvxKZMLvymYNEdbEjrWoEByTipIUHUoeylSbVdNyhaHgqCwLIDmeHJZyYjeUrvGfqdolIsIpVZVSfrvMDsBAqbrbvtcdpdAAyYIZyacdoljDgvDmXesNdqmMsaxLoVRNjMPWLFrotypoMKklVIfuaYydEcLthUYpDtXVwMfgUEfaIjxUDcvUbnvnfSbswGaAlRlUoIxamYTeqpEYDOOxdsRsDmWwFAIxfbinmrcMZADKywCGCGlTIOYKKhXSUxOHQfLeBdoHtGkPuyWSZNQZYCuSfqeynylQGofVUSZtchtvtentyHlMxcRJPOHvQJMPxvatJGxIRdkujTAElTtMMGFLdZKgfuGqSExeNpQgXTmvMWKgVRjFnDurZEOoNIkgVtffvElaYaWCyAQYoHNPtilRXNTFjmiomipVKACuHoZDxVXBXKtTQjgqsmuSKMacZvMNXMpKbmPGTHlxRTcnqtQUedILPqWlxEPJDwDJuZakAwBpdmHb",_transaction_comment.getContent());
     Assertions.assertEquals(new Date(),_transaction_comment.getPost_Date());
@@ -53,11 +50,11 @@ class Transaction_CommentTest {
   public void testTransaction_CommentKeyedParameterizedConstructorSetsKeyedVariables(){
     Transaction_Comment _transaction_comment= new Transaction_Comment(
         7609,
-        6033,
+        "lwIFwDnklwIFwDnklwIFwDnk521212312322",
         6987
     );
     Assertions.assertEquals(7609,_transaction_comment.getUser_ID());
-    Assertions.assertEquals(6033,_transaction_comment.getTransaction_ID());
+    Assertions.assertEquals("lwIFwDnklwIFwDnklwIFwDnk521212312322",_transaction_comment.getTransaction_ID());
     Assertions.assertEquals(6987,_transaction_comment.getTransaction_Comment_ID());
     Assertions.assertNull(_transaction_comment.getContent());
     Assertions.assertNull(_transaction_comment.getPost_Date());
@@ -80,17 +77,17 @@ class Transaction_CommentTest {
   }
   @Test
   public void testTransaction_CommentThrowsIllegalArgumentExceptionIfTransaction_IDTooSmall(){
-    int Transaction_ID = -1;
+    String Transaction_ID = "aa";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_transaction_comment.setTransaction_ID(Transaction_ID);});
   }
   @Test
   public void testTransaction_CommentThrowsIllegalArgumentExceptionIfTransaction_IDTooBig(){
-    int Transaction_ID = 10001;
+    String Transaction_ID = "lwIFwDnklwIFwDnklwIFwDnk521212312322xxxx";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_transaction_comment.setTransaction_ID(Transaction_ID);});
   }
   @Test
   public void testTransaction_CommentSetsTransaction_ID(){
-    int Transaction_ID = 1022;
+    String Transaction_ID = "lwIFwDnklwIFwDnklwIFwDnk521212312322";
     _transaction_comment.setTransaction_ID(Transaction_ID);
     Assertions.assertEquals(Transaction_ID, _transaction_comment.getTransaction_ID());
   }
@@ -161,12 +158,12 @@ class Transaction_CommentTest {
 //to set the User_ID as equal.
     smaller.setUser_ID(20);
 //to compare a smaller and larger Transaction_ID
-    smaller.setTransaction_ID(10);
-    bigger.setTransaction_ID(20);
+    smaller.setTransaction_ID("awIFwDnklwIFwDnklwIFwDnk521212312322");
+    bigger.setTransaction_ID("lwIFwDnklwIFwDnklwIFwDnk521212312322");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the Transaction_ID as equal.
-    smaller.setTransaction_ID(20);
+    smaller.setTransaction_ID("lwIFwDnklwIFwDnklwIFwDnk521212312322");
 //to compare a smaller and larger Transaction_Comment_ID
     smaller.setTransaction_Comment_ID(10);
     bigger.setTransaction_Comment_ID(20);

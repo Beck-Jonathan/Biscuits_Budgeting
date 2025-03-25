@@ -91,7 +91,7 @@ class EditTransaction_CommentServletTest {
 //to set the old Transaction_Comment
     Transaction_Comment transaction_comment = new Transaction_Comment();
     transaction_comment.setUser_ID(54);
-    transaction_comment.setTransaction_ID(55);
+    transaction_comment.setTransaction_ID("lwIFwDnklwIFwDnklwIFwDnk521212312322");
     transaction_comment.setTransaction_Comment_ID(20);
     transaction_comment.setContent("testTransaction_Comment");
     transaction_comment.setPost_Date(new Date());
@@ -99,7 +99,7 @@ class EditTransaction_CommentServletTest {
     request.setSession(session);
 //create a new albums parameters
     request.setParameter("inputtransaction_commentUser_ID","54");
-    request.setParameter("inputtransaction_commentTransaction_ID","55");
+    request.setParameter("inputtransaction_commentTransaction_ID","lwIFwDnklwIFwDnklwIFwDnklwIFwDnk5212");
     request.setParameter("inputtransaction_commentTransaction_Comment_ID","20");
     request.setParameter("inputtransaction_commentContent","TestValue");
     request.setParameter("inputtransaction_commentOldContent","oldContent");
@@ -159,7 +159,7 @@ class EditTransaction_CommentServletTest {
 //to set the old Transaction_Comment
     Transaction_Comment transaction_comment = new Transaction_Comment();
     transaction_comment.setUser_ID(43);
-    transaction_comment.setTransaction_ID(43);
+    transaction_comment.setTransaction_ID("lwIFwDnklwIFwDnklwIFwDnk521212312322");
     transaction_comment.setTransaction_Comment_ID(43);
     transaction_comment.setContent("DUPLICATE");
     transaction_comment.setPost_Date(new Date());
@@ -167,7 +167,7 @@ class EditTransaction_CommentServletTest {
     request.setSession(session);
 //create a new albums parameters
     request.setParameter("inputtransaction_commentUser_ID","406");
-    request.setParameter("inputtransaction_commentTransaction_ID","406");
+    request.setParameter("inputtransaction_commentTransaction_ID","lwIFwDnklwIFwDnklwIFwDnklwIFwDnk5212");
     request.setParameter("inputtransaction_commentTransaction_Comment_ID","406");
     request.setParameter("inputtransaction_commentContent","DUPLICATE");
     request.setParameter("inputtransaction_commentOldContent","DUPLICATE");
@@ -191,14 +191,14 @@ class EditTransaction_CommentServletTest {
 //to set the old Transaction_Comment
     Transaction_Comment transaction_comment = new Transaction_Comment();
     transaction_comment.setUser_ID(43);
-    transaction_comment.setTransaction_ID(43);
+    transaction_comment.setTransaction_ID("lwIFwDnklwIFwDnklwIFwDnk521212312322");
     transaction_comment.setTransaction_Comment_ID(43);
     transaction_comment.setContent("EXCEPTION");
     session.setAttribute("transaction_comment",transaction_comment);
     request.setSession(session);
 //create a new albums parameters
     request.setParameter("inputtransaction_commentUser_ID","406");
-    request.setParameter("inputtransaction_commentTransaction_ID","406");
+    request.setParameter("inputtransaction_commentTransaction_ID","lwIFwDnklwIFwDnklwIFwDnklwIFwDnk5212");
     request.setParameter("inputtransaction_commentTransaction_Comment_ID","406");
     request.setParameter("inputtransaction_commentContent","EXCEPTION");
     request.setParameter("inputtransaction_commentOldContent","EXCEPTION");

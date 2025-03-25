@@ -77,7 +77,7 @@ public class EditTransaction_CommentServlet extends HttpServlet{
       errors++;
     }
     try {
-      _oldTransaction_Comment.setTransaction_ID(Integer.valueOf(_Transaction_ID));
+      _oldTransaction_Comment.setTransaction_ID(_Transaction_ID);
     } catch(Exception e) {results.put("transaction_commentTransaction_IDerror", e.getMessage());
       errors++;
     }

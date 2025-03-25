@@ -144,7 +144,7 @@ class AddTransaction_CommentServletTest {
     session.setAttribute("User_B",user);
     request.setSession(session);
 
-    request.setParameter("inputtransaction_commentTransaction_ID","406");
+    request.setParameter("inputtransaction_commentTransaction_ID","lwIFwDnklwIFwDnklwIFwDnklwIFwDnk5212");
     request.setParameter("inputtransaction_commentTransaction_Comment_ID","406");
     request.setParameter("inputtransaction_commentContent","TestValue");
     servlet.doPost(request,response);
@@ -166,7 +166,7 @@ class AddTransaction_CommentServletTest {
     session.setAttribute("User_B",user);
     request.setSession(session);
 
-    request.setParameter("inputtransaction_commentTransaction_ID","406");
+    request.setParameter("inputtransaction_commentTransaction_ID","lwIFwDnklwIFwDnklwIFwDnklwIFwDnk5212");
     request.setParameter("inputtransaction_commentTransaction_Comment_ID","406");
     request.setParameter("inputtransaction_commentContent","EXCEPTION");
     servlet.doPost(request,response);
@@ -192,7 +192,7 @@ class AddTransaction_CommentServletTest {
     session.setAttribute("User_B",user);
     request.setSession(session);
 
-    request.setParameter("inputtransaction_commentTransaction_ID","406");
+    request.setParameter("inputtransaction_commentTransaction_ID","lwIFwDnklwIFwDnklwIFwDnklwIFwDnk5212");
     request.setParameter("inputtransaction_commentTransaction_Comment_ID","406");
     request.setParameter("inputtransaction_commentContent","DUPLICATE");
     servlet.doPost(request,response);

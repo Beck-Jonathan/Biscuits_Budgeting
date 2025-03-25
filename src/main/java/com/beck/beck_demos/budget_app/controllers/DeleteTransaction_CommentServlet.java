@@ -48,7 +48,7 @@ public class DeleteTransaction_CommentServlet extends HttpServlet {
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Delete Transaction_Comment");
     int Transaction_CommentID=-1;
-    int Transaction_ID=-1;
+    String Transaction_ID="";
     int errors = 0;
     try {
       Transaction_CommentID = Integer.valueOf(req.getParameter("transaction_commentid"));
@@ -56,7 +56,7 @@ public class DeleteTransaction_CommentServlet extends HttpServlet {
       errors ++;
     }
     try {
-      Transaction_ID = Integer.valueOf(req.getParameter("transaction_id"));
+      Transaction_ID = req.getParameter("transaction_id");
     } catch(Exception e) {
       errors ++;
     }

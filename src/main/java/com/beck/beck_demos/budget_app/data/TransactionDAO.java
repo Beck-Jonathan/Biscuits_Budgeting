@@ -596,7 +596,7 @@ public class TransactionDAO implements iTransactionDAO {
 
           while (resultSet.next()) {
             Integer User_ID = resultSet.getInt("Transaction_Comment_User_ID");
-            Integer Transaction_ID = resultSet.getInt("Transaction_Comment_Transaction_ID");
+            String Transaction_ID = resultSet.getString("Transaction_Comment_Transaction_ID");
             Integer Transaction_Comment_ID = resultSet.getInt("Transaction_Comment_Transaction_Comment_ID");
             String Content = resultSet.getString("Transaction_Comment_Content");
             java.util.Date Post_Date = resultSet.getDate("Transaction_Comment_Post_Date");

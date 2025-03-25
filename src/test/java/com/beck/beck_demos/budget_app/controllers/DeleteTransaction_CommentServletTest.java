@@ -55,7 +55,7 @@ class DeleteTransaction_CommentServletTest {
     int status = response.getStatus();
     String url = response.getRedirectedUrl();
     assertEquals(302,status);
-    assertEquals("editTransaction?transactionid=-1",url);
+    assertEquals("editTransaction?transactionid=null",url);
   }
   @Test
   public void TestLoggedOutUserGets302OndoPost() throws ServletException, IOException{
@@ -73,7 +73,7 @@ class DeleteTransaction_CommentServletTest {
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
-    request.setParameter("transaction_id","55");
+    request.setParameter("transaction_id","lwIFwDnklwIFwDnklwIFwDnklwIFwDnk5212");
     request.setParameter("transaction_commentid","20");
 
     servlet.doPost(request,response);

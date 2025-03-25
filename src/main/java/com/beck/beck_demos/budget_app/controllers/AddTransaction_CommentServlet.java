@@ -99,7 +99,7 @@ public class AddTransaction_CommentServlet extends HttpServlet{
       errors++;
     }
     try {
-      transaction_comment.setTransaction_ID(Integer.valueOf(_Transaction_ID));
+      transaction_comment.setTransaction_ID(_Transaction_ID);
     } catch(Exception e) {results.put("transaction_commentTransaction_IDerror", e.getMessage());
       errors++;
     }
