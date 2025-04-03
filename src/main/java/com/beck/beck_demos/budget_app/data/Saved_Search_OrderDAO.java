@@ -35,8 +35,7 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
           statement.setInt(1,User_ID);
           statement.setInt(2,pagesize);
           statement.setInt(3,offset);
-          java.util.UUID x = new UUID(23L,43L);
-          statement.setObject(4,x);
+
 
           try(ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {Integer Saved_Search_Order_ID = resultSet.getInt("Saved_Search_Order_Saved_Search_Order_ID");

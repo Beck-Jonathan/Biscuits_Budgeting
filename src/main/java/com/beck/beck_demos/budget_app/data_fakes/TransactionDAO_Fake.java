@@ -313,6 +313,23 @@ public class TransactionDAO_Fake implements iTransactionDAO {
     transactionVMs.set(location, _newTransaction);
     return result;
   }
+
+  @Override
+  public int toggleLockTransaction(Transaction transaction) throws SQLException {
+    int location =-1;
+    for (int i=0;i<transactionVMs.size();i++){
+      if (transactionVMs.get(i).getTransaction_ID().equals(transaction.getTransaction_ID())&& Objects.equals(transactionVMs.get(i).getUser_ID(), transaction.getUser_ID())){
+        location =i;
+        break;
+      }
+    }
+    if (location==-1){
+      throw new SQLException("Unable To Find Transaction.");
+    }
+    transactionVMs.get(location).setIs_Locked(!transactionVMs.get(location).getIs_Locked());
+    return 1;
+  }
+
   private boolean duplicateKey(Transaction _transaction){
     return _transaction.getCategory_ID().equals("DUPLICATE");
   }

@@ -51,14 +51,20 @@ Create the JSP  For Viewing All of The  Transaction table
                                         <option  value="${category.category_ID}"  ${category.category_ID == transaction.category_ID ? 'selected' : ''}>${category.category_ID}</option>
                                     </c:forEach>
                                 </select>
+                            <td style="width:50px">
+                                <div id="${transaction.transaction_ID}_status"  style="border:none; display:none;"  > xx </div>
+                            </td>
                                 </td>
-                            <td><input type="checkbox" id="lock+${transaction.transaction_ID}" <c:if test="${transaction.is_Locked}">checked</c:if>></td>
+                            <td>
+                                <input type="checkbox" class="lock" id="${transaction.transaction_ID}_lock" <c:if test="${transaction.is_Locked}">checked</c:if>>
+                            <td style="width:50px">
+                                <div id="${transaction.transaction_ID}_lock_lock"  style="border:none; display:none;"  > xx </div>
+                            </td>
+                            </td>
                             <td>
                                     ${fn:escapeXml(transaction.comment_count)}
                             </td>
-                                <td style="width:50px">
-                                    <div id="${transaction.transaction_ID}_status"  style="border:none; display:none;"  > xx </div>
-                                </td>
+
                             <td><a href = "editTransaction?transactionid=${transaction.transaction_ID}&mode=edit" > Edit </a></td>
 
                         </tr>

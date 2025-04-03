@@ -49,4 +49,11 @@ public interface iTransactionDAO {
 * @author Jonathan Beck
  */
   int update(Transaction oldTransaction, Transaction newTransaction) throws SQLException;
+  /**
+   * DAO Method to lock or unlock Transaction objects
+   * @param transaction the Transaction to be locked or unlocked
+   * @return number of records updated
+   * @author Jonathan Beck
+   */
+  int toggleLockTransaction( Transaction transaction) throws SQLException;
 }

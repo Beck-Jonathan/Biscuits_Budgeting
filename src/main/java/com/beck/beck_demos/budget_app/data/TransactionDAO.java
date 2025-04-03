@@ -92,9 +92,29 @@ public class TransactionDAO implements iTransactionDAO {
     return result;
   }
 
+  @Override
+  public int toggleLockTransaction(Transaction transaction) throws SQLException {
+    int rowsAffected=0;
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_toggle_lock_Transaction( ?,?)}")){
+          statement.setString(1,transaction.getTransaction_ID());
+          statement.setInt(2,transaction.getUser_ID());
+
+          rowsAffected = statement.executeUpdate();
+          if (rowsAffected == 0) {
+            throw new RuntimeException("Could not (un)Lock Transaction. Try again later");
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not (un)Lock Transaction. Try again later");
+    }
+    return rowsAffected;
+  }
 
 
-   public int bulkUpdateCategory(int userid, String category, String query) throws SQLException {
+  public int bulkUpdateCategory(int userid, String category, String query) throws SQLException {
     int result = 0;
     try (Connection connection = getConnection()) {
       if (connection != null) {
