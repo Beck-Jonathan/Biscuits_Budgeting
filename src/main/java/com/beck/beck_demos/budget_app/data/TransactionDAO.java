@@ -60,7 +60,7 @@ public class TransactionDAO implements iTransactionDAO {
     int result = 0;
     try (Connection connection = getConnection()) {
       if (connection !=null){
-        try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Transaction(? ,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}"))
+        try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Transaction(? ,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}"))
         {
           statement.setString(1,oldTransaction.getTransaction_ID());
           statement.setInt(2,oldTransaction.getUser_ID());
@@ -81,6 +81,8 @@ public class TransactionDAO implements iTransactionDAO {
           statement.setString(17,newTransaction.getType());
           statement.setString(18,oldTransaction.getStatus());
           statement.setString(19,newTransaction.getStatus());
+          statement.setBoolean(20,oldTransaction.getIs_Locked());
+          statement.setBoolean(21,newTransaction.getIs_Locked());
           result=statement.executeUpdate();
         } catch (SQLException e) {
           throw new RuntimeException("Could not update Transaction . Try again later");
@@ -135,8 +137,9 @@ public class TransactionDAO implements iTransactionDAO {
             Double Amount = resultSet.getDouble("Transaction_Amount");
             String Type = resultSet.getString("Transaction_Type");
             String Status = resultSet.getString("Transaction_Status");
+            boolean Is_Locked = resultSet.getBoolean("Transaction_Is_Locked");
 
-            Transaction _result = new Transaction(Transaction_ID, User_ID, Category_ID, Account_Num, Post_Date, Check_No, Description, Amount, Type, Status);
+            Transaction _result = new Transaction(Transaction_ID, User_ID, Category_ID, Account_Num, Post_Date, Check_No, Description, Amount, Type, Status, Is_Locked);
             result.add(_result);
           }
         }
@@ -201,7 +204,7 @@ public class TransactionDAO implements iTransactionDAO {
           Double Amount = creditAmount - debitAmount;
           String Type = Amount > 0 ? "Credit" : "Debit";
           String Status = (String) parts.get(6);
-          Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", Account_Num, Post_Date, Check_No, Description, Amount, Type, Status);
+          Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", Account_Num, Post_Date, Check_No, Description, Amount, Type, Status,false);
           result.add(_transaction);
           // read next line
           line = reader.readLine();
@@ -251,7 +254,7 @@ public class TransactionDAO implements iTransactionDAO {
           Double Amount = creditAmount + debitAmount;
           String Type = Amount > 0 ? "Credit" : "Debit";
           String Status = "Posted";
-          Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", accountNumber, Post_Date, Check_No, Description, Amount, Type, Status);
+          Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", accountNumber, Post_Date, Check_No, Description, Amount, Type, Status,false);
           result.add(_transaction);
           // read next line
           line = reader.readLine();
@@ -286,7 +289,7 @@ public class TransactionDAO implements iTransactionDAO {
           Double Amount = Double.valueOf((String) parts.get(4));
           String Type = Amount > 0 ? "Credit" : "Debit";
           String Status = "Posted";
-          Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", Account_Num, Post_Date, Check_No, Description, Amount, Type, Status);
+          Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", Account_Num, Post_Date, Check_No, Description, Amount, Type, Status,false);
           result.add(_transaction);
           // read next line
           line = reader.readLine();
@@ -398,8 +401,9 @@ public class TransactionDAO implements iTransactionDAO {
             Double Amount = resultSet.getDouble("Transaction_Amount");
             String Type = resultSet.getString("Transaction_Type");
             String Status = resultSet.getString("Transaction_Status");
+            boolean Is_Locked = resultSet.getBoolean("Transaction_Is_Locked");
             int count = resultSet.getInt("Comment_Count");
-            Transaction _result = new Transaction(Transaction_ID, User_ID, Category_ID, Account_Num, Post_Date, Check_No, Description, Amount, Type, Status);
+            Transaction _result = new Transaction(Transaction_ID, User_ID, Category_ID, Account_Num, Post_Date, Check_No, Description, Amount, Type, Status,Is_Locked);
             Transaction_VM __result = new Transaction_VM(_result,count);
             result.add(__result);
           }
@@ -430,8 +434,9 @@ public class TransactionDAO implements iTransactionDAO {
             Double Amount = resultSet.getDouble("Transaction_Amount");
             String Type = resultSet.getString("Transaction_Type");
             String Status = resultSet.getString("Transaction_Status");
+            boolean Is_Locked = resultSet.getBoolean("Transaction_Is_Locked");
             int count = resultSet.getInt("Comment_Count");
-            Transaction _result = new Transaction(Transaction_ID, User_ID, Category_ID, Account_Num, Post_Date, Check_No, Description, Amount, Type, Status);
+            Transaction _result = new Transaction(Transaction_ID, User_ID, Category_ID, Account_Num, Post_Date, Check_No, Description, Amount, Type, Status,Is_Locked);
             Transaction_VM __result = new Transaction_VM(_result,count);
             result.add(__result);
           }
@@ -543,12 +548,13 @@ public class TransactionDAO implements iTransactionDAO {
             Double Amount = resultSet.getDouble("Transaction_Amount");
             String Type = resultSet.getString("Transaction_Type");
             String Status = resultSet.getString("Transaction_Status");
+            boolean Is_Locked = resultSet.getBoolean("Transaction_Is_Locked");
             Integer User_User_ID = resultSet.getInt("User_User_ID");
             String User_User_Name = resultSet.getString("User_User_Name");
             //String User_User_PW = resultSet.getString("User_User_PW");
             String User_Email = resultSet.getString("User_Email");
             //String Category_Category_ID = resultSet.getString("Category_Category_ID");
-            Transaction _result = new Transaction(Transaction_ID, User_ID, Category_ID, Account_Num, Post_Date, Check_No, Description, Amount, Type, Status);
+            Transaction _result = new Transaction(Transaction_ID, User_ID, Category_ID, Account_Num, Post_Date, Check_No, Description, Amount, Type, Status, Is_Locked);
             result.add(_result);
           }
         }
@@ -577,13 +583,14 @@ public class TransactionDAO implements iTransactionDAO {
             Double Amount = resultSet.getDouble("Transaction_Amount");
             String Type = resultSet.getString("Transaction_Type");
             String Status = resultSet.getString("Transaction_Status");
+            boolean Is_Locked = resultSet.getBoolean("Transaction_Is_Locked");
             Integer User_User_ID = resultSet.getInt("User_User_ID");
             String User_User_Name = resultSet.getString("User_User_Name");
             String User_User_PW = resultSet.getString("User_User_PW");
             String User_Email = resultSet.getString("User_Email");
             String Category_Category_ID = resultSet.getString("Category_Category_ID");
             Integer Category_User_ID = resultSet.getInt("Category_User_ID");
-            Transaction _result = new Transaction( Transaction_ID, User_ID, Category_ID, Account_Num, Post_Date, Check_No, Description, Amount, Type, Status);
+            Transaction _result = new Transaction( Transaction_ID, User_ID, Category_ID, Account_Num, Post_Date, Check_No, Description, Amount, Type, Status, Is_Locked);
             result = new Transaction_VM(_result);
         }
           }

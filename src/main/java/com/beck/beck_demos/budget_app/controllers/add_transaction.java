@@ -12,10 +12,7 @@ import jakarta.servlet.http.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @WebServlet("/add_transaction")
 @MultipartConfig(
@@ -67,12 +64,21 @@ public class add_transaction extends HttpServlet {
     if (!fileSaveDir.exists()) {
       fileSaveDir.mkdirs();
     }
-    Part filePart = req.getPart("upload_transactions");
     Map<String, String> results = new HashMap<>();
-    String fileName = filePart.getSubmittedFileName();
-    File checkFile = new File(uploadFilePath + File.separator + fileName);
-    if (checkFile.exists()) {
-      checkFile.delete();
+    String fileName = "";
+    Part filePart = req.getPart("upload_transactions");
+    Collection<Part> x = req.getParts();
+    int y = 0;
+    if (filePart!=null) {
+
+      fileName = filePart.getSubmittedFileName();
+      File checkFile = new File(uploadFilePath + File.separator + fileName);
+      if (checkFile.exists()) {
+        checkFile.delete();
+      }
+    }
+    else {
+      results.put("FileEmptyError", "File is empty");
     }
     try {
       for (Part part : req.getParts()) {
@@ -111,11 +117,12 @@ public class add_transaction extends HttpServlet {
     }
 
     oldTrans=totalTrans-NewTrans;
-    int x = 0;
+
 
     uploadedFile.delete();
     results.put("AddedCount","You uploaded "+totalTrans+" transactions. "+NewTrans+" of them were new. "+ oldTrans+" of them were old, and not added to the database.");
     session.setAttribute("results",results);
+
     resp.sendRedirect("budget_home");
 
     //session.setAttribute("currentPage",req.getRequestURL());

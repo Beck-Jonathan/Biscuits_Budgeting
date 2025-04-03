@@ -25,10 +25,11 @@ public class Transaction implements Comparable<Transaction> {
   private Double Amount;
   private String Type;
   private String Status;
+  private boolean Is_Locked;
 
   public Transaction(){}
 
-  public Transaction(String Transaction_ID, Integer User_ID, String Category_ID, String Bank_Account_ID, Date Post_Date, Integer Check_No, String Description, Double Amount, String Type, String Status) {
+  public Transaction(String Transaction_ID, Integer User_ID, String Category_ID, String Bank_Account_ID, Date Post_Date, Integer Check_No, String Description, Double Amount, String Type, String Status,boolean Is_Locked) {
 
     this.Transaction_ID = Transaction_ID;
     this.User_ID = User_ID;
@@ -40,6 +41,7 @@ public class Transaction implements Comparable<Transaction> {
     this.Amount = Amount;
     this.Type = Type;
     this.Status = Status;
+    this.Is_Locked = Is_Locked;
   }
 
   public Transaction(String Transaction_ID) {
@@ -254,6 +256,21 @@ public class Transaction implements Comparable<Transaction> {
     }
     this.Status = Status;
   }
+  /**
+   * <p> Gets the Is_Locked of the associated Transaction object </p>
+   * @return the Is_Locked of this Transaction object.
+   */
+  public boolean getIs_Locked() {
+    return Is_Locked;
+  }
+
+  /**
+   * <p> Sets the Is_Locked of the associated Transaction object </p>
+   * @param Is_Locked the is_locked of the transaction,
+   */
+  public void setIs_Locked(boolean Is_Locked) {
+    this.Is_Locked = Is_Locked;
+  }
   @Override
   public int compareTo(@NotNull Transaction o) {
     if (this.Transaction_ID.compareTo(o.Transaction_ID)<0){
@@ -314,6 +331,12 @@ public class Transaction implements Comparable<Transaction> {
       return -1;
     }
     else if(this.Status.compareTo(o.Status) > 0){
+      return 1;
+    }
+    if (!this.Is_Locked&&o.Is_Locked){
+      return -1;
+    }
+    else if (this.Is_Locked&&!o.Is_Locked){
       return 1;
     }
     return 0;

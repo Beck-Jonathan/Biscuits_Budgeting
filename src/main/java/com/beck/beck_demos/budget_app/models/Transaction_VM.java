@@ -17,15 +17,15 @@ public class Transaction_VM extends Transaction{
   public Transaction_VM(){}
 
   public Transaction_VM(Transaction transaction){
-    super(transaction.getTransaction_ID(), transaction.getUser_ID(), transaction.getCategory_ID(), transaction.getBank_Account_ID(), transaction.getPost_Date(), transaction.getCheck_No(), transaction.getDescription(), transaction.getAmount(), transaction.getType(), transaction.getStatus());
+    super(transaction.getTransaction_ID(), transaction.getUser_ID(), transaction.getCategory_ID(), transaction.getBank_Account_ID(), transaction.getPost_Date(), transaction.getCheck_No(), transaction.getDescription(), transaction.getAmount(), transaction.getType(), transaction.getStatus(), transaction.getIs_Locked());
   }
   public Transaction_VM(Transaction transaction,List<Transaction_Comment> transaction_comments){
-    super( transaction.getTransaction_ID(),  transaction.getUser_ID(),  transaction.getCategory_ID(),  transaction.getBank_Account_ID(),  transaction.getPost_Date(),  transaction.getCheck_No(),  transaction.getDescription(),  transaction.getAmount(),  transaction.getType(),  transaction.getStatus());
+    super( transaction.getTransaction_ID(),  transaction.getUser_ID(),  transaction.getCategory_ID(),  transaction.getBank_Account_ID(),  transaction.getPost_Date(),  transaction.getCheck_No(),  transaction.getDescription(),  transaction.getAmount(),  transaction.getType(),  transaction.getStatus(),transaction.getIs_Locked());
     this.Transaction_Comments = transaction_comments;
 
   }
   public Transaction_VM(Transaction transaction,int count){
-    super( transaction.getTransaction_ID(),  transaction.getUser_ID(),  transaction.getCategory_ID(),  transaction.getBank_Account_ID(),  transaction.getPost_Date(),  transaction.getCheck_No(),  transaction.getDescription(),  transaction.getAmount(),  transaction.getType(),  transaction.getStatus());
+    super( transaction.getTransaction_ID(),  transaction.getUser_ID(),  transaction.getCategory_ID(),  transaction.getBank_Account_ID(),  transaction.getPost_Date(),  transaction.getCheck_No(),  transaction.getDescription(),  transaction.getAmount(),  transaction.getType(),  transaction.getStatus(), transaction.getIs_Locked());
     this.comment_count = count;
 
   }

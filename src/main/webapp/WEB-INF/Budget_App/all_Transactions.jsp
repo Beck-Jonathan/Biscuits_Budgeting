@@ -27,6 +27,7 @@ Create the JSP  For Viewing All of The  Transaction table
                         <th scope="col">Type</th>
                         <th scope="col">Status</th>
                         <th scope="col">Category</th>
+                        <th scope="col">Is_Locked</th>
                         <th scope="col"><a href="${appURL}/all-Transactions?sort=Comments&direction=${direction}&category=${category}&year=${year}">Comment Count</a></th>
                         <th scope="col"></th>
 
@@ -51,6 +52,7 @@ Create the JSP  For Viewing All of The  Transaction table
                                     </c:forEach>
                                 </select>
                                 </td>
+                            <td><input type="checkbox" id="lock+${transaction.transaction_ID}" <c:if test="${transaction.is_Locked}">checked</c:if>></td>
                             <td>
                                     ${fn:escapeXml(transaction.comment_count)}
                             </td>

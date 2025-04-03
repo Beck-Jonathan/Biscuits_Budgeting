@@ -95,6 +95,18 @@ Create the JSP For Viuw/Edit from the Transaction table
                 </c:if>
             </div>
         </div>
+        <!-- Is_Locked -->
+        <div class ="row" id = "row10">
+            <label for="inputtransactionIs_Locked" class="form-label">Locked</label>
+            <div class="input-group">
+                <select  class="<c:if test="${not empty results.transactionIs_Lockederror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1"  <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputtransactionIs_Locked" name="inputtransactionIs_Locked" >
+                    <option value="unLocked" <c:if test="${!Transaction.is_Lcoked}"> selected</c:if>>UnLocked</option>
+                    <option value="Locked" <c:if test="${Transaction.is_Lcoked}"> selected  </c:if>>Locked</option>
+
+
+                </select>
+            </div>
+        </div>
         <div class="align-items-center mt-0">
             <div class="d-grid"><button class="btn btn-orange mb-0" type="submit">Edit Transaction </button></div>
             <c:if test="${not empty results.dbStatus}"

@@ -49,7 +49,7 @@ class ExportServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID(41);
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doGet(request,response);

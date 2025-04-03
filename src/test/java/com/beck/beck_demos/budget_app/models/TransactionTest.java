@@ -35,6 +35,7 @@ class TransactionTest {
     Assertions.assertNull(_transaction.getAmount());
     Assertions.assertNull(_transaction.getType());
     Assertions.assertNull(_transaction.getStatus());
+    Assertions.assertFalse(_transaction.getIs_Locked());
   }
   @Test
   public void testTransactionParameterizedConstructorSetsAllVariables() throws ParseException {
@@ -57,7 +58,8 @@ class TransactionTest {
         "DYXPphMxwsHXPwYSrsdLAgHVMClhWhMnVbAuEUFSFtAtXmFaLaCkqHZJjPKtctUuRvnPFgaBNVRdRuQHBNSqfscKUDUyWADIluUKpsEJYUPCsVaPXLEkdBfOxQamZIVFmxgpyWYeviPRGBZODgqjjIJeFrxetGgmccqZYElYnukUHwqBWoOCNfUQagRnJeSYqhoecmYuoWoHAvHfqUSmDmLkGbinATilrBpGXHqrJkJPmnrUBaobgYhnFhbAb",
         42.36,
         "lnohYwKvLdfASpFvAg",
-        "ygKCZIhiTkJaIkiwGZ"
+        "ygKCZIhiTkJaIkiwGZ",
+        true
     );
     Assertions.assertEquals("XxtdYmVM",_transaction.getTransaction_ID());
     Assertions.assertEquals(1081,_transaction.getUser_ID());
@@ -69,6 +71,7 @@ class TransactionTest {
     Assertions.assertEquals(42.36,_transaction.getAmount());
     Assertions.assertEquals("lnohYwKvLdfASpFvAg",_transaction.getType());
     Assertions.assertEquals("ygKCZIhiTkJaIkiwGZ",_transaction.getStatus());
+    Assertions.assertTrue(_transaction.getIs_Locked());
   }
   @Test
   public void testTransactionKeyedParameterizedConstructorSetsKeyedVariables(){
@@ -236,6 +239,28 @@ class TransactionTest {
     _transaction.setStatus(Status);
     Assertions.assertEquals(Status,_transaction.getStatus());
   }
+
+
+  /**
+   <p> Tests That the Setters for the Transaction.Is_Locked field work </p>
+   */
+  @Test
+  public void testTransactionSetsIs_LockedasFalse(){
+    boolean status = false;
+    _transaction.setIs_Locked(status);
+    Assertions.assertEquals(status, _transaction.getIs_Locked());
+  }
+
+  /**
+   <p> Tests That the Setters for the Transaction.Is_Locked field work </p>
+   */
+  @Test
+  public void testTransactionSetsIs_LockedasTrue(){
+    boolean status = true;
+    _transaction.setIs_Locked(status);
+    Assertions.assertEquals(status, _transaction.getIs_Locked());
+  }
+
   @Test
   public void testCompareToCanCompareForEachDateField()throws ParseException {
     DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -311,6 +336,13 @@ class TransactionTest {
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the Status as equal.
     smaller.setStatus("bbbb");
+    //to compare a smaller and larger Is_Locked
+    smaller.setIs_Locked(false);
+    bigger.setIs_Locked(true);
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the Is_Locked as equal.
+    smaller.setIs_Locked(true);
     Assertions.assertTrue(bigger.compareTo(smaller)==0);
   }
 

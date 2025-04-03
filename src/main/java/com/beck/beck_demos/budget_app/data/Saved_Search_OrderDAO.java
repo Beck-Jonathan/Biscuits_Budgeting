@@ -5,6 +5,8 @@ import com.beck.beck_demos.budget_app.models.Saved_Search_Order;
 import com.beck.beck_demos.budget_app.models.Saved_Search_Order_Line;
 import com.beck.beck_demos.budget_app.models.Saved_Search_Order_VM;
 import com.beck.beck_demos.budget_app.models.User;
+import jakarta.websocket.Decoder;
+import jakarta.websocket.Encoder;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -13,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static com.beck.beck_demos.budget_app.data.Database.getConnection;
 
@@ -32,6 +35,9 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
           statement.setInt(1,User_ID);
           statement.setInt(2,pagesize);
           statement.setInt(3,offset);
+          java.util.UUID x = new UUID(23L,43L);
+          statement.setObject(4,x);
+
           try(ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {Integer Saved_Search_Order_ID = resultSet.getInt("Saved_Search_Order_Saved_Search_Order_ID");
               Integer Owned_User = resultSet.getInt("Saved_Search_Order_Owned_User");
@@ -40,6 +46,7 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
               Date Last_Used = resultSet.getDate("Saved_Search_Order_Last_Used");
               Date Last_Updated = resultSet.getDate("Saved_Search_Order_Last_Updated");
               Integer Times_Ran = resultSet.getInt("Saved_Search_Order_Times_Ran");
+
 
               String User_User_Name = resultSet.getString("User_User_Name");
               User user = new User();
