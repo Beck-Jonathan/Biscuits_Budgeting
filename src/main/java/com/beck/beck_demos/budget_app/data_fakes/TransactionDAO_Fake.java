@@ -15,9 +15,9 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   private  List<Transaction_VM> transactionVMs;
   public TransactionDAO_Fake(){
     transactionVMs = new ArrayList<>();
-    Transaction transaction0 = new Transaction("XxtdYmVMXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 41, "mMvMlyeB", "xAwAtNYh", new Date(103,4,4), 50, "nCYTHrPO", 43.94, "VpNtaCaw", "ZPHFJIYd",false);
-    Transaction transaction1 = new Transaction("ukukySnYXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 41, "EEgjEfHm", "DZruQsNI", new Date(104,4,4), 41, "tSKeiGeS", 59.31, "tuuNNIrl", "ADZCjFxl",false);
-    Transaction transaction2 = new Transaction("AbgcYOYUXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 41, "aqWOkMQH", "MdlXXIxq", new Date(104,4,4), 62, "HudIsSUR", 24.12, "snltZGLJ", "InhoYwkH",false);
+    Transaction transaction0 = new Transaction("XxtdYmVMXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 41, "mMvMlyeB", "xAwAtNYh", new Date(103,4,4), 50, "Casey", 43.94, "VpNtaCaw", "ZPHFJIYd",false);
+    Transaction transaction1 = new Transaction("ukukySnYXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 41, "EEgjEfHm", "DZruQsNI", new Date(104,4,4), 41, "xCasey", 59.31, "tuuNNIrl", "ADZCjFxl",true);
+    Transaction transaction2 = new Transaction("AbgcYOYUXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 41, "aqWOkMQH", "MdlXXIxq", new Date(104,4,4), 62, "Casey", 24.12, "snltZGLJ", "InhoYwkH",false);
     Transaction transaction3 = new Transaction("OCKMacGkXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 41, "YwEsYxXg", "YrrxQPxo", new Date(104,4,4), 13, "KRfWlDSH", 11.36, "YwMJnuUm", "LEtOqAPS",false);
     Transaction transaction4 = new Transaction("BFBLAaRwXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 69, "PVEswhXn", "jLiECvmj", new Date(104,4,4), 18, "vVDgNOEv", 26.08, "hlysPkyD", "SwsBHRBv",false);
     Transaction transaction5 = new Transaction("hwVSiwiSXxtdYmVMXxtdYmVMXxtdYmVMXxtd", 29, "PVEswhXn", "CsCZwEIf", new Date(104,4,4), 53, "nfoybZov", 65.91, "VMRcORSQ", "gTnPkAuA",false);
@@ -147,7 +147,23 @@ public class TransactionDAO_Fake implements iTransactionDAO {
 
   @Override
   public int bulkUpdateCategory(int userid, String category, String query) throws SQLException {
-    return 0;
+    int result = 0 ;
+    if (exceptionKey(query)){
+      throw new SQLException("error");
+    }
+    List<Transaction_VM> results = new ArrayList<>();
+    for (Transaction_VM t : transactionVMs) {
+
+      if (t.getUser_ID().equals(userid)&&t.getDescription().contains(query)) {
+        results.add(t);
+      }
+    }
+    for (Transaction_VM t : results) {
+      t.setCategory_ID(category);
+      result ++;
+    }
+
+    return result;
   }
 
   @Override
@@ -220,7 +236,17 @@ public class TransactionDAO_Fake implements iTransactionDAO {
 
   @Override
   public List<Transaction_VM> searchTransactionByUser(int userID, String query) throws SQLException {
-    return List.of();
+    if (exceptionKey(query)){
+      throw new SQLException("error");
+    }
+    List<Transaction_VM> results = new ArrayList<>();
+    for (Transaction_VM t : transactionVMs) {
+
+      if (t.getUser_ID().equals(userID)&&t.getDescription().contains(query)) {
+        results.add(t);
+      }
+    }
+    return results;
   }
 
   @Override
@@ -331,9 +357,13 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   }
 
   private boolean duplicateKey(Transaction _transaction){
-    return _transaction.getCategory_ID().equals("DUPLICATE");
+    return _transaction.getCategory_ID().equals("DUPLICATE")||_transaction.getTransaction_ID().equals("DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
   }
   private boolean exceptionKey(Transaction _transaction){
-    return _transaction.getCategory_ID().equals("EXCEPTION");
+    return _transaction.getCategory_ID().equals("EXCEPTION")||_transaction.getTransaction_ID().equals("EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
+  }
+
+  private boolean exceptionKey(String _transaction){
+    return _transaction.equals("EXCEPTION");
   }
 }

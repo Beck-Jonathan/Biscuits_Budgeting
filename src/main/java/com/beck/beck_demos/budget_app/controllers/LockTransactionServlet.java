@@ -41,11 +41,13 @@ public class LockTransactionServlet extends HttpServlet {
     int errors=0;
     String Transaction_id =req.getParameter("t_id");
     Transaction old_t = new Transaction();
-    old_t.setUser_ID(user.getUser_ID());
-    if (Transaction_id!=null&& !Transaction_id.isEmpty()) {
+    try{
+      old_t.setUser_ID(user.getUser_ID());
       old_t.setTransaction_ID(Transaction_id);
+    } catch (Exception e) {
+      errors++;
     }
-    else {errors++;}
+
 
     String status="error";
     int result=0;

@@ -14,10 +14,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/search_transaction")
 public class SearchAndCategorizeServlet extends HttpServlet {
@@ -30,13 +33,17 @@ public class SearchAndCategorizeServlet extends HttpServlet {
 
   }
 
+  public void init(iTransactionDAO transactionDAO, iCategoryDAO categoryDAO) {
+    this.transactionDAO = transactionDAO;
+    this.categoryDAO = categoryDAO;
+  }
+
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
     HttpSession session = req.getSession();
-    if (categoryDAO==null){
-      categoryDAO = new CategoryDAO();
-    }
+    Map<String, String> results = new HashMap<>();
+
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
       resp.sendRedirect("/budget_in");
@@ -44,25 +51,27 @@ public class SearchAndCategorizeServlet extends HttpServlet {
     }
     List<Category> allCategories = categoryDAO.getCategoryByUser(user.getUser_ID());
     req.setAttribute("Categories", allCategories);
-    if (user==null){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-      return;
-    }
+
     session.setAttribute("currentPage",req.getRequestURL());
     List<Transaction_VM> transactions = null;
     int transaction_count=0;
+    int errors = 0;
     String query = req.getParameter("query");
     session.setAttribute("search",query);
-    if (query!=null && !query.equals("")) {
+    if(query==null||query.length()<2){
+      results.put("inputError","Invalid query");
+      errors++;
+    }
+    if (errors==0) {
       try {
         transactions = transactionDAO.searchTransactionByUser(user.getUser_ID(), query);
       } catch (SQLException e) {
-        throw new RuntimeException(e);
+        results.put("dbStatus", "Unable To Search");
       }
     }
 
     req.setAttribute("Transactions", transactions);
-
+    req.setAttribute("results",results);
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Search Transactions");
     req.getRequestDispatcher("WEB-INF/Budget_App/search_categorize_transaction.jsp").forward(req, resp);
@@ -70,33 +79,53 @@ public class SearchAndCategorizeServlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    if (categoryDAO==null){
-      categoryDAO = new CategoryDAO();
-    }
+
 
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
-    if (user==null){
-     resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-     return;
+    if (user==null ||!user.getRoles().contains("User")){
+      resp.sendRedirect("/budget_in");
+      return;
      }
+    Map<String, String> results = new HashMap<>();
     session.setAttribute("currentPage",req.getRequestURL());
-    int update = 0;
+    Integer update = 0;
     int transaction_count=0;
+    int errors = 0;
     String query = (String) session.getAttribute("search");
-    if(query==null||query.equals("")||query.length()<2){
-
+    if(query==null||query.length()<2){
+      results.put("inputError","Invalid query");
+      errors ++;
     }
-    else {
-      String category = req.getParameter("category");
+    String category = req.getParameter("category");
+    try {
+      Transaction t = new Transaction();
+      t.setCategory_ID(category);
+    } catch (Exception e){
+      results.put("categoryError","Invalid category");
+      errors++;
+    }
+
+      if (errors==0){
+
       try {
         update = transactionDAO.bulkUpdateCategory(user.getUser_ID(), category, query);
+        results.put("updateCount", update.toString());
       } catch (SQLException e) {
-        throw new RuntimeException(e);
+        results.put("dbStatus", "Unable To Categorize");
+        results.put("updateCount", "0");
       }
-    }
 
-    req.setAttribute("updates", update);
+    }
+      else {
+        req.setAttribute("results", results);
+        req.setAttribute("pageTitle", "Search Transactions");
+        req.getRequestDispatcher("WEB-INF/Budget_App/search_categorize_transaction.jsp").forward(req, resp);
+        return;
+
+      }
+
+    req.setAttribute("results", results);
 
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Search Transactions");
