@@ -59,7 +59,7 @@ public class add_transaction extends HttpServlet {
       return;
     }
     String applicationPath = req.getServletContext().getRealPath("");
-    String uploadFilePath = applicationPath + File.separator + UPLOAD_DIR;
+    String uploadFilePath = applicationPath +  UPLOAD_DIR;
     File fileSaveDir = new File(uploadFilePath);
     if (!fileSaveDir.exists()) {
       fileSaveDir.mkdirs();
@@ -74,6 +74,7 @@ public class add_transaction extends HttpServlet {
       fileName = filePart.getSubmittedFileName();
       File checkFile = new File(uploadFilePath + File.separator + fileName);
       if (checkFile.exists()) {
+        int zz=0;
         checkFile.delete();
       }
     }
