@@ -9,8 +9,8 @@ Create the JSP  For adding to The  Suggestion table
         <!-- Application_Name -->
         <div class ="row" id = "row1">
             <label for="inputsuggestionApplication_Name" class="form-label">Application Name</label>
-            <select name="cars" name ="inputsuggestionApplication_Name" id="inputsuggestionApplication_Name">
-                <option value="Budgeting" selected>Budgeting</option>
+            <select  name ="inputsuggestionApplication_Name" id="inputsuggestionApplication_Name">
+                <option selected value="Budgeting" >Budgeting</option>
                 <option value="Homepage">Homepage</option>
                 <option value="Scheduling">Scheduling</option>
                 <option value="Other">Other (Please Explain)</option>
