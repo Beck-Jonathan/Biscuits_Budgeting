@@ -5,6 +5,7 @@ import com.beck.beck_demos.budget_app.models.Transaction;
 import com.beck.beck_demos.budget_app.models.Transaction_VM;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.util.List;
 
@@ -56,4 +57,6 @@ public interface iTransactionDAO {
    * @author Jonathan Beck
    */
   int toggleLockTransaction( Transaction transaction) throws SQLException;
+
+  int writeTransactionToFile(List<Transaction> transactions, String path) throws IOException;
 }

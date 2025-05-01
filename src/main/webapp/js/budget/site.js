@@ -70,6 +70,11 @@ $(document).ready(function() {
 	$( "#PieChart" ).button( "option", "showIcon", "true" );
 	$( "#PieChart" ).button( "option", "label", "Bar Chart" );
 
+	$("#suggestions").button();
+	$( "#suggestions" ).button( "option", "icon", "ui-icon-check" );
+	$( "#suggestions" ).button( "option", "showIcon", "true" );
+	$( "#suggestions" ).button( "option", "label", "Suggestion Box" );
+
 
 
 

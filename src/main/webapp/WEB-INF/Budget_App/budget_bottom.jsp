@@ -46,6 +46,14 @@
     <script src="js/budget/categorize.js"></script>
 </c:if>
 
+<c:if test="${pageTitle eq 'Add Suggestion'}">
+    <script src="js/budget/addSuggestion.js"></script>
+</c:if>
+
+<c:if test="${pageTitle eq 'All Suggestions'}">
+    <script src="js/budget/allSuggestion.js"></script>
+</c:if>
+
 
 
 

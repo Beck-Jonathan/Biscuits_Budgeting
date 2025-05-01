@@ -356,6 +356,11 @@ public class TransactionDAO_Fake implements iTransactionDAO {
     return 1;
   }
 
+  @Override
+  public int writeTransactionToFile(List<Transaction> transactions, String path) {
+    return 0;
+  }
+
   private boolean duplicateKey(Transaction _transaction){
     return _transaction.getCategory_ID().equals("DUPLICATE")||_transaction.getTransaction_ID().equals("DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
   }

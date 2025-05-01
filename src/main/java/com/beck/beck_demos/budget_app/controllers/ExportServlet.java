@@ -18,12 +18,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.joda.time.DateTime;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,15 +34,16 @@ public class ExportServlet extends HttpServlet {
 
   private iTransactionDAO transactionDAO;
   private static final String UPLOAD_DIR = "uploads";
-  private static final long serialVersionUID = 1L;
+  //private static final long serialVersionUID = 1L;
   private ServletFileUpload uploader = null;
 
-  @Override
-  public void init(ServletConfig config) throws ServletException {
-    transactionDAO =  new TransactionDAO();
-  }
+  //@Override
+  //public void init() throws ServletException {
+   // transactionDAO =  new TransactionDAO();
+ // }
 
   public void init(iTransactionDAO transactionDAO) {
+
     this.transactionDAO = transactionDAO;
   }
 
@@ -56,6 +59,7 @@ public class ExportServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String applicationPath = req.getServletContext().getRealPath("");
     String uploadFilePath = applicationPath + File.separator + UPLOAD_DIR;
+
 //To restrict this page based on privilege level
     int PRIVILEGE_NEEDED = 0;
     HttpSession session = req.getSession();
@@ -65,7 +69,8 @@ public class ExportServlet extends HttpServlet {
       resp.sendRedirect("/budget_in");
       return;
     }
-
+    String filename = "output_"+user.getUser_Name()+"_"+".txt";
+    String full_File = uploadFilePath + File.separator + filename;
     session.setAttribute("currentPage",req.getRequestURL());
     List<Transaction> transactions = null;
     boolean error = false;
@@ -74,29 +79,16 @@ public class ExportServlet extends HttpServlet {
     } catch (SQLException e) {
       error = true;
     }
-    PrintWriter writer = new PrintWriter(uploadFilePath+"/the-file-name.txt", StandardCharsets.UTF_8);
-    if (!error) {
-      writer.print("T_ID\tU_ID\tCategory\tAccount\tPost_Date\tCheck#\tDescription\tAmount\tType\tStatus");
-      for (Transaction t : transactions) {
-        writer.print(t.getTransaction_ID() + "\t");
-        writer.print(t.getUser_ID() + "\t");
-        writer.print(t.getCategory_ID() + "\t");
-        writer.print(t.getBank_Account_ID() + "\t");
-        writer.print(t.getPost_Date() + "\t");
-        writer.print(t.getCheck_No() + "\t");
-        writer.print(t.getDescription() + "\t");
-        writer.print(t.getAmount() + "\t");
-        writer.print(t.getType() + "\t");
-        writer.print(t.getStatus() + "\t");
-        writer.print("\n");
+    if(!error) {
+      try {
+        transactionDAO.writeTransactionToFile(transactions, full_File);
+      } catch (Exception e) {
+        error = true;
       }
     }
-    else {
-      writer.print("error");
-    }
-    writer.close();
+
     //https://www.geeksforgeeks.org/jsp-file-downloading/
-    String filename = "the-file-name.txt";
+
     //String filepath = "c:\\Table_Gen\\";
     // Set response to download file
     resp.setContentType("APPLICATION/OCTET-STREAM");
