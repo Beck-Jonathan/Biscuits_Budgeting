@@ -4,6 +4,8 @@ package com.beck.beck_demos.budget_app.data;
 
 import com.beck.beck_demos.budget_app.iData.iSuggestionDAO;
 import com.beck.beck_demos.budget_app.models.Suggestion;
+import com.beck.beck_demos.budget_app.models.Suggestion_VM;
+import com.beck.beck_demos.budget_app.models.User;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -62,8 +64,8 @@ public class SuggestionDAO implements iSuggestionDAO {
 
 
   @Override
-  public List<Suggestion> getAllSuggestion(int offset, int limit, String search, String User_ID) throws SQLException {
-    List<Suggestion> result = new ArrayList<>();
+  public List<Suggestion_VM> getAllSuggestion(int offset, int limit, String search, String User_ID) throws SQLException {
+    List<Suggestion_VM> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       if (connection != null) {
         connection.setSchema("schedule");
@@ -81,10 +83,12 @@ public class SuggestionDAO implements iSuggestionDAO {
               String content = resultSet.getString("Suggestion_content");
               String User_User_ID = resultSet.getString("User_User_ID");
               String User_User_Name = resultSet.getString("User_User_Name");
-              String User_User_PW = resultSet.getString("User_User_PW");
+              //String User_User_PW = resultSet.getString("User_User_PW");
               String User_Email = resultSet.getString("User_Email");
               Suggestion _suggestion = new Suggestion( Suggestion_ID, _User_ID, Application_Name, content);
-              result.add(_suggestion);
+              User user = new User(0,User_User_Name,null,User_Email);
+              Suggestion_VM suggestionVM = new Suggestion_VM(_suggestion,user);
+              result.add(suggestionVM);
             }
           }
         }
@@ -97,8 +101,8 @@ public class SuggestionDAO implements iSuggestionDAO {
 
 
   @Override
-  public Suggestion getSuggestionByPrimaryKey(Suggestion _suggestion) throws SQLException {
-    Suggestion result = null;
+  public Suggestion_VM getSuggestionByPrimaryKey(Suggestion _suggestion) throws SQLException {
+    Suggestion_VM result = null;
     try(Connection connection = getConnection()) {
       if (connection != null) {
         connection.setSchema("schedule");
@@ -116,7 +120,9 @@ public class SuggestionDAO implements iSuggestionDAO {
               String User_User_Name = resultSet.getString("User_User_Name");
               String User_User_PW = resultSet.getString("User_User_PW");
               String User_Email = resultSet.getString("User_Email");
-              result = new Suggestion(Suggestion_ID, User_ID, Application_Name, content);
+              Suggestion suggestion = new Suggestion(Suggestion_ID, User_ID, Application_Name, content);
+              User user = new User(0, User_User_Name, null, User_Email);
+              result = new Suggestion_VM(suggestion, user);
             }
           }
         }

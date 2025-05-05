@@ -3,6 +3,7 @@ package com.beck.beck_demos.budget_app.iData;
 
 
 import com.beck.beck_demos.budget_app.models.Suggestion;
+import com.beck.beck_demos.budget_app.models.Suggestion_VM;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -28,11 +29,11 @@ public interface iSuggestionDAO {
    * @return List of Suggestion
    * @author Jonathan Beck
    */
-  List<Suggestion> getAllSuggestion(int offset, int limit, String search, String User_ID) throws SQLException;
+  List<Suggestion_VM> getAllSuggestion(int offset, int limit, String search, String User_ID) throws SQLException;
   /**
    * DAO Method to retrieve by Primary Key Suggestion objects
    * @return List of Suggestion
    * @author Jonathan Beck
    */
-  Suggestion getSuggestionByPrimaryKey(Suggestion _suggestion) throws SQLException;
+  Suggestion_VM getSuggestionByPrimaryKey(Suggestion _suggestion) throws SQLException;
 }

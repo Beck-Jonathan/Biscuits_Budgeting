@@ -8,6 +8,7 @@ package com.beck.beck_demos.budget_app.controllers;
 
 import com.beck.beck_demos.budget_app.data.SuggestionDAO;
 import com.beck.beck_demos.budget_app.models.Suggestion;
+import com.beck.beck_demos.budget_app.models.Suggestion_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import com.beck.beck_demos.budget_app.iData.iSuggestionDAO;
 import jakarta.servlet.ServletException;
@@ -80,7 +81,7 @@ public class DeleteSuggestionServlet extends HttpServlet {
       writer.close();
       return;
     }
-    List<Suggestion> suggestions = null;
+    List<Suggestion_VM> suggestions = null;
     try {
       suggestions = suggestionDAO.getAllSuggestion(0,20,"","");
     }

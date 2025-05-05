@@ -35,7 +35,7 @@ Create the JSP  For Viewing All of The  Suggestion table
                             <td>
                                 <button class="detailButton" href="${suggestion.suggestion_ID}" >Details</button>
                             </td>
-                            <td>${fn:escapeXml(suggestion.user_ID)}</td>
+                            <td>${fn:escapeXml(suggestion.user.user_Name)}</td>
                             <td>${fn:escapeXml(suggestion.application_Name)}</td>
                             <td>${fn:escapeXml(suggestion.content)}</td>
                             <td>
