@@ -13,6 +13,7 @@ Create the JSP  For adding to The  Suggestion table
                 <option selected value="Budgeting" >Budgeting</option>
                 <option value="Homepage">Homepage</option>
                 <option value="Scheduling">Scheduling</option>
+                <option value="Derby">CRRD Site</option>
                 <option value="Other">Other (Please Explain)</option>
             </select>
         </div>
