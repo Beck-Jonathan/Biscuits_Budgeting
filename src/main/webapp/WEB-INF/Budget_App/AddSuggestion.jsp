@@ -20,7 +20,7 @@ Create the JSP  For adding to The  Suggestion table
         <div class ="row" id = "row2">
             <label for="inputsuggestioncontent" class="form-label">content</label>
             <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.suggestioncontenterror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="content" id="inputsuggestioncontent" name="inputsuggestioncontent" value="${fn:escapeXml(results.content)}">
+                <textarea  style="height:200px; vertical-align: top" class="<c:if test="${not empty results.suggestioncontenterror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" id="inputsuggestioncontent" name="inputsuggestioncontent" value="${fn:escapeXml(results.content)}"> </textarea>
                 <c:if test="${not empty results.suggestioncontenterror}">
                     <div class="invalid-feedback">${results.suggestioncontenterror}</div>
                 </c:if>
