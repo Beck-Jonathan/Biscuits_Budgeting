@@ -74,6 +74,12 @@ public class AllSuggestionServlet extends HttpServlet {private iSuggestionDAO su
     session.setAttribute("currentPage",req.getRequestURL());
     List<Suggestion_VM> suggestions = null;
     int suggestion_count = 0;
+    List<String> Applications = new ArrayList<>();
+    Applications.add("Budgeting");
+    Applications.add("Homepage");
+    Applications.add("Scheduling");
+    Applications.add("Derby");
+    Applications.add("Other");
     try {
       //List <String> allApplications = suggestionDAO.getDistinctApplicationForDropdown();
       //req.setAttribute("Applications", allApplications);
@@ -83,6 +89,7 @@ public class AllSuggestionServlet extends HttpServlet {private iSuggestionDAO su
       suggestions = new ArrayList<>();
     }
     int total_pages = (suggestion_count/page_size)+1;
+    req.setAttribute("Applications",Applications);
     req.setAttribute("noOfPages", total_pages);
     req.setAttribute("Suggestions", suggestions);
     req.setAttribute("pageTitle", "All Suggestions");
