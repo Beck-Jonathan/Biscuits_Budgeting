@@ -101,14 +101,15 @@ public class SuggestionDAO_Fake implements iSuggestionDAO {
   }
 
   @Override
-  public List<Suggestion_VM> getAllSuggestion(int offset, int limit, String search, String User_ID) throws SQLException {
+  public List<Suggestion_VM> getAllSuggestion(int offset, int limit, String search, String User_ID, String Application_Name) throws SQLException {
     List<Suggestion_VM> results = new ArrayList<>();
     for (Suggestion_VM suggestion : suggestionVMs){
-      if ((suggestion.getUser_ID()!=null||suggestion.getUser_ID().equals(User_ID))
-      ){
-        if (search.isEmpty() || suggestion.getSuggestion_ID().contains(search)|| suggestion.getUser_ID().contains(search)|| suggestion.getApplication_Name().contains(search)|| suggestion.getcontent().contains(search)){
+      if ((User_ID.isEmpty() ||suggestion.getUser_ID().equals(User_ID))){
+      if ((Application_Name.isEmpty() ||suggestion.getApplication_Name().equals(Application_Name))) {
+        if (search.isEmpty() || suggestion.getSuggestion_ID().contains(search) || suggestion.getUser_ID().contains(search) || suggestion.getApplication_Name().contains(search) || suggestion.getcontent().contains(search)) {
           results.add(suggestion);
         }
+      }
       }
     }
     return results;

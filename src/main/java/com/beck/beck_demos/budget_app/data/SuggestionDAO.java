@@ -64,18 +64,19 @@ public class SuggestionDAO implements iSuggestionDAO {
 
 
   @Override
-  public List<Suggestion_VM> getAllSuggestion(int offset, int limit, String search, String User_ID) throws SQLException {
+  public List<Suggestion_VM> getAllSuggestion(int offset, int limit, String search, String User_ID, String _Application_Name) throws SQLException {
     List<Suggestion_VM> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       if (connection != null) {
         connection.setSchema("schedule");
         connection.setCatalog("schedule");
 
-        try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_all_Suggestion(?,?,?,?)}")) {
+        try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_all_Suggestion(?,?,?,?,?)}")) {
           statement.setInt(1,limit)
           ;statement.setInt(2,offset);
           statement.setString(3,search);
           statement.setString(4,User_ID);
+          statement.setString(5,_Application_Name);
           try(ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {String Suggestion_ID = resultSet.getString("Suggestion_Suggestion_ID");
               String _User_ID = resultSet.getString("Suggestion_User_ID");

@@ -29,7 +29,7 @@ public interface iSuggestionDAO {
    * @return List of Suggestion
    * @author Jonathan Beck
    */
-  List<Suggestion_VM> getAllSuggestion(int offset, int limit, String search, String User_ID) throws SQLException;
+  List<Suggestion_VM> getAllSuggestion(int offset, int limit, String search, String User_ID, String Application_Name) throws SQLException;
   /**
    * DAO Method to retrieve by Primary Key Suggestion objects
    * @return List of Suggestion

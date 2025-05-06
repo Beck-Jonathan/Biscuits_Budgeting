@@ -11,13 +11,20 @@ Create the JSP  For Viewing All of The  Suggestion table
             Add Suggestion   <a href="addSuggestion">Add</a>
             <c:if test="${Suggestions.size() > 0}">
                 <div class="search-container">
-                    <form action="all-Suggestion">
+                    <form action="all-Suggestions">
                         <input type="text" placeholder="Search.." id="searchBox" name="search">
-                        <button type="submit"><i class="fa fa-search"></i></button>
+                        <select name ="App" id="inputsuggestionApplication_Name">
+                            <option value="" >All</option>
+                            <option value="Budgeting" >Budgeting</option>
+                            <option value="Homepage">Homepage</option>
+                            <option value="Scheduling" selected>Scheduling</option>
+                            <option value="Derby">CRRD Site</option>
+                            <option value="Other">Other (Please Explain)</option>
+                        </select>
+                        <button type="submit"><i class="fa fa-search">search & filter</i></button>
+
                     </form>
                 </div>
-                Export Suggestion   <a href="exportSuggestion?mode=export">Add</a>
-                Write To SQL File Suggestion   <a href="exportSuggestion?mode=SQL">Add</a>
                 <div class="table-responsive"><table class="table table-bordered">
                     <thead>
                     <tr>

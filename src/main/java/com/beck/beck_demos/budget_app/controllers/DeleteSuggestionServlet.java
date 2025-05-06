@@ -55,6 +55,11 @@ public class DeleteSuggestionServlet extends HttpServlet {
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Delete Suggestion");
     String SuggestionID = req.getParameter("suggestionid");
+    String Application_Name= (String) session.getAttribute("App");
+    if (Application_Name==null){
+      Application_Name="";
+      session.setAttribute("App",Application_Name);
+    }
 
     boolean _ajax=false;
     String AJAX = req.getParameter("AJAX");
@@ -83,7 +88,7 @@ public class DeleteSuggestionServlet extends HttpServlet {
     }
     List<Suggestion_VM> suggestions = null;
     try {
-      suggestions = suggestionDAO.getAllSuggestion(0,20,"","");
+      suggestions = suggestionDAO.getAllSuggestion(0,20,"","",Application_Name);
     }
     catch (Exception ex){
       results.put("dbStatus",ex.getMessage());

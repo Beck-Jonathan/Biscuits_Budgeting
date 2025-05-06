@@ -57,10 +57,15 @@ public class AllSuggestionServlet extends HttpServlet {private iSuggestionDAO su
       errors++;
       results.put("searchError","Invalid search term");
     }
+    String Appplication_Name = req.getParameter("App");
+    if (Appplication_Name==null){
+      Appplication_Name="";
+      session.setAttribute("App",Appplication_Name);
+    }
     session.setAttribute("currentPage",req.getRequestURL());
     List<Suggestion_VM> suggestions = null;
     try {
-      suggestions =suggestionDAO.getAllSuggestion(0,20,search_term,"");
+      suggestions =suggestionDAO.getAllSuggestion(0,20,search_term,"",Appplication_Name);
     } catch (Exception e) {
       suggestions = new ArrayList<>();
     }
