@@ -133,4 +133,28 @@ public class SuggestionDAO implements iSuggestionDAO {
     }
     return result;
   }
+
+  @Override
+  public int getSuggestionCount(String Search_term, String User_ID, String Application_Name) throws SQLException {
+    int result =0;
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        connection.setSchema("schedule");
+        connection.setCatalog("schedule");
+        try(CallableStatement statement = connection.prepareCall("{CALL sp_count_by_all_Suggestion(?,?,?)}")) {
+          statement.setString(1,Search_term);
+          statement.setString(2,User_ID);
+          statement.setString(3,Application_Name);
+          try(ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+              result = resultSet.getInt(1);
+            }
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not retrieve Suggestions. Try again later");
+    }
+    return result;
+  }
 }

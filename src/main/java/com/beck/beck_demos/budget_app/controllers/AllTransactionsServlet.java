@@ -111,9 +111,14 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
 
     int page_number = 1;
     int recordsPerPage = 5;
-    if(req.getParameter("page") != null) {
-      page_number = Integer.parseInt(req.getParameter("page"));
+
+    try {
+       page_number = Integer.parseInt(req.getParameter("page"));
+       } catch (Exception e){
+        page_number=1;
     }
+    
+
     session.setAttribute("page_number",page_number);
 
     // page_size = req.get

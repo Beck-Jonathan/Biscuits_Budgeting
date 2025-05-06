@@ -36,4 +36,5 @@ public interface iSuggestionDAO {
    * @author Jonathan Beck
    */
   Suggestion_VM getSuggestionByPrimaryKey(Suggestion _suggestion) throws SQLException;
+  int getSuggestionCount(String Search_term, String User_ID, String Application_Name) throws SQLException;
 }

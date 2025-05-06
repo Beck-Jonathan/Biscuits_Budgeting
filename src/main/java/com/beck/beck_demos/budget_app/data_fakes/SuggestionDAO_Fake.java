@@ -130,6 +130,22 @@ public class SuggestionDAO_Fake implements iSuggestionDAO {
     }
     return result;
   }
+
+  @Override
+  public int getSuggestionCount(String Search_term, String User_ID, String Application_Name) throws SQLException {
+    List<Suggestion_VM> results = new ArrayList<>();
+    for (Suggestion_VM suggestion : suggestionVMs){
+      if ((suggestion.getUser_ID()!=null||suggestion.getUser_ID().equals(User_ID))
+          &&(suggestion.getApplication_Name()!=null||suggestion.getApplication_Name().equals(Application_Name))
+      ){
+        if (Search_term.isEmpty() || suggestion.getSuggestion_ID().contains(Search_term)|| suggestion.getUser_ID().contains(Search_term)|| suggestion.getApplication_Name().contains(Search_term)|| suggestion.getcontent().contains(Search_term)){
+          results.add(suggestion);
+        }
+      }
+    }
+    return results.size();
+  }
+
   private boolean duplicateKey(Suggestion _suggestion){
     return _suggestion.getcontent().equals("DUPLICATE");
   }

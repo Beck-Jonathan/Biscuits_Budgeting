@@ -62,9 +62,42 @@ Create the JSP  For Viewing All of The  Suggestion table
         </div>
     </div>
 </div>
+<%--For displaying Previous link except for the 1st page --%>
+<c:if test="${suggestion_page_number != 1}">
+    <form action="all-Suggestions" method="get">
+        <input type="hidden" name="user_id" value="${user_id}">
+        <input type="hidden" name="application_name" value="${application_name}">
+        <input type="hidden" name="suggestion_page" value="${suggestion_page-1}">
+        <br/><br/>
+        <input type="submit" value="Previous Page" />
+    </form>
+</c:if>
+<%--For displaying Page numbers.
+The when condition does not display a link for the current page--%><form action="all-Suggestions" method="get" ><input type="hidden" name="user_id" value="${user_id}">
+    <input type="hidden" name="application_name" value="${application_name}">
+    Select a page :
+    <select name="suggestion_page" onchange="this.form.submit()">
+        <c:forEach var="i" begin="1" end="${noOfPages}">
+            <option value=${i}  ${suggestion_page_number == i ? ' selected' : ''} >${i}</option>
+        </c:forEach>
+    </select>
+    <br/><br/>
+    <input type="submit" value="Submit" />
+</form>
+<%--For displaying Next link --%>
+<c:if test="${suggestion_page_number lt noOfPages}">
+    <form action="all-Transactions" method="get">
+        <input type="hidden" name="user_id" value="${user_id}">
+        <input type="hidden" name="application_name" value="${application_name}">
+        <input type="hidden" name="suggestion_page" value="${suggestion_page+1}">
+        <br/><br/>
+        <input type="submit" value="Next Page" />
+    </form>
+</c:if>
 <div id="dialog" title="Confirmation Required">
     Are you sure about this?
 </div>
+
 </main>
 <%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>
 
