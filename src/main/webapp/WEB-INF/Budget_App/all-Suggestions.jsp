@@ -64,7 +64,7 @@ Create the JSP  For Viewing All of The  Suggestion table
     <form action="all-Suggestions" method="get">
         <input type="hidden" name="user_id" value="${user_id}">
         <input type="hidden" name="application_name" value="${application_name}">
-        <input type="hidden" name="suggestion_page" value="${suggestion_page-1}">
+        <input type="hidden" name="suggestion_page" value="${suggestion_page_number-1}">
         <br/><br/>
         <input type="submit" value="Previous Page" />
     </form>
@@ -83,10 +83,10 @@ The when condition does not display a link for the current page--%><form action=
 </form>
 <%--For displaying Next link --%>
 <c:if test="${suggestion_page_number lt noOfPages}">
-    <form action="all-Transactions" method="get">
+    <form action="all-Suggestions" method="get">
         <input type="hidden" name="user_id" value="${user_id}">
         <input type="hidden" name="application_name" value="${application_name}">
-        <input type="hidden" name="suggestion_page" value="${suggestion_page+1}">
+        <input type="hidden" name="suggestion_page" value="${suggestion_page_number+1}">
         <br/><br/>
         <input type="submit" value="Next Page" />
     </form>

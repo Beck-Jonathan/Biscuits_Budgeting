@@ -79,6 +79,8 @@ public class AllSuggestionServlet extends HttpServlet {private iSuggestionDAO su
     Applications.add("Homepage");
     Applications.add("Scheduling");
     Applications.add("Derby");
+    Applications.add("Warriors");
+    Applications.add("Generator");
     Applications.add("Other");
     try {
       //List <String> allApplications = suggestionDAO.getDistinctApplicationForDropdown();
