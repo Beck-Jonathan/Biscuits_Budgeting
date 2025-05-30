@@ -143,6 +143,45 @@ public class TransactionDAO implements iTransactionDAO {
     return result;
   }
 
+  @Override
+  public List<List<Category_VM>> getMonthlyAnalysis(List<List<Category_VM>> months, int user_ID, int year) throws SQLException {
+    List<List<Category_VM>> result = new ArrayList<>();
+    int startingMonth = 0;
+    int loop = -1;
+    try (Connection connection = getConnection()) {
+      try (CallableStatement statement = connection.prepareCall("{CALL sp_total_Category_by_time_monthly(?,?)}")) {
+        statement.setInt(1, user_ID);
+        statement.setInt(2, year);
+        try (ResultSet resultSet = statement.executeQuery()) {
+          while (resultSet.next()) {
+            int Month = resultSet.getInt(1);
+            String Category_ID = resultSet.getString(2);
+            int count = resultSet.getInt(3);
+
+            if (resultSet.wasNull()) {
+              count = 0;
+            }
+            Double amount = resultSet.getDouble(4);
+            if (resultSet.wasNull()) {
+              count = 0;
+              amount = 0d;
+            }
+            if (Month != startingMonth) {
+              result.add(new ArrayList<>());
+              startingMonth = Month;
+              loop++;
+            }
+            Category_VM category = new Category_VM(Category_ID, amount, count, Month);
+            result.get(loop).add(category);
+          }
+        } catch (Exception e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }
+    return result;
+  }
+
   public int bulkUpdateCategory(int userid, String category, String query) throws SQLException {
     int result = 0;
     try (Connection connection = getConnection()) {

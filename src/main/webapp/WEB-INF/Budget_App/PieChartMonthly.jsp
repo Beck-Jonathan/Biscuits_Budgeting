@@ -1,3 +1,4 @@
+<%--
 <%@include file="/WEB-INF/Budget_App/budget_top.jsp"%>
 
 
@@ -17,7 +18,7 @@
             <div class="col col-md-2">
                 <select  class="<c:if test="${not empty results.transactionCategory_IDerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Year" id="inputtransactionYear" name="inputtransactionYear" >
                     <c:forEach items="${yearRange}" var="year">
-                        <option value=${year} <c:if test="${year eq 2024}"> selected </c:if>>${year}   </option>
+                        <option value=${year}>${year}   </option>
                     </c:forEach>
                 </select>
                 <button id="byYear">by Year</button>
@@ -35,25 +36,26 @@
             </div>
 
 
-    </div>
+        </div>
 
 
 
     </div>
 </div>
 <p hidden id="FirstYear">${Breakdown[0][0].year}</p>
-<%-- <p hidden >
-    <table hidden>
+<p hidden >
+<table hidden>
     <th></th>
     <c:forEach items="${Breakdown}" var="year">
         <tr>
-        <c:forEach items="${year}" var="category">
-            <td> <p id="${category.year}${category.category_ID.replace(" ","")}year"> ${category.year}</p>  <p id="${category.year}${category.category_ID.replace(" ","")}amount">${category.amount}</p>  <p id="${category.year}${category.category_ID.replace(" ","")}count">${category.count}</p>  <p id="${category.year}${category.category_ID.replace(" ","")}name">${category.category_ID}</p> </td>
-        </c:forEach>
+            <c:forEach items="${year}" var="category">
+                <td> <p id="${category.year}${category.category_ID.replace(" ","")}year"> ${category.year}</p>  <p id="${category.year}${category.category_ID.replace(" ","")}amount">${category.amount}</p>  <p id="${category.year}${category.category_ID.replace(" ","")}count">${category.count}</p>  <p id="${category.year}${category.category_ID.replace(" ","")}name">${category.category_ID}</p> </td>
+            </c:forEach>
         </tr>
     </c:forEach>
-</table> --%>
+</table>
 </p>
 
 
 <%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>
+--%>

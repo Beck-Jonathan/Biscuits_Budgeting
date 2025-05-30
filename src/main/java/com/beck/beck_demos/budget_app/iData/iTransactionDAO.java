@@ -59,4 +59,6 @@ public interface iTransactionDAO {
   int toggleLockTransaction( Transaction transaction) throws SQLException;
 
   int writeTransactionToFile(List<Transaction> transactions, String path) throws IOException;
+  List<List<Category_VM>> getMonthlyAnalysis(List<List<Category_VM>> months, int user_ID, int year) throws SQLException;
+
 }

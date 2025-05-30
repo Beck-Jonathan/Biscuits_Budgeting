@@ -361,6 +361,11 @@ public class TransactionDAO_Fake implements iTransactionDAO {
     return 0;
   }
 
+  @Override
+  public List<List<Category_VM>> getMonthlyAnalysis(List<List<Category_VM>> months, int user_ID, int year) throws SQLException {
+    return List.of();
+  }
+
   private boolean duplicateKey(Transaction _transaction){
     return _transaction.getCategory_ID().equals("DUPLICATE")||_transaction.getTransaction_ID().equals("DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
   }

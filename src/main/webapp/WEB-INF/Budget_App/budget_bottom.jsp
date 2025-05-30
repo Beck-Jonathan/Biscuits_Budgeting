@@ -37,8 +37,13 @@
 </c:if>
 
 <c:if test="${pageTitle eq 'Pie Chart'}">
-    <script src="js/budget/pieChart.js"></script>
+    <script src="js/budget/pieChartMonth.js"></script>
 </c:if>
+
+<%-- <c:if test="${pageTitle eq 'Pie Chart Month'}">
+    <script src="js/budget/pieChartMonth.js"></script>
+</c:if>
+--%>
 <c:if test="${pageTitle eq 'All Transactions'}">
     <script src="js/budget/categorize.js"></script>
 </c:if>
