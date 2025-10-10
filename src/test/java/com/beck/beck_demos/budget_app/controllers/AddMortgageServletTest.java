@@ -238,7 +238,7 @@ public class AddMortgageServletTest {
     request.setParameter("inputmortgagePresent_Value","243.6");
     request.setParameter("inputmortgageFuture_Value","243.6");
     request.setParameter("inputmortgageInterest_Rate","243.6");
-    request.setParameter("inputmortgageMonthly_Payment","243.6");
+    request.setParameter("inputmortgageMonthly_Payment","667");
     request.setParameter("inputmortgageExtra_Payment","243.6");
     request.setParameter("inputmortgageRemaining_Term","406");
     servlet.doPost(request,response);
@@ -272,7 +272,7 @@ public class AddMortgageServletTest {
     request.setParameter("inputmortgagePresent_Value","243.6");
     request.setParameter("inputmortgageFuture_Value","243.6");
     request.setParameter("inputmortgageInterest_Rate","243.6");
-    request.setParameter("inputmortgageMonthly_Payment","243.6");
+    request.setParameter("inputmortgageMonthly_Payment","667");
     request.setParameter("inputmortgageExtra_Payment","243.6");
     request.setParameter("inputmortgageRemaining_Term","406");
     servlet.doPost(request,response);

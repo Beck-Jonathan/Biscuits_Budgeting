@@ -108,6 +108,7 @@ public class AllReceiptServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
+    user.setUser_ID(17);
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -125,6 +126,7 @@ public class AllReceiptServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
+    user.setUser_ID(17);
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -145,6 +147,7 @@ public class AllReceiptServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
+    user.setUser_ID(17);
     user.setRoles(roles);
     session.setAttribute("User_B",user);
 

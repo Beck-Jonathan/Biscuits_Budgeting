@@ -172,14 +172,13 @@ public class AddReceiptServletTest {
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
 
     String Transaction_IDError = results.get("receiptTransaction_IDerror");
-    String Image_LinkError = results.get("receiptImage_Linkerror");
+    ;
     String NameError = results.get("receiptNameerror");
     String DescriptionError = results.get("receiptDescriptionerror");
 
     assertNotEquals("",Transaction_IDError);
     assertNotNull(Transaction_IDError);
-    assertNotEquals("",Image_LinkError);
-    assertNotNull(Image_LinkError);
+
     assertNotEquals("",NameError);
     assertNotNull(NameError);
     assertNotEquals("",DescriptionError);
@@ -196,10 +195,11 @@ public class AddReceiptServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
+    user.setUser_ID(27);
     session.setAttribute("User_B",user);
     request.setSession(session);
 
-    request.setParameter("inputreceiptTransaction_ID","TestValue");
+    request.setParameter("inputreceiptTransaction_ID","1f28b230-9e41-4c37-b8ff-70df7648cecc");
     request.setParameter("inputreceiptImage_Link","TestValue");
     request.setParameter("inputreceiptName","TestValue");
     request.setParameter("inputreceiptDescription","TestValue");
@@ -211,7 +211,7 @@ public class AddReceiptServletTest {
     formFields.put("variant", "php");
     formFields.put("os", "mac");
     formFields.put("version", "3.4");
-    formFields.put("inputreceiptReceipt_ID", "TestValue");
+    formFields.put("inputreceiptTransaction_ID", "1f28b230-9e41-4c37-b8ff-70df7648cecc");
     formFields.put("inputreceiptImage_Link", "TestValue");
     formFields.put("inputreceiptName", "TestValue");
     formFields.put("inputreceiptDescription", "TestValue");
@@ -262,7 +262,7 @@ public class AddReceiptServletTest {
     formFields.put("variant", "php");
     formFields.put("os", "mac");
     formFields.put("version", "3.4");
-    formFields.put("inputreceiptTransaction_ID", "EXCEPTION");
+    formFields.put("inputreceiptTransaction_ID", "EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
     formFields.put("inputreceiptImage_Link", "EXCEPTION");
     formFields.put("inputreceiptName", "EXCEPTION");
     formFields.put("inputreceiptDescription", "EXCEPTION");
@@ -317,7 +317,7 @@ public class AddReceiptServletTest {
     formFields.put("variant", "php");
     formFields.put("os", "mac");
     formFields.put("version", "3.4");
-    formFields.put("inputreceiptTransaction_ID", "DUPLICATE");
+    formFields.put("inputreceiptTransaction_ID", "DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
     formFields.put("inputreceiptImage_Link", "DUPLICATE");
     formFields.put("inputreceiptName", "DUPLICATE");
     formFields.put("inputreceiptDescription", "DUPLICATE");

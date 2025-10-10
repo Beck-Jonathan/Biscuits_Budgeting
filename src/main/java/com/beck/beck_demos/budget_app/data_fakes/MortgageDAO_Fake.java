@@ -90,10 +90,10 @@ Collections.sort(mortgageVMs);
   }
 
   private boolean duplicateKey(Mortgage _mortgage){
-    return _mortgage.getMortgage_ID().contains("DUPLICATE");
+    return _mortgage.getMonthly_Payment()==666;
   }
   private boolean exceptionKey(Mortgage _mortgage){
-    return _mortgage.getMortgage_ID().contains("EXCEPTION");
+    return _mortgage.getMonthly_Payment()==667;
   }
 
 

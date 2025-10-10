@@ -378,13 +378,37 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   }
 
   private boolean duplicateKey(Transaction _transaction){
-    return _transaction.getCategory_ID().equals("DUPLICATE")||_transaction.getTransaction_ID().equals("DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
+
+    boolean result = false;
+    if (_transaction.getTransaction_ID()!=null){
+      result = _transaction.getTransaction_ID().equals("DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
+      if (result){
+        return result;
+      }
+    }
+    if (_transaction.getCategory_ID()!=null){
+      result = _transaction.getCategory_ID().equals("DUPLICATE");
+
+    }
+    return result;
+
   }
   private boolean exceptionKey(Transaction _transaction){
-    return _transaction.getCategory_ID().equals("EXCEPTION")||_transaction.getTransaction_ID().equals("EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
+    boolean result = false;
+    if (_transaction.getTransaction_ID()!=null){
+      result = _transaction.getTransaction_ID().equals("EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
+      if (result){
+        return result;
+      }
+    }
+    if (_transaction.getCategory_ID()!=null){
+      result = _transaction.getCategory_ID().equals("EXCEPTION");
+
+    }
+return result;
   }
 
   private boolean exceptionKey(String _transaction){
-    return _transaction.equals("EXCEPTION");
+    return (_transaction!=null && _transaction.equals("EXCEPTION"));
   }
 }

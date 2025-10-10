@@ -339,12 +339,12 @@ class MortgageTest {
     Mortgage smaller = new Mortgage();
     Mortgage bigger = new Mortgage();
 //to compare a smaller and larger Mortgage_ID
-    smaller.setMortgage_ID("aaaa");
-    bigger.setMortgage_ID("bbbb");
+    smaller.setMortgage_ID("8b0c01b4-c726-4aed-806d-37f273332773");
+    bigger.setMortgage_ID("9b0c01b4-c726-4aed-806d-37f273332773");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the Mortgage_ID as equal.
-    smaller.setMortgage_ID("bbbb");
+    smaller.setMortgage_ID("9b0c01b4-c726-4aed-806d-37f273332773");
 //to compare a smaller and larger User_ID
     smaller.setUser_ID(10);
     bigger.setUser_ID(20);

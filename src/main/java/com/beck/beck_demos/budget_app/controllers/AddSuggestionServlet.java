@@ -43,7 +43,8 @@ public class AddSuggestionServlet extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("schedule_in");
+      session.invalidate();
+      resp.sendRedirect("budget_home");
       return;
     }
     session.setAttribute("currentPage",req.getRequestURL());
@@ -63,7 +64,8 @@ public class AddSuggestionServlet extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("schedule_in");
+      session.invalidate();
+      resp.sendRedirect("budget_home");
       return;
     }
 

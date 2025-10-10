@@ -43,7 +43,8 @@ public class AllSuggestionServlet extends HttpServlet {private iSuggestionDAO su
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("budget_in");
+      session.invalidate();
+      resp.sendRedirect("budget_home");
       return;
     }
 

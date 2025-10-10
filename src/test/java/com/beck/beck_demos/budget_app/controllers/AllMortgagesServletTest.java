@@ -76,7 +76,7 @@ public class AllMortgagesServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(44);
+    user.setUser_ID(47);
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);

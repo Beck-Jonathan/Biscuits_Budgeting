@@ -50,6 +50,7 @@ class ExportServletTest {
     roles.add("User");
     user.setRoles(roles);
     user.setUser_ID(41);
+    user.setUser_Name("Test");
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doGet(request,response);
@@ -81,6 +82,7 @@ class ExportServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
+    user.setUser_Name("Test");
     user.setRoles(roles);
     user.setUser_ID(41);
     session.setAttribute("User_B",user);
@@ -102,6 +104,7 @@ class ExportServletTest {
     roles.add("User");
     user.setRoles(roles);
     user.setUser_ID(1000);
+    user.setUser_Name("Test");
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doGet(request,response);

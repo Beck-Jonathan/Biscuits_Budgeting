@@ -133,6 +133,8 @@ class add_transactionTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
+    user.setUser_ID(37);
+
     user.setRoles(roles);
     File file = new File(request.getSession().getServletContext().getRealPath("/")+"dummy");
     file.delete();
@@ -148,10 +150,6 @@ class add_transactionTest {
     MockMultipartFile mockMultipartFile =
         new MockMultipartFile("upload_transactions", fileName, "text/plain", content);
     request.addFile(mockMultipartFile);
-
-
-
-
 
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -170,6 +168,7 @@ class add_transactionTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
+    user.setUser_ID(37);
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -198,6 +197,7 @@ class add_transactionTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
+    user.setUser_ID(37);
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);

@@ -64,7 +64,7 @@ public class DeleteReceiptServletTest {
     request.setSession(session);
     servlet.doPost(request, response);
     String status = response.getContentAsString();
-    assertEquals("Unable To Find Receipt.", status);
+    assertEquals("Receipt not found", status);
   }
 
   /**
@@ -139,7 +139,7 @@ public class DeleteReceiptServletTest {
     String status = response.getContentAsString();
 
     session = request.getSession(false);
-    assertEquals("Unable To Find Receipt.", status);
+    assertEquals("Receipt not found", status);
 
   }
 

@@ -114,7 +114,7 @@ class ReceiptTest {
    */
   @Test
   public void testSetTransaction_IDSetsTransaction_ID(){
-    String Transaction_ID = "nJvkhqBRXmIEBNxQpwsvttpiFBrxqQGSNp";
+    String Transaction_ID = "nJvkhqBRXmIEBNxQpwsvttpiFBrxqQGSNpxx";
     _receipt.setTransaction_ID(Transaction_ID);
     Assertions.assertEquals(Transaction_ID,_receipt.getTransaction_ID());
   }
@@ -212,19 +212,19 @@ class ReceiptTest {
     Receipt smaller = new Receipt();
     Receipt bigger = new Receipt();
 //to compare a smaller and larger Receipt_ID
-    smaller.setReceipt_ID("aaaa");
-    bigger.setReceipt_ID("bbbb");
+    smaller.setReceipt_ID("nJvkhqBRXmIEBNxQpwsvttpiFBrxqQGSNpxx");
+    bigger.setReceipt_ID("pJvkhqBRXmIEBNxQpwsvttpiFBrxqQGSNpxx");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the Receipt_ID as equal.
-    smaller.setReceipt_ID("bbbb");
+    smaller.setReceipt_ID("pJvkhqBRXmIEBNxQpwsvttpiFBrxqQGSNpxx");
 //to compare a smaller and larger Transaction_ID
-    smaller.setTransaction_ID("aaaa");
-    bigger.setTransaction_ID("bbbb");
+    smaller.setTransaction_ID("aJvkhqBRXmIEBNxQpwsvttpiFBrxqQGSNpxx");
+    bigger.setTransaction_ID("bJvkhqBRXmIEBNxQpwsvttpiFBrxqQGSNpxx");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the Transaction_ID as equal.
-    smaller.setTransaction_ID("bbbb");
+    smaller.setTransaction_ID("bJvkhqBRXmIEBNxQpwsvttpiFBrxqQGSNpxx");
 //to compare a smaller and larger Image_Link
     smaller.setImage_Link("aaaa");
     bigger.setImage_Link("bbbb");

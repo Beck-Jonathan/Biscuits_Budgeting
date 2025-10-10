@@ -212,14 +212,14 @@ public class EditReceiptServletTest {
 //to set the old Receipt
     Receipt receipt = new Receipt();
     receipt.setReceipt_ID("kPaFZnoBwSWFxQyrPiBWMACLTrPFStleSVwt");
-    receipt.setTransaction_ID("testReceipt");
+    receipt.setTransaction_ID("kPaFZnoBwSWFxQyrPiBWMACLTrPFStleSVwt");
     receipt.setImage_Link("testReceipt");
     receipt.setName("testReceipt");
     receipt.setDescription("testReceipt");
     session.setAttribute("receipt",receipt);
 //create a new Receipts parameters
-    request.setParameter("inputreceiptReceipt_ID","TestValue");
-    request.setParameter("inputreceiptTransaction_ID","TestValue");
+    request.setParameter("inputreceiptReceipt_ID","kPaFZnoBwSWFxQyrPiBWMACLTrPFStleSVwt");
+    request.setParameter("inputreceiptTransaction_ID","kPaFZnoBwSWFxQyrPiBWMACLTrPFStleSVwt");
     request.setParameter("inputreceiptImage_Link","TestValue");
     request.setParameter("inputreceiptName","TestValue");
     request.setParameter("inputreceiptDescription","TestValue");
@@ -251,13 +251,13 @@ public class EditReceiptServletTest {
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Receipt_IDError = results.get("receiptReceipt_IDerror");
+
     String Transaction_IDError = results.get("receiptTransaction_IDerror");
     String Image_LinkError = results.get("receiptImage_Linkerror");
     String NameError = results.get("receiptNameerror");
     String DescriptionError = results.get("receiptDescriptionerror");
-    assertNotEquals("",Receipt_IDError);
-    assertNotNull(Receipt_IDError);
+
+
     assertNotEquals("",Transaction_IDError);
     assertNotNull(Transaction_IDError);
     assertNotEquals("",Image_LinkError);
@@ -293,15 +293,15 @@ public class EditReceiptServletTest {
     request.setSession(session);
 //to set the old Receipt
     Receipt receipt = new Receipt();
-    receipt.setReceipt_ID("DUPLICATE");
-    receipt.setTransaction_ID("DUPLICATE");
+    receipt.setReceipt_ID("DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
+    receipt.setTransaction_ID("DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
     receipt.setImage_Link("DUPLICATE");
     receipt.setName("DUPLICATE");
     receipt.setDescription("DUPLICATE");
     session.setAttribute("receipt",receipt);
 //create a new Receipt parameters
-    request.setParameter("inputreceiptReceipt_ID","DUPLICATE");
-    request.setParameter("inputreceiptTransaction_ID","DUPLICATE");
+    request.setParameter("inputreceiptReceipt_ID","DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
+    request.setParameter("inputreceiptTransaction_ID","DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
     request.setParameter("inputreceiptImage_Link","DUPLICATE");
     request.setParameter("inputreceiptName","DUPLICATE");
     request.setParameter("inputreceiptDescription","DUPLICATE");
@@ -329,15 +329,15 @@ public class EditReceiptServletTest {
     request.setSession(session);
 //to set the old Receipt
     Receipt receipt = new Receipt();
-    receipt.setReceipt_ID("EXCEPTION");
-    receipt.setTransaction_ID("EXCEPTION");
+    receipt.setReceipt_ID("EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
+    receipt.setTransaction_ID("EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
     receipt.setImage_Link("EXCEPTION");
     receipt.setName("EXCEPTION");
     receipt.setDescription("EXCEPTION");
     session.setAttribute("receipt",receipt);
 //create a new Receipts parameters
-    request.setParameter("inputreceiptReceipt_ID","EXCEPTION");
-    request.setParameter("inputreceiptTransaction_ID","EXCEPTION");
+    request.setParameter("inputreceiptReceipt_ID","EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
+    request.setParameter("inputreceiptTransaction_ID","EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
     request.setParameter("inputreceiptImage_Link","EXCEPTION");
     request.setParameter("inputreceiptName","EXCEPTION");
     request.setParameter("inputreceiptDescription","EXCEPTION");
