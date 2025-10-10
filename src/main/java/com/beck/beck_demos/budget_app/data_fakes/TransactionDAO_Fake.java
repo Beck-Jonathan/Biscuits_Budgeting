@@ -4,7 +4,7 @@ import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
 import com.beck.beck_demos.budget_app.models.Category_VM;
 import com.beck.beck_demos.budget_app.models.Transaction;
 import com.beck.beck_demos.budget_app.models.Transaction_VM;
-import software.amazon.awssdk.services.s3.endpoints.internal.Value;
+//import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.io.File;
 import java.sql.Date;
@@ -364,6 +364,17 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   @Override
   public List<List<Category_VM>> getMonthlyAnalysis(List<List<Category_VM>> months, int user_ID, int year) throws SQLException {
     return List.of();
+  }
+
+  @Override
+  public List<Transaction> getDistinctTransactionForDropdown(int user_ID) throws SQLException {
+    List<Transaction> transactions = new ArrayList<>();
+    for (Transaction t : transactionVMs) {
+      if (t.getUser_ID()==user_ID) {
+        transactions.add(t);
+      }
+    }
+    return transactions;
   }
 
   private boolean duplicateKey(Transaction _transaction){

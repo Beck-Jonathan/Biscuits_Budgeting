@@ -44,7 +44,7 @@ public class MoneyBreakdownServlet extends HttpServlet {
     Map<String,String> results = new HashMap<>();
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("/budget_in");
+      resp.sendRedirect("budget_home");
       return;
     }
     List<List<Category_VM>> breakdown = new ArrayList<>();

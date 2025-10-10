@@ -3,6 +3,7 @@ package com.beck.beck_demos.budget_app.data_fakes;
 import com.beck.beck_demos.budget_app.iData.iMortgageDAO;
 import com.beck.beck_demos.budget_app.models.Mortgage;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,21 +12,21 @@ public class MortgageDAO_Fake implements iMortgageDAO {
   private  List<Mortgage> mortgageVMs;
   public MortgageDAO_Fake(){
   mortgageVMs = new ArrayList<>();
-  Mortgage mortgage0 = new Mortgage(12, 44, 29.53, 48.89, 68.61, 60.58, 59.59, 46);
-  Mortgage mortgage1 = new Mortgage(12, 44, 15.49, 39.84, 45.64, 35.46, 20.02, 19);
-  Mortgage mortgage2 = new Mortgage(21, 44, 10.09, 22.12, 10.95, 53.46, 52.93, 12);
-  Mortgage mortgage3 = new Mortgage(17, 44, 38.81, 66.08, 18.17, 14.58, 11.46, 26);
-  Mortgage mortgage4 = new Mortgage(30, 44, 48.55, 29.49, 28.18, 64.66, 54.5, 64);
-  Mortgage mortgage5 = new Mortgage(39, 47, 54.24, 29.64, 22.65, 62.68, 68.4, 67);
-  Mortgage mortgage6 = new Mortgage(53, 47, 67.24, 68.91, 49.71, 28.62, 60.96, 28);
-  Mortgage mortgage7 = new Mortgage(46, 47, 60.91, 49.56, 24.79, 41.98, 65.32, 60);
-  Mortgage mortgage8 = new Mortgage(52, 47, 60.44, 55.99, 58.12, 29.63, 51.67, 36);
-  Mortgage mortgage9 = new Mortgage(20, 47, 27.46, 40.8, 35.52, 24.49, 43.26, 40);
-  Mortgage mortgage10 = new Mortgage(51, 37, 40.8, 60.24, 14.46, 19.5, 55.11, 68);
-  Mortgage mortgage11 = new Mortgage(19, 37, 34.87, 52.83, 35.89, 12.69, 12.01, 38);
-  Mortgage mortgage12 = new Mortgage(48, 37, 49.86, 22.51, 69.38, 57.26, 56.78, 63);
-  Mortgage mortgage13 = new Mortgage(43, 37, 34.53, 43.05, 26.72, 41.01, 43.34, 49);
-  Mortgage mortgage14 = new Mortgage(38, 37, 24.19, 14.13, 27.7, 57.78, 18.65, 19);
+    Mortgage mortgage0 = new Mortgage("xfJsxVBDDqBaKBFAgDhQACTFREWwjVxILdpW", 47, "WfhcykTs", 55.69, 50.84, 35.65, 59.9, 46.75, 48);
+    Mortgage mortgage1 = new Mortgage("sRLMssDNRsUaetFJLmitlSLsspKHooQnZyQd", 47, "KjQUgkgF", 53.08, 53.46, 53.86, 66.52, 31.1, 34);
+    Mortgage mortgage2 = new Mortgage("YMlpdRBiLFTUCCqMHIEnkXrsUfmAiXHlQDbp", 47, "HVEANqAC", 33.38, 60.08, 59.09, 56.51, 37.14, 13);
+    Mortgage mortgage3 = new Mortgage("UvLmgLckyPVymAnNJAZqxowNOUJmdNgXXiER", 47, "KnZeqWZP", 67.78, 20.58, 36.79, 49.45, 63.54, 65);
+    Mortgage mortgage4 = new Mortgage("kbubURjuhpeWSxXpoELcJbmYJFTwqldFwruf", 47, "xDQgaaHi", 25.06, 60.88, 22.69, 67.21, 19.99, 58);
+    Mortgage mortgage5 = new Mortgage("mosUwJIedjNClcLOctXuIDnxpvNEXhqgFllF", 34, "RDREJBKE", 33.22, 39.28, 32.76, 68.34, 32.4, 24);
+    Mortgage mortgage6 = new Mortgage("WfoTtuYYcTOVDtlmAkkhYScjnctRkcJYTgQc", 34, "fwyrVBya", 24.72, 34.28, 33.4, 34.49, 10.04, 43);
+    Mortgage mortgage7 = new Mortgage("wscQcfMeEXFbkpDRdIDMRKZwfAWAAGOEXTUc", 34, "qRuctHSi", 50.13, 12.81, 15.89, 63.61, 50.64, 17);
+    Mortgage mortgage8 = new Mortgage("FbeaxsPnvMtaijtcTdvTUtGYHFyIfYOsYbUw", 34, "PTpWOIgl", 42.72, 26.42, 52.16, 28.08, 15.88, 60);
+    Mortgage mortgage9 = new Mortgage("HIwBIGUvTmQGvFkYfbpQpbQWQwKDGvOGejkW", 34, "JTUlCgVL", 42.6, 35.97, 13.32, 42.59, 60.8, 13);
+    Mortgage mortgage10 = new Mortgage("ZPgoJgyGhuKgvndBEXkYPYTxiEGyJtVrMSUd", 45, "fVfonVCc", 57.04, 55.67, 36.26, 11.76, 54.86, 33);
+    Mortgage mortgage11 = new Mortgage("maRJkoqYDtcChIiSClNjskxWoDtkoAirOMQn", 45, "NtAwqmTG", 43.48, 55.74, 14.88, 44.89, 27.93, 63);
+    Mortgage mortgage12 = new Mortgage("SEcSptMFkiSiusKHQORpJGPoavCBWGelKBQf", 45, "xpbUGTlg", 69.59, 18.25, 17.31, 38.84, 39.01, 51);
+    Mortgage mortgage13 = new Mortgage("BMMPGAGAclqSvlIoPCsPAdnMiwOSOtGPTtGy", 45, "BGsjppdi", 65.09, 43.36, 41.27, 10.78, 11.32, 59);
+    Mortgage mortgage14 = new Mortgage("kPvLgYNTSjDqIHtwebyBioOsQLSSigehrVdM", 45, "tewQgMLQ", 68.12, 68.39, 64.83, 62.81, 50.26, 37);
 
 mortgageVMs.add(mortgage0);
 mortgageVMs.add(mortgage1);
@@ -55,4 +56,45 @@ Collections.sort(mortgageVMs);
     return results;
   }
 
-}
+  @Override
+  public int add(Mortgage _mortgage) throws SQLException {
+    if (duplicateKey(_mortgage)){
+      return 0;
+    }
+    if (exceptionKey(_mortgage)){
+      throw new SQLException("error");
+    }
+    int size = mortgageVMs.size();
+
+    mortgageVMs.add(_mortgage);
+    int newsize = mortgageVMs.size();
+    return newsize-size;
+  }
+
+  @Override
+  public Integer deleteMortgage(String mortgageID) throws SQLException {
+    int size = mortgageVMs.size();
+    int location =-1;
+    for (int i=0;i<mortgageVMs.size();i++){
+      if (mortgageVMs.get(i).getMortgage_ID().equals(mortgageID)){
+        location =i;
+        break;
+      }
+    }
+    if (location==-1){
+      throw new SQLException("Unable To Find Mortgage.");
+    }
+    mortgageVMs.remove(location);
+    int newsize = mortgageVMs.size();
+    return size-newsize;
+  }
+
+  private boolean duplicateKey(Mortgage _mortgage){
+    return _mortgage.getMortgage_ID().contains("DUPLICATE");
+  }
+  private boolean exceptionKey(Mortgage _mortgage){
+    return _mortgage.getMortgage_ID().contains("EXCEPTION");
+  }
+
+
+  }

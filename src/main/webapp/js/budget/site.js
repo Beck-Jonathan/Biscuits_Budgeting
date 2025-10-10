@@ -76,6 +76,11 @@ $(document).ready(function() {
 	$( "#suggestions" ).button( "option", "label", "Suggestion Box" );
 
 
+	$("#receipts").button();
+	$( "#receipts" ).button( "option", "icon", "ui-icon-check" );
+	$( "#receipts" ).button( "option", "showIcon", "true" );
+	$( "#receipts" ).button( "option", "label", "Receipts" );
+
 
 
 })

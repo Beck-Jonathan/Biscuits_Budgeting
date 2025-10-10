@@ -50,6 +50,9 @@
 <c:if test="${pageTitle eq 'Search Transactions'}">
     <script src="js/budget/categorize.js"></script>
 </c:if>
+<c:if test="${pageTitle eq 'Add Receipt'|| pageTitle eq 'Edit Receipt'}">
+    <script src="js/budget/addReceipt.js"></script>
+</c:if>
 
 <c:if test="${pageTitle eq 'Add Suggestion'}">
     <script src="js/budget/addSuggestion.js"></script>
@@ -58,6 +61,22 @@
 <c:if test="${pageTitle eq 'All Suggestions'}">
     <script src="js/budget/allSuggestion.js"></script>
 </c:if>
+
+<c:if test="${pageTitle eq 'Add Mortgage'|| pageTitle eq 'Edit Mortgage'}">
+    <script src="js/budget/addMortgage.js"></script>
+</c:if>
+<c:if test="${pageTitle eq 'All Mortgage'}">
+    <script src="js/budget/allMortgage.js"></script>
+</c:if>
+
+<c:if test="${pageTitle eq 'Edit Transaction'}">
+    <script src="js/budget/editTransaction.js"></script>
+    <script src="js/budget/allReceipt.js"></script>
+</c:if>
+<c:if test="${pageTitle eq 'All Receipts'}">
+    <script src="js/budget/allReceipt.js"></script>
+</c:if>
+
 
 
 

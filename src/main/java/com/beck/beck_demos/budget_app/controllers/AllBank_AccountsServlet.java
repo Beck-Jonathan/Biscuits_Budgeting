@@ -44,7 +44,7 @@ public class AllBank_AccountsServlet extends HttpServlet {
     User user = (User)session.getAttribute("User_B");
     int User_ID = -1;
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("/budget_in");
+      resp.sendRedirect("budget_home");
       return;
     }
     try{

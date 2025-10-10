@@ -40,7 +40,7 @@
 //    HttpSession session = req.getSession();
 //    User user = (User)session.getAttribute("User_B");
 //    if (user==null||!user.getRoles().contains("User")){
-//      resp.sendRedirect("/budget_in");
+//      resp.sendRedirect("budget_home");
 //      return;
 //    }
 //    session.setAttribute("currentPage",req.getRequestURL());
@@ -58,7 +58,7 @@
 //    int errors = 0;
 //    User user = (User)session.getAttribute("User_B");
 //    if (user==null||!user.getRoles().contains("User")){
-//      resp.sendRedirect("/budget_in");
+//      resp.sendRedirect("budget_home");
 //      return;
 //    }
 //    Map<String,String> results = new HashMap<>();

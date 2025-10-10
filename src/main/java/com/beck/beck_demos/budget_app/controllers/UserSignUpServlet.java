@@ -56,7 +56,7 @@ public class UserSignUpServlet extends HttpServlet{
     HttpSession session = req.getSession();
     User _user = (User) session.getAttribute("User_B");
     if (_user != null) {
-      resp.sendRedirect("/budget_home");
+      resp.sendRedirect("budget_home");
       return;
     }
 

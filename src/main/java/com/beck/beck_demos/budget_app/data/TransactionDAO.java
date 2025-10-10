@@ -24,6 +24,7 @@ import com.beck.beck_demos.budget_app.models.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -182,6 +183,30 @@ public class TransactionDAO implements iTransactionDAO {
     return result;
   }
 
+  @Override
+  public List<Transaction> getDistinctTransactionForDropdown(int user_ID) throws SQLException {
+    List<Transaction> result = new ArrayList<>();
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try(CallableStatement statement = connection.prepareCall("{CALL sp_select_distinct_and_active_Transaction_for_dropdown(?)}")) {
+          statement.setInt(1,user_ID);
+          try(ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+              String Transaction_ID = resultSet.getString("Transaction_Transaction_ID");
+              String Description = resultSet.getString("Transaction_Description");
+              Transaction _transaction = new Transaction( Transaction_ID);
+              _transaction.setDescription(Description);
+              result.add(_transaction);
+            }
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not retrieve Transactions. Try again later");
+    }
+    return result;
+  }
+
   public int bulkUpdateCategory(int userid, String category, String query) throws SQLException {
     int result = 0;
     try (Connection connection = getConnection()) {
@@ -250,101 +275,33 @@ public class TransactionDAO implements iTransactionDAO {
       } else if (partsname.get(0).equals("Custom")) {
         type = "custom";
         accountNumber = (String) partsname.get(2);
-      } else {
+      }
+      else if (partsname.get(1).equals("Activity")){
+        type="HSA";
+      }
+      else {
         type = "GreenState";
       }
       //first line is just heading data
       line = reader.readLine();
       if (type.equals("GreenState")) {
         while (line != null) {
-          ArrayList parts = new ArrayList(List.of(line.split("\t")));
-          String Transaction_ID = "";
-          String Account_Num = (String) parts.get(0);
-          Integer userID = 1;
-          //Date Post_Date = new Date(2024, 5, 5);
-          //Date Post_Date = (Date) parts.get(2);
-          String Post_Date_String = ((String) parts.get(1));
-          java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(Post_Date_String);
-
-          java.sql.Date Post_Date = new java.sql.Date(utilDate.getTime());
-          Integer Check_No = 0;
-          if (parts.get(2) != null && !parts.get(2).equals("")) {
-            Check_No = Integer.valueOf((String) parts.get(2));
-          }
-
-          String Description = (String) parts.get(3);
-          Double debitAmount = 0d;
-          Double creditAmount = 0d;
-          if (parts.get(5).equals("")) {
-            creditAmount = 0d;
-          } else {
-            creditAmount = Double.valueOf((String) parts.get(5));
-          }
-          if (parts.get(4).equals("")) {
-            debitAmount = 0d;
-          } else {
-            debitAmount = Double.valueOf((String) parts.get(4));
-          }
-          Double Amount = creditAmount - debitAmount;
-          String Type = Amount > 0 ? "Credit" : "Debit";
-          String Status = (String) parts.get(6);
-          Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", Account_Num, Post_Date, Check_No, Description, Amount, Type, Status, false);
+          Transaction _transaction = readGreenStateLine(line);
           result.add(_transaction);
           // read next line
           line = reader.readLine();
         }
       }
-      if (type.equals("custom")) {
+      else if (type.equals("custom")) {
         while (line != null) {
-          ArrayList parts = new ArrayList(List.of(line.split("\t")));
-          String Transaction_ID = "";
-
-          Integer userID = 1;
-
-          String Post_Date_String = ((String) parts.get(1));
-          java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(Post_Date_String);
-
-          java.sql.Date Post_Date = new java.sql.Date(utilDate.getTime());
-          Integer Check_No = 0;
-
-          String Description = (String) parts.get(2);
-          if (Description != null && Description.startsWith("Check ")) {
-            ArrayList descParts = new ArrayList(List.of(Description.split(" ")));
-            Check_No = Integer.valueOf((String) descParts.get(1));
-          }
-          Double debitAmount = 0d;
-          Double creditAmount = 0d;
-          if (parts.get(3).equals("")) {
-            creditAmount = 0d;
-          } else {
-            String creditString = (String) parts.get(3);
-            creditString = creditString.replace(",", "");
-            creditString = creditString.replace("\"", "");
-            creditAmount = Double.valueOf(creditString);
-          }
-          if (parts.get(4).equals("")) {
-            debitAmount = 0d;
-          } else {
-            String debitString = (String) parts.get(4);
-            debitString = debitString.replace(",", "");
-            debitString = debitString.replace("\"", "");
-            try {
-              debitAmount = Double.valueOf(debitString);
-            } catch (Exception e) {
-              int x = 0;
-            }
-          }
-          Double Amount = creditAmount + debitAmount;
-          String Type = Amount > 0 ? "Credit" : "Debit";
-          String Status = "Posted";
-          Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", accountNumber, Post_Date, Check_No, Description, Amount, Type, Status, false);
+          Transaction _transaction = readCustomLine(line,accountNumber);
           result.add(_transaction);
           // read next line
           line = reader.readLine();
         }
       }
 
-      if (type.equals("Altra")) {
+      else if (type.equals("Altra")) {
 
         ArrayList AcctNum = new ArrayList(List.of(line.split("\t")));
         ArrayList AcctNum2 = new ArrayList(List.of(((String) AcctNum.get(0)).split(":")));
@@ -356,26 +313,25 @@ public class TransactionDAO implements iTransactionDAO {
 
         while (line != null) {
 
-          ArrayList parts = new ArrayList(List.of(line.split("\t")));
-          Integer userID = 1;
-          String Transaction_ID = "";
-          String Post_Date_String = ((String) parts.get(1));
-          java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(Post_Date_String);
-          java.sql.Date Post_Date = new java.sql.Date(utilDate.getTime());
-          Integer Check_No = 0;
-          if (parts.size() > 6 && parts.get(6) != null && !parts.get(6).equals("")) {
-            Check_No = Integer.valueOf((String) parts.get(6));
-          }
-
-          String Description = (String) parts.get(3);
-
-          Double Amount = Double.valueOf((String) parts.get(4));
-          String Type = Amount > 0 ? "Credit" : "Debit";
-          String Status = "Posted";
-          Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", Account_Num, Post_Date, Check_No, Description, Amount, Type, Status, false);
+          Transaction _transaction = readAltraLine(line,Account_Num);
           result.add(_transaction);
           // read next line
           line = reader.readLine();
+        }
+      }
+      else if (type.equals("HSA")){
+        int count = 0;
+        while (line != null) {
+
+          if (count>139){
+            int y =0;
+          }
+          Transaction _transaction = readHSALine(line);
+          result.add(_transaction);
+          count ++;
+          // read next line
+          line = reader.readLine();
+
         }
       }
 
@@ -387,6 +343,131 @@ public class TransactionDAO implements iTransactionDAO {
     return result;
   }
 
+  private Transaction readGreenStateLine(String line) throws ParseException {
+    ArrayList parts = new ArrayList(List.of(line.split("\t")));
+    String Transaction_ID = "";
+    String Account_Num = (String) parts.get(0);
+    Integer userID = 1;
+    //Date Post_Date = new Date(2024, 5, 5);
+    //Date Post_Date = (Date) parts.get(2);
+    String Post_Date_String = ((String) parts.get(1));
+    java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(Post_Date_String);
+
+    java.sql.Date Post_Date = new java.sql.Date(utilDate.getTime());
+    Integer Check_No = 0;
+    if (parts.get(2) != null && !parts.get(2).equals("")) {
+      Check_No = Integer.valueOf((String) parts.get(2));
+    }
+
+    String Description = (String) parts.get(3);
+    Double debitAmount = 0d;
+    Double creditAmount = 0d;
+    if (parts.get(5).equals("")) {
+      creditAmount = 0d;
+    } else {
+      creditAmount = Double.valueOf((String) parts.get(5));
+    }
+    if (parts.get(4).equals("")) {
+      debitAmount = 0d;
+    } else {
+      debitAmount = Double.valueOf((String) parts.get(4));
+    }
+    Double Amount = creditAmount - debitAmount;
+    String Type = Amount > 0 ? "Credit" : "Debit";
+    String Status = (String) parts.get(6);
+    Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", Account_Num, Post_Date, Check_No, Description, Amount, Type, Status, false);
+    return _transaction;
+  }
+
+  private Transaction readCustomLine(String line, String accountNumber) throws ParseException {
+    ArrayList parts = new ArrayList(List.of(line.split("\t")));
+    String Transaction_ID = "";
+
+    Integer userID = 1;
+
+    String Post_Date_String = ((String) parts.get(1));
+    java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(Post_Date_String);
+
+    java.sql.Date Post_Date = new java.sql.Date(utilDate.getTime());
+    Integer Check_No = 0;
+
+    String Description = (String) parts.get(2);
+    if (Description != null && Description.startsWith("Check ")) {
+      ArrayList descParts = new ArrayList(List.of(Description.split(" ")));
+      Check_No = Integer.valueOf((String) descParts.get(1));
+    }
+    Double debitAmount = 0d;
+    Double creditAmount = 0d;
+    if (parts.get(3).equals("")) {
+      creditAmount = 0d;
+    } else {
+      String creditString = (String) parts.get(3);
+      creditString = creditString.replace(",", "");
+      creditString = creditString.replace("\"", "");
+      creditAmount = Double.valueOf(creditString);
+    }
+    if (parts.get(4).equals("")) {
+      debitAmount = 0d;
+    } else {
+      String debitString = (String) parts.get(4);
+      debitString = debitString.replace(",", "");
+      debitString = debitString.replace("\"", "");
+      try {
+        debitAmount = Double.valueOf(debitString);
+      } catch (Exception e) {
+        int x = 0;
+      }
+    }
+    Double Amount = creditAmount + debitAmount;
+    String Type = Amount > 0 ? "Credit" : "Debit";
+    String Status = "Posted";
+    Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", accountNumber, Post_Date, Check_No, Description, Amount, Type, Status, false);
+    return _transaction;
+  }
+  private Transaction readAltraLine(String line, String Account_Num) throws ParseException {
+    ArrayList parts = new ArrayList(List.of(line.split("\t")));
+    Integer userID = 1;
+    String Transaction_ID = "";
+    String Post_Date_String = ((String) parts.get(1));
+    java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(Post_Date_String);
+    java.sql.Date Post_Date = new java.sql.Date(utilDate.getTime());
+    Integer Check_No = 0;
+    if (parts.size() > 6 && parts.get(6) != null && !parts.get(6).equals("")) {
+      Check_No = Integer.valueOf((String) parts.get(6));
+    }
+
+    String Description = (String) parts.get(3);
+
+    Double Amount = Double.valueOf((String) parts.get(4));
+    String Type = Amount > 0 ? "Credit" : "Debit";
+    String Status = "Posted";
+    Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", Account_Num, Post_Date, Check_No, Description, Amount, Type, Status, false);
+    return _transaction;
+  }
+
+  private Transaction readHSALine(String line) throws ParseException {
+    ArrayList parts = new ArrayList(List.of(line.split("\t")));
+    String Transaction_ID = "";
+    String Account_Num = (String) parts.get(0);
+    Integer userID = 1;
+    String Post_Date_String = ((String) parts.get(3));
+    java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(Post_Date_String);
+    java.sql.Date Post_Date = new java.sql.Date(utilDate.getTime());
+    Integer Check_No = 0;
+    String Description = (String) parts.get(1);
+    String _amount = (String)parts.get(4);
+    _amount= _amount.replace("$","");
+    //_amount= _amount.replace("","");
+    _amount= _amount.replace("(","-");
+    _amount= _amount.replace(")","");
+    _amount= _amount.replace(",","");
+    _amount= _amount.replace("\"","");
+    Double Amount = Double.valueOf(_amount);
+    String Type = Amount > 0 ? "Credit" : "Debit";
+    String Status = (String) parts.get(5);
+    Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", Account_Num, Post_Date, Check_No, Description, Amount, Type, Status, false);
+    return _transaction;
+  }
   public int add(Transaction _transaction) {
     int numRowsAffected = 0;
     try (Connection connection = getConnection()) {
@@ -697,15 +778,36 @@ public class TransactionDAO implements iTransactionDAO {
           }
 
         }
+      } catch (SQLException e) {
+        throw new RuntimeException("Could not retrieve Transaction_Comments. Try again later");
+      }
+      List<Receipt> receipts = new ArrayList<>();
+      result.setReceipts(receipts);
+      try (CallableStatement statement = connection.prepareCall("{CALL sp_retrieve_Receipt_by_Transaction(?,?,?)}")) {
+        statement.setInt(1, 100) ;
+        statement.setInt(2, 0);
+        statement.setString(3, _transaction.getTransaction_ID());
+        try (ResultSet resultSet = statement.executeQuery()) {
+          while (resultSet.next()) {
+            String Receipt_ID = resultSet.getString("Receipt_Receipt_ID");
+            String Transaction_ID = resultSet.getString("Receipt_Transaction_ID");
+            String Image_Link = resultSet.getString("Receipt_Image_Link");
+            String Name = resultSet.getString("Receipt_Name");
+            String Description = resultSet.getString("Receipt_Description");
+
+            Receipt _receipt = new Receipt(Receipt_ID, Transaction_ID, Image_Link, Name, Description);
+            receipts.add(_receipt);
+          }
+        }
       }
 
     } catch (SQLException e) {
-      throw new RuntimeException("Could not retrieve Transaction_Comments. Try again later");
+      throw new RuntimeException("Could not retrieve Receipts. Try again later");
     }
 
     return result;
   }
-
- 
 }
+ 
+
 

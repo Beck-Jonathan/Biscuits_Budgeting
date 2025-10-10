@@ -45,7 +45,7 @@ public class AddTransaction_CommentServlet extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("/budget_in");
+      resp.sendRedirect("budget_home");
       return;
     }
 
@@ -66,11 +66,9 @@ public class AddTransaction_CommentServlet extends HttpServlet{
 
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("/budget_in");
+      resp.sendRedirect("budget_home");
       return;
     }
-
-
 
     String _Transaction_ID = req.getParameter("inputtransaction_commentTransaction_ID");
     if (_Transaction_ID!=null) {

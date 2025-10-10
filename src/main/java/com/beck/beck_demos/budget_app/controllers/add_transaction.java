@@ -40,7 +40,7 @@ public class add_transaction extends HttpServlet {
 
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("/budget_in");
+      resp.sendRedirect("budget_home");
       return;
     }
     session.setAttribute("currentPage",req.getRequestURL());
@@ -53,7 +53,7 @@ public class add_transaction extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User) session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("/budget_in");
+      resp.sendRedirect("budget_home");
       return;
     }
     String applicationPath = req.getServletContext().getRealPath("");

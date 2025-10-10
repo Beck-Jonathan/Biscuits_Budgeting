@@ -25,6 +25,9 @@
     <div class="col col-md-1">
         <a href="PieChart">   <button type="button" value="MoneyBreakdown" id="PieChart" ></button></a>
     </div>
+    <div class="col col-md-1">
+        <a href="all-Receipts">   <button type="button" value="All Receipts" id="receipts" ></button></a>
+    </div>
 
     <div class="col col-md-1">
     <%--    <a href="all-Mortgages">   <button type="button" value="Mortgage" id="Mortgage" ></button></a> --%>

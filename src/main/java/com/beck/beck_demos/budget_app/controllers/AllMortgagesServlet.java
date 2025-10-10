@@ -39,7 +39,7 @@ public class AllMortgagesServlet extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("/budget_in");
+      resp.sendRedirect("budget_home");
       return;
     }
 
@@ -50,7 +50,7 @@ public class AllMortgagesServlet extends HttpServlet {
 
     req.setAttribute("Mortgages", mortgages);
     req.setAttribute("pageTitle", "All Mortgages");
-    req.getRequestDispatcher("WEB-INF/Budget_App/all-Mortgages.jsp").forward(req, resp);
+    req.getRequestDispatcher("WEB-INF/Budget_App/all_Mortgages.jsp").forward(req, resp);
 
   }
 }

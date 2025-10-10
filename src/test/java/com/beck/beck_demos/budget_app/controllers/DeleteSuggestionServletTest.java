@@ -77,7 +77,7 @@ public class DeleteSuggestionServletTest {
     int status = response.getStatus();
     assertEquals(302,status);
     String redirect_link = response.getRedirectedUrl();
-    String desired_redirect = "schedule_in";
+    String desired_redirect = "budget_home";
     assertEquals(desired_redirect,redirect_link);
   }
 
@@ -114,7 +114,7 @@ public class DeleteSuggestionServletTest {
     int status = response.getStatus();
     assertEquals(302,status);
     String redirect_link = response.getRedirectedUrl();
-    String desired_redirect = "schedule_in";
+    String desired_redirect = "budget_home";
     assertEquals(desired_redirect,redirect_link);
   }
 

@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ import java.util.Map;
 @WebServlet("/editTransaction")
 public class ViewEditTransactionServlet extends HttpServlet{
 
-  private List<Category> allCategories;
+
   private iTransactionDAO transactionDAO;
 
   private iCategoryDAO categoryDAO;
@@ -35,6 +36,7 @@ public class ViewEditTransactionServlet extends HttpServlet{
   public void init() {
     transactionDAO = new TransactionDAO();
       categoryDAO = new CategoryDAO();
+
   }
   public void init(iTransactionDAO transactionDAO, iCategoryDAO categoryDAO){
     this.transactionDAO = transactionDAO;
@@ -49,7 +51,7 @@ public class ViewEditTransactionServlet extends HttpServlet{
 
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("/budget_in");
+      resp.sendRedirect("budget_home");
       return;
     }
 //To restrict this page based on privilege level
@@ -88,8 +90,13 @@ public class ViewEditTransactionServlet extends HttpServlet{
     req.setAttribute("mode",mode);
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Edit Transaction");
+    List<Category> allCategories = null;
+    try{
+      allCategories = categoryDAO.getCategoryByUser(user.getUser_ID());
+    }catch(Exception e){
+      allCategories = new ArrayList<Category>();
+    }
 
-    allCategories = categoryDAO.getCategoryByUser(user.getUser_ID());
     req.setAttribute("Categorys", allCategories);
     req.getRequestDispatcher("WEB-INF/Budget_App/EditTransaction.jsp").forward(req, resp);
   }
@@ -98,17 +105,17 @@ public class ViewEditTransactionServlet extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("/budget_in");
+      resp.sendRedirect("budget_home");
       return;
     }
 
     Map<String, String> results = new HashMap<>();
     String mode = req.getParameter("mode");
     req.setAttribute("mode",mode);
-//to set the drop downs
 
-    allCategories = categoryDAO.getCategoryByUser(user.getUser_ID());
-    req.setAttribute("Categorys", allCategories);
+
+
+
 //to get the old Transaction
     Transaction_VM _oldTransaction= (Transaction_VM)session.getAttribute("transaction");
 //to get the new event's info
@@ -220,6 +227,14 @@ public class ViewEditTransactionServlet extends HttpServlet{
         results.put("dbStatus","Transaction Not Updated");
       }
     }
+    List<Category> allCategories = null;
+    try{
+      allCategories = categoryDAO.getCategoryByUser(user.getUser_ID());
+    }catch(Exception e){
+      allCategories = new ArrayList<Category>();
+    }
+
+    req.setAttribute("Categorys", allCategories);
 //standard
     req.setAttribute("results", results);
     req.setAttribute("pageTitle", "Edit a Transaction ");

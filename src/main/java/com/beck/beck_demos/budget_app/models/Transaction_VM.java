@@ -5,13 +5,10 @@ import java.util.List;
 public class Transaction_VM extends Transaction{
   private List<Transaction_Comment> Transaction_Comments;
 
-  public int getComment_count() {
-    return comment_count;
-  }
 
-  public void setComment_count(int comment_count) {
-    this.comment_count = comment_count;
-  }
+
+  private List<Receipt> Receipts;
+
 
   private int comment_count;
   public Transaction_VM(){}
@@ -34,5 +31,19 @@ public class Transaction_VM extends Transaction{
   }
   public void setTransaction_Comments(List<Transaction_Comment> _transaction_comments) {
     this.Transaction_Comments = _transaction_comments;
+  }
+  public int getComment_count() {
+    return comment_count;
+  }
+
+  public void setComment_count(int comment_count) {
+    this.comment_count = comment_count;
+  }
+  public List<Receipt> getReceipts() {
+    return Receipts;
+  }
+
+  public void setReceipts(List<Receipt> receipts) {
+    Receipts = receipts;
   }
 }

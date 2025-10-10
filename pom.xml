@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.Beck</groupId>
-    <artifactId>beck_demos</artifactId>
+    <artifactId>crrg_git</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>beck_demos</name>
+    <name>crrg_git</name>
     <packaging>war</packaging>
 
     <properties>
@@ -19,14 +19,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
-            <dependency>
-                <groupId>org.jetbrains</groupId>
-                <artifactId>annotations</artifactId>
-                <version>26.0.1</version>
-            </dependency>
-
-
             <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-bom -->
             <dependency>
                 <groupId>software.amazon.awssdk</groupId>
@@ -242,35 +234,11 @@
             <artifactId>cloudinary-taglib</artifactId>
             <version>2.0.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/s3 -->
         <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>s3</artifactId>
-            <version>2.29.37</version>
-
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-deadline</artifactId>
+            <version>1.12.777</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/s3 -->
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>s3</artifactId>
-            <version>2.29.37</version>
-
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/aws-core -->
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>aws-core</artifactId>
-            <version>2.29.37</version>
-        </dependency>
-
-
-
-
-
-
-
-
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-test -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -285,33 +253,8 @@
             <artifactId>spring-web</artifactId>
             <version>6.2.0</version>
         </dependency>
-
-
-
-
-
-
-        <!-- https://mvnrepository.com/artifact/net.sourceforge.jwebunit/jwebunit-htmlunit-plugin -->
-
-        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>5.14.2</version>
-            <scope>test</scope>
-        </dependency>
-
-
-
-
-
-
-
-
-
-
-
     </dependencies>
+
 
     <build>
         <plugins>

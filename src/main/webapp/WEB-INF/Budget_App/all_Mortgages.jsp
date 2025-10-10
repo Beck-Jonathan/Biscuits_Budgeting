@@ -14,7 +14,8 @@ Create the JSP  For Viewing All of The  Mortgage table
                     <thead>
                     <tr>
                         <th scope="col">Mortgage_ID</th>
-                        <th scope="col">User_ID</th>
+
+                        <th scope="col">Nickname</th>
                         <th scope="col">Present_Value</th>
                         <th scope="col">Future_Value</th>
                         <th scope="col">Interest_Rate</th>
@@ -29,6 +30,7 @@ Create the JSP  For Viewing All of The  Mortgage table
                     <c:forEach items="${Mortgages}" var="mortgage">
                         <tr>
                             <td><a href = "editmortgage?mortgageid=${mortgage.mortgage_ID}&mode=view">${fn:escapeXml(mortgage.mortgage_ID)}</a></td><td>${fn:escapeXml(mortgage.user_ID)}</td>
+                            <td>${fn:escapeXml(mortgage.nickname)}</td>
                             <td>${fn:escapeXml(mortgage.present_Value)}</td>
                             <td>${fn:escapeXml(mortgage.future_Value)}</td>
                             <td>${fn:escapeXml(mortgage.interest_Rate)}</td>

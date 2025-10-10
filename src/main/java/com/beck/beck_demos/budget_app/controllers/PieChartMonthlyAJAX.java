@@ -41,7 +41,7 @@ public class PieChartMonthlyAJAX extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("/budget_in");
+      resp.sendRedirect("budget_home");
       return;
     }
     int year = 2025;
@@ -117,7 +117,7 @@ public class PieChartMonthlyAJAX extends HttpServlet {
       }
     }
     catch (Exception e){
-      resp.sendRedirect("budget-in");
+      resp.sendRedirect("budget_home");
       return;
     }
 

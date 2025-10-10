@@ -194,6 +194,53 @@ Create the JSP For Viuw/Edit from the Transaction table
 
         </div>
     </div>
+<h1>All budget_app Receipts</h1>
+<p>There ${transaction.receipts.size() eq 1 ? "is" : "are"}&nbsp;${transaction.receipts.size()} Receipt${transaction.receipts.size() ne 1 ? "s" : ""}</p>
+<c:if test="${transaction.receipts.size() > 0}">
+<div class="container">
+
+
+    <c:forEach items="${transaction.receipts}" var="receipt">
+    <span id="${receipt.receipt_ID}_card" class="card receiptCard">
+     <a href="${receipt.image_Link}" >
+         <img <c:if test="${fn:contains(receipt.image_Link, 'drive')}">crossorigin="anonymous" </c:if>
+             <%--<c:if test="${!fn:contains(direction.image_Link, 'drive')}">  referrerPolicy="no-referrer" </c:if> --%>
+             <%--  crossorigin="anonymous" --%>
+              referrerPolicy="no-referrer"
+              src="${receipt.image_Link}" alt="Avatar"> </a>
+
+    <p>${fn:escapeXml(receipt.name)}</p>
+        <div class="row">
+            <div class="col-2">
+
+                    <a  class="delButton" href="${receipt.receipt_ID}">❌</a>
+
+            </div>
+
+            <div class="col-5"></div>
+            <div class="col-2 ">
+
+                    <a href = "editReceipt?receiptid=${receipt.receipt_ID}&mode=edit"> ⚙️ </a>
+
+            </div>
+            <div class="col-2"><a href = "editReceipt?receiptid=${receipt.receipt_ID}&mode=view"> 🔎 </a></div>
+            <div class="col-1"></div>
+        </div>
+    </span>
+
+    </c:forEach>
+    </div>
+
+</c:if>
+                <span class="card receiptCard">
+                    <a href="addReceipt?transactionID=${transaction.transaction_ID}"> <h1>+</h1> </a>
+                    <p>Add New</p>
+                </span>
+<div id="dialog" title="Confirmation Required">
+    Are you sure about this?
 </div>
+
+
+
 <%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>
 

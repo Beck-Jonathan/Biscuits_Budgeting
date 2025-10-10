@@ -41,7 +41,7 @@ public class PieChartController extends HttpServlet {
 
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("/budget_in");
+      resp.sendRedirect("budget_home");
       return;
     }
     Map<String,String> results = new HashMap<>();
@@ -95,7 +95,7 @@ public class PieChartController extends HttpServlet {
       }
     }
     catch (Exception e){
-      resp.sendRedirect("budget-in");
+      resp.sendRedirect("budget_home");
       return;
     }
 

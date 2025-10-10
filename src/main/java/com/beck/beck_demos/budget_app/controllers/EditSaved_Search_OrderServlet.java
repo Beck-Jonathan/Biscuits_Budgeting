@@ -52,7 +52,7 @@ public class EditSaved_Search_OrderServlet extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("/budget_in");
+      resp.sendRedirect("budget_home");
       return;
     }
 
@@ -98,7 +98,7 @@ public class EditSaved_Search_OrderServlet extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("/budget_in");
+      resp.sendRedirect("budget_home");
       return;
     }
 
