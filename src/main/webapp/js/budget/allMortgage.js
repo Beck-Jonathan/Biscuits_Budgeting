@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    normalizeHeight();
+
     $("#dialog").dialog({
         modal: true,
         bgiframe: true,
@@ -30,7 +30,7 @@ $(document).ready(function() {
                 "Delete For Real" : function() {
                     console.log("try");
                     $.ajax({
-                        url: 'deleteMortgage',
+                        url: 'deletemortgage',
                         data: "mortgageid=" + targetUrl+"&AJAX=true" ,
                         type: 'post',
                         async: true,
@@ -42,7 +42,8 @@ $(document).ready(function() {
                             }
                         }})
                     $(this).dialog("close");
-                    var rowid ="#"+ targetUrl+"row";
+                    var rowid ="#"+ targetUrl+"_row";
+                    console.log(rowid);
                     $(rowid).slideUp();
                 },
                 "Let It Stay" : function() {

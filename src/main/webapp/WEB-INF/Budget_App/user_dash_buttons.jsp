@@ -30,7 +30,7 @@
     </div>
 
     <div class="col col-md-1">
-    <%--    <a href="all-Mortgages">   <button type="button" value="Mortgage" id="Mortgage" ></button></a> --%>
+     <a href="all-Mortgages">   <button type="button" value="Mortgage" id="Mortgage" ></button></a>
     </div>
     <div class="col col-md-1">
         <a href="Export">   <button type="button" value="Export" id="Export" ></button></a>

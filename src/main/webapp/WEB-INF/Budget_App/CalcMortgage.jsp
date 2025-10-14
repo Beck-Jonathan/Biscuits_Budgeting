@@ -5,11 +5,21 @@ Create the JSP  For adding to The  Mortgage table
 <%@include file="/WEB-INF/Budget_App/budget_top.jsp"%>
 
 <div class = "container">
-    <form method="post" action="${appURL}/calculateMortgage" id = "calculateMortgage" >
+    <form method="post" action="${appURL}/addMortgage" id = "calculateMortgage" >
 
+        <!-- Nickname -->
+        <div class ="row" id = "row1">
+            <label for="inputmortgageNickname" class="form-label">Nickname</label>
+            <div class="input-group input-group-lg">
+                <input type="text" class="<c:if test="${not empty results.mortgageNicknameerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Nickname" id="inputmortgageNickname" name="inputmortgageNickname" value="${fn:escapeXml(results.Nickname)}">
+                <c:if test="${not empty results.mortgageNicknameerror}">
+                    <div class="invalid-feedback">${results.mortgageNicknameerror}</div>
+                </c:if>
+            </div>
+        </div>
         <!-- Present_Value -->
 
-        <div class ="row" id = "row1">
+        <div class ="row" id = "row2">
             <div class="col col-md-4">
             <label for="inputmortgagePresent_Value" class="form-label">Present_Value</label>
             <div class="input-group input-group-lg">
@@ -21,7 +31,7 @@ Create the JSP  For adding to The  Mortgage table
             </div>
         </div>
         <!-- Future_Value -->
-        <div class ="row" id = "row2">
+        <div class ="row" id = "row3">
             <div class="col col-md-4">
             <label for="inputmortgageFuture_Value" class="form-label">Future_Value</label>
             <div class="input-group input-group-lg">
@@ -33,7 +43,7 @@ Create the JSP  For adding to The  Mortgage table
             </div>
         </div>
         <!-- Interest_Rate -->
-        <div class ="row" id = "row3">
+        <div class ="row" id = "row4">
             <div class="col col-md-4">
             <label for="inputmortgageInterest_Rate" class="form-label">Interest_Rate</label>
             <div class="input-group input-group-lg">
@@ -45,7 +55,7 @@ Create the JSP  For adding to The  Mortgage table
             </div>
         </div>
         <!-- Monthly_Payment -->
-        <div class ="row" id = "row4">
+        <div class ="row" id = "row5">
             <div class="col col-md-4">
             <label for="inputmortgageMonthly_Payment" class="form-label">Monthly_Payment</label>
             <div class="input-group input-group-lg">
@@ -61,7 +71,7 @@ Create the JSP  For adding to The  Mortgage table
             </div>
         </div>
         <!-- Extra_Payment -->
-        <div class ="row" id = "row5">
+        <div class ="row" id = "row6">
             <div class="col col-md-4">
             <label for="inputmortgageExtra_Payment" class="form-label">Extra_Payment</label>
             <div class="input-group input-group-lg">
@@ -73,7 +83,7 @@ Create the JSP  For adding to The  Mortgage table
             </div>
         </div>
         <!-- Remaining_Term -->
-        <div class ="row" id = "row6">
+        <div class ="row" id = "row7">
             <div class="col col-md-4">
             <label for="inputmortgageRemaining_Term" class="form-label">Remaining_Term</label>
             <div class="input-group input-group-lg">

@@ -92,7 +92,10 @@ public class AddMortgageServlet extends HttpServlet{
       return;
     }
 
-
+    String _Nickname = req.getParameter("inputmortgageNickname");
+    if (_Nickname!=null) {
+      _Nickname=_Nickname.trim();
+    }
 
     String _Present_Value = req.getParameter("inputmortgagePresent_Value");
     if (_Present_Value!=null) {
@@ -120,6 +123,7 @@ public class AddMortgageServlet extends HttpServlet{
     }
     Map<String, String> results = new HashMap<>();
 
+    results.put("Nickname",_Nickname);
     results.put("Present_Value",_Present_Value);
     results.put("Future_Value",_Future_Value);
     results.put("Interest_Rate",_Interest_Rate);
@@ -128,6 +132,11 @@ public class AddMortgageServlet extends HttpServlet{
     results.put("Remaining_Term",_Remaining_Term);
     Mortgage mortgage = new Mortgage();
     int errors =0;
+    try {
+      mortgage.setNickname(_Nickname);
+    } catch(Exception e) {results.put("mortgageNicknameerror", e.getMessage());
+      errors++;
+    }
     try {
       mortgage.setUser_ID(user.getUser_ID());
     } catch(Exception e) {results.put("mortgageUser_IDerror", e.getMessage());
@@ -163,8 +172,17 @@ public class AddMortgageServlet extends HttpServlet{
     } catch(Exception e) {results.put("mortgageRemaining_Termerror", e.getMessage());
       errors++;
     }
+
     int result=0;
-    if (errors==0){
+    try {
+    if (!mortgage.validate()){
+      errors++;
+      results.put("mortgageCalculationError","Invalid input. Please validation your inputs and try again");
+    }} catch (Exception e){
+      results.put("mortgageRemaining_Termerror", e.getMessage());
+      errors++;
+    }
+    if (errors==0 ){
       try{
         result=mortgageDAO.add(mortgage);
       }catch(Exception ex){
@@ -182,7 +200,7 @@ public class AddMortgageServlet extends HttpServlet{
     }
     req.setAttribute("results", results);
     req.setAttribute("pageTitle", "Add Mortgage");
-    req.getRequestDispatcher("WEB-INF/budget_app/AddMortgage.jsp").forward(req, resp);
+    req.getRequestDispatcher("WEB-INF/Budget_App/CalcMortgage.jsp").forward(req, resp);
 
   }
 }

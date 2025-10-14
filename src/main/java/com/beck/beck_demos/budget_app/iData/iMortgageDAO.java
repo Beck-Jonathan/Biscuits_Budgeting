@@ -27,4 +27,20 @@ public interface iMortgageDAO {
     * @author Jonathan Beck
     */
    Integer deleteMortgage(String mortgageID) throws SQLException;
+
+   /**
+    * DAO Method to update Mortgage objects
+    * @param oldMortgage the Mortgage to be updated
+    * @param newMortgage the updated version of the Mortgage
+    * @return number of records updated
+    * @author Jonathan Beck
+    */
+   int update(Mortgage oldMortgage, Mortgage newMortgage) throws SQLException;
+
+   /**
+    * DAO Method to retrieve by Foreign Key Mortgage objects
+    * @return List of Mortgage
+    * @author Jonathan Beck
+    */
+   Mortgage getMortgageByPrimaryKey(Mortgage _mortgage) throws SQLException;
 }

@@ -2,6 +2,7 @@ package com.beck.beck_demos.budget_app.data_fakes;
 
 import com.beck.beck_demos.budget_app.iData.iMortgageDAO;
 import com.beck.beck_demos.budget_app.models.Mortgage;
+import com.beck.beck_demos.budget_app.models.Mortgage_VM;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -89,11 +90,49 @@ Collections.sort(mortgageVMs);
     return size-newsize;
   }
 
+  @Override
+  public int update(Mortgage oldMortgage, Mortgage newMortgage) throws SQLException {
+    int location =-1;
+    if (duplicateKey(oldMortgage)){
+      return 0;
+    }
+    if (exceptionKey(oldMortgage)){
+      throw new SQLException("error");
+    }
+    for (int i=0;i<mortgageVMs.size();i++){
+      if (mortgageVMs.get(i).getMortgage_ID().equals(oldMortgage.getMortgage_ID())){
+        location =i;
+        break;
+      }
+    }
+    if (location==-1){
+      throw new SQLException();
+    }
+
+    mortgageVMs.set(location,newMortgage);
+    return 1;
+  }
+
+  @Override
+  public Mortgage getMortgageByPrimaryKey(Mortgage _mortgage) throws SQLException {
+    Mortgage result = null;
+    for (Mortgage mortgage : mortgageVMs) {
+      if (mortgage.getMortgage_ID().equals(_mortgage.getMortgage_ID())){
+        result = mortgage;
+        break;
+      }
+    }
+    if (result == null){
+      throw new SQLException("Mortgage not found");
+    }
+    return result;
+  }
+
   private boolean duplicateKey(Mortgage _mortgage){
-    return _mortgage.getMonthly_Payment()==666;
+    return _mortgage.getMonthly_Payment()==666 || _mortgage.getNickname().toLowerCase().equals("duplicate");
   }
   private boolean exceptionKey(Mortgage _mortgage){
-    return _mortgage.getMonthly_Payment()==667;
+    return _mortgage.getMonthly_Payment()==667|| _mortgage.getNickname().toLowerCase().equals("exception");
   }
 
 

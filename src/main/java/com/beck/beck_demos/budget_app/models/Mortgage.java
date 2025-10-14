@@ -120,7 +120,7 @@ public class Mortgage implements Comparable<Mortgage> {
    * throws IllegalArgumentException if Present_Value is outside of a logical range
    */
   public void setPresent_Value(Double Present_Value) {
-    if (Present_Value<0||Present_Value>10000){
+    if (Present_Value<0||Present_Value>10000000){
       throw new IllegalArgumentException("Present_Value Can Not Be Negative");
     }
     this.Present_Value = Present_Value;
@@ -140,7 +140,7 @@ public class Mortgage implements Comparable<Mortgage> {
    * throws IllegalArgumentException if Future_Value is outside of a logical range
    */
   public void setFuture_Value(Double Future_Value) {
-    if (Future_Value<0||Future_Value>10000){
+    if (Future_Value<0||Future_Value>1000000){
       throw new IllegalArgumentException("Future_Value Can Not Be Negative");
     }
     this.Future_Value = Future_Value;
@@ -224,6 +224,13 @@ public class Mortgage implements Comparable<Mortgage> {
       throw new IllegalArgumentException("Remaining_Term Can Not Be Negative");
     }
     this.Remaining_Term = Remaining_Term;
+  }
+  public boolean validate(){
+    double desired_balance = this.Future_Value;
+    double first= Present_Value*(Math.pow(1+Interest_Rate/1200,this.Remaining_Term));
+    double second =(Monthly_Payment+Extra_Payment)*(Math.pow(1+Interest_Rate/1200,this.Remaining_Term)-1) /(Interest_Rate/1200);
+    double calculated_balance = first - second;
+    return (Math.abs(desired_balance-calculated_balance)<.05);
   }
   @Override
   public int compareTo(@NotNull Mortgage o) {

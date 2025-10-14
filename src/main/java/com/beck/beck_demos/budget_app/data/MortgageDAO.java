@@ -116,70 +116,76 @@ public class MortgageDAO implements iMortgageDAO {
     }
     return rowsAffected;
   }
-//
-//  public static int update(Mortgage oldMortgage, Mortgage newMortgage) throws SQLException{
-//    int result = 0;
-//    try (Connection connection = getConnection()) {
-//      if (connection !=null){
-//        try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Mortgage(? ,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}"))
-//        {
-//          statement.setInt(1,oldMortgage.getMortgage_ID());
-//          statement.setInt(2,oldMortgage.getUser_ID());
-//          statement.setInt(3,newMortgage.getUser_ID());
-//          statement.setDouble(4,oldMortgage.getPresent_Value());
-//          statement.setDouble(5,newMortgage.getPresent_Value());
-//          statement.setDouble(6,oldMortgage.getFuture_Value());
-//          statement.setDouble(7,newMortgage.getFuture_Value());
-//          statement.setDouble(8,oldMortgage.getInterest_Rate());
-//          statement.setDouble(9,newMortgage.getInterest_Rate());
-//          statement.setDouble(10,oldMortgage.getMonthly_Payment());
-//          statement.setDouble(11,newMortgage.getMonthly_Payment());
-//          statement.setDouble(12,oldMortgage.getExtra_Payment());
-//          statement.setDouble(13,newMortgage.getExtra_Payment());
-//          statement.setInt(14,oldMortgage.getRemaining_Term());
-//          statement.setInt(15,newMortgage.getRemaining_Term());
-//          result=statement.executeUpdate();
-//        } catch (SQLException e) {
-//          throw new RuntimeException("Could not update Mortgage . Try again later");
-//        }
-//      }
-//    }
-//    return result;
-//  }
-//  public static int deleteMortgage(int mortgageID) {
-//    int rowsAffected=0;
-//    try (Connection connection = getConnection()) {
-//      if (connection != null) {
-//        try (CallableStatement statement = connection.prepareCall("{CALL sp_Delete_Mortgage( ?)}")){
-//          statement.setInt(1,mortgageID);
-//          rowsAffected = statement.executeUpdate();
-//          if (rowsAffected == 0) {
-//            throw new RuntimeException("Could not Delete Mortgage. Try again later");
-//          }
-//        }
-//      }
-//    } catch (SQLException e) {
-//      throw new RuntimeException("Could not Delete Mortgage. Try again later");
-//    }
-//    return rowsAffected;
-//  }
-//  public static int undeleteMortgage(int mortgageID) {
-//    int rowsAffected=0;
-//    try (Connection connection = getConnection()) {
-//      if (connection != null) {
-//        try (CallableStatement statement = connection.prepareCall("{CALL sp_unDelete_Mortgage( ?)}")){
-//          statement.setInt(1,mortgageID);
-//          rowsAffected = statement.executeUpdate();
-//          if (rowsAffected == 0) {
-//            throw new RuntimeException("Could not Restore Mortgage. Try again later");
-//          }
-//        }
-//      }
-//    } catch (SQLException e) {
-//      throw new RuntimeException("Could not Restore Mortgage. Try again later");
-//    }
-//    return rowsAffected;
-//  }
+
+  @Override
+  /**
+   * DAO Method to update Mortgage objects
+   * @param oldMortgage the Mortgage to be updated
+   * @param newMortgage the updated version of the Mortgage
+   * @return number of records updated
+   * @author Jonathan Beck
+   */
+  public int update(Mortgage oldMortgage, Mortgage newMortgage) throws SQLException{
+    int result = 0;
+    try (Connection connection = getConnection()) {
+      if (connection !=null){
+        try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Mortgage(? ,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}"))
+        {
+          statement.setString(1,oldMortgage.getMortgage_ID());
+          statement.setInt(2,oldMortgage.getUser_ID());
+          statement.setInt(3,newMortgage.getUser_ID());
+          statement.setString(4,oldMortgage.getNickname());
+          statement.setString(5,newMortgage.getNickname());
+          statement.setDouble(6,oldMortgage.getPresent_Value());
+          statement.setDouble(7,newMortgage.getPresent_Value());
+          statement.setDouble(8,oldMortgage.getFuture_Value());
+          statement.setDouble(9,newMortgage.getFuture_Value());
+          statement.setDouble(10,oldMortgage.getInterest_Rate());
+          statement.setDouble(11,newMortgage.getInterest_Rate());
+          statement.setDouble(12,oldMortgage.getMonthly_Payment());
+          statement.setDouble(13,newMortgage.getMonthly_Payment());
+          statement.setDouble(14,oldMortgage.getExtra_Payment());
+          statement.setDouble(15,newMortgage.getExtra_Payment());
+          statement.setInt(16,oldMortgage.getRemaining_Term());
+          statement.setInt(17,newMortgage.getRemaining_Term());
+          result=statement.executeUpdate();
+        } catch (SQLException e) {
+          throw new RuntimeException("Could not update Mortgage . Try again later");
+        }
+      }
+    }
+    return result;
+  }
+
+  @Override
+  public Mortgage getMortgageByPrimaryKey(Mortgage _mortgage) throws SQLException {
+    Mortgage result = null;
+    try(Connection connection = getConnection()) {
+      try(CallableStatement statement = connection.prepareCall("{CALL sp_retrieve_by_pk_Mortgage(?)}")) {
+        statement.setString(1, _mortgage.getMortgage_ID().toString());
+
+        try (ResultSet resultSet = statement.executeQuery()){
+          if(resultSet.next()){String Mortgage_ID = resultSet.getString("Mortgage_Mortgage_ID");
+            Integer User_ID = resultSet.getInt("Mortgage_User_ID");
+            String Nickname = resultSet.getString("Mortgage_Nickname");
+            Double Present_Value = resultSet.getDouble("Mortgage_Present_Value");
+            Double Future_Value = resultSet.getDouble("Mortgage_Future_Value");
+            Double Interest_Rate = resultSet.getDouble("Mortgage_Interest_Rate");
+            Double Monthly_Payment = resultSet.getDouble("Mortgage_Monthly_Payment");
+            Double Extra_Payment = resultSet.getDouble("Mortgage_Extra_Payment");
+            Integer Remaining_Term = resultSet.getInt("Mortgage_Remaining_Term");
+            Integer User_User_ID = resultSet.getInt("User_User_ID");
+            String User_User_Name = resultSet.getString("User_User_Name");
+            String User_User_PW = resultSet.getString("User_User_PW");
+            String User_Email = resultSet.getString("User_Email");
+            result = new Mortgage( Mortgage_ID, User_ID, Nickname, Present_Value, Future_Value, Interest_Rate, Monthly_Payment, Extra_Payment, Remaining_Term);}
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return result;
+  }
 
 }
 

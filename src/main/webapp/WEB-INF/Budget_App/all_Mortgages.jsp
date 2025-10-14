@@ -13,7 +13,6 @@ Create the JSP  For Viewing All of The  Mortgage table
                 <div class="table-responsive"><table class="table table-bordered">
                     <thead>
                     <tr>
-                        <th scope="col">Mortgage_ID</th>
 
                         <th scope="col">Nickname</th>
                         <th scope="col">Present_Value</th>
@@ -28,8 +27,8 @@ Create the JSP  For Viewing All of The  Mortgage table
                     </thead>
                     <tbody>
                     <c:forEach items="${Mortgages}" var="mortgage">
-                        <tr>
-                            <td><a href = "editmortgage?mortgageid=${mortgage.mortgage_ID}&mode=view">${fn:escapeXml(mortgage.mortgage_ID)}</a></td><td>${fn:escapeXml(mortgage.user_ID)}</td>
+                        <tr id="${mortgage.mortgage_ID}_row">
+
                             <td>${fn:escapeXml(mortgage.nickname)}</td>
                             <td>${fn:escapeXml(mortgage.present_Value)}</td>
                             <td>${fn:escapeXml(mortgage.future_Value)}</td>
@@ -38,10 +37,11 @@ Create the JSP  For Viewing All of The  Mortgage table
                             <td>${fn:escapeXml(mortgage.extra_Payment)}</td>
                             <td>${fn:escapeXml(mortgage.remaining_Term)}</td>
                             <td><a href = "editmortgage?mortgageid=${mortgage.mortgage_ID}&mode=edit" > Edit </a></td>
-                            <td><a href = "deletemortgage?mortgageid=${mortgage.mortgage_ID}&mode=<c:choose><c:when test="${mortgage.is_active}">0</c:when>
-						<c:otherwise>1</c:otherwise>
-						</c:choose>">
-                                <c:if test="${!mortgage.is_active}">un</c:if>Delete </a></td>
+                            <td>
+                                <div>
+                                    <button class="delButton" href="${mortgage.mortgage_ID}" >Delete</button> </div>
+                                <div style="display: none;" id="mortgage.mortgage_IDStatus"></div>
+                            </td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -50,6 +50,9 @@ Create the JSP  For Viewing All of The  Mortgage table
             </c:if>
         </div>
     </div>
+</div>
+<div id="dialog" title="Confirmation Required">
+    Are you sure about this?
 </div>
 </main>
 <%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>

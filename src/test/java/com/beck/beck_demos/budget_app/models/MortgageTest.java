@@ -176,7 +176,7 @@ class MortgageTest {
    */
   @Test
   public void testMortgageThrowsIllegalArgumentExceptionIfPresent_ValueTooBig(){
-    double Present_Value = 10001;
+    double Present_Value = 100000001;
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_mortgage.setPresent_Value(Present_Value);});
   }
 
@@ -204,7 +204,7 @@ class MortgageTest {
    */
   @Test
   public void testMortgageThrowsIllegalArgumentExceptionIfFuture_ValueTooBig(){
-    double Future_Value = 10001;
+    double Future_Value = 100000001;
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_mortgage.setFuture_Value(Future_Value);});
   }
 
@@ -325,11 +325,79 @@ class MortgageTest {
    */
   @Test
   public void testMortgageSetsRemaining_Term(){
+    _mortgage = new Mortgage();
+    _mortgage.setRemaining_Term(22);;
+    _mortgage.setExtra_Payment(0d);
+    _mortgage.setMonthly_Payment(1000d);
+    _mortgage.setInterest_Rate(3.5);
+    _mortgage.setPresent_Value(100000d);
+    _mortgage.setFuture_Value(83930.02);
+
+    boolean result = _mortgage.validate();
+    assertTrue(result);
+
+  }
+
+  /**
+   * <p> test that this returns true on a logical mortgage with zero extra payment</p>
+   */
+  @Test
+  public void testValidateReturnsTrueOnValidMortgageWithNoExtraPayment(){
+    _mortgage = new Mortgage();
+    _mortgage.setRemaining_Term(22);;
+    _mortgage.setExtra_Payment(150d);
+    _mortgage.setMonthly_Payment(850d);
+    _mortgage.setInterest_Rate(3.5);
+    _mortgage.setPresent_Value(100000d);
+    _mortgage.setFuture_Value(83930.02);
+
+    boolean result = _mortgage.validate();
+    assertTrue(result);
+  }
+
+  /**
+   * <p> test that this returns true on a logical mortgage with an extra payment</p>
+   */
+  @Test
+  public void testValidateReturnsTrueOnValidMortgageWithAnExtraPayment(){
+    _mortgage = new Mortgage();
+    _mortgage.setRemaining_Term(22);;
+    _mortgage.setExtra_Payment(0d);
+    _mortgage.setMonthly_Payment(850d);
+    _mortgage.setInterest_Rate(3.5);
+    _mortgage.setPresent_Value(100000d);
+    _mortgage.setFuture_Value(83930.02);
+
+    boolean result = _mortgage.validate();
+    assertFalse(result);
+  }
+
+  /**
+   * <p> test that this returns false on a illogical mortgage with zero extra payment</p>
+   */
+  @Test
+  public void testValidateReturnsFalseOnInvalidMortgageWithNoExtraPayment(){
+    _mortgage = new Mortgage();
+    _mortgage.setRemaining_Term(22);;
+    _mortgage.setExtra_Payment(150d);
+    _mortgage.setMonthly_Payment(700d);
+    _mortgage.setInterest_Rate(3.5);
+    _mortgage.setPresent_Value(100000d);
+    _mortgage.setFuture_Value(83930.02);
+
+    boolean result = _mortgage.validate();
+    assertFalse(result);
+  }
+
+  /**
+   * <p> test that this returns false on a illogical mortgage with an extra payment</p>
+   */
+  @Test
+  public void testValidateReturnsFalseOnInvalidMortgageWithAnExtraPayment(){
     int Remaining_Term = 5489;
     _mortgage.setRemaining_Term(Remaining_Term);
     Assertions.assertEquals(Remaining_Term, _mortgage.getRemaining_Term());
   }
-
 
   /**
    <p> Tests That the CompareTo Method for the Mortgage object works </p>
