@@ -31,10 +31,11 @@
 <script type="text/javascript" src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
 
 <script src="js/budget/site.js"></script>
-<script type="module" src="js/budget/tvmCalculator.js"></script>
 
-<c:if test="${pageTitle eq 'Mortgage'}">
+
+<c:if test="${pageTitle eq 'Add Mortgage'|| pageTitle eq 'Edit Mortgage'}">
     <script src="js/budget/mortgage.js"></script>
+    <script type="module" src="js/budget/tvmCalculator.js"></script>
 </c:if>
 
 <c:if test="${pageTitle eq 'Pie Chart'}">

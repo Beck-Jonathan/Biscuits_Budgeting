@@ -1,17 +1,7 @@
 $(document).ready(async function () {
 
 
-	var tvmCalculator = await import("./tvmCalculator.js")
-	console.log(tvmCalculator)
-// Specify params as object
-	const tvmParams = {pv: -100000, fv: 0, nper: 30, rate: 4};
 
-// Calculate payment amount of a loan
-	const periodicPayment = tvmCalculator.calcPMT(tvmParams);
-
-// Log calculated result (3508.33)
-	console.log('Payment amount (PMT): ', periodicPayment);
-	const category = "";
 
 ////console.log("ready on new version")
 	$("#Home").button();

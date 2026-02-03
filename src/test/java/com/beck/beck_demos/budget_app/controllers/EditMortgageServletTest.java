@@ -249,7 +249,7 @@ public class EditMortgageServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    
+
     user.setRoles(roles);
     session.setAttribute("User_B",user);
 

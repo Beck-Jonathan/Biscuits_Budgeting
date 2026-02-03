@@ -108,6 +108,10 @@ export const calcNPer = params => {
     const vars = calcVars(rate, 0, isBeginning, isDiscrete, cf, pf);
     const { rateEff, b } = vars;
     let nper;
+    console.log("rate"+rate);
+    console.log("pmt"+pmt);
+    console.log("pv"+pv);
+    console.log("fv"+(fv+pv));
 
     if (rateEff === 0) {
         nper = -1 * ((fv + pv) / pmt);
@@ -121,6 +125,8 @@ export const calcNPer = params => {
         }
 
         if (t !== 0) {
+            console.log(rateEff);
+            console.log(t);
             nper = Math.log(t) / Math.log(1 + rateEff);
         }
     }

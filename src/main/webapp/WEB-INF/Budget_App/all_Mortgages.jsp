@@ -8,7 +8,7 @@ Create the JSP  For Viewing All of The  Mortgage table
         <div class="col-12">
             <h1>All Biscuit Mortgages</h1>
             <p>There ${Mortgages.size() eq 1 ? "is" : "are"}&nbsp;${Mortgages.size()} Mortgage${Mortgages.size() ne 1 ? "s" : ""}</p>
-            Add Mortgage   <a href="calculateMortgage">Add</a>
+            Add Mortgage   <a href="addMortgage">Add</a>
             <c:if test="${Mortgages.size() > 0}">
                 <div class="table-responsive"><table class="table table-bordered">
                     <thead>
@@ -36,7 +36,7 @@ Create the JSP  For Viewing All of The  Mortgage table
                             <td>${fn:escapeXml(mortgage.monthly_Payment)}</td>
                             <td>${fn:escapeXml(mortgage.extra_Payment)}</td>
                             <td>${fn:escapeXml(mortgage.remaining_Term)}</td>
-                            <td><a href = "editmortgage?mortgageid=${mortgage.mortgage_ID}&mode=edit" > Edit </a></td>
+                            <td><a href = "editMortgage?mortgageid=${mortgage.mortgage_ID}&mode=edit" > Edit </a></td>
                             <td>
                                 <div>
                                     <button class="delButton" href="${mortgage.mortgage_ID}" >Delete</button> </div>
