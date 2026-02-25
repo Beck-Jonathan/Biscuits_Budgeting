@@ -9,7 +9,6 @@ import com.beck.beck_demos.budget_app.data.ReceiptDAO;
 import com.beck.beck_demos.budget_app.data.TransactionDAO;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
 import com.beck.beck_demos.budget_app.models.Receipt;
-import com.beck.beck_demos.budget_app.models.Transaction;
 import com.beck.beck_demos.budget_app.models.User;
 import com.beck.beck_demos.budget_app.iData.iReceiptDAO;
 import jakarta.servlet.ServletException;

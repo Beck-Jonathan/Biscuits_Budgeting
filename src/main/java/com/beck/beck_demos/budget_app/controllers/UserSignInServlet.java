@@ -10,8 +10,6 @@ package com.beck.beck_demos.budget_app.controllers;
 import com.beck.beck_demos.budget_app.data.*;
 import com.beck.beck_demos.budget_app.iData.iUserDAO;
 import com.beck.beck_demos.budget_app.models.*;
-import com.beck.beck_demos.shared.EmailService;
-import com.mysql.cj.Session;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -21,7 +19,6 @@ import jakarta.servlet.http.HttpSession;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,7 +104,7 @@ public class UserSignInServlet extends HttpServlet{
     results.put("User_PW",_User_PW);
 
 
-    int id =0;
+    String id ="";
     try {
       String hashed = userDAO.get_pw(_User_Name);
       if(!BCrypt.checkpw(_User_PW,hashed)){
@@ -139,7 +136,7 @@ public class UserSignInServlet extends HttpServlet{
       results.put("dbError", "Database Error");
     }
 
-    if (id==0){
+    if (id.equals("")){
       results.put("dbStatus1","Login Failed, please verify your username and password");
     }
     session.setAttribute("dbStatus","Login Fail!");

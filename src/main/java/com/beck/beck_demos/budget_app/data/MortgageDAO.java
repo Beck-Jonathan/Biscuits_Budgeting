@@ -26,23 +26,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
+
 import static com.beck.beck_demos.budget_app.data.Database.getConnection;
 public class MortgageDAO implements iMortgageDAO {
 
 
-  public List<Mortgage> getMortgagebyUser(Integer User_ID,int limit,int offset) {
+  public List<Mortgage> getMortgagebyUser(String User_ID, int limit, int offset) {
     List<Mortgage> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Mortgage_by_User(?,?,?)}")) {
-          statement.setInt(1,User_ID)
+          statement.setString(1,User_ID);
           ;statement.setInt(2,limit)
           ;statement.setInt(3,offset);
           try(ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
               String Mortgage_ID = resultSet.getString("Mortgage_Mortgage_ID");
-              Integer User_ID2 = resultSet.getInt("Mortgage_User_ID");
+              String User_ID2 = resultSet.getString("Mortgage_User_ID");
               String Nickname = resultSet.getString("Mortgage_Nickname");
               Double Present_Value = resultSet.getDouble("Mortgage_Present_Value");
               Double Future_Value = resultSet.getDouble("Mortgage_Future_Value");
@@ -73,7 +73,7 @@ public class MortgageDAO implements iMortgageDAO {
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Mortgage( ?, ?, ?, ?, ?, ?, ?, ?)}")){
-          statement.setInt(1,_mortgage.getUser_ID());
+          statement.setString(1,_mortgage.getUser_ID());
           statement.setString(2,_mortgage.getNickname());
           statement.setDouble(3,_mortgage.getPresent_Value());
           statement.setDouble(4,_mortgage.getFuture_Value());
@@ -132,8 +132,8 @@ public class MortgageDAO implements iMortgageDAO {
         try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Mortgage(? ,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}"))
         {
           statement.setString(1,oldMortgage.getMortgage_ID());
-          statement.setInt(2,oldMortgage.getUser_ID());
-          statement.setInt(3,newMortgage.getUser_ID());
+          statement.setString(2,oldMortgage.getUser_ID());
+          statement.setString(3,newMortgage.getUser_ID());
           statement.setString(4,oldMortgage.getNickname());
           statement.setString(5,newMortgage.getNickname());
           statement.setDouble(6,oldMortgage.getPresent_Value());
@@ -166,7 +166,7 @@ public class MortgageDAO implements iMortgageDAO {
 
         try (ResultSet resultSet = statement.executeQuery()){
           if(resultSet.next()){String Mortgage_ID = resultSet.getString("Mortgage_Mortgage_ID");
-            Integer User_ID = resultSet.getInt("Mortgage_User_ID");
+            String User_ID = resultSet.getString("Mortgage_User_ID");
             String Nickname = resultSet.getString("Mortgage_Nickname");
             Double Present_Value = resultSet.getDouble("Mortgage_Present_Value");
             Double Future_Value = resultSet.getDouble("Mortgage_Future_Value");

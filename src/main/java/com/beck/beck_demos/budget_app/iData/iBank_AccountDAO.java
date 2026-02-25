@@ -25,7 +25,7 @@ public interface iBank_AccountDAO {
    * @return List of Bank_Account
    * @author Jonathan Beck
    */
-  List<Bank_Account> getAllBank_Account(int offset, int limit, Integer User_ID) throws SQLException;
+  List<Bank_Account> getAllBank_Account(int offset, int limit, String User_ID) throws SQLException;
   /**
    * DAO Method to add Bank_Account objects
    * @param _bank_account the Bank_Account to be added

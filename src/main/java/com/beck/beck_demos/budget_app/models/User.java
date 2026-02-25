@@ -21,13 +21,12 @@ package com.beck.beck_demos.budget_app.models;
 
 import com.beck.beck_demos.shared.MyValidators;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.regex.Matcher;
 import org.jetbrains.annotations.NotNull;
 
 public class User implements Comparable<User>{
-  private Integer User_ID;
+  private String User_ID;
   private String User_Name;
   private char[] User_PW;
   private String Email;
@@ -35,7 +34,7 @@ public class User implements Comparable<User>{
 
   public User(){}
 
-  public User(Integer User_ID, String User_Name, char[] User_PW, String Email) {
+  public User(String User_ID, String User_Name, char[] User_PW, String Email) {
 
     this.User_ID = User_ID;
     this.User_Name = User_Name;
@@ -46,7 +45,7 @@ public class User implements Comparable<User>{
    * <p> Gets the User_ID of the associated User object </p>
    * @return the User_ID of this User object.
    */
-  public Integer getUser_ID() {
+  public String getUser_ID() {
     return User_ID;
   }
   /**
@@ -54,9 +53,9 @@ public class User implements Comparable<User>{
    *@param User_ID the user_id of the user,
    * throws IllegalArgumentException if User_ID is negative or greater than 10,000
    */
-  public void setUser_ID(Integer User_ID) {
-    if (User_ID < 0 || User_ID > 10000) {
-      throw new IllegalArgumentException("User_ID Can Not Be Negative");
+  public void setUser_ID(String User_ID) {
+    if (User_ID.length() < 36 || User_ID.length() > 36) {
+      throw new IllegalArgumentException("Invalid user ID");
     }
     this.User_ID = User_ID;
   }

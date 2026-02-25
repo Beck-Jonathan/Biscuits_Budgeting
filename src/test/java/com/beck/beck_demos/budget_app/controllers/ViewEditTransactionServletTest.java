@@ -51,7 +51,7 @@ class ViewEditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doGet(request,response);
@@ -64,7 +64,7 @@ class ViewEditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doPost(request,response);
@@ -91,7 +91,7 @@ class ViewEditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("WrongRole");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doGet(request,response);
@@ -104,7 +104,7 @@ class ViewEditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("WrongRole");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doPost(request,response);
@@ -117,7 +117,7 @@ class ViewEditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(41);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     session.setAttribute("User_B",user);
     String Transaction_ID= "XxtdYmVMXxtdYmVMXxtdYmVMXxtdYmVMXxtd";
     request.setParameter("transactionid",Transaction_ID);
@@ -133,7 +133,7 @@ class ViewEditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     session.setAttribute("User_B",user);
     String Transaction_ID= "";
     request.setParameter("transactionid",Transaction_ID);
@@ -158,13 +158,13 @@ class ViewEditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID("618052e9-c69b-4d9b-880e-e22e4a970bd6");
     session.setAttribute("User_B",user);
     request.setSession(session);
 //to set the old Transaction
     Transaction_VM transaction = new Transaction_VM();
     transaction.setTransaction_ID("XxtdYmVMXxtdYmVMXxtdYmVMXxtdYmVMXxtd");
-    transaction.setUser_ID(41);
+    transaction.setUser_ID("618052e9-c69b-4d9b-880e-e22e4a970bd6");
     transaction.setCategory_ID("testTransaction");
     transaction.setBank_Account_ID("testTransaction");
     transaction.setCheck_No(43);
@@ -173,7 +173,7 @@ class ViewEditTransactionServletTest {
     transaction.setStatus("testTransaction");
     session.setAttribute("transaction",transaction);
 //create a new albums parameters
-    request.setParameter("inputtransactionUser_ID","39");
+    request.setParameter("inputtransactionUser_ID","618052e9-c69b-4d9b-880e-e22e4a970bd6");
     request.setParameter("inputtransactionCategory_ID","TestValue");
     request.setParameter("inputtransactionAccount_Num","TestValue");
     request.setParameter("inputtransactionCheck_No","406");
@@ -197,7 +197,7 @@ class ViewEditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doPost(request,response);
@@ -243,13 +243,13 @@ class ViewEditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     session.setAttribute("User_B",user);
     request.setSession(session);
 //to set the old Transaction
     Transaction_VM transaction = new Transaction_VM();
     transaction.setTransaction_ID("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-    transaction.setUser_ID(43);
+    transaction.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     transaction.setCategory_ID("DUPLICATE");
     transaction.setBank_Account_ID("DUPLICATE");
     transaction.setCheck_No(43);
@@ -282,13 +282,13 @@ class ViewEditTransactionServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     session.setAttribute("User_B",user);
     request.setSession(session);
 //to set the old Transaction
     Transaction_VM transaction = new Transaction_VM();
     transaction.setTransaction_ID("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-    transaction.setUser_ID(43);
+    transaction.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     transaction.setCategory_ID("EXCEPTION");
     transaction.setBank_Account_ID("EXCEPTION");
     transaction.setCheck_No(43);

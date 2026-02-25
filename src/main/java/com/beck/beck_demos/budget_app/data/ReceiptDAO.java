@@ -136,7 +136,7 @@ public class ReceiptDAO implements iReceiptDAO {
   }
 
   @Override
-  public List<Receipt> getAllReceipt(int offset, int limit, String search, String Transaction_ID, int user_id) throws SQLException {
+  public List<Receipt> getAllReceipt(int offset, int limit, String search, String Transaction_ID, String user_id) throws SQLException {
     List<Receipt> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       if (connection != null) {
@@ -145,7 +145,7 @@ public class ReceiptDAO implements iReceiptDAO {
           statement.setInt(2, offset);
           statement.setString(3, search);
           statement.setString(4, Transaction_ID);
-          statement.setInt(5,user_id);
+          statement.setString(5,user_id);
           try (ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
               String Receipt_ID = resultSet.getString("Receipt_Receipt_ID");
@@ -197,14 +197,14 @@ public class ReceiptDAO implements iReceiptDAO {
   }
 
   @Override
-  public int getReceiptCount(String searchTerm, String transactionId, int user_id) {
+  public int getReceiptCount(String searchTerm, String transactionId, String user_id) {
     int result =0;
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_count_by_all_Receipt(?,?,?)}")) {
           statement.setString(1, searchTerm);
           statement.setString(2, transactionId);
-          statement.setInt(3, user_id);
+          statement.setString(3, user_id);
           try (ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
               result = resultSet.getInt(1);

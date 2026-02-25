@@ -200,7 +200,7 @@ public class AddMortgageServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(36);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");;
     session.setAttribute("User_B",user);
     request.setSession(session);
     request.setParameter("inputmortgageMortgage_ID","3e6abc9f-90de-4929-8a16-e2d301db1ff9");
@@ -231,7 +231,7 @@ public class AddMortgageServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(36);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     session.setAttribute("User_B",user);
     request.setSession(session);
     request.setParameter("inputmortgageMortgage_ID","EXCEPTION");
@@ -265,7 +265,7 @@ public class AddMortgageServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(36);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);

@@ -13,7 +13,7 @@ public interface iSaved_Search_OrderDAO {
    * @return List of Saved_Search_Order
    * @author Jonathan Beck
    */
-  public List<Saved_Search_Order_VM> getSaved_Search_OrderbyUser(Integer User_ID, int pagesize, int offset) throws SQLException;
+  public List<Saved_Search_Order_VM> getSaved_Search_OrderbyUser(String User_ID, int pagesize, int offset) throws SQLException;
   /**
    * DAO Method to add Saved_Search_Order objects
    * @param _saved_search_order the Saved_Search_Order to be added
@@ -41,7 +41,7 @@ public interface iSaved_Search_OrderDAO {
    * @return number of records deleted
    * @author Jonathan Beck
    */
-  int delete( int Saved_Search_Order_ID, int user_id) throws SQLException;
+  int delete(int Saved_Search_Order_ID, String user_id) throws SQLException;
 
   /**
    * DAO Method to add line items to  Saved_Search_Order objects

@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.*;
 class UserTest {
   private User _user;
   @BeforeEach
@@ -29,12 +26,12 @@ class UserTest {
   @Test
   public void testUserParameterizedConstructorSetsAllVariables(){
     User _user= new User(
-        754,
+        "af735dfc-22a9-4214-a8e5-fb8de2305700",
         "GrDfKssjDroTwjtpyewSRUKBvmtSALiIRbDOjJuTDariNWtufwgmkgCiWyajqJgBVgfGpidPjnPXFKKdnRahZUqAaYHjNnpoTX",
         "COMONHIdRyXaUEXWKPlsuMDHmKQiVqMlDUZMWrTMhaEAaUIVZdEeJlRBKyhxTbceLnRjxJnWYfnTICaYBtPklacQDXCXKVsFwZ".toCharArray(),
         "olDYXPphMxwsHXPwYSrsdLAgHVMClhWhMnVbAuEUFSFtAtXmFaLaCkqHZJjPKtctUuRvnPFgaBNVRdRuQHBNSqfscKUDUyWADI"
     );
-    Assertions.assertEquals(754,_user.getUser_ID());
+    Assertions.assertEquals("af735dfc-22a9-4214-a8e5-fb8de2305700",_user.getUser_ID());
     Assertions.assertEquals("GrDfKssjDroTwjtpyewSRUKBvmtSALiIRbDOjJuTDariNWtufwgmkgCiWyajqJgBVgfGpidPjnPXFKKdnRahZUqAaYHjNnpoTX",_user.getUser_Name());
     Assertions.assertEquals("COMONHIdRyXaUEXWKPlsuMDHmKQiVqMlDUZMWrTMhaEAaUIVZdEeJlRBKyhxTbceLnRjxJnWYfnTICaYBtPklacQDXCXKVsFwZ",new String(_user.getUser_PW()));
     Assertions.assertEquals("olDYXPphMxwsHXPwYSrsdLAgHVMClhWhMnVbAuEUFSFtAtXmFaLaCkqHZJjPKtctUuRvnPFgaBNVRdRuQHBNSqfscKUDUyWADI",_user.getEmail());
@@ -42,17 +39,17 @@ class UserTest {
 
   @Test
   public void testUserThrowsIllegalArgumentExceptionIfUser_IDTooSmall(){
-    int User_ID = -1;
+    String User_ID = "af735dfc-22a9-4214-a8e5-fb8057";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_user.setUser_ID(User_ID);});
   }
   @Test
   public void testUserThrowsIllegalArgumentExceptionIfUser_IDTooBig(){
-    int User_ID = 10001;
+    String User_ID = "af735dfc-22a9-4214-a8e5-fb80sssssss57";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_user.setUser_ID(User_ID);});
   }
   @Test
   public void testUserSetsUser_ID(){
-    int User_ID = 2003;
+    String User_ID = "af735dfc-22a9-4214-a8e5-fb8de2305700";
     _user.setUser_ID(User_ID);
     Assertions.assertEquals(User_ID, _user.getUser_ID());
   }
@@ -114,12 +111,12 @@ class UserTest {
     User smaller = new User();
     User bigger = new User();
 //to compare a smaller and larger User_ID
-    smaller.setUser_ID(10);
-    bigger.setUser_ID(20);
+    smaller.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
+    bigger.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the User_ID as equal.
-    smaller.setUser_ID(20);
+    smaller.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");;
 //to compare a smaller and larger User_Name
     smaller.setUser_Name("aaaa");
     bigger.setUser_Name("bbbb");

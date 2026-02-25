@@ -38,7 +38,7 @@ public class TransactionDAO implements iTransactionDAO {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_update_Transaction_category(?,?,?)}")) {
           statement.setString(1, oldTransaction.getTransaction_ID());
-          statement.setInt(2, oldTransaction.getUser_ID());
+          statement.setString(2, oldTransaction.getUser_ID());
 
           statement.setString(3, newTransaction.getCategory_ID());
 
@@ -66,8 +66,8 @@ public class TransactionDAO implements iTransactionDAO {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_update_Transaction(? ,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}")) {
           statement.setString(1, oldTransaction.getTransaction_ID());
-          statement.setInt(2, oldTransaction.getUser_ID());
-          statement.setInt(3, newTransaction.getUser_ID());
+          statement.setString(2, oldTransaction.getUser_ID());
+          statement.setString(3, newTransaction.getUser_ID());
           statement.setString(4, oldTransaction.getCategory_ID());
           statement.setString(5, newTransaction.getCategory_ID());
           statement.setString(6, oldTransaction.getBank_Account_ID());
@@ -102,7 +102,7 @@ public class TransactionDAO implements iTransactionDAO {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_toggle_lock_Transaction( ?,?)}")) {
           statement.setString(1, transaction.getTransaction_ID());
-          statement.setInt(2, transaction.getUser_ID());
+          statement.setString(2, transaction.getUser_ID());
 
           rowsAffected = statement.executeUpdate();
           if (rowsAffected == 0) {
@@ -120,38 +120,45 @@ public class TransactionDAO implements iTransactionDAO {
   public int writeTransactionToFile(List<Transaction> Transactions, String path) throws IOException {
 
     int result = 0;
-    PrintWriter writer = new PrintWriter(path, StandardCharsets.UTF_8);
-    writer.println("Transaction_ID\tUser_ID\tCategory_ID\tBank_Account_ID\tPost_Date\tCheck_No\tDescription\tAmount\tType\tStatus\tIs_Locked");
-    for (Transaction _transaction : Transactions) {
+    File file = new File(path);
 
-      writer.print(_transaction.getTransaction_ID());
-      writer.print("\t" + _transaction.getUser_ID());
-      writer.print("\t" + _transaction.getCategory_ID());
-      writer.print("\t" + _transaction.getBank_Account_ID());
-      writer.print("\t" + _transaction.getPost_Date());
-      writer.print("\t" + _transaction.getCheck_No());
-      writer.print("\t" + _transaction.getDescription());
-      writer.print("\t" + _transaction.getAmount());
-      writer.print("\t" + _transaction.getType());
-      writer.print("\t" + _transaction.getStatus());
-      writer.print("\t" + _transaction.getIs_Locked());
-      writer.print("\n");
+// Ensure the directory exists
+    if (file.getParentFile() != null) {
+      file.getParentFile().mkdirs();
+    }
+    try (PrintWriter writer = new PrintWriter(file, StandardCharsets.UTF_8)) {
+      writer.println("Transaction_ID\tUser_ID\tCategory_ID\tBank_Account_ID\tPost_Date\tCheck_No\tDescription\tAmount\tType\tStatus\tIs_Locked");
+      for (Transaction _transaction : Transactions) {
 
-      result++;
+        writer.print(_transaction.getTransaction_ID());
+        writer.print("\t" + _transaction.getUser_ID());
+        writer.print("\t" + _transaction.getCategory_ID());
+        writer.print("\t" + _transaction.getBank_Account_ID());
+        writer.print("\t" + _transaction.getPost_Date());
+        writer.print("\t" + _transaction.getCheck_No());
+        writer.print("\t" + _transaction.getDescription());
+        writer.print("\t" + _transaction.getAmount());
+        writer.print("\t" + _transaction.getType());
+        writer.print("\t" + _transaction.getStatus());
+        writer.print("\t" + _transaction.getIs_Locked());
+        writer.print("\n");
+
+        result++;
+      }
     }
 
-    writer.close();
+
     return result;
   }
 
   @Override
-  public List<List<Category_VM>> getMonthlyAnalysis(List<List<Category_VM>> months, int user_ID, int year) throws SQLException {
+  public List<List<Category_VM>> getMonthlyAnalysis(List<List<Category_VM>> months, String user_ID, int year) throws SQLException {
     List<List<Category_VM>> result = new ArrayList<>();
     int startingMonth = 0;
     int loop = -1;
     try (Connection connection = getConnection()) {
       try (CallableStatement statement = connection.prepareCall("{CALL sp_total_Category_by_time_monthly(?,?)}")) {
-        statement.setInt(1, user_ID);
+        statement.setString(1, user_ID);
         statement.setInt(2, year);
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
@@ -184,12 +191,12 @@ public class TransactionDAO implements iTransactionDAO {
   }
 
   @Override
-  public List<Transaction> getDistinctTransactionForDropdown(int user_ID) throws SQLException {
+  public List<Transaction> getDistinctTransactionForDropdown(String user_ID) throws SQLException {
     List<Transaction> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try(CallableStatement statement = connection.prepareCall("{CALL sp_select_distinct_and_active_Transaction_for_dropdown(?)}")) {
-          statement.setInt(1,user_ID);
+          statement.setString(1,user_ID);
           try(ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
               String Transaction_ID = resultSet.getString("Transaction_Transaction_ID");
@@ -207,12 +214,12 @@ public class TransactionDAO implements iTransactionDAO {
     return result;
   }
 
-  public int bulkUpdateCategory(int userid, String category, String query) throws SQLException {
+  public int bulkUpdateCategory(String userid, String category, String query) throws SQLException {
     int result = 0;
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_assign_categories(?,?,?)}")) {
-          statement.setInt(1, userid);
+          statement.setString(1, userid);
           statement.setString(2, category);
 
           statement.setString(3, query);
@@ -230,16 +237,16 @@ public class TransactionDAO implements iTransactionDAO {
   }
 
   //getTransactionForExportByUser
-  public List<Transaction> getTransactionForExportByUser(int userID) throws SQLException {
+  public List<Transaction> getTransactionForExportByUser(String userID) throws SQLException {
     List<Transaction> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       try (CallableStatement statement = connection.prepareCall("{CALL sp_transaction_for_export(?)}")) {
-        statement.setInt(1, userID);
+        statement.setString(1, userID);
 
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
             String Transaction_ID = resultSet.getString("Transaction_Transaction_ID");
-            Integer User_ID = resultSet.getInt("Transaction_User_ID");
+            String User_ID = resultSet.getString("Transaction_User_ID");
             String Category_ID = resultSet.getString("Transaction_Category_ID");
             String Account_Num = resultSet.getString("Transaction_Bank_Account_ID");
             Date Post_Date = resultSet.getDate("Transaction_Post_Date");
@@ -347,7 +354,7 @@ public class TransactionDAO implements iTransactionDAO {
     ArrayList parts = new ArrayList(List.of(line.split("\t")));
     String Transaction_ID = "";
     String Account_Num = (String) parts.get(0);
-    Integer userID = 1;
+    String userID = "";
     //Date Post_Date = new Date(2024, 5, 5);
     //Date Post_Date = (Date) parts.get(2);
     String Post_Date_String = ((String) parts.get(1));
@@ -383,7 +390,7 @@ public class TransactionDAO implements iTransactionDAO {
     ArrayList parts = new ArrayList(List.of(line.split("\t")));
     String Transaction_ID = "";
 
-    Integer userID = 1;
+    String userID = "";
 
     String Post_Date_String = ((String) parts.get(1));
     java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(Post_Date_String);
@@ -426,7 +433,7 @@ public class TransactionDAO implements iTransactionDAO {
   }
   private Transaction readAltraLine(String line, String Account_Num) throws ParseException {
     ArrayList parts = new ArrayList(List.of(line.split("\t")));
-    Integer userID = 1;
+    String userID = "";
     String Transaction_ID = "";
     String Post_Date_String = ((String) parts.get(1));
     java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(Post_Date_String);
@@ -449,7 +456,7 @@ public class TransactionDAO implements iTransactionDAO {
     ArrayList parts = new ArrayList(List.of(line.split("\t")));
     String Transaction_ID = "";
     String Account_Num = (String) parts.get(0);
-    Integer userID = 1;
+    String userID = "";
     String Post_Date_String = ((String) parts.get(3));
     java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(Post_Date_String);
     java.sql.Date Post_Date = new java.sql.Date(utilDate.getTime());
@@ -473,7 +480,7 @@ public class TransactionDAO implements iTransactionDAO {
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Transaction( ?,?, ?, ?, ?, ?, ?, ?, ?)}")) {
-          statement.setInt(1, _transaction.getUser_ID());
+          statement.setString(1, _transaction.getUser_ID());
           statement.setString(2, "Uncategorized");
           statement.setString(3, _transaction.getBank_Account_ID());
           statement.setDate(4, (Date) _transaction.getPost_Date());
@@ -494,7 +501,7 @@ public class TransactionDAO implements iTransactionDAO {
     return numRowsAffected;
   }
 
-  public int addBatch(List<Transaction> _transactions, int user_id) {
+  public int addBatch(List<Transaction> _transactions, String user_id) {
     int added = 0;
 
     boolean result = true;
@@ -504,7 +511,7 @@ public class TransactionDAO implements iTransactionDAO {
         for (Transaction _transaction : _transactions) {
 
           try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Transaction( ?,?, ?, ?, ?, ?, ?, ?, ?)}")) {
-            statement.setInt(1, user_id);
+            statement.setString(1, user_id);
             statement.setString(2, "Uncategorized");
             statement.setString(3, _transaction.getBank_Account_ID());
             statement.setDate(4, (Date) _transaction.getPost_Date());
@@ -529,23 +536,23 @@ public class TransactionDAO implements iTransactionDAO {
 
   }
 
-  public List<Transaction_VM> getTransactionByUser(Integer User_ID) throws SQLException {
+  public List<Transaction_VM> getTransactionByUser(String User_ID) throws SQLException {
     return getTransactionByUser(User_ID, "", 0, 10, 0, "", 0);
   }
 
-  public List<Transaction_VM> getTransactionByUser(int User_ID, int pagesize) throws SQLException {
+  public List<Transaction_VM> getTransactionByUser(String User_ID, int pagesize) throws SQLException {
     return getTransactionByUser(User_ID, "", 0, pagesize, 0, "", 0);
   }
 
-  public List<Transaction_VM> getTransactionByUser(Integer User_ID, int pagesize, int offset) throws SQLException {
+  public List<Transaction_VM> getTransactionByUser(String User_ID, int pagesize, int offset) throws SQLException {
     return getTransactionByUser(User_ID, "", 0, pagesize, offset, "", 0);
   }
 
-  public List<Transaction_VM> getTransactionByUser(int userID, String category, int year, int pagesize, int offset, String sortBy, int order) throws SQLException {
+  public List<Transaction_VM> getTransactionByUser(String userID, String category, int year, int pagesize, int offset, String sortBy, int order) throws SQLException {
     List<Transaction_VM> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User(?,?,?,?,?,?,?)}")) {
-        statement.setInt(1, userID);
+        statement.setString(1, userID);
         statement.setString(2, category);
         statement.setInt(3, year);
         statement.setInt(4, pagesize);
@@ -556,7 +563,7 @@ public class TransactionDAO implements iTransactionDAO {
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
             String Transaction_ID = resultSet.getString("Transaction_Transaction_ID");
-            Integer User_ID = resultSet.getInt("Transaction_User_ID");
+            String User_ID = resultSet.getString("Transaction_User_ID");
             String Category_ID = resultSet.getString("Transaction_Category_ID");
             String Account_Num = resultSet.getString("Transaction_Bank_Account_ID");
             Date Post_Date = resultSet.getDate("Transaction_Post_Date");
@@ -579,17 +586,17 @@ public class TransactionDAO implements iTransactionDAO {
     return result;
   }
 
-  public List<Transaction_VM> searchTransactionByUser(int userID, String query) throws SQLException {
+  public List<Transaction_VM> searchTransactionByUser(String userID, String query) throws SQLException {
     List<Transaction_VM> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       try (CallableStatement statement = connection.prepareCall("{CALL sp_find_transaction(?,?)}")) {
-        statement.setInt(1, userID);
+        statement.setString(1, userID);
         statement.setString(2, query);
 
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
             String Transaction_ID = resultSet.getString("Transaction_Transaction_ID");
-            Integer User_ID = resultSet.getInt("Transaction_User_ID");
+            String User_ID = resultSet.getString("Transaction_User_ID");
             String Category_ID = resultSet.getString("Transaction_Category_ID");
             String Account_Num = resultSet.getString("Transaction_Bank_Account_ID");
             Date Post_Date = resultSet.getDate("Transaction_Post_Date");
@@ -613,13 +620,13 @@ public class TransactionDAO implements iTransactionDAO {
   }
   //getAnalysis
 
-  public List<List<Category_VM>> getAnalysis(List<List<Category_VM>> years, int user_ID) throws SQLException {
+  public List<List<Category_VM>> getAnalysis(List<List<Category_VM>> years, String user_ID) throws SQLException {
     List<List<Category_VM>> result = new ArrayList<>();
     int startingYear = 0;
     int loop = -1;
     try (Connection connection = getConnection()) {
       try (CallableStatement statement = connection.prepareCall("{CALL sp_total_Category_by_time(?)}")) {
-        statement.setInt(1, user_ID);
+        statement.setString(1, user_ID);
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
             int Year = resultSet.getInt(1);
@@ -650,11 +657,11 @@ public class TransactionDAO implements iTransactionDAO {
     return result;
   }
 
-  public int getTransactionCountByUser(int userID, String category, int year) throws SQLException {
+  public int getTransactionCountByUser(String userID, String category, int year) throws SQLException {
     int result = 0;
     try (Connection connection = getConnection()) {
       try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User_count(?,?,?)}")) {
-        statement.setInt(1, userID);
+        statement.setString(1, userID);
         statement.setString(2, category);
         statement.setInt(3, year);
 
@@ -703,7 +710,7 @@ public class TransactionDAO implements iTransactionDAO {
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
             String Transaction_ID = resultSet.getString("Transaction_Transaction_ID");
-            Integer User_ID = resultSet.getInt("Transaction_User_ID");
+            String User_ID = resultSet.getString("Transaction_User_ID");
             String Category_ID = resultSet.getString("Transaction_Category_ID");
             String Account_Num = resultSet.getString("Transaction_Bank_Account_ID");
             Date Post_Date = resultSet.getDate("Transaction_Post_Date");
@@ -734,12 +741,12 @@ public class TransactionDAO implements iTransactionDAO {
     try (Connection connection = getConnection()) {
       try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_pk_Transaction(?,?)}")) {
         statement.setString(1, _transaction.getTransaction_ID());
-        statement.setInt(2, _transaction.getUser_ID());
+        statement.setString(2, _transaction.getUser_ID());
 
         try (ResultSet resultSet = statement.executeQuery()) {
           if (resultSet.next()) {
             String Transaction_ID = resultSet.getString("Transaction_Transaction_ID");
-            Integer User_ID = resultSet.getInt("Transaction_User_ID");
+            String User_ID = resultSet.getString("Transaction_User_ID");
             String Category_ID = resultSet.getString("Transaction_Category_ID");
             String Account_Num = resultSet.getString("Transaction_Bank_Account_ID");
             Date Post_Date = resultSet.getDate("Transaction_Post_Date");
@@ -767,7 +774,7 @@ public class TransactionDAO implements iTransactionDAO {
         try (ResultSet resultSet = statement.executeQuery()) {
 
           while (resultSet.next()) {
-            Integer User_ID = resultSet.getInt("Transaction_Comment_User_ID");
+            String User_ID = resultSet.getString("Transaction_Comment_User_ID");
             String Transaction_ID = resultSet.getString("Transaction_Comment_Transaction_ID");
             Integer Transaction_Comment_ID = resultSet.getInt("Transaction_Comment_Transaction_Comment_ID");
             String Content = resultSet.getString("Transaction_Comment_Content");

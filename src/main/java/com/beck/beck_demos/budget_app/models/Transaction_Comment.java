@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Transaction_Comment implements Comparable<Transaction_Comment> {
-  private Integer User_ID;
+  private String User_ID;
   private String Transaction_ID;
   private Integer Transaction_Comment_ID;
   private String Content;
@@ -16,7 +16,7 @@ public class Transaction_Comment implements Comparable<Transaction_Comment> {
 
   public Transaction_Comment(){}
 
-  public Transaction_Comment(Integer User_ID, String Transaction_ID, Integer Transaction_Comment_ID, String Content, Date Post_Date) {
+  public Transaction_Comment(String User_ID, String Transaction_ID, Integer Transaction_Comment_ID, String Content, Date Post_Date) {
 
     this.User_ID = User_ID;
     this.Transaction_ID = Transaction_ID;
@@ -25,17 +25,17 @@ public class Transaction_Comment implements Comparable<Transaction_Comment> {
     this.Post_Date = Post_Date;
   }
 
-  public Transaction_Comment(Integer User_ID, String Transaction_ID, Integer Transaction_Comment_ID) {
+  public Transaction_Comment(String User_ID, String Transaction_ID, Integer Transaction_Comment_ID) {
 
     this.User_ID = User_ID;
     this.Transaction_ID = Transaction_ID;
     this.Transaction_Comment_ID = Transaction_Comment_ID;
   }
-  public Integer getUser_ID() {
+  public String getUser_ID() {
     return User_ID;
   }
-  public void setUser_ID(Integer User_ID) {
-    if (User_ID<0||User_ID>10000){
+  public void setUser_ID(String User_ID) {
+    if (User_ID.length()<36||User_ID.length()>36){
       throw new IllegalArgumentException("User_ID Can Not Be Negative");
     }
     this.User_ID = User_ID;

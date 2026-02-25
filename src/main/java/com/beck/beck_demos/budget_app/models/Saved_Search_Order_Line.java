@@ -10,13 +10,13 @@ public class Saved_Search_Order_Line implements Comparable<Saved_Search_Order_Li
   private Integer Saved_Search_Order_ID;
   private Integer Line_No;
   private String Category_ID;
-  private Integer User_ID;
+  private String User_ID;
   private String Search_Phrase;
   private boolean Is_Active;
 
   public Saved_Search_Order_Line(){}
 
-  public Saved_Search_Order_Line(Integer Saved_Search_Order_ID, Integer Line_No, String Category_ID, Integer User_ID, String Search_Phrase, boolean Is_Active) {
+  public Saved_Search_Order_Line(Integer Saved_Search_Order_ID, Integer Line_No, String Category_ID, String User_ID, String Search_Phrase, boolean Is_Active) {
 
     this.Saved_Search_Order_ID = Saved_Search_Order_ID;
     this.Line_No = Line_No;
@@ -62,11 +62,11 @@ public class Saved_Search_Order_Line implements Comparable<Saved_Search_Order_Li
     }
     this.Category_ID = Category_ID;
   }
-  public Integer getUser_ID() {
+  public String getUser_ID() {
     return User_ID;
   }
-  public void setUser_ID(Integer User_ID) {
-    if (User_ID<0||User_ID>10000){
+  public void setUser_ID(String User_ID) {
+    if (User_ID.length()<36||User_ID.length()>36){
       throw new IllegalArgumentException("User_ID Can Not Be Negative");
     }
     this.User_ID = User_ID;

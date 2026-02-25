@@ -101,7 +101,7 @@ class UserSignInServletTest {
     User user = (User) session.getAttribute("User_B");
     assertEquals(302,responseStatus);
     assertNotNull(user);
-    assertEquals(user.getUser_ID(),37);
+    assertEquals("799369e6-d63a-4428-b239-5eb2e09113a2",user.getUser_ID());
   }
   @Test
   public void TestAddCanNotLoginWithBadPasswordNoErrorsAndRedirects() throws ServletException, IOException{

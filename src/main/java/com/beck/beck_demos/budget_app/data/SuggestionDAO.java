@@ -87,7 +87,7 @@ public class SuggestionDAO implements iSuggestionDAO {
               //String User_User_PW = resultSet.getString("User_User_PW");
               String User_Email = resultSet.getString("User_Email");
               Suggestion _suggestion = new Suggestion( Suggestion_ID, _User_ID, Application_Name, content);
-              User user = new User(0,User_User_Name,null,User_Email);
+              User user = new User("",User_User_Name,null,User_Email);
               Suggestion_VM suggestionVM = new Suggestion_VM(_suggestion,user);
               result.add(suggestionVM);
             }
@@ -122,7 +122,7 @@ public class SuggestionDAO implements iSuggestionDAO {
               String User_User_PW = resultSet.getString("User_User_PW");
               String User_Email = resultSet.getString("User_Email");
               Suggestion suggestion = new Suggestion(Suggestion_ID, User_ID, Application_Name, content);
-              User user = new User(0, User_User_Name, null, User_Email);
+              User user = new User("", User_User_Name, null, User_Email);
               result = new Suggestion_VM(suggestion, user);
             }
           }

@@ -6,9 +6,9 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mindrot.jbcrypt.BCrypt.gensalt;
 
@@ -16,11 +16,11 @@ public class UserDAO_Fake implements iUserDAO {
   private  List<User> users;
   public UserDAO_Fake(){
     users = new ArrayList<>();
-    User user0 = new User(37, "dTSPJjCO", "XNbwbckK!!".toCharArray(), "mWpKVEYk@gmail.com");
-    User user1 = new User(64, "xHDApUMY", "jNQFPWTR".toCharArray(), "ekektUmd@gmail.com");
-    User user2 = new User(36, "xOqYpDHU", "jahcUHBA".toCharArray(), "vRmtjGFI@gmail.com");
-    User user3 = new User(30, "eRceDjmK", "soBHCkld".toCharArray(), "CWZkwrDf@gmail.com");
-    User user4 = new User(101, "eRceDjmKdd", "soBHCkld!!".toCharArray(), "error@gmail.com");
+    User user0 = new User("799369e6-d63a-4428-b239-5eb2e09113a2", "dTSPJjCO", "XNbwbckK!!".toCharArray(), "mWpKVEYk@gmail.com");
+    User user1 = new User("899369e6-d63a-4428-b239-5eb2e09113a2", "xHDApUMY", "jNQFPWTR".toCharArray(), "ekektUmd@gmail.com");
+    User user2 = new User("999369e6-d63a-4428-b239-5eb2e09113a2", "xOqYpDHU", "jahcUHBA".toCharArray(), "vRmtjGFI@gmail.com");
+    User user3 = new User("199369e6-d63a-4428-b239-5eb2e09113a2", "eRceDjmK", "soBHCkld".toCharArray(), "CWZkwrDf@gmail.com");
+    User user4 = new User("299369e6-d63a-4428-b239-5eb2e09113a2", "eRceDjmKdd", "soBHCkld!!".toCharArray(), "error@gmail.com");
     users.add(user0);
     users.add(user1);
     users.add(user2);
@@ -36,20 +36,10 @@ public class UserDAO_Fake implements iUserDAO {
     if (exceptionKey(_user)){
       throw new SQLException("error");
     }
-    int user_id=1;
-    while (true){
-      boolean free = true;
-      for (User user : users) {
-        if (user.getUser_ID()==user_id){
-          free=false;
-          break;
-        }
-      }
-      user_id++;
-      break;
+    UUID uuid = UUID.randomUUID();
+    String uuidAsString = uuid.toString();
 
-    }
-    _user.setUser_ID(user_id);
+    _user.setUser_ID(uuidAsString);
     int startsize = users.size();
     users.add(_user);
     int endsize = users.size();
@@ -57,8 +47,8 @@ public class UserDAO_Fake implements iUserDAO {
   }
 
   @Override
-  public int getUserID(String email) throws SQLException {
-    int result = -1;
+  public String getUserID(String email) throws SQLException {
+    String result = "";
     for (User user : users) {
       if (user.getEmail().equals(email)) {
         result = user.getUser_ID();
@@ -98,11 +88,11 @@ public class UserDAO_Fake implements iUserDAO {
   }
 
   @Override
-  public int getUserIDByUserName(String username) throws Exception {
+  public String getUserIDByUserName(String username) throws Exception {
     if (username.equals("EXCEPTION")){
       throw new Exception("error");
     }
-    int result = -1;
+    String result = "";
     for (User user : users) {
       if (user.getUser_Name().equals(username)) {
         result = user.getUser_ID();
@@ -125,7 +115,7 @@ public class UserDAO_Fake implements iUserDAO {
   }
 
   @Override
-  public boolean addDefaultCategories(int userID) throws SQLException {
+  public boolean addDefaultCategories(String userID) throws SQLException {
     return false;
   }
 
@@ -158,7 +148,7 @@ public class UserDAO_Fake implements iUserDAO {
   }
 
   @Override
-  public int addRole(String role, int userID) {
+  public int addRole(String role, String userID) {
     return 0;
   }
 

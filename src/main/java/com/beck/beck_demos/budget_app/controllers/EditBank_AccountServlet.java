@@ -97,7 +97,7 @@ public class EditBank_AccountServlet extends HttpServlet{
     if (_Bank_Account_ID!=null){
       _Bank_Account_ID=_Bank_Account_ID.trim();
     }
-    Integer _User_ID = user.getUser_ID();
+    String _User_ID = user.getUser_ID();
 
     String _Account_Nickname = req.getParameter("inputbank_accountAccount_Nickname");
     if (_Account_Nickname!=null){

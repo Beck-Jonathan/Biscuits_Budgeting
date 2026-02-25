@@ -23,11 +23,11 @@ public class SuggestionDAO_Fake implements iSuggestionDAO {
   public SuggestionDAO_Fake() {
     suggestionVMs = new ArrayList<>();
     User user1 = new User();
-    user1.setUser_ID(32);
+    user1.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     User user2 = new User();
-    user2.setUser_ID(33);
+    user2.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");
     User user3 = new User();
-    user3.setUser_ID(34);
+    user3.setUser_ID("hec75744-130e-4bcb-8bbe-9bee18080428");
 
 
     Suggestion suggestion0 = new Suggestion("odtAdunsYTIHEEnxmnCvombdPMaboDFhqwoP", "aatAdunsYTIHEEnxmnCvombdPMaboDFhqwoP", "MQZYuRWD", "XqiclcUl");

@@ -30,7 +30,7 @@ public class Transaction_CommentDAO implements iTransaction_CommentDAO {
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Transaction_Comment( ?, ?, ?, ?)}")){
-          statement.setInt(1,_transaction_comment.getUser_ID());
+          statement.setString(1,_transaction_comment.getUser_ID());
           statement.setString(2,_transaction_comment.getTransaction_ID());
           statement.setInt(3,_transaction_comment.getTransaction_Comment_ID());
           statement.setString(4,_transaction_comment.getContent());
@@ -55,7 +55,7 @@ public class Transaction_CommentDAO implements iTransaction_CommentDAO {
       if (connection !=null){
         try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Transaction_Comment(? ,? ,? ,?,?)}"))
         {
-          statement.setInt(1,oldTransaction_Comment.getUser_ID());
+          statement.setString(1,oldTransaction_Comment.getUser_ID());
           statement.setString(2,oldTransaction_Comment.getTransaction_ID());
           statement.setInt(3,oldTransaction_Comment.getTransaction_Comment_ID());
           statement.setString(4,oldTransaction_Comment.getContent());
@@ -76,7 +76,7 @@ public class Transaction_CommentDAO implements iTransaction_CommentDAO {
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_Delete_Transaction_Comment( ?,?,?)}")){
-          statement.setInt(1,_transaction_comment.getUser_ID());
+          statement.setString(1,_transaction_comment.getUser_ID());
           statement.setString(2,_transaction_comment.getTransaction_ID());
           statement.setInt(3,_transaction_comment.getTransaction_Comment_ID());
           rowsAffected = statement.executeUpdate();

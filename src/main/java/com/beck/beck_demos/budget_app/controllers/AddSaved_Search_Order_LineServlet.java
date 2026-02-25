@@ -2,7 +2,6 @@ package com.beck.beck_demos.budget_app.controllers;
 
 
 import com.beck.beck_demos.budget_app.data.Saved_Search_OrderDAO;
-import com.beck.beck_demos.budget_app.models.Category;
 import com.beck.beck_demos.budget_app.models.Saved_Search_Order_Line;
 import com.beck.beck_demos.budget_app.models.User;
 import com.beck.beck_demos.budget_app.iData.iSaved_Search_OrderDAO;
@@ -75,7 +74,7 @@ public class AddSaved_Search_Order_LineServlet extends HttpServlet {
     if (_Category_ID!=null) {
       _Category_ID=_Category_ID.trim();
     }
-    Integer _User_ID = user.getUser_ID();
+    String _User_ID = user.getUser_ID();
     String _Search_Phrase = req.getParameter("inputsaved_search_order_lineSearch_Phrase");
     if (_Search_Phrase!=null) {
       _Search_Phrase=_Search_Phrase.trim();

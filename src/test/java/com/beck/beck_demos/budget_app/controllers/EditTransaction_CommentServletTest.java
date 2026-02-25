@@ -50,7 +50,7 @@ class EditTransaction_CommentServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -72,7 +72,7 @@ class EditTransaction_CommentServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("WrongRole");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     servlet.doPost(request,response);
@@ -85,12 +85,12 @@ class EditTransaction_CommentServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(54);
+    user.setUser_ID("f503f3ba-3375-40d4-8a0f-5c5aee018c6b");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
 //to set the old Transaction_Comment
     Transaction_Comment transaction_comment = new Transaction_Comment();
-    transaction_comment.setUser_ID(54);
+    transaction_comment.setUser_ID("f503f3ba-3375-40d4-8a0f-5c5aee018c6b");
     transaction_comment.setTransaction_ID("lwIFwDnklwIFwDnklwIFwDnk521212312322");
     transaction_comment.setTransaction_Comment_ID(20);
     transaction_comment.setContent("testTransaction_Comment");
@@ -98,7 +98,7 @@ class EditTransaction_CommentServletTest {
     session.setAttribute("transaction_comment",transaction_comment);
     request.setSession(session);
 //create a new albums parameters
-    request.setParameter("inputtransaction_commentUser_ID","54");
+    request.setParameter("inputtransaction_commentUser_ID","f503f3ba-3375-40d4-8a0f-5c5aee018c6b");
     request.setParameter("inputtransaction_commentTransaction_ID","lwIFwDnklwIFwDnklwIFwDnklwIFwDnk5212");
     request.setParameter("inputtransaction_commentTransaction_Comment_ID","20");
     request.setParameter("inputtransaction_commentContent","TestValue");
@@ -118,7 +118,7 @@ class EditTransaction_CommentServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -153,12 +153,12 @@ class EditTransaction_CommentServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
 //to set the old Transaction_Comment
     Transaction_Comment transaction_comment = new Transaction_Comment();
-    transaction_comment.setUser_ID(43);
+    transaction_comment.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
     transaction_comment.setTransaction_ID("lwIFwDnklwIFwDnklwIFwDnk521212312322");
     transaction_comment.setTransaction_Comment_ID(43);
     transaction_comment.setContent("DUPLICATE");
@@ -185,12 +185,12 @@ class EditTransaction_CommentServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
 //to set the old Transaction_Comment
     Transaction_Comment transaction_comment = new Transaction_Comment();
-    transaction_comment.setUser_ID(43);
+    transaction_comment.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
     transaction_comment.setTransaction_ID("lwIFwDnklwIFwDnklwIFwDnk521212312322");
     transaction_comment.setTransaction_Comment_ID(43);
     transaction_comment.setContent("EXCEPTION");

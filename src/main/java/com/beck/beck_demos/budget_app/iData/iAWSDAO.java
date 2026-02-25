@@ -14,7 +14,7 @@ import java.util.Map;
 
 public interface iAWSDAO {
 
-  public Map<File, String> uploadToS3(List<File> files, String bucketName, int UserID) throws Exception;
+  public Map<File, String> uploadToS3(List<File> files, String bucketName, String UserID) throws Exception;
   public List<File> saveUploadedFiles(HttpServletRequest req, String applicationPath, List<DiskFileItem> items, String UPLOAD_DIR) throws Exception ;
 
   Integer deleteReceipt(String receiptID) throws SQLException;

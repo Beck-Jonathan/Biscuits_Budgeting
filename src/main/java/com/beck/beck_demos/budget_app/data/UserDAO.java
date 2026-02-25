@@ -8,7 +8,6 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,15 +38,15 @@ public class UserDAO implements iUserDAO {
     return numRowsAffected;
   }
 
-  public  int getUserID(String email) throws SQLException{
-    int userId = 0;
+  public String getUserID(String email) throws SQLException{
+    String userId = "";
     try(Connection connection = getConnection()) {
       try(CallableStatement statement = connection.prepareCall("{CALL sp_user_id_by_email(?)}")) {
         statement.setString(1,email);
 
         try (ResultSet resultSet = statement.executeQuery()){
           if(resultSet.next()){
-            userId=resultSet.getInt(1);
+            userId=resultSet.getString(1);
           }
         }
         catch (SQLException ex ){
@@ -64,11 +63,11 @@ public class UserDAO implements iUserDAO {
     User result = null;
     try(Connection connection = getConnection()) {
       try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_pk_User(?)}")) {
-        statement.setInt(1, _user.getUser_ID());
+        statement.setString(1, _user.getUser_ID());
 
         try (ResultSet resultSet = statement.executeQuery()){
           if(resultSet.next()){
-            Integer User_ID = resultSet.getInt("User_ID");
+            String User_ID = resultSet.getString("User_ID");
             String User_Name = resultSet.getString("User_Name");
             char[] User_PW = resultSet.getString("User_PW").toCharArray();
 
@@ -111,8 +110,8 @@ public class UserDAO implements iUserDAO {
     return pw;
   }
 
-  public  int getUserIDByUserName(String username) {
-    int id=0;
+  public String getUserIDByUserName(String username) {
+    String id="";
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_user_id_by_username( ?)}")){
@@ -122,12 +121,12 @@ public class UserDAO implements iUserDAO {
 
           try (ResultSet resultSet = statement.executeQuery()){
             if(resultSet.next()) {
-              id = resultSet.getInt(1);
+              id = resultSet.getString(1);
             }
 
           }
 
-          if (id==0) {
+          if (id.equals("")) {
             throw new RuntimeException("Could not Login User. Try again later");
           }
         }
@@ -162,12 +161,12 @@ public class UserDAO implements iUserDAO {
     return result;
   }
 
-  public  boolean addDefaultCategories(int userID) throws SQLException {
+  public  boolean addDefaultCategories(String userID) throws SQLException {
     boolean result = true;
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_create_default_categories(? )}")) {
-          statement.setInt(1, userID);
+          statement.setString(1, userID);
 
           try {
             int results = statement.executeUpdate();
@@ -271,12 +270,12 @@ public class UserDAO implements iUserDAO {
     }
     return result;
   }
-  public  int addRole(String role, int userID ) {
+  public  int addRole(String role, String userID ) {
     int numRowsAffected=0;try (Connection connection = getConnection()) {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_User_Role_Line( ?, ?)}")){
           statement.setString(1,role);
-          statement.setInt(2,userID);
+          statement.setString(2,userID);
           numRowsAffected = statement.executeUpdate();
           if (numRowsAffected == 0) {
             throw new RuntimeException("Could not add User_Role_Line. Try again later");

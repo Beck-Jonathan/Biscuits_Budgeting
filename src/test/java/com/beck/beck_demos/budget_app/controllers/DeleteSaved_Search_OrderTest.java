@@ -48,7 +48,7 @@ class DeleteSaved_Search_OrderTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(1);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doGet(request,response);
@@ -68,7 +68,7 @@ class DeleteSaved_Search_OrderTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(31);
+    user.setUser_ID("0607a176-01de-46ea-a463-1d59db87491a");
     session.setAttribute("User_B",user);
     request.setSession(session);
     request.setParameter("saved_search_orderid","34");
@@ -83,7 +83,7 @@ class DeleteSaved_Search_OrderTest {
     List<String> roles = new ArrayList<>();
     roles.add("WrongRole");
     user.setRoles(roles);
-    user.setUser_ID(1);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doGet(request,response);
@@ -97,7 +97,7 @@ class DeleteSaved_Search_OrderTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(1);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     session.setAttribute("User_B",user);
     request.setSession(session);
     request.setParameter("saved_search_orderid","1");

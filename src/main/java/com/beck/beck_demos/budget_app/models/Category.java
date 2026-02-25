@@ -1,6 +1,5 @@
 package com.beck.beck_demos.budget_app.models;
 
-import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -8,11 +7,11 @@ import org.jetbrains.annotations.NotNull;
 /// Jonathan Beck
 public class Category implements Comparable<Category> {
   private String Category_ID;
-  private Integer User_ID;
+  private String User_ID;
 
   public Category(){}
 
-  public Category(String Category_ID, Integer User_ID) {
+  public Category(String Category_ID, String User_ID) {
 
     setCategory_ID(Category_ID);
     setUser_ID(User_ID);
@@ -44,7 +43,7 @@ public class Category implements Comparable<Category> {
    * <p> Gets the User_ID of the associated Category object </p>
    * @return the User_ID of this Category object.
    */
-  public Integer getUser_ID() {
+  public String getUser_ID() {
     return User_ID;
   }
 
@@ -53,11 +52,8 @@ public class Category implements Comparable<Category> {
    *@param User_ID the user_id of the category,
    * throws IllegalArgumentException if User_ID is negative or greater than 10,000
    */
-  public void setUser_ID(Integer User_ID) {
-    if (User_ID<0){
-      throw new IllegalArgumentException("User_ID Can Not Be Negative");
-    }
-    if (User_ID>10000){
+  public void setUser_ID(String User_ID) {
+    if (User_ID.length() < 36 || User_ID.length() > 36) {
       throw new IllegalArgumentException("User_ID Can Not Be greater than 10,000");
     }
     this.User_ID = User_ID;

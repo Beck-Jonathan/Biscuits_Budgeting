@@ -1,7 +1,6 @@
 package com.beck.beck_demos.budget_app.controllers;
 
 import com.beck.beck_demos.budget_app.data.Saved_Search_OrderDAO;
-import com.beck.beck_demos.budget_app.models.Saved_Search_Order;
 import com.beck.beck_demos.budget_app.models.User;
 import com.beck.beck_demos.budget_app.iData.iSaved_Search_OrderDAO;
 import jakarta.servlet.ServletException;

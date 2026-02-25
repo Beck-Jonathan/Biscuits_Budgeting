@@ -3,13 +3,9 @@ package com.beck.beck_demos.budget_app.controllers; /******************
  Created By Jonathan Beck 7/22/2024
  ***************/
 
-import com.beck.beck_demos.budget_app.data.TransactionDAO;
-import com.beck.beck_demos.budget_app.data.CategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-import com.beck.beck_demos.budget_app.models.Category;
 import com.beck.beck_demos.budget_app.models.Transaction;
 import com.beck.beck_demos.budget_app.models.User;
-import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,17 +14,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.joda.time.DateTime;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 @WebServlet("/Export")
 public class ExportServlet extends HttpServlet {
 
@@ -78,6 +70,11 @@ public class ExportServlet extends HttpServlet {
       transactions = transactionDAO.getTransactionForExportByUser(user.getUser_ID());
     } catch (SQLException e) {
       error = true;
+      transactions=null;
+      resp.setContentType("text/plain");
+      PrintWriter out = resp.getWriter();
+      out.println("error");
+      return;
     }
     if(!error) {
       try {

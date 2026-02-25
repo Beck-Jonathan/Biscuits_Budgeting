@@ -57,7 +57,7 @@ public class EditMortgageServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -74,7 +74,7 @@ public class EditMortgageServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -123,7 +123,7 @@ public class EditMortgageServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("WrongRole");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -143,7 +143,7 @@ public class EditMortgageServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("WrongRole");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -163,7 +163,7 @@ public class EditMortgageServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
 
@@ -184,7 +184,7 @@ public class EditMortgageServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
 
@@ -205,14 +205,14 @@ public class EditMortgageServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
 //to set the old Mortgage
     Mortgage mortgage = new Mortgage();
     mortgage.setMortgage_ID("xfJsxVBDDqBaKBFAgDhQACTFREWwjVxILdpW");
-    mortgage.setUser_ID(43);
+    mortgage.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
     mortgage.setNickname("testMortgage");
     mortgage.setPresent_Value(23.2d);
     mortgage.setFuture_Value(23.2d);
@@ -296,14 +296,14 @@ public class EditMortgageServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
 //to set the old Mortgage
     Mortgage mortgage = new Mortgage();
     mortgage.setMortgage_ID("DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
-    mortgage.setUser_ID(43);
+    mortgage.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
     mortgage.setNickname("DUPLICATE");
     mortgage.setPresent_Value(100000d);
     mortgage.setFuture_Value(83930.05d);
@@ -340,14 +340,14 @@ public class EditMortgageServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
 //to set the old Mortgage
     Mortgage mortgage = new Mortgage();
     mortgage.setMortgage_ID("EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
-    mortgage.setUser_ID(43);
+    mortgage.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
     mortgage.setNickname("EXCEPTION");
     mortgage.setRemaining_Term(43);
     session.setAttribute("mortgage",mortgage);

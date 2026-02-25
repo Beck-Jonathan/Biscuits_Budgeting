@@ -47,7 +47,7 @@ public class AllBank_AccountsServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(24);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -67,7 +67,7 @@ public class AllBank_AccountsServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("WrongRole");
-    user.setUser_ID(24);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -80,7 +80,7 @@ public class AllBank_AccountsServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(24);
+    user.setUser_ID("17172158-16cd-4722-862a-bfe59e4be263");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -94,7 +94,7 @@ public class AllBank_AccountsServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(24);
+    user.setUser_ID("17172158-16cd-4722-862a-bfe59e4be263");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
 

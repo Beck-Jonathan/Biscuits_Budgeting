@@ -6,7 +6,6 @@ import com.beck.beck_demos.budget_app.data.ReceiptDAO;
 import com.beck.beck_demos.budget_app.data.TransactionDAO;
 import com.beck.beck_demos.budget_app.iData.iAWSDAO;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-import com.beck.beck_demos.budget_app.iData.iUserDAO;
 import com.beck.beck_demos.budget_app.models.Receipt;
 import com.beck.beck_demos.budget_app.models.Transaction;
 import com.beck.beck_demos.budget_app.models.User;

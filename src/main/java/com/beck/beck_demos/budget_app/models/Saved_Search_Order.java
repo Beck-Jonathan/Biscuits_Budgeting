@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Saved_Search_Order implements Comparable<Saved_Search_Order> {
   private Integer Saved_Search_Order_ID;
-  private Integer Owned_User;
+  private String Owned_User;
   private String Nickname;
   private String Description;
   private Date Last_Used;
@@ -22,7 +22,7 @@ public class Saved_Search_Order implements Comparable<Saved_Search_Order> {
 
   public Saved_Search_Order(){}
 
-  public Saved_Search_Order(Integer Saved_Search_Order_ID, Integer Owned_User, String Nickname, String Description, Date Last_Used, Date Last_Updated, Integer Times_Ran) {
+  public Saved_Search_Order(Integer Saved_Search_Order_ID, String Owned_User, String Nickname, String Description, Date Last_Used, Date Last_Updated, Integer Times_Ran) {
 
     this.Saved_Search_Order_ID = Saved_Search_Order_ID;
     this.Owned_User = Owned_User;
@@ -46,11 +46,11 @@ public class Saved_Search_Order implements Comparable<Saved_Search_Order> {
     }
     this.Saved_Search_Order_ID = Saved_Search_Order_ID;
   }
-  public Integer getOwned_User() {
+  public String getOwned_User() {
     return Owned_User;
   }
-  public void setOwned_User(Integer Owned_User) {
-    if (Owned_User<0||Owned_User>10000){
+  public void setOwned_User(String Owned_User) {
+    if (Owned_User.length()<36||Owned_User.length()>36){
       throw new IllegalArgumentException("Owned_User Can Not Be Negative");
     }
     this.Owned_User = Owned_User;

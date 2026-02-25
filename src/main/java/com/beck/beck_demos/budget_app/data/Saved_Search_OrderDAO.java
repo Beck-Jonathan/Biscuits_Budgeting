@@ -5,8 +5,6 @@ import com.beck.beck_demos.budget_app.models.Saved_Search_Order;
 import com.beck.beck_demos.budget_app.models.Saved_Search_Order_Line;
 import com.beck.beck_demos.budget_app.models.Saved_Search_Order_VM;
 import com.beck.beck_demos.budget_app.models.User;
-import jakarta.websocket.Decoder;
-import jakarta.websocket.Encoder;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -15,7 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import static com.beck.beck_demos.budget_app.data.Database.getConnection;
 
@@ -27,19 +24,19 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
    */
 
   @Override
-  public  List<Saved_Search_Order_VM> getSaved_Search_OrderbyUser(Integer User_ID, int pagesize, int offset) {
+  public  List<Saved_Search_Order_VM> getSaved_Search_OrderbyUser(String User_ID, int pagesize, int offset) {
     List<Saved_Search_Order_VM> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Saved_Search_Order_by_User(?,?,?)}")) {
-          statement.setInt(1,User_ID);
+          statement.setString(1,User_ID);
           statement.setInt(2,pagesize);
           statement.setInt(3,offset);
 
 
           try(ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {Integer Saved_Search_Order_ID = resultSet.getInt("Saved_Search_Order_Saved_Search_Order_ID");
-              Integer Owned_User = resultSet.getInt("Saved_Search_Order_Owned_User");
+              String Owned_User = resultSet.getString("Saved_Search_Order_Owned_User");
               String Nickname = resultSet.getString("Saved_Search_Order_Nickname");
               String Description = resultSet.getString("Saved_Search_Order_Description");
               Date Last_Used = resultSet.getDate("Saved_Search_Order_Last_Used");
@@ -73,7 +70,7 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
     int numRowsAffected=0;try (Connection connection = getConnection()) {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Saved_Search_Order( ?, ?, ?, ?, ?, ?)}")){
-          statement.setInt(1,_saved_search_order.getOwned_User());
+          statement.setString(1,_saved_search_order.getOwned_User());
           statement.setString(2,_saved_search_order.getNickname());
           statement.setString(3,_saved_search_order.getDescription());
           java.sql.Date Last_Used = new java.sql.Date(_saved_search_order.getLast_Used().getTime());
@@ -106,18 +103,18 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
     try(Connection connection = getConnection()) {
       try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_pk_Saved_Search_Order(?,?)}")) {
         statement.setString(1, _saved_search_order.getSaved_Search_Order_ID().toString());
-        statement.setInt(2,_saved_search_order.getOwned_User());
+        statement.setString(2,_saved_search_order.getOwned_User());
 
         try (ResultSet resultSet = statement.executeQuery()){
           if(resultSet.next()) {
             Integer Saved_Search_Order_ID = resultSet.getInt("Saved_Search_Order_Saved_Search_Order_ID");
-            Integer Owned_User = resultSet.getInt("Saved_Search_Order_Owned_User");
+            String Owned_User = resultSet.getString("Saved_Search_Order_Owned_User");
             String Nickname = resultSet.getString("Saved_Search_Order_Nickname");
             String Description = resultSet.getString("Saved_Search_Order_Description");
             Date Last_Used = resultSet.getDate("Saved_Search_Order_Last_Used");
             Date Last_Updated = resultSet.getDate("Saved_Search_Order_Last_Updated");
             Integer Times_Ran = resultSet.getInt("Saved_Search_Order_Times_Ran");
-            Integer User_User_ID = resultSet.getInt("User_User_ID");
+            String User_User_ID = resultSet.getString("User_User_ID");
             String User_User_Name = resultSet.getString("User_User_Name");
 
             String User_Email = resultSet.getString("User_Email");
@@ -138,7 +135,7 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
           while (resultSet.next()) {Integer Saved_Search_Order_ID = resultSet.getInt("Saved_Search_Order_Line_Saved_Search_Order_ID");
             Integer Line_No = resultSet.getInt("Saved_Search_Order_Line_Line_No");
             String Category_ID = resultSet.getString("Saved_Search_Order_Line_Category_ID");
-            Integer User_ID = resultSet.getInt("Saved_Search_Order_Line_User_ID");
+            String User_ID = resultSet.getString("Saved_Search_Order_Line_User_ID");
             String Search_Phrase = resultSet.getString("Saved_Search_Order_Line_Search_Phrase");
             boolean Is_Active = resultSet.getBoolean("Saved_Search_Order_Line_Is_Active");
 
@@ -169,7 +166,7 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
         try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Saved_Search_Order(?,?,?,?,?,?,?,?)}"))
         {
           statement.setInt(1,oldSaved_Search_Order.getSaved_Search_Order_ID());
-          statement.setInt(2,oldSaved_Search_Order.getOwned_User());
+          statement.setString(2,oldSaved_Search_Order.getOwned_User());
           statement.setString(3,oldSaved_Search_Order.getNickname());
           statement.setString(4,newSaved_Search_Order.getNickname());
           statement.setString(5,oldSaved_Search_Order.getDescription());
@@ -193,13 +190,13 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
    * @return number of records deleted
    * @author Jonathan Beck
    */
- public int delete( int Saved_Search_Order_ID, int user_id) throws SQLException{
+ public int delete(int Saved_Search_Order_ID, String user_id) throws SQLException{
     int rowsAffected=0;
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_Delete_Saved_Search_Order( ?,?)}")){
           statement.setInt(1,Saved_Search_Order_ID);
-          statement.setInt(2,user_id);
+          statement.setString(2,user_id);
           rowsAffected = statement.executeUpdate();
           if (rowsAffected == 0) {
             throw new RuntimeException("Could not Delete Saved_Search_Order. Try again later");
@@ -220,7 +217,7 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
           statement.setInt(1,_saved_search_order_line.getSaved_Search_Order_ID());
           statement.setInt(2,_saved_search_order_line.getLine_No());
           statement.setString(3,_saved_search_order_line.getCategory_ID());
-          statement.setInt(4,_saved_search_order_line.getUser_ID());
+          statement.setString(4,_saved_search_order_line.getUser_ID());
           statement.setString(5,_saved_search_order_line.getSearch_Phrase());
           numRowsAffected = statement.executeUpdate();
           if (numRowsAffected == 0) {
@@ -245,7 +242,7 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
           statement.setInt(2,oldSaved_Search_Order_Line.getLine_No());
           statement.setString(3,oldSaved_Search_Order_Line.getCategory_ID());
           statement.setString(4,newSaved_Search_Order_Line.getCategory_ID());
-          statement.setInt(5,oldSaved_Search_Order_Line.getUser_ID());
+          statement.setString(5,oldSaved_Search_Order_Line.getUser_ID());
           statement.setString(6,oldSaved_Search_Order_Line.getSearch_Phrase());
           statement.setString(7,newSaved_Search_Order_Line.getSearch_Phrase());
           statement.setBoolean(8,oldSaved_Search_Order_Line.getIs_Active());

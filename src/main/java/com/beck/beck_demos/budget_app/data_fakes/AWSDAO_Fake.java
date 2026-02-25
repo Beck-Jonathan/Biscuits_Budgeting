@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class AWSDAO_Fake implements iAWSDAO {
   @Override
-  public Map<File, String> uploadToS3(List<File> files, String bucketName, int UserID) throws Exception {
+  public Map<File, String> uploadToS3(List<File> files, String bucketName, String UserID) throws Exception {
     Map<File, String> uploadedFiles = new java.util.HashMap<>();
     for (File file : files) {
 

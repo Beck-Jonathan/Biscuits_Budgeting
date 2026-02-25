@@ -11,7 +11,7 @@ public interface iMortgageDAO {
     * @return List of Mortgage
     * @author Jonathan Beck
     */
-   List<Mortgage> getMortgagebyUser(Integer User_ID, int limit, int offset);
+   List<Mortgage> getMortgagebyUser(String User_ID, int limit, int offset);
    /**
     * DAO Method to add Mortgage objects
     * @param _mortgage the Mortgage to be added

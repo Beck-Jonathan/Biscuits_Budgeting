@@ -44,7 +44,7 @@ class Saved_Search_Order_VMTest {
     Date date = df.parse(strDate);
     Saved_Search_Order _saved_search_order= new Saved_Search_Order(
         8739,
-        5781,
+        "f503f3ba-3375-40d4-8a0f-5c5aee018c6b",
         "hyZEgNFORjRMrUduYoOvfteYaiBsZvifshNKqaRCNPUomwIrjanJCoQdDnbnSKHZDritXdPuAsNVmpvStDHCBlOXJliNefDtPV",
         "AgVmsgCObAlrAQDRApkZOHMlObSaveUIEMJaApNTbksZdKGXQgkXuARvUlwrSfNSgfVuybhDpVZXGDlglNayitraCmBGxSrYknRMTSYuUYsWayEGgmgTvngwrDbxUPJJQtNOUwMdsdxqmSEBpJebSVEdMBoKKrGGjGStCWsMnfPNSAAlUcEfqdqPWJfcZxjoCLecEhQjnVtAnYoPBqOFPmdeqjLLRkcLwiAyxaGGksUNmKveimYBwNxjReQoq",
         df.parse("2/8/2025 1:48:31 AM"),
@@ -53,7 +53,7 @@ class Saved_Search_Order_VMTest {
     );
     _saved_search_orderVM = new Saved_Search_Order_VM(_saved_search_order);
     Assertions.assertEquals(8739,_saved_search_orderVM.getSaved_Search_Order_ID());
-    Assertions.assertEquals(5781,_saved_search_orderVM.getOwned_User());
+    Assertions.assertEquals("f503f3ba-3375-40d4-8a0f-5c5aee018c6b",_saved_search_orderVM.getOwned_User());
     Assertions.assertEquals("hyZEgNFORjRMrUduYoOvfteYaiBsZvifshNKqaRCNPUomwIrjanJCoQdDnbnSKHZDritXdPuAsNVmpvStDHCBlOXJliNefDtPV",_saved_search_orderVM.getNickname());
     Assertions.assertEquals("AgVmsgCObAlrAQDRApkZOHMlObSaveUIEMJaApNTbksZdKGXQgkXuARvUlwrSfNSgfVuybhDpVZXGDlglNayitraCmBGxSrYknRMTSYuUYsWayEGgmgTvngwrDbxUPJJQtNOUwMdsdxqmSEBpJebSVEdMBoKKrGGjGStCWsMnfPNSAAlUcEfqdqPWJfcZxjoCLecEhQjnVtAnYoPBqOFPmdeqjLLRkcLwiAyxaGGksUNmKveimYBwNxjReQoq",_saved_search_orderVM.getDescription());
     Assertions.assertEquals(df.parse("2/8/2025 1:48:31 AM"),_saved_search_orderVM.getLast_Used());
@@ -68,7 +68,7 @@ class Saved_Search_Order_VMTest {
     Date date = df.parse(strDate);
     Saved_Search_Order _saved_search_order= new Saved_Search_Order(
         3195,
-        4119,
+        "f503f3ba-3375-40d4-8a0f-5c5aee018c6b",
         "AUFHJHhClApnbPOLiVgutlljeWQoscXtHJSgjXMPsrKlvdqwjFZSUljXNrWXsEHiCVqeOiestEensOlJYgLnHyAxWZQdlsOyRV",
         "nZNZFcUdevjfNpifOjOWZNcACyAlJhCrlTRgsXdmqaoJOfYQeNfDAApEUcsmBdbksBlpFvfnqmTbVShTRqnqPJwjLaltOsWEDTCNlBAWOaNPDLKwypRbMGcQQagNdEpNKPwnaEOIxwQZLhDvWjluqMZvZTJdXCrQOWVubJBkIeApVyJhgFOXjUdbnoWpOauZgIctGEovfEUAvoRdrBkSmTetgElOZILwsURfhvjWtfOhwCuenJUOPLWjKWdom",
         df.parse("4/19/2022 6:31:39 AM"),
@@ -78,7 +78,7 @@ class Saved_Search_Order_VMTest {
     User _user = new User();
     _saved_search_orderVM = new Saved_Search_Order_VM(_saved_search_order, _user);
     Assertions.assertEquals(3195,_saved_search_orderVM.getSaved_Search_Order_ID());
-    Assertions.assertEquals(4119,_saved_search_orderVM.getOwned_User());
+    Assertions.assertEquals("f503f3ba-3375-40d4-8a0f-5c5aee018c6b",_saved_search_orderVM.getOwned_User());
     Assertions.assertEquals("AUFHJHhClApnbPOLiVgutlljeWQoscXtHJSgjXMPsrKlvdqwjFZSUljXNrWXsEHiCVqeOiestEensOlJYgLnHyAxWZQdlsOyRV",_saved_search_orderVM.getNickname());
     Assertions.assertEquals("nZNZFcUdevjfNpifOjOWZNcACyAlJhCrlTRgsXdmqaoJOfYQeNfDAApEUcsmBdbksBlpFvfnqmTbVShTRqnqPJwjLaltOsWEDTCNlBAWOaNPDLKwypRbMGcQQagNdEpNKPwnaEOIxwQZLhDvWjluqMZvZTJdXCrQOWVubJBkIeApVyJhgFOXjUdbnoWpOauZgIctGEovfEUAvoRdrBkSmTetgElOZILwsURfhvjWtfOhwCuenJUOPLWjKWdom",_saved_search_orderVM.getDescription());
     Assertions.assertEquals(df.parse("4/19/2022 6:31:39 AM"),_saved_search_orderVM.getLast_Used());
@@ -94,7 +94,7 @@ class Saved_Search_Order_VMTest {
     Date date = df.parse(strDate);
     Saved_Search_Order _saved_search_order= new Saved_Search_Order(
         288,
-        8345,
+        "f503f3ba-3375-40d4-8a0f-5c5aee018c6b",
         "DRXcrUBcdEFPoGfsHBtBhDIjmRVAMUsGEMLeYbkCKbfovNUrAvCcvidOQNEstuWtZOiYIxyKwVIfTUwEPfunTnGchkJUBmGJam",
         "DFvEMZQtFXxSydmStFhJWWmkBcUUJnJAVTbhUDihDImpUWymPFthQXgjrUknRdPLeBHZiTdxKNwVltSEFgoQMvVyyohXxkHnIjZxZyLgNYcUFXjLwtXbeHseMAfpadJsFfgddjivWejNyOSnfsjInpyFZavmmQdPqPgrikpJXMlThJhsBFPgbDJNHydqNwdlncDPEFIuHNkNOcFbOZTshmFZkiGxulHaJUEplAKfvvtkBlfhBPrpBcVxKAfcf",
         df.parse("3/1/2015 5:27:20 PM"),
@@ -104,7 +104,7 @@ class Saved_Search_Order_VMTest {
     List<Saved_Search_Order_Line> saved_search_order_lines = new ArrayList<>();
     _saved_search_orderVM = new Saved_Search_Order_VM(_saved_search_order, saved_search_order_lines);
     Assertions.assertEquals(288,_saved_search_orderVM.getSaved_Search_Order_ID());
-    Assertions.assertEquals(8345,_saved_search_orderVM.getOwned_User());
+    Assertions.assertEquals("f503f3ba-3375-40d4-8a0f-5c5aee018c6b",_saved_search_orderVM.getOwned_User());
     Assertions.assertEquals("DRXcrUBcdEFPoGfsHBtBhDIjmRVAMUsGEMLeYbkCKbfovNUrAvCcvidOQNEstuWtZOiYIxyKwVIfTUwEPfunTnGchkJUBmGJam",_saved_search_orderVM.getNickname());
     Assertions.assertEquals("DFvEMZQtFXxSydmStFhJWWmkBcUUJnJAVTbhUDihDImpUWymPFthQXgjrUknRdPLeBHZiTdxKNwVltSEFgoQMvVyyohXxkHnIjZxZyLgNYcUFXjLwtXbeHseMAfpadJsFfgddjivWejNyOSnfsjInpyFZavmmQdPqPgrikpJXMlThJhsBFPgbDJNHydqNwdlncDPEFIuHNkNOcFbOZTshmFZkiGxulHaJUEplAKfvvtkBlfhBPrpBcVxKAfcf",_saved_search_orderVM.getDescription());
     Assertions.assertEquals(df.parse("3/1/2015 5:27:20 PM"),_saved_search_orderVM.getLast_Used());

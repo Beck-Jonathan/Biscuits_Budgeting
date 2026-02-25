@@ -76,7 +76,7 @@ public class ReceiptDAO_Fake implements iReceiptDAO{
     return result;
   }
   @Override
-  public List <Receipt> getAllReceipt(int limit, int offset, String search_term, String Transaction_ID, int user_id) throws SQLException {
+  public List <Receipt> getAllReceipt(int limit, int offset, String search_term, String Transaction_ID, String user_id) throws SQLException {
     List<Receipt> results = new ArrayList<>();
     for (Receipt receipt : receipts){
       if (Transaction_ID.isEmpty()||receipt.getTransaction_ID().equals(Transaction_ID))
@@ -140,7 +140,7 @@ public class ReceiptDAO_Fake implements iReceiptDAO{
   }
 
   @Override
-  public int getReceiptCount(String searchTerm, String transactionId, int user_id) {
+  public int getReceiptCount(String searchTerm, String transactionId, String user_id) {
     List<Receipt> results = new ArrayList<>();
     for (Receipt receipt : receipts){
       if ((receipt.getTransaction_ID()!=null||receipt.getTransaction_ID().equals(transactionId))

@@ -47,7 +47,7 @@ class EditCategoryServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -61,7 +61,7 @@ class EditCategoryServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doPost(request,response);
@@ -112,7 +112,7 @@ class EditCategoryServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     session.setAttribute("User_B",user);
     String Category_ID= "fOmyBlIv";
     request.setParameter("categoryid",Category_ID);
@@ -121,7 +121,7 @@ class EditCategoryServletTest {
     Category category = (Category) session.getAttribute("category");
     assertNotNull(category);
     assertEquals(Category_ID,category.getCategory_ID());
-    assertEquals(36,category.getUser_ID());
+    assertEquals("af735dfc-22a9-4214-a8e5-fb8de2305700",category.getUser_ID());
   }
 
   @Test
@@ -154,7 +154,7 @@ class EditCategoryServletTest {
 //to set the old Category
     Category category = new Category();
     category.setCategory_ID("fOmyBlIv");
-    category.setUser_ID(36);
+    category.setUser_ID("8255af1b-2e9f-487d-b192-b30845feabfc");
     session.setAttribute("category",category);
 //create a new albums parameters
     request.setParameter("inputcategoryCategory_ID","TestValue");
@@ -203,7 +203,7 @@ class EditCategoryServletTest {
 //to set the old Category
     Category category = new Category();
     category.setCategory_ID("DUPLICATE");
-    category.setUser_ID(43);
+    category.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     session.setAttribute("category",category);
 //create a new albums parameters
     request.setParameter("inputcategoryCategory_ID","DUPLICATE");
@@ -228,7 +228,7 @@ class EditCategoryServletTest {
 //to set the old Category
     Category category = new Category();
     category.setCategory_ID("EXCEPTION");
-    category.setUser_ID(43);
+    category.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     session.setAttribute("category",category);
 //create a new albums parameters
     request.setParameter("inputcategoryCategory_ID","EXCEPTION");

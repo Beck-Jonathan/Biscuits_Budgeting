@@ -1,6 +1,5 @@
 package com.beck.beck_demos.budget_app.models;
 
-import com.beck.beck_demos.budget_app.models.Transaction;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +10,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
 class TransactionTest {
   private Transaction _transaction;
   @BeforeEach
@@ -49,7 +47,7 @@ class TransactionTest {
     String _censored_id = new String(censored_id);
     Transaction _transaction= new Transaction(
         "XxtdYmVM",
-        1081,
+        "af735dfc-22a9-4214-a8e5-fb8de2305700",
         "rDfKssjDroTwjtpyewSRUKBvmtSALiIRbDOjJuTDariNWtufwgmkgCiWyajqJgBVgfGpidPjnPXFKKdnRahZUqAaYHjNnpoTXC",
         BankAccountID,
         date
@@ -62,7 +60,7 @@ class TransactionTest {
         true
     );
     Assertions.assertEquals("XxtdYmVM",_transaction.getTransaction_ID());
-    Assertions.assertEquals(1081,_transaction.getUser_ID());
+    Assertions.assertEquals("af735dfc-22a9-4214-a8e5-fb8de2305700",_transaction.getUser_ID());
     Assertions.assertEquals("rDfKssjDroTwjtpyewSRUKBvmtSALiIRbDOjJuTDariNWtufwgmkgCiWyajqJgBVgfGpidPjnPXFKKdnRahZUqAaYHjNnpoTXC",_transaction.getCategory_ID());
     Assertions.assertEquals(_censored_id,_transaction.getBank_Account_ID());
     Assertions.assertEquals(date,_transaction.getPost_Date());
@@ -107,17 +105,17 @@ class TransactionTest {
   }
   @Test
   public void testTransactionThrowsIllegalArgumentExceptionIfUser_IDTooSmall(){
-    int User_ID = -1;
+    String User_ID = "af735dfc-22a9-4214-a8e5-fb8057";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_transaction.setUser_ID(User_ID);});
   }
   @Test
   public void testTransactionThrowsIllegalArgumentExceptionIfUser_IDTooBig(){
-    int User_ID = 10001;
+    String User_ID = "af735dfc-22a9-4214-a8e5-fb80sssssss57";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_transaction.setUser_ID(User_ID);});
   }
   @Test
   public void testTransactionSetsUser_ID(){
-    int User_ID = 846;
+    String User_ID = "af735dfc-22a9-4214-a8e5-fb8de2305700";
     _transaction.setUser_ID(User_ID);
     Assertions.assertEquals(User_ID, _transaction.getUser_ID());
   }
@@ -274,12 +272,12 @@ class TransactionTest {
 //to set the Transaction_ID as equal.
     smaller.setTransaction_ID("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
 //to compare a smaller and larger User_ID
-    smaller.setUser_ID(10);
-    bigger.setUser_ID(20);
+    smaller.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
+    bigger.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the User_ID as equal.
-    smaller.setUser_ID(20);
+    smaller.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");;
 //to compare a smaller and larger Category_ID
     smaller.setCategory_ID("aaaa");
     bigger.setCategory_ID("bbbb");

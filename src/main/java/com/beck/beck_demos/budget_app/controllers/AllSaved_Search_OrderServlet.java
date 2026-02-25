@@ -6,7 +6,6 @@ package com.beck.beck_demos.budget_app.controllers;
  ***************/
 
 import com.beck.beck_demos.budget_app.data.Saved_Search_OrderDAO;
-import com.beck.beck_demos.budget_app.models.Saved_Search_Order;
 import com.beck.beck_demos.budget_app.models.Saved_Search_Order_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import com.beck.beck_demos.budget_app.iData.iSaved_Search_OrderDAO;
@@ -18,9 +17,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 @WebServlet("/all-Saved_Search_Orders")
 public class AllSaved_Search_OrderServlet  extends HttpServlet {
   private iSaved_Search_OrderDAO saved_search_orderDAO;

@@ -1,12 +1,7 @@
 package com.beck.beck_demos.budget_app.controllers;
 
-import com.beck.beck_demos.budget_app.data.CategoryDAO;
 import com.beck.beck_demos.budget_app.data.TransactionDAO;
-import com.beck.beck_demos.budget_app.data.UserDAO;
-import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-import com.beck.beck_demos.budget_app.iData.iUserDAO;
-import com.beck.beck_demos.budget_app.models.Category;
 import com.beck.beck_demos.budget_app.models.Category_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,7 +14,6 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

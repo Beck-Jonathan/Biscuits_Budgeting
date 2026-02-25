@@ -47,7 +47,7 @@ class DeleteTransaction_CommentServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -69,7 +69,7 @@ class DeleteTransaction_CommentServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(54);
+    user.setUser_ID("f503f3ba-3375-40d4-8a0f-5c5aee018c6b");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -85,7 +85,7 @@ class DeleteTransaction_CommentServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("WrongRole");
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -99,7 +99,7 @@ class DeleteTransaction_CommentServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(54);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);

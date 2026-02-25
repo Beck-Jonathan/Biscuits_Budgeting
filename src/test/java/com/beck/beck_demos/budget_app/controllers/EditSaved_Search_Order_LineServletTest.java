@@ -47,7 +47,7 @@ class EditSaved_Search_Order_LineServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(31);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -69,7 +69,7 @@ class EditSaved_Search_Order_LineServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("WrongRole");
-    user.setUser_ID(31);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -85,7 +85,7 @@ class EditSaved_Search_Order_LineServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(31);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -94,7 +94,7 @@ class EditSaved_Search_Order_LineServletTest {
     saved_search_order_line.setSaved_Search_Order_ID(34);
     saved_search_order_line.setLine_No(27);
     saved_search_order_line.setCategory_ID("testSaved_Search_Order_Line");
-    saved_search_order_line.setUser_ID(43);
+    saved_search_order_line.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
     saved_search_order_line.setSearch_Phrase("testSaved_Search_Order_Line");
     saved_search_order_line.setIs_Active(true);
     session.setAttribute("saved_search_order_line",saved_search_order_line);
@@ -122,7 +122,7 @@ class EditSaved_Search_Order_LineServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(31);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -156,7 +156,7 @@ class EditSaved_Search_Order_LineServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(31);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -165,7 +165,7 @@ class EditSaved_Search_Order_LineServletTest {
     saved_search_order_line.setSaved_Search_Order_ID(43);
     saved_search_order_line.setLine_No(43);
     saved_search_order_line.setCategory_ID("DUPLICATE");
-    saved_search_order_line.setUser_ID(43);
+    saved_search_order_line.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
     saved_search_order_line.setSearch_Phrase("DUPLICATE");
     saved_search_order_line.setIs_Active(true);
     session.setAttribute("saved_search_order_line",saved_search_order_line);
@@ -192,7 +192,7 @@ class EditSaved_Search_Order_LineServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(31);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -201,7 +201,7 @@ class EditSaved_Search_Order_LineServletTest {
     saved_search_order_line.setSaved_Search_Order_ID(43);
     saved_search_order_line.setLine_No(43);
     saved_search_order_line.setCategory_ID("EXCEPTION");
-    saved_search_order_line.setUser_ID(43);
+    saved_search_order_line.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
     saved_search_order_line.setSearch_Phrase("EXCEPTION");
     saved_search_order_line.setIs_Active(true);
     session.setAttribute("saved_search_order_line",saved_search_order_line);

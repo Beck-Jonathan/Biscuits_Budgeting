@@ -14,21 +14,21 @@ public class Bank_AccountDAO_Fake implements iBank_AccountDAO {
 
   public Bank_AccountDAO_Fake() {
     bank_accountVMs = new ArrayList<>();
-    Bank_Account bank_account0 = new Bank_Account("hSNjUblO", 24, "DmjVevwE", 29.56, new Date());
-    Bank_Account bank_account1 = new Bank_Account("GejhdSlI", 24, "YvswvEJj", 18.86, new Date());
-    Bank_Account bank_account2 = new Bank_Account("OcqGoFft", 24, "wSpiIltu", 41.03, new Date());
-    Bank_Account bank_account3 = new Bank_Account("lDAMLJpU", 24, "FpesMopi", 26.04, new Date());
-    Bank_Account bank_account4 = new Bank_Account("tcxXoKSi", 24, "mHCYJxXf", 18.67, new Date());
-    Bank_Account bank_account5 = new Bank_Account("WfwyjDRZ", 57, "UTuLNWdJ", 14.75, new Date());
-    Bank_Account bank_account6 = new Bank_Account("beBsZDMD", 57, "WtEgCSdb", 64.59, new Date());
-    Bank_Account bank_account7 = new Bank_Account("rYTkwMZL", 57, "qLlUNbHU", 56.11, new Date());
-    Bank_Account bank_account8 = new Bank_Account("vfoQvgss", 57, "doiQeNIQ", 65.08, new Date());
-    Bank_Account bank_account9 = new Bank_Account("NdBMLjpx", 57, "GuwqExUv", 50.96, new Date());
-    Bank_Account bank_account10 = new Bank_Account("MgQlSwbw", 51, "fwvRyEqP", 29.29, new Date());
-    Bank_Account bank_account11 = new Bank_Account("PFyxxvlj", 51, "jvhaDNwq", 51.97, new Date());
-    Bank_Account bank_account12 = new Bank_Account("OclsrBnu", 51, "rynfrgMb", 23.91, new Date());
-    Bank_Account bank_account13 = new Bank_Account("MRMUBpNu", 51, "BNkAcSmA", 61.72, new Date());
-    Bank_Account bank_account14 = new Bank_Account("TFbvkCDl", 51, "uEDBTrpB", 48.12, new Date());
+    Bank_Account bank_account0 = new Bank_Account("hSNjUblO", "17172158-16cd-4722-862a-bfe59e4be263", "DmjVevwE", 29.56, new Date());
+    Bank_Account bank_account1 = new Bank_Account("GejhdSlI", "17172158-16cd-4722-862a-bfe59e4be263", "YvswvEJj", 18.86, new Date());
+    Bank_Account bank_account2 = new Bank_Account("OcqGoFft", "17172158-16cd-4722-862a-bfe59e4be263", "wSpiIltu", 41.03, new Date());
+    Bank_Account bank_account3 = new Bank_Account("lDAMLJpU", "17172158-16cd-4722-862a-bfe59e4be263", "FpesMopi", 26.04, new Date());
+    Bank_Account bank_account4 = new Bank_Account("tcxXoKSi", "17172158-16cd-4722-862a-bfe59e4be263", "mHCYJxXf", 18.67, new Date());
+    Bank_Account bank_account5 = new Bank_Account("WfwyjDRZ", "102f4989-020b-4292-bbbb-7925e6b4ed35", "UTuLNWdJ", 14.75, new Date());
+    Bank_Account bank_account6 = new Bank_Account("beBsZDMD", "102f4989-020b-4292-bbbb-7925e6b4ed35", "WtEgCSdb", 64.59, new Date());
+    Bank_Account bank_account7 = new Bank_Account("rYTkwMZL", "102f4989-020b-4292-bbbb-7925e6b4ed35", "qLlUNbHU", 56.11, new Date());
+    Bank_Account bank_account8 = new Bank_Account("vfoQvgss", "102f4989-020b-4292-bbbb-7925e6b4ed35", "doiQeNIQ", 65.08, new Date());
+    Bank_Account bank_account9 = new Bank_Account("NdBMLjpx", "102f4989-020b-4292-bbbb-7925e6b4ed35", "GuwqExUv", 50.96, new Date());
+    Bank_Account bank_account10 = new Bank_Account("MgQlSwbw", "618052e9-c69b-4d9b-880e-e22e4a970bd6", "fwvRyEqP", 29.29, new Date());
+    Bank_Account bank_account11 = new Bank_Account("PFyxxvlj", "618052e9-c69b-4d9b-880e-e22e4a970bd6", "jvhaDNwq", 51.97, new Date());
+    Bank_Account bank_account12 = new Bank_Account("OclsrBnu", "618052e9-c69b-4d9b-880e-e22e4a970bd6", "rynfrgMb", 23.91, new Date());
+    Bank_Account bank_account13 = new Bank_Account("MRMUBpNu", "618052e9-c69b-4d9b-880e-e22e4a970bd6", "BNkAcSmA", 61.72, new Date());
+    Bank_Account bank_account14 = new Bank_Account("TFbvkCDl", "618052e9-c69b-4d9b-880e-e22e4a970bd6", "uEDBTrpB", 48.12, new Date());
     bank_accountVMs.add(bank_account0);
     bank_accountVMs.add(bank_account1);
     bank_accountVMs.add(bank_account2);
@@ -83,7 +83,7 @@ public class Bank_AccountDAO_Fake implements iBank_AccountDAO {
   }
 
   @Override
-  public List <Bank_Account> getAllBank_Account(int limit, int offset, Integer User_ID) throws SQLException {
+  public List <Bank_Account> getAllBank_Account(int limit, int offset, String User_ID) throws SQLException {
     List<Bank_Account> results = new ArrayList<>();
     for (Bank_Account bank_account : bank_accountVMs){
       if ((User_ID==null||bank_account.getUser_ID().equals(User_ID))

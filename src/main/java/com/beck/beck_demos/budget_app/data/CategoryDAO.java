@@ -8,14 +8,14 @@ package com.beck.beck_demos.budget_app.data;
 
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
 import com.beck.beck_demos.budget_app.models.Category;
-import com.beck.beck_demos.budget_app.models.User;
+
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
+
 import static com.beck.beck_demos.budget_app.data.Database.getConnection;
 public class CategoryDAO implements iCategoryDAO {
   /**
@@ -27,7 +27,7 @@ public class CategoryDAO implements iCategoryDAO {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Category( ?,?)}")){
           statement.setString(1,_category.getCategory_ID());
-          statement.setInt(2,_category.getUser_ID());
+          statement.setString(2,_category.getUser_ID());
           numRowsAffected = statement.executeUpdate();
           if (numRowsAffected == 0) {
             throw new RuntimeException("Could not add Category. Try again later");
@@ -40,12 +40,12 @@ public class CategoryDAO implements iCategoryDAO {
     return numRowsAffected;
   }
 
-  public List<Category> getCategoryByUser(int userID) {
+  public List<Category> getCategoryByUser(String userID) {
     List<Category> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_user_Category(?)}")) {
-          statement.setInt(1,userID);
+          statement.setString(1,userID);
           try(ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {String Category_ID = resultSet.getString("Category_Category_ID");
             Category _category = new Category( Category_ID,userID);
@@ -59,13 +59,13 @@ public class CategoryDAO implements iCategoryDAO {
     }
     return result;}
 
-  public int deleteCategory(String categoryID, int User_ID) {
+  public int deleteCategory(String categoryID, String User_ID) {
     int rowsAffected=0;
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_Delete_Category( ?,?)}")){
           statement.setString(1,categoryID);
-          statement.setInt(2,User_ID);
+          statement.setString(2,User_ID);
           rowsAffected = statement.executeUpdate();
           if (rowsAffected == 0) {
             throw new RuntimeException("Could not Delete Category. Try again later");
@@ -85,7 +85,7 @@ public class CategoryDAO implements iCategoryDAO {
         {
           statement.setString(1,oldCategory.getCategory_ID());
           statement.setString(2,newCategory.getCategory_ID());
-          statement.setInt(3,oldCategory.getUser_ID());
+          statement.setString(3,oldCategory.getUser_ID());
           result=statement.executeUpdate();
         } catch (SQLException e) {
           throw new RuntimeException("Could not update Category . Try again later");

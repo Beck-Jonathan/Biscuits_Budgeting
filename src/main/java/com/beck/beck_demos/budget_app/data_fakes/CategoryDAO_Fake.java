@@ -2,7 +2,6 @@ package com.beck.beck_demos.budget_app.data_fakes;
 
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
 import com.beck.beck_demos.budget_app.models.Category;
-import com.beck.beck_demos.budget_app.models.User;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,21 +14,21 @@ public class CategoryDAO_Fake implements iCategoryDAO {
   private  List<Category> categories;
   public CategoryDAO_Fake(){
     categories = new ArrayList<>();
-    Category category0 = new Category("fOmyBlIv", 36);
-    Category category1 = new Category("GLMVFfOv", 36);
-    Category category2 = new Category("HBYSCtHU", 36);
-    Category category3 = new Category("khvySdbm", 36);
-    Category category4 = new Category("ZTKajGXn", 36);
-    Category category5 = new Category("yTLuvxGG", 13);
-    Category category6 = new Category("IMrVdPEL", 13);
-    Category category7 = new Category("wmbdbfRl", 13);
-    Category category8 = new Category("ksbVeGEU", 13);
-    Category category9 = new Category("WBZWffQG", 13);
-    Category category10 = new Category("nvMJdMZW", 47);
-    Category category11 = new Category("htInVYNl", 47);
-    Category category12 = new Category("blROscKW", 47);
-    Category category13 = new Category("vIuUKHwc", 47);
-    Category category14 = new Category("SYDMAsdx", 47);
+    Category category0 = new Category("fOmyBlIv", "8255af1b-2e9f-487d-b192-b30845feabfc");
+    Category category1 = new Category("GLMVFfOv", "8255af1b-2e9f-487d-b192-b30845feabfc");
+    Category category2 = new Category("HBYSCtHU", "8255af1b-2e9f-487d-b192-b30845feabfc");
+    Category category3 = new Category("khvySdbm", "8255af1b-2e9f-487d-b192-b30845feabfc");
+    Category category4 = new Category("ZTKajGXn", "8255af1b-2e9f-487d-b192-b30845feabfc");
+    Category category5 = new Category("yTLuvxGG", "6b840299-407f-4c2b-a86b-53119cd8449d");
+    Category category6 = new Category("IMrVdPEL", "6b840299-407f-4c2b-a86b-53119cd8449d");
+    Category category7 = new Category("wmbdbfRl", "6b840299-407f-4c2b-a86b-53119cd8449d");
+    Category category8 = new Category("ksbVeGEU", "6b840299-407f-4c2b-a86b-53119cd8449d");
+    Category category9 = new Category("WBZWffQG", "6b840299-407f-4c2b-a86b-53119cd8449d");
+    Category category10 = new Category("nvMJdMZW", "6b840299-407f-4c2b-a86b-53119cd8449d");
+    Category category11 = new Category("htInVYNl", "fec75744-130e-4bcb-8bbe-9bee18080428");
+    Category category12 = new Category("blROscKW", "fec75744-130e-4bcb-8bbe-9bee18080428");
+    Category category13 = new Category("vIuUKHwc", "fec75744-130e-4bcb-8bbe-9bee18080428");
+    Category category14 = new Category("SYDMAsdx", "fec75744-130e-4bcb-8bbe-9bee18080428");
 
     categories.add(category0);
     categories.add(category1);
@@ -68,7 +67,7 @@ public class CategoryDAO_Fake implements iCategoryDAO {
   }
 
   @Override
-  public List<Category> getCategoryByUser(int User_ID){
+  public List<Category> getCategoryByUser(String User_ID){
     List<Category> results = new ArrayList<>();
     for (Category category : categories){
       if (category.getUser_ID().equals(User_ID)){
@@ -79,7 +78,7 @@ public class CategoryDAO_Fake implements iCategoryDAO {
   }
 
   @Override
-  public int deleteCategory(String categoryID, int User_ID) throws SQLException {
+  public int deleteCategory(String categoryID, String User_ID) throws SQLException {
     int size = categories.size();
     int location =-1;
     for (int i=0;i<categories.size();i++){

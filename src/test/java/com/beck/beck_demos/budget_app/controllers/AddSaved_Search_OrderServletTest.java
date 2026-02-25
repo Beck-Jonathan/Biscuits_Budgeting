@@ -110,7 +110,7 @@ class AddSaved_Search_OrderServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(39);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -137,7 +137,7 @@ class AddSaved_Search_OrderServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(39);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     session.setAttribute("User_B",user);
     request.setSession(session);
     request.setParameter("inputsaved_search_orderOwned_User","406");
@@ -158,7 +158,7 @@ class AddSaved_Search_OrderServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(39);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -184,7 +184,7 @@ class AddSaved_Search_OrderServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(39);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);

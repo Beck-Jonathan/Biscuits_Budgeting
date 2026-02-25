@@ -14,14 +14,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.time.LocalDate;
 
 import static com.beck.beck_demos.budget_app.data.Database.getConnection;
 
 import com.beck.beck_demos.budget_app.iData.iBank_AccountDAO;
-import com.beck.beck_demos.budget_app.models.Bank_Account;
-
-import java.sql.SQLException;
 
 public class Bank_AccountDAO implements iBank_AccountDAO {
 
@@ -35,7 +31,7 @@ public class Bank_AccountDAO implements iBank_AccountDAO {
 
         try (ResultSet resultSet = statement.executeQuery()){
           if(resultSet.next()){String Bank_Account_ID = resultSet.getString("Bank_Account_Bank_Account_ID");
-            Integer User_ID = resultSet.getInt("Bank_Account_User_ID");
+            String User_ID = resultSet.getString("Bank_Account_User_ID");
             String Account_Nickname = resultSet.getString("Bank_Account_Account_Nickname");
             Double Balance = resultSet.getDouble("Bank_Account_Balance");
             Date Balance_Date = resultSet.getDate("Bank_Account_Balance_Date");
@@ -67,8 +63,8 @@ public class Bank_AccountDAO implements iBank_AccountDAO {
         try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Bank_Account(? ,?,?,?,?,?,?,?,?)}"))
         {
           statement.setString(1,oldBank_Account.getBank_Account_ID());
-          statement.setInt(2,oldBank_Account.getUser_ID());
-          statement.setInt(3,newBank_Account.getUser_ID());
+          statement.setString(2,oldBank_Account.getUser_ID());
+          statement.setString(3,newBank_Account.getUser_ID());
           statement.setString(4,oldBank_Account.getAccount_Nickname());
           statement.setString(5,newBank_Account.getAccount_Nickname());
           statement.setDouble(6,oldBank_Account.getBalance());
@@ -85,17 +81,17 @@ public class Bank_AccountDAO implements iBank_AccountDAO {
   }
 
   @Override
-  public List<Bank_Account> getAllBank_Account(int offset, int limit, Integer User_ID) throws SQLException {
+  public List<Bank_Account> getAllBank_Account(int offset, int limit, String User_ID) throws SQLException {
     List<Bank_Account> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Bank_Account_by_User(?,?,?)}")) {
           statement.setInt(2,limit)
           ;statement.setInt(3,offset);
-          statement.setInt(1,User_ID);
+          statement.setString(1,User_ID);
           try(ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {String Bank_Account_ID = resultSet.getString("Bank_Account_Bank_Account_ID");
-              Integer _User_ID = resultSet.getInt("Bank_Account_User_ID");
+              String _User_ID = resultSet.getString("Bank_Account_User_ID");
               String Account_Nickname = resultSet.getString("Bank_Account_Account_Nickname");
               Double Balance = resultSet.getDouble("Bank_Account_Balance");
               Date Balance_Date = resultSet.getDate("Bank_Account_Balance_Date");
@@ -125,7 +121,7 @@ public class Bank_AccountDAO implements iBank_AccountDAO {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Bank_Account( ?, ?, ?, ?, ?)}")){
           statement.setString(1,_bank_account.getBank_Account_ID());
-          statement.setInt(2,_bank_account.getUser_ID());
+          statement.setString(2,_bank_account.getUser_ID());
           statement.setString(3,_bank_account.getAccount_Nickname());
           statement.setDouble(4,_bank_account.getBalance());
           java.sql.Date newDate = new java.sql.Date(_bank_account.getBalance_Date().getTime());

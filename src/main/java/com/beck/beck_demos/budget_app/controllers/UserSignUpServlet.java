@@ -10,7 +10,6 @@ package com.beck.beck_demos.budget_app.controllers;
 import com.beck.beck_demos.budget_app.data.*;
 import com.beck.beck_demos.budget_app.iData.iUserDAO;
 import com.beck.beck_demos.budget_app.models.*;
-import com.beck.beck_demos.shared.EmailService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -51,7 +50,7 @@ public class UserSignUpServlet extends HttpServlet{
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    int id;
+    String id;
     req.setAttribute("pageTitle", "Join Us!");
     HttpSession session = req.getSession();
     User _user = (User) session.getAttribute("User_B");

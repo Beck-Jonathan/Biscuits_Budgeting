@@ -50,7 +50,7 @@
 //    List<String> roles = new ArrayList<>();
 //    roles.add("User");
 //    user.setRoles(roles);
-//    user.setUser_ID(39);
+//    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
 //    session.setAttribute("User_B",user);
 //    request.setSession(session);
 //    servlet.doGet(request,response);
@@ -63,7 +63,7 @@
 //    List<String> roles = new ArrayList<>();
 //    roles.add("User");
 //    user.setRoles(roles);
-//    user.setUser_ID(39);
+//    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
 //    session.setAttribute("User_B",user);
 //    request.setSession(session);
 //    servlet.doPost(request,response);
@@ -90,7 +90,7 @@
 //    List<String> roles = new ArrayList<>();
 //    roles.add("WrongRole");
 //    user.setRoles(roles);
-//    user.setUser_ID(39);
+//    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
 //    session.setAttribute("User_B",user);
 //    request.setSession(session);
 //    servlet.doGet(request,response);
@@ -103,7 +103,7 @@
 //    List<String> roles = new ArrayList<>();
 //    roles.add("WrongRole");
 //    user.setRoles(roles);
-//    user.setUser_ID(39);
+//    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
 //    session.setAttribute("User_B",user);
 //    request.setSession(session);
 //    servlet.doPost(request,response);
@@ -133,7 +133,7 @@
 //    List<String> roles = new ArrayList<>();
 //    roles.add("User");
 //    user.setRoles(roles);
-//    user.setUser_ID(39);
+//    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
 //    session.setAttribute("User_B",user);
 //    Integer Transaction_ID= null;
 //    request.setParameter("transactionid",Transaction_ID.toString());
@@ -158,13 +158,13 @@
 //    List<String> roles = new ArrayList<>();
 //    roles.add("User");
 //    user.setRoles(roles);
-//    user.setUser_ID(39);
+//    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
 //    session.setAttribute("User_B",user);
 //    request.setSession(session);
 ////to set the old Transaction
 //    Transaction transaction = new Transaction();
 //    transaction.setTransaction_ID(43);
-//    transaction.setUser_ID(43);
+//    transaction.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
 //    transaction.setCategory_ID("testTransaction");
 //    transaction.setAccount_Num("testTransaction");
 //    transaction.setCheck_No(43);
@@ -195,7 +195,7 @@
 //    List<String> roles = new ArrayList<>();
 //    roles.add("User");
 //    user.setRoles(roles);
-//    user.setUser_ID(39);
+//    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
 //    session.setAttribute("User_B",user);
 //    request.setSession(session);
 //    servlet.doPost(request,response);
@@ -242,13 +242,13 @@
 //    List<String> roles = new ArrayList<>();
 //    roles.add("User");
 //    user.setRoles(roles);
-//    user.setUser_ID(39);
+//    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
 //    session.setAttribute("User_B",user);
 //    request.setSession(session);
 ////to set the old Transaction
 //    Transaction transaction = new Transaction();
 //    transaction.setTransaction_ID(43);
-//    transaction.setUser_ID(43);
+//    transaction.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
 //    transaction.setCategory_ID("DUPLICATE");
 //    transaction.setAccount_Num("DUPLICATE");
 //    transaction.setCheck_No(43);
@@ -279,13 +279,13 @@
 //    List<String> roles = new ArrayList<>();
 //    roles.add("User");
 //    user.setRoles(roles);
-//    user.setUser_ID(39);
+//    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
 //    session.setAttribute("User_B",user);
 //    request.setSession(session);
 ////to set the old Transaction
 //    Transaction transaction = new Transaction();
 //    transaction.setTransaction_ID(43);
-//    transaction.setUser_ID(43);
+//    transaction.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
 //    transaction.setCategory_ID("EXCEPTION");
 //    transaction.setAccount_Num("EXCEPTION");
 //    transaction.setCheck_No(43);

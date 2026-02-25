@@ -1,7 +1,5 @@
 package com.beck.beck_demos.budget_app.models;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +10,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
 class Bank_AccountTest {
   private Bank_Account _bank_account;
   @BeforeEach
@@ -39,7 +36,7 @@ class Bank_AccountTest {
     Date date = (Date) sdf.parse("2024-11-11");
     Bank_Account _bank_account= new Bank_Account(
         bankAccountID,
-        6778,
+        "fec75744-130e-4bcb-8bbe-9bee18080428",
         "aoVyLNnmRreFiFilRMQPZjsUjOMYbigfMZVwCHrPXqunrPOYDUmXBUeFqQTlPuYCrPWUKJWQCsxryxANvPeqnPFbaueayVoWxC",
         71d,
         date
@@ -51,7 +48,7 @@ class Bank_AccountTest {
     }
     String _censored_id = new String(censored_id);
     Assertions.assertEquals(_censored_id,_bank_account.getBank_Account_ID());
-    Assertions.assertEquals(6778,_bank_account.getUser_ID());
+    Assertions.assertEquals("fec75744-130e-4bcb-8bbe-9bee18080428",_bank_account.getUser_ID());
     Assertions.assertEquals("aoVyLNnmRreFiFilRMQPZjsUjOMYbigfMZVwCHrPXqunrPOYDUmXBUeFqQTlPuYCrPWUKJWQCsxryxANvPeqnPFbaueayVoWxC",_bank_account.getAccount_Nickname());
     Assertions.assertEquals(71,_bank_account.getBalance());
     Assertions.assertEquals(date,_bank_account.getBalance_Date());
@@ -100,17 +97,17 @@ class Bank_AccountTest {
   }
   @Test
   public void testBank_AccountThrowsIllegalArgumentExceptionIfUser_IDTooSmall(){
-    int User_ID = -1;
+    String User_ID = "";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_bank_account.setUser_ID(User_ID);});
   }
   @Test
   public void testBank_AccountThrowsIllegalArgumentExceptionIfUser_IDTooBig(){
-    int User_ID = 10001;
+    String User_ID = "fec75744-130e-4bcb-8bbe-9bee18080428sss";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_bank_account.setUser_ID(User_ID);});
   }
   @Test
   public void testBank_AccountSetsUser_ID(){
-    int User_ID = 6518;
+    String User_ID = "fec75744-130e-4bcb-8bbe-9bee18080428";
     _bank_account.setUser_ID(User_ID);
     Assertions.assertEquals(User_ID, _bank_account.getUser_ID());
   }
@@ -159,12 +156,12 @@ class Bank_AccountTest {
 //to set the Bank_Account_ID as equal.
     smaller.setBank_Account_ID("bbbb");
 //to compare a smaller and larger User_ID
-    smaller.setUser_ID(10);
-    bigger.setUser_ID(20);
+    smaller.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
+    bigger.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the User_ID as equal.
-    smaller.setUser_ID(20);
+    smaller.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");
 //to compare a smaller and larger Account_Nickname
     smaller.setAccount_Nickname("aaaa");
     bigger.setAccount_Nickname("bbbb");

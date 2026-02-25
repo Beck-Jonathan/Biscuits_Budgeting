@@ -48,7 +48,7 @@ class DeleteCategoryServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(1);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doGet(request,response);
@@ -68,7 +68,7 @@ class DeleteCategoryServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(36);
+    user.setUser_ID("8255af1b-2e9f-487d-b192-b30845feabfc");
     session.setAttribute("User_B",user);
     request.setSession(session);
     request.setParameter("categoryid","fOmyBlIv");
@@ -95,7 +95,7 @@ class DeleteCategoryServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(36);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     session.setAttribute("User_B",user);
     request.setSession(session);
     request.setParameter("categoryid","fOmyBlIv");
@@ -111,7 +111,7 @@ class DeleteCategoryServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(1);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     session.setAttribute("User_B",user);
     request.setSession(session);
     request.setParameter("categoryid","xxxxxxxxxxxxx");

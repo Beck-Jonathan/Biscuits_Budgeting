@@ -4,7 +4,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 class Saved_Search_Order_LineTest {
 
@@ -34,14 +33,14 @@ class Saved_Search_Order_LineTest {
         6151,
         3215,
         "REIgRuBpxqGJOcvVhBWCikBdLECBANExCGNqlJbKQYsohcibNePgcZwtWesYpGvWQapPurnUkQqMucUZmVwWUbIgwUhlRwYWBs",
-        3094,
+        "f503f3ba-3375-40d4-8a0f-5c5aee018c6b",
         "jiWsOhfihBxCkxyvygcaaTGcQysmaICfaFswOsJmXyYCLiJIClfXgotvDpAEWpFLeRgqvosYtUDPYskZnIUvBGwXbwevADqKop",
         true
     );
     Assertions.assertEquals(6151,_saved_search_order_line.getSaved_Search_Order_ID());
     Assertions.assertEquals(3215,_saved_search_order_line.getLine_No());
     Assertions.assertEquals("REIgRuBpxqGJOcvVhBWCikBdLECBANExCGNqlJbKQYsohcibNePgcZwtWesYpGvWQapPurnUkQqMucUZmVwWUbIgwUhlRwYWBs",_saved_search_order_line.getCategory_ID());
-    Assertions.assertEquals(3094,_saved_search_order_line.getUser_ID());
+    Assertions.assertEquals("f503f3ba-3375-40d4-8a0f-5c5aee018c6b",_saved_search_order_line.getUser_ID());
     Assertions.assertEquals("jiWsOhfihBxCkxyvygcaaTGcQysmaICfaFswOsJmXyYCLiJIClfXgotvDpAEWpFLeRgqvosYtUDPYskZnIUvBGwXbwevADqKop",_saved_search_order_line.getSearch_Phrase());
     Assertions.assertTrue(_saved_search_order_line.getIs_Active());
   }
@@ -108,17 +107,17 @@ class Saved_Search_Order_LineTest {
   }
   @Test
   public void testSaved_Search_Order_LineThrowsIllegalArgumentExceptionIfUser_IDTooSmall(){
-    int User_ID = -1;
+    String User_ID = "f503f3ba-3375-40d4-8a0f-5c5aee018b";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_saved_search_order_line.setUser_ID(User_ID);});
   }
   @Test
   public void testSaved_Search_Order_LineThrowsIllegalArgumentExceptionIfUser_IDTooBig(){
-    int User_ID = 10001;
+    String User_ID = "f503f3ba-3375-40d4-8a0f-5c5aee018c6ba";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_saved_search_order_line.setUser_ID(User_ID);});
   }
   @Test
   public void testSaved_Search_Order_LineSetsUser_ID(){
-    int User_ID = 2694;
+    String User_ID = "f503f3ba-3375-40d4-8a0f-5c5aee018c6b";
     _saved_search_order_line.setUser_ID(User_ID);
     Assertions.assertEquals(User_ID, _saved_search_order_line.getUser_ID());
   }
@@ -176,12 +175,12 @@ class Saved_Search_Order_LineTest {
 //to set the Category_ID as equal.
     smaller.setCategory_ID("bbbb");
 //to compare a smaller and larger User_ID
-    smaller.setUser_ID(10);
-    bigger.setUser_ID(20);
+    smaller.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
+    bigger.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the User_ID as equal.
-    smaller.setUser_ID(20);
+    smaller.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");;
 //to compare a smaller and larger Search_Phrase
     smaller.setSearch_Phrase("aaaa");
     bigger.setSearch_Phrase("bbbb");

@@ -182,7 +182,7 @@ public class AddSuggestionServletTest {
   @Test
   public void TestAddCanAddWithNoErrorsAndRedirects() throws ServletException, IOException{
     User user = new User();
-    user.setUser_ID(23);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     user.setUser_Name("TestUser");
     List<String> roles = new ArrayList<>();
     roles.add("User");
@@ -208,7 +208,7 @@ public class AddSuggestionServletTest {
   @Test
   public void testExceptionKeyThrowsException() throws ServletException, IOException{
     User user = new User();
-    user.setUser_ID(23);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     user.setUser_Name("TestUser");
     List<String> roles = new ArrayList<>();
     roles.add("User");
@@ -239,7 +239,7 @@ public class AddSuggestionServletTest {
   @Test
   public void testDuplicateKeyReturnsZero() throws ServletException, IOException{
     User user = new User();
-    user.setUser_ID(23);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     user.setUser_Name("TestUser");
     List<String> roles = new ArrayList<>();
     roles.add("User");

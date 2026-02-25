@@ -133,7 +133,7 @@ class add_transactionTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(37);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
 
     user.setRoles(roles);
     File file = new File(request.getSession().getServletContext().getRealPath("/")+"dummy");
@@ -168,7 +168,7 @@ class add_transactionTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(37);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
@@ -197,11 +197,11 @@ class add_transactionTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(37);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
-    request.setParameter("inputtransactionUser_ID","406");
+    request.setParameter("inputtransactionUser_ID","180e8b4d-a01f-480e-b33d-6f8e621c48ff");
     request.setParameter("inputtransactionCategory_ID","DUPLICATE");
     request.setParameter("inputtransactionAccount_Num","DUPLICATE");
     request.setParameter("inputtransactionCheck_No","406");

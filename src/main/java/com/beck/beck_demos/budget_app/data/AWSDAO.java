@@ -3,8 +3,6 @@ package com.beck.beck_demos.budget_app.data;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.beck.beck_demos.budget_app.iData.iAWSDAO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.DiskFileItem;
@@ -74,7 +72,7 @@ public class AWSDAO implements iAWSDAO {
   }
 
   @Override
-  public Map<File, String> uploadToS3(List<File> files, String bucketName, int UserID) throws Exception {
+  public Map<File, String> uploadToS3(List<File> files, String bucketName, String UserID) throws Exception {
     Map<File, String> fileUrlMap = new HashMap<>();
     try (S3Client client = S3Client.builder().build()) {
       for (File file : files) {

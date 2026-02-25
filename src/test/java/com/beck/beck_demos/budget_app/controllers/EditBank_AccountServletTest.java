@@ -47,7 +47,7 @@ public class EditBank_AccountServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(24);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     session.setAttribute("User_B",user);
     request.setSession(session);
     request.setSession(session);
@@ -61,7 +61,7 @@ public class EditBank_AccountServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(24);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doPost(request,response);
@@ -148,13 +148,13 @@ public class EditBank_AccountServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(24);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     session.setAttribute("User_B",user);
     request.setSession(session);
 //to set the old Bank_Account
     Bank_Account bank_account = new Bank_Account();
     bank_account.setBank_Account_ID("hSNjUblO");
-    bank_account.setUser_ID(43);
+    bank_account.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     bank_account.setAccount_Nickname("testBank_Account");
     bank_account.setBalance(104.23d);
     bank_account.setBalance_Date(new Date());
@@ -180,7 +180,7 @@ public class EditBank_AccountServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID(24);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doPost(request,response);
@@ -211,14 +211,14 @@ public class EditBank_AccountServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(24);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
 //to set the old Bank_Account
     Bank_Account bank_account = new Bank_Account();
     bank_account.setBank_Account_ID("DUPLICATE");
-    bank_account.setUser_ID(43);
+    bank_account.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     bank_account.setAccount_Nickname("DUPLICATE");
     bank_account.setBalance(104.23d);
     bank_account.setBalance_Date(new Date());
@@ -243,14 +243,14 @@ public class EditBank_AccountServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID(24);
+    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
 //to set the old Bank_Account
     Bank_Account bank_account = new Bank_Account();
     bank_account.setBank_Account_ID("EXCEPTION");
-    bank_account.setUser_ID(43);
+    bank_account.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     bank_account.setAccount_Nickname("EXCEPTION");
     session.setAttribute("bank_account",bank_account);
 //create a new albums parameters

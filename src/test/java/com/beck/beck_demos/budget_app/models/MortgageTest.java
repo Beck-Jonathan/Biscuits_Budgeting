@@ -39,7 +39,7 @@ class MortgageTest {
   public void testMortgageParameterizedConstructorSetsAllVariables(){
     Mortgage _mortgage= new Mortgage(
         "DOGJOfoxaLJqkdZhJgwwxllZHCvQGoOCAwFW",
-        5110,
+        "f503f3ba-3375-40d4-8a0f-5c5aee018c6b",
         "PVTiVdeElUWQJLtDDgveuTyUcNbYkEPZgbXCDwWqlHESGsCiaeAjBuVDfAPHpcEqyFImWaqpuBSqBrCHXRCCITLAhciOtvaCqEYrKWCSJNawYfwDAKbsEqIuLEwEypLDyYqehRsTOYjJNpiwsqOKTBCONLIbHNXgGFXSsipYYkwiVALYxvreXoJYneIFpbvpIbrNxfccjQnrKwJJRBhPOsFEVkbqoHmIjKyVMIoMZHylwIgXdQHtbMUsPlAlu",
         16.76,
         25.39,
@@ -49,7 +49,7 @@ class MortgageTest {
         9775
     );
     Assertions.assertEquals("DOGJOfoxaLJqkdZhJgwwxllZHCvQGoOCAwFW",_mortgage.getMortgage_ID());
-    Assertions.assertEquals(5110,_mortgage.getUser_ID());
+    Assertions.assertEquals("f503f3ba-3375-40d4-8a0f-5c5aee018c6b",_mortgage.getUser_ID());
     Assertions.assertEquals("PVTiVdeElUWQJLtDDgveuTyUcNbYkEPZgbXCDwWqlHESGsCiaeAjBuVDfAPHpcEqyFImWaqpuBSqBrCHXRCCITLAhciOtvaCqEYrKWCSJNawYfwDAKbsEqIuLEwEypLDyYqehRsTOYjJNpiwsqOKTBCONLIbHNXgGFXSsipYYkwiVALYxvreXoJYneIFpbvpIbrNxfccjQnrKwJJRBhPOsFEVkbqoHmIjKyVMIoMZHylwIgXdQHtbMUsPlAlu",_mortgage.getNickname());
     Assertions.assertEquals(16.76,_mortgage.getPresent_Value());
     Assertions.assertEquals(25.39,_mortgage.getFuture_Value());
@@ -111,7 +111,7 @@ class MortgageTest {
    */
   @Test
   public void testMortgageThrowsIllegalArgumentExceptionIfUser_IDTooSmall(){
-    int User_ID = -1;
+    String User_ID = "f503f3ba-3375-40d4-8a0f-5c5aee018c";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_mortgage.setUser_ID(User_ID);});
   }
 
@@ -120,7 +120,7 @@ class MortgageTest {
    */
   @Test
   public void testMortgageThrowsIllegalArgumentExceptionIfUser_IDTooBig(){
-    int User_ID = 10001;
+    String User_ID = "fec75744-130e-4bcb-8bbe-9bee18080428ss";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_mortgage.setUser_ID(User_ID);});
   }
 
@@ -129,7 +129,7 @@ class MortgageTest {
    */
   @Test
   public void testMortgageSetsUser_ID(){
-    int User_ID = 9694;
+    String User_ID = "fec75744-130e-4bcb-8bbe-9bee18080428";
     _mortgage.setUser_ID(User_ID);
     Assertions.assertEquals(User_ID, _mortgage.getUser_ID());
   }
@@ -414,12 +414,12 @@ class MortgageTest {
 //to set the Mortgage_ID as equal.
     smaller.setMortgage_ID("9b0c01b4-c726-4aed-806d-37f273332773");
 //to compare a smaller and larger User_ID
-    smaller.setUser_ID(10);
-    bigger.setUser_ID(20);
+    smaller.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
+    bigger.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the User_ID as equal.
-    smaller.setUser_ID(20);
+    smaller.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");;
 //to compare a smaller and larger Nickname
     smaller.setNickname("AuSssColFRYctYKqYspGtvVnZwkgtuhOiwNB");
     bigger.setNickname("JuSssColFRYctYKqYspGtvVnZwkgtuhOiwNB");

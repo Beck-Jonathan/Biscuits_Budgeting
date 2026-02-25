@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Mortgage implements Comparable<Mortgage> {
   private String Mortgage_ID;
-  private Integer User_ID;
+  private String User_ID;
   private String Nickname;
   private Double Present_Value;
   private Double Future_Value;
@@ -21,7 +21,7 @@ public class Mortgage implements Comparable<Mortgage> {
 
   public Mortgage(){}
 
-  public Mortgage(String Mortgage_ID, Integer User_ID, String Nickname, Double Present_Value, Double Future_Value, Double Interest_Rate, Double Monthly_Payment, Double Extra_Payment, Integer Remaining_Term) {
+  public Mortgage(String Mortgage_ID, String User_ID, String Nickname, Double Present_Value, Double Future_Value, Double Interest_Rate, Double Monthly_Payment, Double Extra_Payment, Integer Remaining_Term) {
 
     this.Mortgage_ID = Mortgage_ID;
     this.User_ID = User_ID;
@@ -66,7 +66,7 @@ public class Mortgage implements Comparable<Mortgage> {
    * <p> Gets the User_ID of the associated Mortgage object </p>
    * @return the User_ID of this Mortgage object.
    */
-  public Integer getUser_ID() {
+  public String getUser_ID() {
     return User_ID;
   }
 
@@ -75,8 +75,8 @@ public class Mortgage implements Comparable<Mortgage> {
    * @param User_ID the user_id of the mortgage,
    * throws IllegalArgumentException if User_ID is negative or greater than 10,000
    */
-  public void setUser_ID(Integer User_ID) {
-    if (User_ID<0||User_ID>10000){
+  public void setUser_ID(String User_ID) {
+    if (User_ID.length()<36||User_ID.length()>36){
       throw new IllegalArgumentException("User_ID Can Not Be Negative");
     }
     this.User_ID = User_ID;

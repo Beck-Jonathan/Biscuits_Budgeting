@@ -10,7 +10,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
 class Saved_Search_OrderTest {
 
   private Saved_Search_Order _saved_search_order;
@@ -39,7 +38,7 @@ class Saved_Search_OrderTest {
     Date date2 = new Date();
     Saved_Search_Order _saved_search_order= new Saved_Search_Order(
         1774,
-        4584,
+        "f503f3ba-3375-40d4-8a0f-5c5aee018c6b",
         "CbBxFLoYyknxhlJYaTMRWiRoCqpgCVOGFEfwsshtUtvxlcGONfrjICUyukwOXjaRETuWTYhovTHtrnJYWGAbVvcctwvwGDKVgg",
         "IhiuowDmouZGGbrRiGiiXRnZlqpPwLHAkgKKbGhImqUYOkOwxkVuULLwxuuyalKGcKGQdefcWYaPNIPUkioRRebjNqqmgDevflrZlQoknmVAegqRWZWiQsisXnldlscPpctDObNbKAPdNNUsWkrsAyJBrGwBLanyemTMGfodkIteQObsEjbsETWQxZyejcaJdMDVOBwfmcgWDWcZqpfUPeQJAPuggDjoRwYydmVmcXNGCHhTwqnkwrhaxGwvr",
         date1,
@@ -47,7 +46,7 @@ class Saved_Search_OrderTest {
         1054
     );
     Assertions.assertEquals(1774,_saved_search_order.getSaved_Search_Order_ID());
-    Assertions.assertEquals(4584,_saved_search_order.getOwned_User());
+    Assertions.assertEquals("f503f3ba-3375-40d4-8a0f-5c5aee018c6b",_saved_search_order.getOwned_User());
     Assertions.assertEquals("CbBxFLoYyknxhlJYaTMRWiRoCqpgCVOGFEfwsshtUtvxlcGONfrjICUyukwOXjaRETuWTYhovTHtrnJYWGAbVvcctwvwGDKVgg",_saved_search_order.getNickname());
     Assertions.assertEquals("IhiuowDmouZGGbrRiGiiXRnZlqpPwLHAkgKKbGhImqUYOkOwxkVuULLwxuuyalKGcKGQdefcWYaPNIPUkioRRebjNqqmgDevflrZlQoknmVAegqRWZWiQsisXnldlscPpctDObNbKAPdNNUsWkrsAyJBrGwBLanyemTMGfodkIteQObsEjbsETWQxZyejcaJdMDVOBwfmcgWDWcZqpfUPeQJAPuggDjoRwYydmVmcXNGCHhTwqnkwrhaxGwvr",_saved_search_order.getDescription());
     Assertions.assertEquals(date1,_saved_search_order.getLast_Used());
@@ -85,17 +84,17 @@ class Saved_Search_OrderTest {
   }
   @Test
   public void testSaved_Search_OrderThrowsIllegalArgumentExceptionIfOwned_UserTooSmall(){
-    int Owned_User = -1;
+    String Owned_User = "f503f3ba-3375-40d4-8a0f-5c5aee018c";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_saved_search_order.setOwned_User(Owned_User);});
   }
   @Test
   public void testSaved_Search_OrderThrowsIllegalArgumentExceptionIfOwned_UserTooBig(){
-    int Owned_User = 10001;
+    String Owned_User = "f503f3ba-3375-40d4-8a0f-5c5aee018c6bss";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_saved_search_order.setOwned_User(Owned_User);});
   }
   @Test
   public void testSaved_Search_OrderSetsOwned_User(){
-    int Owned_User = 8855;
+    String Owned_User = "f503f3ba-3375-40d4-8a0f-5c5aee018c6b";
     _saved_search_order.setOwned_User(Owned_User);
     Assertions.assertEquals(Owned_User, _saved_search_order.getOwned_User());
   }
@@ -205,12 +204,12 @@ Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the Saved_Search_Order_ID as equal.
 smaller.setSaved_Search_Order_ID(20);
 //to compare a smaller and larger Owned_User
-smaller.setOwned_User(10);
-bigger.setOwned_User(20);
+smaller.setOwned_User("f503f3ba-3375-40d4-8a0f-5c5aee018c6b");
+bigger.setOwned_User("g503f3ba-3375-40d4-8a0f-5c5aee018c6b");
 Assertions.assertTrue(smaller.compareTo(bigger)<0);
 Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the Owned_User as equal.
-smaller.setOwned_User(20);
+smaller.setOwned_User("g503f3ba-3375-40d4-8a0f-5c5aee018c6b");
 //to compare a smaller and larger Nickname
 smaller.setNickname("aaaa");
 bigger.setNickname("bbbb");

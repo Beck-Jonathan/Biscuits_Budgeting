@@ -4,7 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
 class CategoryTest {
   private Category _category;
   @BeforeEach
@@ -33,10 +33,10 @@ class CategoryTest {
   public void testCategoryParameterizedConstructorSetsAllVariables(){
     Category _category= new Category(
         "oMlOpGePhFrUEEEAXemZMSyNCKMVmSXFqtSSMhPJgPWRrSdAxTNctmBnQsOUbZONKhEXFJCejpjRslOSErOfHQvnBgSgwDenZp",
-        9184
+        "af735dfc-22a9-4214-a8e5-fb8de2305700"
     );
     Assertions.assertEquals("oMlOpGePhFrUEEEAXemZMSyNCKMVmSXFqtSSMhPJgPWRrSdAxTNctmBnQsOUbZONKhEXFJCejpjRslOSErOfHQvnBgSgwDenZp",_category.getCategory_ID());
-    Assertions.assertEquals(9184,_category.getUser_ID());
+    Assertions.assertEquals("af735dfc-22a9-4214-a8e5-fb8de2305700",_category.getUser_ID());
   }
 
   /**
@@ -46,10 +46,10 @@ class CategoryTest {
   public void testCategoryKeyedParameterizedConstructorSetsKeyedVariables(){
     Category _category= new Category(
         "aNEOCKDxyMCDVWxrDWQIUSCsggFSYXwpniXEFwnPdbffvVYUFwuKuyRWRtJneFcPxQFdtCYQAAIvyCrsrEmEfsTfeCDWXHOaZR",
-        2765
+        "af735dfc-22a9-4214-a8e5-fb8de2305700"
     );
     Assertions.assertEquals("aNEOCKDxyMCDVWxrDWQIUSCsggFSYXwpniXEFwnPdbffvVYUFwuKuyRWRtJneFcPxQFdtCYQAAIvyCrsrEmEfsTfeCDWXHOaZR",_category.getCategory_ID());
-    Assertions.assertEquals(2765,_category.getUser_ID());
+    Assertions.assertEquals("af735dfc-22a9-4214-a8e5-fb8de2305700",_category.getUser_ID());
   }
 
   /**
@@ -85,7 +85,7 @@ class CategoryTest {
    */
   @Test
   public void testCategoryThrowsIllegalArgumentExceptionIfUser_IDTooSmall(){
-    int User_ID = -1;
+    String User_ID = "af735dfc-22a9-4214-a8e5-fb8057";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_category.setUser_ID(User_ID);});
   }
 
@@ -94,7 +94,7 @@ class CategoryTest {
    */
   @Test
   public void testCategoryThrowsIllegalArgumentExceptionIfUser_IDTooBig(){
-    int User_ID = 10001;
+    String User_ID = "af735dfc-22a9-4214-a8e5-fb80sssssss57";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_category.setUser_ID(User_ID);});
   }
 
@@ -103,7 +103,7 @@ class CategoryTest {
    */
   @Test
   public void testCategorySetsUser_ID(){
-    int User_ID = 3822;
+    String User_ID = "af735dfc-22a9-4214-a8e5-fb8de2305700";
     _category.setUser_ID(User_ID);
     Assertions.assertEquals(User_ID, _category.getUser_ID());
   }
@@ -124,12 +124,12 @@ class CategoryTest {
 //to set the Category_ID as equal.
     smaller.setCategory_ID("bbbb");
 //to compare a smaller and larger User_ID
-    smaller.setUser_ID(10);
-    bigger.setUser_ID(20);
+    smaller.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
+    bigger.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the User_ID as equal.
-    smaller.setUser_ID(20);
+    smaller.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");;
     Assertions.assertTrue(bigger.compareTo(smaller)==0);
   }
 

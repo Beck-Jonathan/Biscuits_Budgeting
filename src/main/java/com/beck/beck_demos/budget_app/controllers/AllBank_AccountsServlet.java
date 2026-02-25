@@ -8,7 +8,6 @@ import com.beck.beck_demos.budget_app.data.Bank_AccountDAO;
 import com.beck.beck_demos.budget_app.models.Bank_Account;
 import com.beck.beck_demos.budget_app.models.User;
 import com.beck.beck_demos.budget_app.iData.iBank_AccountDAO;
-import com.beck.beck_demos.budget_app.iData.iUserDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,9 +16,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 @WebServlet("/all-Bank_Accounts")
 public class AllBank_AccountsServlet extends HttpServlet {
   private iBank_AccountDAO bank_accountDAO;
@@ -42,7 +40,7 @@ public class AllBank_AccountsServlet extends HttpServlet {
 //add roles here
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
-    int User_ID = -1;
+    String User_ID = "";
     if (user==null||!user.getRoles().contains("User")){
       resp.sendRedirect("budget_home");
       return;

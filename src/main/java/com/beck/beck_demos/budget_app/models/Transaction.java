@@ -16,7 +16,7 @@ import static java.lang.Character.isDigit;
 
 public class Transaction implements Comparable<Transaction> {
   private String Transaction_ID;
-  private Integer User_ID;
+  private String User_ID;
   private String Category_ID;
   private String Bank_Account_ID;
   private Date Post_Date;
@@ -29,7 +29,7 @@ public class Transaction implements Comparable<Transaction> {
 
   public Transaction(){}
 
-  public Transaction(String Transaction_ID, Integer User_ID, String Category_ID, String Bank_Account_ID, Date Post_Date, Integer Check_No, String Description, Double Amount, String Type, String Status,boolean Is_Locked) {
+  public Transaction(String Transaction_ID, String User_ID, String Category_ID, String Bank_Account_ID, Date Post_Date, Integer Check_No, String Description, Double Amount, String Type, String Status, boolean Is_Locked) {
 
     this.Transaction_ID = Transaction_ID;
     this.User_ID = User_ID;
@@ -70,7 +70,7 @@ public class Transaction implements Comparable<Transaction> {
    * <p> Gets the User_ID of the associated Transaction object </p>
    * @return the User_ID of this Transaction object.
    */
-  public Integer getUser_ID() {
+  public String getUser_ID() {
     return User_ID;
   }
   /**
@@ -78,8 +78,8 @@ public class Transaction implements Comparable<Transaction> {
    *@param User_ID the user_id of the transaction,
    * throws IllegalArgumentException if User_ID is negative or greater than 10,000
    */
-  public void setUser_ID(Integer User_ID) {
-    if (User_ID<0||User_ID>10000){
+  public void setUser_ID(String User_ID) {
+    if (User_ID.length() < 36 || User_ID.length() > 36) {
       throw new IllegalArgumentException("User_ID Can Not Be Negative");
     }
     this.User_ID = User_ID;

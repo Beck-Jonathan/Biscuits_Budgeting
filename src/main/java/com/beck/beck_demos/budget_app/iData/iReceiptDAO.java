@@ -38,7 +38,7 @@ public interface iReceiptDAO {
    * @return List of Receipt
    * @author Jonathan Beck
    */
-  List<Receipt> getAllReceipt(int offset, int limit, String search, String Transaction_ID, int user_id) throws SQLException;
+  List<Receipt> getAllReceipt(int offset, int limit, String search, String Transaction_ID, String user_id) throws SQLException;
   /**
    * DAO Method to delete Receipt objects
    * @param Receipt_ID the Receipt to be deleted
@@ -47,5 +47,5 @@ public interface iReceiptDAO {
    */
   int deleteReceipt( String Receipt_ID) throws SQLException;
 
-  int getReceiptCount(String searchTerm, String transactionId, int user_id);
+  int getReceiptCount(String searchTerm, String transactionId, String user_id);
 }

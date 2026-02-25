@@ -14,14 +14,14 @@ import static java.lang.Character.isDigit;
 
 public class Bank_Account implements Comparable<Bank_Account> {
   private String Bank_Account_ID;
-  private Integer User_ID;
+  private String User_ID;
   private String Account_Nickname;
   private Double Balance;
   private Date Balance_Date;
 
   public Bank_Account(){}
 
-  public Bank_Account(String Bank_Account_ID, Integer User_ID, String Account_Nickname, Double Balance, Date Balance_Date) {
+  public Bank_Account(String Bank_Account_ID, String User_ID, String Account_Nickname, Double Balance, Date Balance_Date) {
 
     setBank_Account_ID(Bank_Account_ID);
     this.User_ID = User_ID;
@@ -56,11 +56,11 @@ public class Bank_Account implements Comparable<Bank_Account> {
     Bank_Account_ID = new String(account_no);
     this.Bank_Account_ID = Bank_Account_ID;
   }
-  public Integer getUser_ID() {
+  public String getUser_ID() {
     return User_ID;
   }
-  public void setUser_ID(Integer User_ID) {
-    if (User_ID<0||User_ID>10000){
+  public void setUser_ID(String User_ID) {
+    if (User_ID.length()<36||User_ID.length()>36){
       throw new IllegalArgumentException("User_ID Can Not Be Negative");
     }
 
