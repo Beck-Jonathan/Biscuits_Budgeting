@@ -1,7 +1,5 @@
 package com.beck.beck_demos.budget_app.models;
 
-import com.beck.beck_demos.budget_app.models.Budget;
-import org.joda.time.DateTime;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,9 +8,9 @@ import org.junit.jupiter.api.Test;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
 class BudgetTest {
   private Budget _Budget;
   @BeforeEach
@@ -47,10 +45,10 @@ class BudgetTest {
  */
   @Test
   public void testBudgetParameterizedConstructorSetsAllVariables(){
-    Date test = new Date();
+    LocalDate test =  LocalDate.now();
     Budget _Budget= new Budget(
-        "CEQSJYTDlaysmaOPTErQWeGQnBCbPHornulM",
-        "pRRbKtIIEqysBLqwEedpKBUWRZJBxfClhM",
+        "bf903b9f-c350-4f5d-a63d-3c704e8ea70f",
+        "180e8b4d-a01f-480e-b33d-6f8e621c48ff",
         "awMvCIEQqmIRvCowtPhXhxDrSWxiEXWXCSMoXUIuXISOpUyh",
         "neXInxJEjlaULYWkOcoyHlAfnCwpxBQmxstOfTeWTCwsrEGwKhOEQlIOSUBlubTufXrTEaTMujYwclvxqsnSChgGlPvQSskiBNZLlrdUBJaTLfXCtCnBsxjkbodCtCOgNalFBKxAGmadVsPxYwgIOiKDyRHHRgwEBuPoBdDrZcxALOJdDpiYPmRtxLfrWoGdUxyJXTdPoFJqjIDwWfkHxtDYWACnrWftKdtYVvIZgojGUTTIMscqBOTuMPmRd",
         test
@@ -63,8 +61,8 @@ class BudgetTest {
         test
 
     );
-    Assertions.assertEquals("CEQSJYTDlaysmaOPTErQWeGQnBCbPHornulM",_Budget.getbudget_id());
-    Assertions.assertEquals("pRRbKtIIEqysBLqwEedpKBUWRZJBxfClhM",_Budget.getuser_id());
+    Assertions.assertEquals("bf903b9f-c350-4f5d-a63d-3c704e8ea70f",_Budget.getbudget_id());
+    Assertions.assertEquals("180e8b4d-a01f-480e-b33d-6f8e621c48ff",_Budget.getuser_id());
     Assertions.assertEquals("awMvCIEQqmIRvCowtPhXhxDrSWxiEXWXCSMoXUIuXISOpUyh",_Budget.getname());
     Assertions.assertEquals("neXInxJEjlaULYWkOcoyHlAfnCwpxBQmxstOfTeWTCwsrEGwKhOEQlIOSUBlubTufXrTEaTMujYwclvxqsnSChgGlPvQSskiBNZLlrdUBJaTLfXCtCnBsxjkbodCtCOgNalFBKxAGmadVsPxYwgIOiKDyRHHRgwEBuPoBdDrZcxALOJdDpiYPmRtxLfrWoGdUxyJXTdPoFJqjIDwWfkHxtDYWACnrWftKdtYVvIZgojGUTTIMscqBOTuMPmRd",_Budget.getdetails());
     Assertions.assertEquals(test,_Budget.getstart_date());
@@ -81,9 +79,9 @@ class BudgetTest {
   @Test
   public void testBudgetKeyedParameterizedConstructorSetsKeyedVariables(){
     Budget _Budget= new Budget(
-        "ZIKvwtfhZiJmQTcfEZisgVLwudKQalVRWrDX"
+        "180e8b4d-a01f-480e-b33d-6f8e621c48ff"
     );
-    Assertions.assertEquals("ZIKvwtfhZiJmQTcfEZisgVLwudKQalVRWrDX",_Budget.getbudget_id());
+    Assertions.assertEquals("180e8b4d-a01f-480e-b33d-6f8e621c48ff",_Budget.getbudget_id());
     Assertions.assertNull(_Budget.getuser_id());
     Assertions.assertNull(_Budget.getname());
     Assertions.assertNull(_Budget.getdetails());
@@ -109,7 +107,7 @@ class BudgetTest {
  */
   @Test
   public void  testBudgetThrowsIllegalArgumentExceptionIfbudget_idTooLong(){
-    String budget_id = "dEqtcXdPxHkddEwNBSUKJIXXywkbgWObQTFtKg";
+    String budget_id = "180e8b4d-a01f-480e-b33d-6f8e621c48ffsss";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_Budget.setbudget_id(budget_id);});
   }
 
@@ -118,7 +116,7 @@ class BudgetTest {
    */
   @Test
   public void testSetbudget_idSetsbudget_id(){
-    String budget_id = "SZBkgStpVdwZbhlLyguRdUVCfsNyppiWgRdp";
+    String budget_id = "180e8b4d-a01f-480e-b33d-6f8e621c48ff";
     _Budget.setbudget_id(budget_id);
     Assertions.assertEquals(budget_id,_Budget.getbudget_id());
   }
@@ -137,7 +135,7 @@ class BudgetTest {
  */
   @Test
   public void  testBudgetThrowsIllegalArgumentExceptionIfuser_idTooLong(){
-    String user_id = "rYoApINflAofVelOwrVZlqDoSNCiKAluBjGjyh";
+    String user_id = "180e8b4d-a01f-480e-b33d-6f8e621c48ffssss";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_Budget.setuser_id(user_id);});
   }
 
@@ -146,7 +144,7 @@ class BudgetTest {
    */
   @Test
   public void testSetuser_idSetsuser_id(){
-    String user_id = "MSDpsjQgrbmYvUOxTKRKwayDkocCHNrhPH";
+    String user_id = "180e8b4d-a01f-480e-b33d-6f8e621c48ff";
     _Budget.setuser_id(user_id);
     Assertions.assertEquals(user_id,_Budget.getuser_id());
   }
@@ -212,9 +210,8 @@ class BudgetTest {
  */
   @Test
   public void testBudgetThrowsIllegalArgumentExceptionIfstart_dateTooSmall() throws ParseException {
-    String strDate = "03/03/1990";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date date = df.parse(strDate);
+
+    LocalDate date =   LocalDate.of(1980,1,1);
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_Budget.setstart_date(date);});
   }
 
@@ -223,9 +220,8 @@ class BudgetTest {
  */
   @Test
   public void testBudgetThrowsIllegalArgumentExceptionIfstart_dateTooBig() throws ParseException{
-    String strDate = "01/01/2190";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date date = df.parse(strDate);
+
+    LocalDate date = LocalDate.of(2101,1,1);
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_Budget.setstart_date(date);});
   }
 
@@ -234,9 +230,7 @@ class BudgetTest {
  */
   @Test
   public void testBudgetSetsstart_date() throws ParseException{
-    String strDate = "25/2/2026";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date date = df.parse(strDate);
+    LocalDate date = LocalDate.of(2026,1,1);
     _Budget.setstart_date(date);
     Assertions.assertEquals(date, _Budget.getstart_date());
   }
@@ -255,7 +249,7 @@ class BudgetTest {
  */
   @Test
   public void testBudgetThrowsIllegalArgumentExceptionIflimit_amountTooBig(){
-    double limit_amount = 10001;
+    double limit_amount = 10000001;
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_Budget.setlimit_amount(limit_amount);});
   }
 
@@ -322,9 +316,7 @@ class BudgetTest {
  */
   @Test
   public void testBudgetThrowsIllegalArgumentExceptionIfcreated_atTooSmall() throws ParseException{
-    String strDate = "03/03/1990";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date date = df.parse(strDate);
+    LocalDate date = LocalDate.of(1950,1,1);
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_Budget.setcreated_at(date);});
   }
 
@@ -333,9 +325,7 @@ class BudgetTest {
  */
   @Test
   public void testBudgetThrowsIllegalArgumentExceptionIfcreated_atTooBig() throws ParseException{
-    String strDate = "01/01/2190";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date date = df.parse(strDate);
+    LocalDate date = LocalDate.of(2300,1,1);
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_Budget.setcreated_at(date);});
   }
 
@@ -344,9 +334,7 @@ class BudgetTest {
  */
   @Test
   public void testBudgetSetscreated_at() throws ParseException{
-    String strDate = "25/2/2026";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date date = df.parse(strDate);
+    LocalDate date = LocalDate.of(2026,1,1);
     _Budget.setcreated_at(date);
     Assertions.assertEquals(date, _Budget.getcreated_at());
   }
@@ -356,9 +344,7 @@ class BudgetTest {
  */
   @Test
   public void testBudgetThrowsIllegalArgumentExceptionIfupdated_atTooSmall() throws ParseException{
-    String strDate = "03/03/1990";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date date = df.parse(strDate);
+    LocalDate date = LocalDate.of(1950,1,1);
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_Budget.setupdated_at(date);});
   }
 
@@ -367,9 +353,7 @@ class BudgetTest {
  */
   @Test
   public void testBudgetThrowsIllegalArgumentExceptionIfupdated_atTooBig() throws ParseException{
-    String strDate = "01/01/2190";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date date = df.parse(strDate);
+    LocalDate date = LocalDate.of(2300,1,1);
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_Budget.setupdated_at(date);});
   }
 
@@ -378,9 +362,7 @@ class BudgetTest {
  */
   @Test
   public void testBudgetSetsupdated_at() throws ParseException{
-    String strDate = "25/2/2026";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date date = df.parse(strDate);
+    LocalDate date = LocalDate.of(2026,1,1);
     _Budget.setupdated_at(date);
     Assertions.assertEquals(date, _Budget.getupdated_at());
   }
@@ -395,19 +377,19 @@ class BudgetTest {
     Budget smaller = new Budget();
     Budget bigger = new Budget();
 //to compare a smaller and larger budget_id
-    smaller.setbudget_id("aaaa");
-    bigger.setbudget_id("bbbb");
+    smaller.setbudget_id("7e34ea34-06ce-47d8-90b4-895410c599dc");
+    bigger.setbudget_id("8e34ea34-06ce-47d8-90b4-895410c599dc");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the budget_id as equal.
-    smaller.setbudget_id("bbbb");
+    smaller.setbudget_id("8e34ea34-06ce-47d8-90b4-895410c599dc");
 //to compare a smaller and larger user_id
-    smaller.setuser_id("aaaa");
-    bigger.setuser_id("bbbb");
+    smaller.setuser_id("180e8b4d-a01f-480e-b33d-6f8e621c48ff");
+    bigger.setuser_id("280e8b4d-a01f-480e-b33d-6f8e621c48ff");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the user_id as equal.
-    smaller.setuser_id("bbbb");
+    smaller.setuser_id("280e8b4d-a01f-480e-b33d-6f8e621c48ff");
 //to compare a smaller and larger name
     smaller.setname("aaaa");
     bigger.setname("bbbb");
@@ -423,12 +405,12 @@ class BudgetTest {
 //to set the details as equal.
     smaller.setdetails("bbbb");
 //to compare a smaller and larger start_date
-    smaller.setstart_date(df.parse("01/01/2023"));
-    bigger.setstart_date(df.parse("01/01/2024"));
+    smaller.setstart_date(LocalDate.of(2026,1,1));
+    bigger.setstart_date(LocalDate.of(2027,1,1));
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the start_date as equal.
-    smaller.setstart_date(df.parse("01/01/2024"));
+    smaller.setstart_date(LocalDate.of(2027,1,1));
 //to compare a smaller and larger limit_amount
     smaller.setlimit_amount(10.23d);
     bigger.setlimit_amount(14.12d);
@@ -451,19 +433,19 @@ class BudgetTest {
 //to set the is_active as equal.
     smaller.setis_active(true);
 //to compare a smaller and larger created_at
-    smaller.setcreated_at(df.parse("01/01/2023"));
-    bigger.setcreated_at(df.parse("01/01/2024"));
+    smaller.setcreated_at(LocalDate.of(2026,1,1));
+    bigger.setcreated_at(LocalDate.of(2027,1,1));
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the created_at as equal.
-    smaller.setcreated_at(df.parse("01/01/2024"));
+    smaller.setcreated_at(LocalDate.of(2027,1,1));
 //to compare a smaller and larger updated_at
-    smaller.setupdated_at(df.parse("01/01/2023"));
-    bigger.setupdated_at(df.parse("01/01/2024"));
+    smaller.setupdated_at(LocalDate.of(2026,1,1));
+    bigger.setupdated_at(LocalDate.of(2027,1,1));
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the updated_at as equal.
-    smaller.setupdated_at(df.parse("01/01/2024"));
+    smaller.setupdated_at(LocalDate.of(2027,1,1));
     Assertions.assertTrue(bigger.compareTo(smaller)==0);
   }
 

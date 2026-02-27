@@ -83,6 +83,11 @@ $(document).ready(async function () {
 	$("#receipts").button("option", "showIcon", "true");
 	$("#receipts").button("option", "label", "Receipts");
 
+	$("#budgets").button();
+	$("#budgets").button("option", "icon", "ui-icon-check");
+	$("#budgets").button("option", "showIcon", "true");
+	$("#budgets").button("option", "label", "Budgets");
+
 
 })
 

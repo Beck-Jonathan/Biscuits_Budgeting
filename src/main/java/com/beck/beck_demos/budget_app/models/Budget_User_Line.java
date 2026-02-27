@@ -10,19 +10,20 @@ import org.jetbrains.annotations.NotNull;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 
 public class Budget_User_Line implements Comparable<Budget_User_Line> {
   private String Budget_User_Line_id;
   private String user_id;
   private String budget_id;
   private String budget_role_id;
-  private Date created_at;
-  private Date updated_at;
+  private LocalDate created_at;
+  private LocalDate updated_at;
 
   public Budget_User_Line(){}
 
-  public Budget_User_Line(String Budget_User_Line_id, String user_id, String budget_id, String budget_role_id, Date created_at, Date updated_at) {
+  public Budget_User_Line(String Budget_User_Line_id, String user_id, String budget_id, String budget_role_id, LocalDate created_at, LocalDate updated_at) {
 
     this.Budget_User_Line_id = Budget_User_Line_id;
     this.user_id = user_id;
@@ -137,7 +138,7 @@ public class Budget_User_Line implements Comparable<Budget_User_Line> {
    * <p> Gets the created_at of the associated Budget_User_Line object </p>
    * @return the created_at of this Budget_User_Line object.
    */
-  public Date getcreated_at() {
+  public LocalDate getcreated_at() {
     return created_at;
   }
 
@@ -146,16 +147,13 @@ public class Budget_User_Line implements Comparable<Budget_User_Line> {
    * @param created_at the created_at of the Budget_User_Line,
    * throws IllegalArgumentException if created_at is outside of a logical range
    */
-  public void setcreated_at(Date created_at)throws ParseException {
-    String minDate = "01/01/1991";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date _minDate = df.parse(minDate);
-    String maxDate = "12/31/2100";
-    Date _maxDate = df.parse(maxDate);
-    if (created_at.compareTo(_minDate)<0){
+  public void setcreated_at(LocalDate created_at)throws ParseException {
+    LocalDate minDate = LocalDate.of(1991, 1, 1);
+    LocalDate maxDate = LocalDate.of(2100, 12, 31);
+    if (created_at.compareTo(minDate)<0){
       throw new IllegalArgumentException("created_at Can Not Be Before 1991");
     }
-    if (created_at.compareTo(_maxDate)>0){
+    if (created_at.compareTo(maxDate)>0){
       throw new IllegalArgumentException("created_at Can Not Be after 2100");
     }
     this.created_at = created_at;
@@ -165,7 +163,7 @@ public class Budget_User_Line implements Comparable<Budget_User_Line> {
    * <p> Gets the updated_at of the associated Budget_User_Line object </p>
    * @return the updated_at of this Budget_User_Line object.
    */
-  public Date getupdated_at() {
+  public LocalDate getupdated_at() {
     return updated_at;
   }
 
@@ -174,16 +172,13 @@ public class Budget_User_Line implements Comparable<Budget_User_Line> {
    * @param updated_at the updated_at of the Budget_User_Line,
    * throws IllegalArgumentException if updated_at is outside of a logical range
    */
-  public void setupdated_at(Date updated_at)throws ParseException {
-    String minDate = "01/01/1991";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date _minDate = df.parse(minDate);
-    String maxDate = "12/31/2100";
-    Date _maxDate = df.parse(maxDate);
-    if (updated_at.compareTo(_minDate)<0){
+  public void setupdated_at(LocalDate updated_at)throws ParseException {
+    LocalDate minDate = LocalDate.of(1991, 1, 1);
+    LocalDate maxDate = LocalDate.of(2100, 12, 31);
+    if (updated_at.compareTo(minDate)<0){
       throw new IllegalArgumentException("updated_at Can Not Be Before 1991");
     }
-    if (updated_at.compareTo(_maxDate)>0){
+    if (updated_at.compareTo(maxDate)>0){
       throw new IllegalArgumentException("updated_at Can Not Be after 2100");
     }
     this.updated_at = updated_at;

@@ -3,46 +3,42 @@ package com.beck.beck_demos.budget_app.data_fakes;
 import com.beck.beck_demos.budget_app.iData.iBudgetDAO;
 import com.beck.beck_demos.budget_app.models.Budget;
 import com.beck.beck_demos.budget_app.models.Budget_VM;
+import java.time.LocalDate;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class BudgetDAO_Fake  implements  iBudgetDAO{
   private List<Budget_VM> budgetVMs;
+  private  List<String> currency_codes;
   public BudgetDAO_Fake(){
     budgetVMs = new ArrayList<>();
-    Budget budget0 = new Budget("HRZjMFMWMBFvDQigpbvXrkROUwQsTMfAgIgS", "qKCdKSkh", "GxwWnGek", "ZtkxftgS", new Date(), 32.91, "yKVOnTCy", true, new Date(), new Date());
-    Budget budget1 = new Budget("AEdncckxcNyGoTmgHkiIDkHHaQCWrWPCufOk", "qKCdKSkh", "LblkCUZk", "WxeCVVNx", new Date(), 64.82, "pvSfCSUG", true, new Date(), new Date());
-    Budget budget2 = new Budget("FiQVkbeABJRHFiuOZPhONmZmvTsgywjNBHtZ", "qKCdKSkh", "hZScCgoF", "ZJmvAgWZ", new Date(), 13.61, "cRoIDgcR", true, new Date(), new Date());
-    Budget budget3 = new Budget("eKFdgCmawgZPSnxceWeAaUekxPfQunqBorgH", "qKCdKSkh", "FQGenruB", "gubBZLYk", new Date(), 47.72, "dkyvEugk", false, new Date(), new Date());
-    Budget budget4 = new Budget("VljiQUDPbYQKOlgKBnKxDLjhpaEvkSLOqOPN", "qKCdKSkh", "mIrWQDxB", "npPPSYRT", new Date(), 34.53, "iQMycKqF", true, new Date(), new Date());
-    Budget budget5 = new Budget("RBrqIwCNKdVMlMswrZlrULfBpvIhQiJVtEME", "OUiDBwUA", "uekBvOGU", "pALnUwEL", new Date(), 60.3, "uWWwNfSa", false, new Date(), new Date());
-    Budget budget6 = new Budget("dEvNChydYeYjVEDkylbvkIOqANUTYcxjlOaR", "WmFbXMNE", "UiGsgSxn", "yLdPyCZy", new Date(), 46.26, "uWWwNfSa", false, new Date(), new Date());
-    Budget budget7 = new Budget("uAleOruiYDZZaFqSRXJnFlISQokpJrsyYuvV", "XESBuJBT", "cbUrhkMg", "rVubFKhM", new Date(), 26.85, "uWWwNfSa", false, new Date(), new Date());
-    Budget budget8 = new Budget("qlJcGxgNAPRJHmlCZoyITisTlBubENxUtZPP", "wtrKXkxZ", "ntspgEUh", "YilLeRXK", new Date(), 24.29, "uWWwNfSa", true, new Date(), new Date());
-    Budget budget9 = new Budget("wuwtqSMAhOasALACkOlNfgMfGKJNjousYQjv", "gZoBSLMn", "keaLgZOJ", "FkUahVjm", new Date(), 38.38, "uWWwNfSa", true, new Date(), new Date());
-    Budget budget10 = new Budget("fpDalngvINQiCofNsoSIUdCQsctgvvMGvfJn", "jaqpOCRp", "DJRtEofS", "mYiTWYtD", new Date(), 11.94, "QTvcJKSY", false, new Date(), new Date());
-    Budget budget11 = new Budget("NYWmKCeSJFQYnLAsCJcFFjCSIKUyygmtNrwy", "jaqpOCRp", "IDxHhGfj", "prbKHISf", new Date(), 37.59, "XAheTSVK", false, new Date(), new Date());
-    Budget budget12 = new Budget("cRgZWfWFQhfwYCmINUeadqLvCjTbwqFSLLvA", "jaqpOCRp", "fxFWxCSN", "CVMvPNgG", new Date(), 61.91, "uQjUUKha", false, new Date(), new Date());
-    Budget budget13 = new Budget("KfCorhyTHfhdXMTQWjvdjLPuMlcoVnhqHuMs", "jaqpOCRp", "jXBUBDCr", "MJXtYWdl", new Date(), 58.67, "yVGcGFKn", false, new Date(), new Date());
-    Budget budget14 = new Budget("RuOiIMCybLtyvWEFSvplHRvKMRLssGmIlFiF", "jaqpOCRp", "qIDcsPno", "ZufwTQeA", new Date(), 68.67, "DpBJiEHq", true, new Date(), new Date());
-    Budget budget15 = new Budget("NEjdAHtDnnHweHFjOdvANuIDTPLkmSfTvNeG", "cFnxOmqd", "XhLraNpn", "RfqiSBdi", new Date(), 63.55, "RVaMFghm", false, new Date(), new Date());
-    Budget budget16 = new Budget("bfmCbomlhWpnCYhFHwmQqIjiDUnXhbHvxJLu", "QYghqAEL", "EjUDXRtE", "kUuPTZyT", new Date(), 69.79, "RVaMFghm", false, new Date(), new Date());
-    Budget budget17 = new Budget("yHNZxdYUQPNqMoPfwtMiAgUSArsamnkMhooo", "yiAqZNsd", "ssGaEKxJ", "ajYUbapH", new Date(), 31.65, "RVaMFghm", true, new Date(), new Date());
-    Budget budget18 = new Budget("WgItcPGHkeafyxCCfVqffkOjwnYKqoHvECTl", "LZFmjJAS", "EqglKwjv", "sXrSRhml", new Date(), 42.19, "RVaMFghm", true, new Date(), new Date());
-    Budget budget19 = new Budget("OlvUTKCvxUGGtrJkiBLHaWVTmbokIgXfRVqT", "MbibDFpN", "XySLBZYV", "ExAXHNLY", new Date(), 12.43, "RVaMFghm", true, new Date(), new Date());
-    Budget budget20 = new Budget("HxFsAmUMKOpsWLwXosDiYGwUtqEdLxERDTiD", "bSXSGScD", "GuDHNbJu", "xVZjKXhq", new Date(), 18.64, "GOHaDwqo", true, new Date(), new Date());
-    Budget budget21 = new Budget("oHRTuGNkmmfdMLKVQxUAJVlEnTgGWKoKnSVn", "bSXSGScD", "ubBSRKDJ", "uYwCZdIC", new Date(), 49.01, "lPHlaeVc", false, new Date(), new Date());
-    Budget budget22 = new Budget("CiyRccruIITjKBlgdOfZPkfoSBiVghFTfwfP", "bSXSGScD", "pXBseXfL", "KTjgRCJq", new Date(), 25.98, "bTVZmfOu", true, new Date(), new Date());
-    Budget budget23 = new Budget("mbhcrTCwwAnQdgDuxiUeIMLBBjSOxrWPbyCt", "bSXSGScD", "jiQGHdvP", "xTZXvGeH", new Date(), 40.09, "ANdlpYGU", true, new Date(), new Date());
-    Budget budget24 = new Budget("VFhXnDQdXxSCrqtXjfjQiWLqqPlbskZBbZaL", "bSXSGScD", "AIBDLafO", "KhvEWQQt", new Date(), 66.39, "LjUwLjIH", true, new Date(), new Date());
-    Budget budget25 = new Budget("twfIIjgVkpDvRuEOCPGJchyhBHQuhjjeoLJS", "fiOeSqaB", "ATFXQPgZ", "GcMLZDFS", new Date(), 27.66, "WHBENFhO", true, new Date(), new Date());
-    Budget budget26 = new Budget("LjChPvjthWeNvniLCNSPZISBVnwuQkZlXEvW", "XTQUihDw", "nnVXSdkb", "jgsHlxXe", new Date(), 21.68, "WHBENFhO", true, new Date(), new Date());
-    Budget budget27 = new Budget("kEYexYAJlKBZmSUgkZIiwEcpvvDjqsgIFhGc", "YeJATeBO", "nIKGUIUb", "EMBTaxtf", new Date(), 22.59, "WHBENFhO", false, new Date(), new Date());
-    Budget budget28 = new Budget("cWYXibfShnwSrBVvcHcBYsQDxPlCDnkolFhn", "ESktfMGX", "diGAiKij", "aDIUjRtQ", new Date(), 47.58, "WHBENFhO", false, new Date(), new Date());
-    Budget budget29 = new Budget("VhVMmrYOJkSrFPFKCKeicZAUbUVITgGSYFBL", "qjPuIJwk", "flCVjIvI", "gvgAdXvG", new Date(), 58.93, "WHBENFhO", true, new Date(), new Date());
+    Budget budget0 = new Budget("DLpfWxZUBCbqtdngpApNUBMxKxgaVkEondmy", "WaqPhqiekuhbwKdHIuYvMoNGAnAPfBlwTWKG", "UabcRNVs", "idNQpnFK",  LocalDate.now(), 38.44, "fDC", false, LocalDate.now(), LocalDate.now());
+    Budget budget1 = new Budget("mqkLNBhYRBoRlOdJFOjogHWXcRRmQyNbIkfv", "WaqPhqiekuhbwKdHIuYvMoNGAnAPfBlwTWKG", "JabcjBax", "mAWirxKd", LocalDate.now(), 17.47, "fDC", false, LocalDate.now(), LocalDate.now());
+    Budget budget2 = new Budget("UpHSlyPcbdxGIOyhZjQcAomXFmNxlwWeflYD", "WaqPhqiekuhbwKdHIuYvMoNGAnAPfBlwTWKG", "OabcFXCL", "KOKuGpik", LocalDate.now(), 20.68, "quS", false, LocalDate.now(), LocalDate.now());
+    Budget budget3 = new Budget("VsbynqpfgtPQwligPgtWKQrSIfFHooEjcNkT", "WaqPhqiekuhbwKdHIuYvMoNGAnAPfBlwTWKG", "uUUJBpfj", "YhBTglgL", LocalDate.now(), 46.4, "gZM", true, LocalDate.now(), LocalDate.now());
+    Budget budget4 = new Budget("EhcJnyOJMLbWuMeKTiALMMLxWoiJwqNIVMBA", "plTfoEWwRnQeohUbkJlqYJSqaQSnyoaSaCUI", "lklYuNjM", "dMWEueMZ", LocalDate.now(), 69.02, "fYF", true, LocalDate.now(), LocalDate.now());
+    Budget budget5 = new Budget("jROfHpYxYAXvcdvDvjDKTsbiLLLOhPbOAuVa", "jSaHHYOmVXfvveNitRIugbiahbZBswrhWapT", "dieRcNvt", "HXtaHdyf", LocalDate.now(), 36.23, "fYF", false, LocalDate.now(), LocalDate.now());
+    Budget budget6 = new Budget("VBjSaLwKrqVsTbfScyVSNhkHsgMnaEbSYruW", "DDSgJdBDcqHSkbYtxJdmPDgOtfAInawEoUdv", "Dibjbeof", "YWAoTycq", LocalDate.now(), 69.71, "fYF", false, LocalDate.now(), LocalDate.now());
+    Budget budget7 = new Budget("XhjkUrjEcFqNcIyMXFMiMHGsXppRDsyGdmej", "WXWBqoJdNxSNlmnUdfsbdWeWbtxHUERZtfqH", "feZJWkmg", "qqnUrZvl", LocalDate.now(), 67.26, "fYF", false, LocalDate.now(), LocalDate.now());
+    Budget budget8 = new Budget("ILUIdadvWRamvundEMcmUrsdXaWDbJgdbyCt", "OvRsIANHDkcxpkDJldUhvkLuMkKPGkNwiRsr", "xtKdBRAR", "EiqVFwBy", LocalDate.now(), 32.67, "tJu", false, LocalDate.now(), LocalDate.now());
+    Budget budget9 = new Budget("raiiAxBLedLIYYYhKWHrXuntLtnyAdnkuyQM", "OvRsIANHDkcxpkDJldUhvkLuMkKPGkNwiRsr", "umuOinZM", "rbdyIdto", LocalDate.now(), 41.51, "YKs", true, LocalDate.now(), LocalDate.now());
+    Budget budget10 = new Budget("khRGYAOllVchIfbuGZlvmRxXWoCyNoiAYGKb", "OvRsIANHDkcxpkDJldUhvkLuMkKPGkNwiRsr", "FukDaXDD", "bxePntAI", LocalDate.now(), 10.73, "HMW", true, LocalDate.now(), LocalDate.now());
+    Budget budget11 = new Budget("SlaWmpDLMFWJxgLxumeQvqDjZRYcKPbFPgIV", "OvRsIANHDkcxpkDJldUhvkLuMkKPGkNwiRsr", "UwhyuhQe", "agdNovue", LocalDate.now(), 33.73, "poE", false, LocalDate.now(), LocalDate.now());
+    Budget budget12 = new Budget("ZsldRauMSSoqgfOFxTWljvtIwNyJeoNZCOPA", "OjHNgFyscWEmPETxfqCYGcypwQhvYpMLirOS", "NZqLNncT", "YpyHGHWj", LocalDate.now(), 59.21, "Imu", false, LocalDate.now(), LocalDate.now());
+    Budget budget13 = new Budget("jLaIHejFZEWVhbWjqliKEhgbfOCAdOORwAly", "xJlqXbMBZCENCZIqMVBYiFlVohSrZlPsNlqv", "CQDjuGgJ", "uMwuwjCl", LocalDate.now(), 49.44, "Imu", true, LocalDate.now(), LocalDate.now());
+    Budget budget14 = new Budget("LhQtKFxvIVpOIVlGtPSJKyKiepNTxHdIxNuD", "OEDBhDBdxAhGLOjbKNLGdXKqnqTWQcUlWkKS", "QEbworLI", "OKjJdqeg", LocalDate.now(), 41.39, "Imu", false, LocalDate.now(), LocalDate.now());
+    Budget budget15 = new Budget("YIPtJdaDZyVybhFLaZktkEgZoXOwNYDYDeit", "KWIfAWYrnTLSFMaSaCVQkZkdJqIBbIuDaEmD", "sfMqGVfn", "vAwHQIYo", LocalDate.now(), 15.65, "Imu", true, LocalDate.now(), LocalDate.now());
+    Budget budget16 = new Budget("jtaLmACMhXKXqrTYAkwAAhisxadHluubYvNk", "LPPHmPgrpKVmwghqKsRyOganyZeGSZgwsJrc", "gtYwWurX", "rDKFsMll", LocalDate.now(), 41.5, "PpY", false, LocalDate.now(), LocalDate.now());
+    Budget budget17 = new Budget("GZCcJIDDkreYbrYAVICdOyLruNPGfXuwWBVU", "LPPHmPgrpKVmwghqKsRyOganyZeGSZgwsJrc", "SGlsrUoi", "XwLKkZSD", LocalDate.now(), 63.45, "vEZ", false, LocalDate.now(), LocalDate.now());
+    Budget budget18 = new Budget("VeWJQOEUMEqDLxxhELJdvQUyvlUHFWRnIoXA", "LPPHmPgrpKVmwghqKsRyOganyZeGSZgwsJrc", "keTKaqVq", "XyrEwxpF", LocalDate.now(), 16.66, "omD", false, LocalDate.now(), LocalDate.now());
+    Budget budget19 = new Budget("YyIlCIYhCVDySKGZMRCcmcRHmdOPfEvCCBlW", "LPPHmPgrpKVmwghqKsRyOganyZeGSZgwsJrc", "tGWQVryx", "qJVMCWVU", LocalDate.now(), 11.73, "RHw", true, LocalDate.now(), LocalDate.now());
+    Budget budget20 = new Budget("gAbKxkcEwhVAaBGRtqkEwWWlYTYvPaQcIlsU", "UYgaJnbjcBmLSOeYXnjwsTYXiqNexdDukwVF", "misjFIGm", "bBcdYXSI", LocalDate.now(), 10.39, "ecn", false, LocalDate.now(), LocalDate.now());
+    Budget budget21 = new Budget("TsJRBAEUdTWQuOeITLfVXoVTgxeJTParZhYK", "ljNVbxfnxTBYKPEpXuMwkmSJhAlrsZGmKPMs", "eMOVtAZi", "mCiuqPkb", LocalDate.now(), 25.83, "ecn", false, LocalDate.now(), LocalDate.now());
+    Budget budget22 = new Budget("eHxSBakWYJORyonaCvpBcAhZNcGXqUPRXItj", "CQCxnSOCHQrmwdEDtvsqtDxMAQlXJDvsapVr", "qxIFmZiB", "wuKdmjaL", LocalDate.now(), 32.59, "ecn", false, LocalDate.now(), LocalDate.now());
+    Budget budget23 = new Budget("sWmhhMZxjkGcOLCUamWTUYVWrfwfpNlHaIva", "fuqsbASRofmADOPVDMEppCkguLAHtQkdQUKf", "aoKGtcgL", "yAOBPZpA", LocalDate.now(), 53.15, "ecn", false, LocalDate.now(), LocalDate.now());
     Budget_VM Budget_VM0= new Budget_VM(budget0);
     Budget_VM Budget_VM1= new Budget_VM(budget1);
     Budget_VM Budget_VM2= new Budget_VM(budget2);
@@ -67,12 +63,7 @@ public class BudgetDAO_Fake  implements  iBudgetDAO{
     Budget_VM Budget_VM21= new Budget_VM(budget21);
     Budget_VM Budget_VM22= new Budget_VM(budget22);
     Budget_VM Budget_VM23= new Budget_VM(budget23);
-    Budget_VM Budget_VM24= new Budget_VM(budget24);
-    Budget_VM Budget_VM25= new Budget_VM(budget25);
-    Budget_VM Budget_VM26= new Budget_VM(budget26);
-    Budget_VM Budget_VM27= new Budget_VM(budget27);
-    Budget_VM Budget_VM28= new Budget_VM(budget28);
-    Budget_VM Budget_VM29= new Budget_VM(budget29);
+    
     budgetVMs.add(Budget_VM0);
     budgetVMs.add(Budget_VM1);
     budgetVMs.add(Budget_VM2);
@@ -97,12 +88,126 @@ public class BudgetDAO_Fake  implements  iBudgetDAO{
     budgetVMs.add(Budget_VM21);
     budgetVMs.add(Budget_VM22);
     budgetVMs.add(Budget_VM23);
-    budgetVMs.add(Budget_VM24);
-    budgetVMs.add(Budget_VM25);
-    budgetVMs.add(Budget_VM26);
-    budgetVMs.add(Budget_VM27);
-    budgetVMs.add(Budget_VM28);
-    budgetVMs.add(Budget_VM29);
+    
     Collections.sort(budgetVMs);
+    currency_codes = new ArrayList<>();
+    String currency_code0 = "MQo";
+    String currency_code1 = "CxC";
+    String currency_code2 = "vLC";
+    String currency_code3 = "qJX";
+    currency_codes.add(currency_code0);
+    currency_codes.add(currency_code1);
+    currency_codes.add(currency_code2);
+    currency_codes.add(currency_code3);
+    Collections.sort(currency_codes);
+  }
+
+  @Override
+  public List<String> getDistinctcurrency_codeForDropdown() {
+    return currency_codes;
+  }
+
+  @Override
+  public int add(Budget  _budget ) throws SQLException {
+    if (duplicateKey(_budget )){
+      return 0;
+    }
+    if (exceptionKey(_budget )){
+      throw new SQLException("error");
+    }
+    int size = budgetVMs.size();
+    Budget_VM budget_VM = new  Budget_VM(_budget );
+    budgetVMs.add(budget_VM);
+    int newsize = budgetVMs.size();
+    return newsize-size;
+  }
+
+  @Override
+  public List<Budget_VM> getAllbudget(int offset, int limit, String search, String user_id, String currency_code_id) throws SQLException {
+    search=search.toLowerCase();
+    List<Budget_VM> results = new ArrayList<>();
+    for (Budget_VM budget : budgetVMs){
+      if (!user_id.isEmpty()&& !budget.getuser_id().equals(user_id))
+
+      {continue;
+      }
+    if (!currency_code_id.isEmpty()&& !budget.getcurrency_code_id().equals(currency_code_id))
+
+    {continue;
+    }
+
+    if (!search.isEmpty() && ! budget.getbudget_id().toLowerCase().contains(search)&& ! budget.getuser_id().contains(search)&& ! budget.getname().contains(search)&& ! budget.getdetails().contains(search)&& ! budget.getstart_date().toString().contains(search)&& ! budget.getlimit_amount().toString().contains(search)&& ! budget.getcurrency_code_id().contains(search)&& ! budget.getcreated_at().toString().contains(search)&& ! budget.getupdated_at().toString().contains(search)){
+      continue;
+    }
+    results.add(budget);
+  }
+return results;
+}
+
+  @Override
+  public int getbudgetCount(String search, String userId, String currency_code_id) {
+    search=search.toLowerCase();
+    List<Budget_VM> results = new ArrayList<>();
+    for (Budget_VM budget : budgetVMs){
+      if (!userId.isEmpty()&& !budget.getuser_id().equals(userId))
+
+      {continue;
+      }
+      if (!currency_code_id.isEmpty()&& !budget.getcurrency_code_id().equals(currency_code_id))
+
+      {continue;
+      }
+
+      if (!search.isEmpty() && ! budget.getbudget_id().toLowerCase().contains(search)&& ! budget.getuser_id().contains(search)&& ! budget.getname().contains(search)&& ! budget.getdetails().contains(search)&& ! budget.getstart_date().toString().contains(search)&& ! budget.getlimit_amount().toString().contains(search)&& ! budget.getcurrency_code_id().contains(search)&& ! budget.getcreated_at().toString().contains(search)&& ! budget.getupdated_at().toString().contains(search)){
+        continue;
+      }
+      results.add(budget);
+    }
+    return results.size();
+  }
+
+  @Override
+  public int update(Budget oldbudget, Budget newbudget) throws SQLException {
+    int location =-1;
+    if (duplicateKey(oldbudget)){
+      return 0;
+    }
+    if (exceptionKey(oldbudget)){
+      throw new SQLException("error");
+    }
+    for (int i=0;i<budgetVMs.size();i++){
+      if (budgetVMs.get(i).getbudget_id().equals(oldbudget.getbudget_id())){
+        location =i;
+        break;
+      }
+    }
+    if (location==-1){
+      throw new SQLException();
+    }
+    Budget_VM updated = new Budget_VM(newbudget);
+    budgetVMs.set(location,updated);
+    return 1;
+  }
+
+  @Override
+  public Budget_VM getBudgetByPrimaryKey(Budget budget) throws SQLException {
+    Budget_VM result = null;
+    for (Budget_VM _budget : budgetVMs) {
+      if (budget.getbudget_id().equals(_budget.getbudget_id())){
+        result = _budget;
+        break;
+      }
+    }
+    if (result == null){
+      throw new SQLException("budget not found");
+    }
+    return result;
+  }
+
+  private boolean duplicateKey(Budget  _budget ){
+    return _budget.getname().contains("DUPLICATE");
+  }
+  private boolean exceptionKey(Budget  _budget ){
+    return _budget.getname().contains("EXCEPTION");
   }
 }

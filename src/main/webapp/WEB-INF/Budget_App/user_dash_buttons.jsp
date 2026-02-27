@@ -39,4 +39,8 @@
         <a href="all-Suggestions">   <button type="button" value="View" id="suggestions" ></button></a>
 
     </div>
+    <div class="col col-md-1">
+        <a href="all-Budgets">   <button type="button" value="View" id="budgets" ></button></a>
+
+    </div>
 </div>

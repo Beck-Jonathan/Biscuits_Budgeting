@@ -67,6 +67,10 @@
 <c:if test="${pageTitle eq 'Add Mortgage'|| pageTitle eq 'Edit Mortgage'}">
     <script src="js/budget/addMortgage.js"></script>
 </c:if>
+
+<c:if test="${pageTitle eq 'Add Budget'|| pageTitle eq 'Edit Budget'}">
+    <script src="js/budget/AddBudget.js"></script>
+</c:if>
 <c:if test="${pageTitle eq 'All Mortgages'}">
     <script src="js/budget/allMortgage.js"></script>
 </c:if>
@@ -77,6 +81,10 @@
 </c:if>
 <c:if test="${pageTitle eq 'All Receipts'}">
     <script src="js/budget/allReceipt.js"></script>
+</c:if>
+
+<c:if test="${pageTitle eq 'All Budgets'}">
+    <script src="js/budget/allBudgets.js"></script>
 </c:if>
 
 

@@ -10,23 +10,24 @@ import org.jetbrains.annotations.NotNull;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 
 public class Budget  implements Comparable<Budget> {
   private String budget_id;
   private String user_id;
   private String name;
   private String details;
-  private Date start_date;
+  private LocalDate start_date;
   private Double limit_amount;
   private String currency_code_id;
   private boolean is_active;
-  private Date created_at;
-  private Date updated_at;
+  private LocalDate created_at;
+  private LocalDate updated_at;
 
   public Budget (){}
 
-  public Budget (String budget_id, String user_id, String name, String details, Date start_date, Double limit_amount, String currency_code_id, boolean is_active, Date created_at, Date updated_at) {
+  public Budget (String budget_id, String user_id, String name, String details, LocalDate start_date, Double limit_amount, String currency_code_id, boolean is_active, LocalDate created_at, LocalDate updated_at) {
 
     this.budget_id = budget_id;
     this.user_id = user_id;
@@ -59,8 +60,8 @@ public class Budget  implements Comparable<Budget> {
    * throws IllegalArgumentException if budget_id under 3 characters or longer than 36 characters
    */
   public void setbudget_id(String budget_id) {
-    budget_id = budget_id.replaceAll("[^.,!()A-Za-z0-9 - ]","");
-    if(budget_id.length()<4){
+
+    if(budget_id.length()<36){
       throw new IllegalArgumentException("budget_id is too short.");
     }
     if(budget_id.length()>36){
@@ -83,8 +84,8 @@ public class Budget  implements Comparable<Budget> {
    * throws IllegalArgumentException if user_id under 3 characters or longer than 36 characters
    */
   public void setuser_id(String user_id) {
-    user_id = user_id.replaceAll("[^.,!()A-Za-z0-9 - ]","");
-    if(user_id.length()<4){
+
+    if(user_id.length()<36){
       throw new IllegalArgumentException("user_id is too short.");
     }
     if(user_id.length()>36){
@@ -145,7 +146,7 @@ public class Budget  implements Comparable<Budget> {
    * <p> Gets the start_date of the associated budget  object </p>
    * @return the start_date of this budget  object.
    */
-  public Date getstart_date() {
+  public LocalDate getstart_date() {
     return start_date;
   }
 
@@ -154,16 +155,13 @@ public class Budget  implements Comparable<Budget> {
    * @param start_date the start_date of the budget ,
    * throws IllegalArgumentException if start_date is outside of a logical range
    */
-  public void setstart_date(Date start_date)throws ParseException {
-    String minDate = "01/01/1991";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date _minDate = df.parse(minDate);
-    String maxDate = "12/31/2100";
-    Date _maxDate = df.parse(maxDate);
-    if (start_date.compareTo(_minDate)<0){
+  public void setstart_date(LocalDate start_date)throws ParseException {
+    LocalDate minDate = LocalDate.of(1991, 1, 1);
+    LocalDate maxDate = LocalDate.of(2100, 12, 31);
+    if (start_date.compareTo(minDate)<0){
       throw new IllegalArgumentException("start_date Can Not Be Before 1991");
     }
-    if (start_date.compareTo(_maxDate)>0){
+    if (start_date.compareTo(maxDate)>0){
       throw new IllegalArgumentException("start_date Can Not Be after 2100");
     }
     this.start_date = start_date;
@@ -183,8 +181,11 @@ public class Budget  implements Comparable<Budget> {
    * throws IllegalArgumentException if limit_amount is outside of a logical range
    */
   public void setlimit_amount(Double limit_amount) {
-    if (limit_amount<0||limit_amount>10000){
+    if (limit_amount<0){
       throw new IllegalArgumentException("limit_amount Can Not Be Negative");
+    }
+    if (limit_amount>10000000){
+      throw new IllegalArgumentException("limit_amount can not be over 10,000,000");
     }
     this.limit_amount = limit_amount;
   }
@@ -234,7 +235,7 @@ public class Budget  implements Comparable<Budget> {
    * <p> Gets the created_at of the associated budget  object </p>
    * @return the created_at of this budget  object.
    */
-  public Date getcreated_at() {
+  public LocalDate getcreated_at() {
     return created_at;
   }
 
@@ -243,16 +244,13 @@ public class Budget  implements Comparable<Budget> {
    * @param created_at the created_at of the budget ,
    * throws IllegalArgumentException if created_at is outside of a logical range
    */
-  public void setcreated_at(Date created_at)throws ParseException {
-    String minDate = "01/01/1991";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date _minDate = df.parse(minDate);
-    String maxDate = "12/31/2100";
-    Date _maxDate = df.parse(maxDate);
-    if (created_at.compareTo(_minDate)<0){
+  public void setcreated_at(LocalDate created_at)throws ParseException {
+    LocalDate minDate = LocalDate.of(1991, 1, 1);
+    LocalDate maxDate = LocalDate.of(2100, 12, 31);
+    if (created_at.compareTo(minDate)<0){
       throw new IllegalArgumentException("created_at Can Not Be Before 1991");
     }
-    if (created_at.compareTo(_maxDate)>0){
+    if (created_at.compareTo(maxDate)>0){
       throw new IllegalArgumentException("created_at Can Not Be after 2100");
     }
     this.created_at = created_at;
@@ -262,7 +260,7 @@ public class Budget  implements Comparable<Budget> {
    * <p> Gets the updated_at of the associated budget  object </p>
    * @return the updated_at of this budget  object.
    */
-  public Date getupdated_at() {
+  public LocalDate getupdated_at() {
     return updated_at;
   }
 
@@ -271,16 +269,13 @@ public class Budget  implements Comparable<Budget> {
    * @param updated_at the updated_at of the budget ,
    * throws IllegalArgumentException if updated_at is outside of a logical range
    */
-  public void setupdated_at(Date updated_at)throws ParseException {
-    String minDate = "01/01/1991";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date _minDate = df.parse(minDate);
-    String maxDate = "12/31/2100";
-    Date _maxDate = df.parse(maxDate);
-    if (updated_at.compareTo(_minDate)<0){
+  public void setupdated_at(LocalDate updated_at)throws ParseException {
+    LocalDate minDate = LocalDate.of(1991, 1, 1);
+    LocalDate maxDate = LocalDate.of(2100, 12, 31);
+    if (updated_at.compareTo(minDate)<0){
       throw new IllegalArgumentException("updated_at Can Not Be Before 1991");
     }
-    if (updated_at.compareTo(_maxDate)>0){
+    if (updated_at.compareTo(maxDate)>0){
       throw new IllegalArgumentException("updated_at Can Not Be after 2100");
     }
     this.updated_at = updated_at;
