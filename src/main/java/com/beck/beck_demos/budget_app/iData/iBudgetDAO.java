@@ -33,4 +33,12 @@ public interface iBudgetDAO {
   int update(Budget oldbudget, Budget newbudget) throws SQLException;
 
   Budget_VM getBudgetByPrimaryKey(Budget budget) throws SQLException;
+
+  /**
+   * DAO Method to delete budget objects
+   * @param budget_id the budget to be deleted
+   * @return number of records deleted
+   * @author Jonathan Beck
+   */
+  int deletebudget( String budget_id) throws SQLException;
 }

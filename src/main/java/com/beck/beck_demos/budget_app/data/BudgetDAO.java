@@ -205,4 +205,29 @@ public class BudgetDAO implements iBudgetDAO {
     }
     return vm;
   }
+
+  /**
+   * DAO Method to delete budget objects
+   * @param budget_id the budget to be deleted
+   * @return number of records deleted
+   * @author Jonathan Beck
+   */
+  @Override
+ public int deletebudget( String budget_id) throws SQLException{
+    int rowsAffected=0;
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_Delete_budget( ?)}")){
+          statement.setString(1,budget_id);
+          rowsAffected = statement.executeUpdate();
+          if (rowsAffected == 0) {
+            throw new RuntimeException("Could not Delete budget. Try again later");
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not Delete budget. Try again later");
+    }
+    return rowsAffected;
+  }
 }

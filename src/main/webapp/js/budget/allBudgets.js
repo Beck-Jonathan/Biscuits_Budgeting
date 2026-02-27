@@ -30,9 +30,9 @@ $(document).ready(function() {
                 "Delete For Real" : function() {
                     console.log("try");
                     $.ajax({
-                        url: 'deletebudget',
-                        data: "budgetid=" + targetUrl+"&AJAX=true" ,
-                        type: 'post',
+                        url: 'deleteBudget',
+                        data: "budgetid=" + targetUrl ,
+                        type: 'get',
                         async: true,
                         success: function (response) {
                             if (response==1){

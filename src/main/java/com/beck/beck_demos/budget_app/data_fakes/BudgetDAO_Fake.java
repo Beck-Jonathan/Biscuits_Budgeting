@@ -204,6 +204,26 @@ return results;
     return result;
   }
 
+  @Override
+  public int deletebudget(String budget_id) throws SQLException {
+
+      int size = budgetVMs.size();
+      int location =-1;
+      for (int i=0;i<budgetVMs.size();i++){
+        if (budgetVMs.get(i).getbudget_id().equals(budget_id)){
+          location =i;
+          break;
+        }
+      }
+      if (location==-1){
+        throw new SQLException("Unable To Find budget.");
+      }
+      budgetVMs.remove(location);
+      int newsize = budgetVMs.size();
+      return size-newsize;
+    }
+
+
   private boolean duplicateKey(Budget  _budget ){
     return _budget.getname().contains("DUPLICATE");
   }
