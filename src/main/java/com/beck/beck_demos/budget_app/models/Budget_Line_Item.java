@@ -10,24 +10,25 @@ import org.jetbrains.annotations.NotNull;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 
 public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
   private String Budget_Line_Item_id;
   private String budget_id;
   private String name;
   private String details;
-  private Date line_item_date;
+  private LocalDate line_item_date;
   private Double amount;
   private String budget_line_type_id;
   private String budget_line_status_id;
   private String transaction_id;
-  private Date created_at;
-  private Date updated_at;
+  private LocalDate created_at;
+  private LocalDate updated_at;
 
   public Budget_Line_Item(){}
 
-  public Budget_Line_Item(String Budget_Line_Item_id, String budget_id, String name, String details, Date line_item_date, Double amount, String budget_line_type_id, String budget_line_status_id, String transaction_id, Date created_at, Date updated_at) {
+  public Budget_Line_Item(String Budget_Line_Item_id, String budget_id, String name, String details, LocalDate line_item_date, Double amount, String budget_line_type_id, String budget_line_status_id, String transaction_id, LocalDate created_at, LocalDate updated_at) {
 
     this.Budget_Line_Item_id = Budget_Line_Item_id;
     this.budget_id = budget_id;
@@ -147,7 +148,7 @@ public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
    * <p> Gets the line_item_date of the associated Budget_Line_Item object </p>
    * @return the line_item_date of this Budget_Line_Item object.
    */
-  public Date getline_item_date() {
+  public LocalDate getline_item_date() {
     return line_item_date;
   }
 
@@ -156,12 +157,9 @@ public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
    * @param line_item_date the line_item_date of the Budget_Line_Item,
    * throws IllegalArgumentException if line_item_date is outside of a logical range
    */
-  public void setline_item_date(Date line_item_date)throws ParseException {
-    String minDate = "01/01/1991";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date _minDate = df.parse(minDate);
-    String maxDate = "12/31/2100";
-    Date _maxDate = df.parse(maxDate);
+  public void setline_item_date(LocalDate line_item_date)throws ParseException {
+    LocalDate _minDate = LocalDate.of(1999,12,31);
+    LocalDate _maxDate = LocalDate.of(2100,1,1);
     if (line_item_date.compareTo(_minDate)<0){
       throw new IllegalArgumentException("line_item_date Can Not Be Before 1991");
     }
@@ -267,7 +265,7 @@ public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
    * <p> Gets the created_at of the associated Budget_Line_Item object </p>
    * @return the created_at of this Budget_Line_Item object.
    */
-  public Date getcreated_at() {
+  public LocalDate getcreated_at() {
     return created_at;
   }
 
@@ -276,12 +274,9 @@ public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
    * @param created_at the created_at of the Budget_Line_Item,
    * throws IllegalArgumentException if created_at is outside of a logical range
    */
-  public void setcreated_at(Date created_at)throws ParseException {
-    String minDate = "01/01/1991";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date _minDate = df.parse(minDate);
-    String maxDate = "12/31/2100";
-    Date _maxDate = df.parse(maxDate);
+  public void setcreated_at(LocalDate created_at)throws ParseException {
+    LocalDate _minDate = LocalDate.of(1999,12,31);
+    LocalDate _maxDate = LocalDate.of(2100,1,1);
     if (created_at.compareTo(_minDate)<0){
       throw new IllegalArgumentException("created_at Can Not Be Before 1991");
     }
@@ -295,7 +290,7 @@ public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
    * <p> Gets the updated_at of the associated Budget_Line_Item object </p>
    * @return the updated_at of this Budget_Line_Item object.
    */
-  public Date getupdated_at() {
+  public LocalDate getupdated_at() {
     return updated_at;
   }
 
@@ -304,12 +299,9 @@ public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
    * @param updated_at the updated_at of the Budget_Line_Item,
    * throws IllegalArgumentException if updated_at is outside of a logical range
    */
-  public void setupdated_at(Date updated_at)throws ParseException {
-    String minDate = "01/01/1991";
-    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    Date _minDate = df.parse(minDate);
-    String maxDate = "12/31/2100";
-    Date _maxDate = df.parse(maxDate);
+  public void setupdated_at(LocalDate updated_at)throws ParseException {
+    LocalDate _minDate = LocalDate.of(1999,12,31);
+    LocalDate _maxDate = LocalDate.of(2100,1,1);
     if (updated_at.compareTo(_minDate)<0){
       throw new IllegalArgumentException("updated_at Can Not Be Before 1991");
     }
