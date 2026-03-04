@@ -1,0 +1,43 @@
+body { font-family: Arial; margin: 20px; }
+/*.container { max-width: 900px; margin: auto; }*/
+.line_card { padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px #ccc; margin-bottom: 20px; }
+.row { display: flex; gap: 10px; margin-bottom: 10px; }
+input, button { padding: 8px; }
+table { width: 100%; margin-top: 10px; border-collapse: collapse; }
+th, td { border-bottom: 1px solid #ddd; padding: 8px; text-align: left; }
+.btn { cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; }
+#inputRow {
+    background-color: #f8f9fa;
+}
+#inputRow input {
+    width: 100%;
+}
+
+.pieCont #budgetChart{
+    position: relative;
+    height: 250px !important;
+    width: 100%;
+}
+
+.editable {
+    cursor: pointer;
+}
+
+.editable:hover {
+    background-color: #eef;
+}
+
+.color-preview {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-left: 8px;
+}
+
+
+
+#colorPreview span {
+    cursor: default;
+    user-select: none;
+}

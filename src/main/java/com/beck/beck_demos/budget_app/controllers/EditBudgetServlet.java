@@ -2,8 +2,9 @@ package com.beck.beck_demos.budget_app.controllers;
 
 
 import com.beck.beck_demos.budget_app.data.BudgetDAO;
-import com.beck.beck_demos.budget_app.models.Budget;
-import com.beck.beck_demos.budget_app.models.User;
+import com.beck.beck_demos.budget_app.data.Budget_Line_ItemDAO;
+import com.beck.beck_demos.budget_app.iData.iBudget_Line_ItemDAO;
+import com.beck.beck_demos.budget_app.models.*;
 import com.beck.beck_demos.budget_app.iData.iBudgetDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -49,15 +50,17 @@ import java.util.Map;
 @WebServlet("/editBudget")
 public class EditBudgetServlet extends HttpServlet{
   private iBudgetDAO budgetDAO;
+  private iBudget_Line_ItemDAO budgetLineItemDAO;
 
   @Override
   public void init() {
     budgetDAO = new BudgetDAO();
+    budgetLineItemDAO = new Budget_Line_ItemDAO();
 
   }
-  public void init(iBudgetDAO budgetDAO){
+  public void init(iBudgetDAO budgetDAO, iBudget_Line_ItemDAO budgetLineItemDAO){
     this.budgetDAO = budgetDAO;
-
+    this.budgetLineItemDAO = budgetLineItemDAO;
   }
 
   @Override
@@ -82,7 +85,8 @@ public class EditBudgetServlet extends HttpServlet{
     }catch (Exception e) {
       req.setAttribute("dbStatus",e.getMessage());
     }
-    Budget budget= new Budget();
+    Budget_VM budget= new Budget_VM();
+    List<Budget_Line_ItemVM> budget_line_items = null;
     try{
       budget.setbudget_id(primaryKey);
     } catch (Exception e){
@@ -92,7 +96,9 @@ public class EditBudgetServlet extends HttpServlet{
     }
     try{
       budget=budgetDAO.getBudgetByPrimaryKey(budget);
-    } catch (SQLException e) {
+      budget_line_items =budgetLineItemDAO.getLineItemsByBudget(primaryKey);
+      budget.setLines(budget_line_items);
+    } catch (Exception e) {
       req.setAttribute("dbStatus",e.getMessage());
       budget= null;
     }
@@ -100,19 +106,37 @@ public class EditBudgetServlet extends HttpServlet{
       resp.sendRedirect("all-budgets");
       return;
     }
+    List<String> allcolors = null;
+    List<String> allbudget_line_types = null;
+    List<String> allbudget_line_statuss = null;
+    List<String> allcurrency_codes = null;
+    try{
+
+      allcolors = budgetLineItemDAO.getDistinctcolorForDropdown();
+      allbudget_line_types = budgetLineItemDAO.getDistinctbudget_line_typeForDropdown();
+      allbudget_line_statuss = budgetLineItemDAO.getDistinctbudget_line_statusForDropdown();
+      allcurrency_codes = budgetDAO.getDistinctcurrency_codeForDropdown();
+
+    } catch (Exception e){
+
+      allcolors= new ArrayList<>();
+      allbudget_line_types= new ArrayList<>();
+      allbudget_line_statuss= new ArrayList<>();
+      allcurrency_codes = new ArrayList<>();
+      resp.sendRedirect("all-budgets");
+    }
+
+    req.setAttribute("colors", allcolors);
+    req.setAttribute("budget_line_types", allbudget_line_types);
+    req.setAttribute("budget_line_status", allbudget_line_statuss);
+    req.setAttribute("currency_codes", allcurrency_codes);
     session.setAttribute("Budget",budget);
     req.setAttribute("mode",mode);
     session.setAttribute("currentPage",req.getRequestURL());
-    req.setAttribute("pageTitle", "Edit budget");
+    req.setAttribute("pageTitle", "Edit Budget");
 
-    List<String> allcurrency_codes = null;
-    try {
 
-      allcurrency_codes = budgetDAO.getDistinctcurrency_codeForDropdown();
-      req.setAttribute("currency_codes", allcurrency_codes);
-    } catch (Exception e){
-      resp.sendRedirect("all-budgets");
-    }
+
     req.getRequestDispatcher("WEB-INF/Budget_App/Editbudget.jsp").forward(req, resp);
   }
   @Override
@@ -242,7 +266,7 @@ public class EditBudgetServlet extends HttpServlet{
     }
 //standard
     req.setAttribute("results", results);
-    req.setAttribute("pageTitle", "Edit budget");
+    req.setAttribute("pageTitle", "Edit Budget");
     req.getRequestDispatcher("WEB-INF/Budget_App/Editbudget.jsp").forward(req, resp);
   }
 }

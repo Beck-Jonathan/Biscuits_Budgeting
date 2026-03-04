@@ -7,7 +7,9 @@ import java.time.LocalDate;
 import java.util.*;
 import com.beck.beck_demos.budget_app.controllers.EditBudgetServlet;
 import com.beck.beck_demos.budget_app.data_fakes.BudgetDAO_Fake;
+import com.beck.beck_demos.budget_app.data_fakes.Budget_Line_ItemDAO_Fake;
 import com.beck.beck_demos.budget_app.models.Budget;
+import com.beck.beck_demos.budget_app.models.Budget_Line_ItemVM;
 import com.beck.beck_demos.budget_app.models.Budget_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.RequestDispatcher;
@@ -37,7 +39,7 @@ public class EditBudgetServletTest {
     MockServletContext servletContext = new MockServletContext();
     MockServletConfig servletConfig = new MockServletConfig(servletContext, "Edit_Budget");
     servlet.init(servletConfig);
-    servlet.init(new BudgetDAO_Fake());
+    servlet.init(new BudgetDAO_Fake(), new Budget_Line_ItemDAO_Fake());
     request =  new MockHttpServletRequest(servletContext);
     response = new MockHttpServletResponse();
     session = new MockHttpSession(servletContext);
@@ -204,6 +206,42 @@ public class EditBudgetServletTest {
     Budget_VM Budget = (Budget_VM) session.getAttribute("Budget");
     assertNull(Budget);
     assertEquals(302,response.getStatus());
+  }
+
+  /**
+   <p> Test that getting all budget_line_item can filter. </p>
+   */
+  @Test
+  public void testLoggedInUserCanFilterbudget_line_itemsBybudget_id() throws ServletException, IOException{
+    User user = new User();
+    List<String> roles = new ArrayList<>();
+    roles.add("User");
+    user.setRoles(roles);
+    user.setUser_ID("WaqPhqiekuhbwKdHIuYvMoNGAnAPfBlwTWKG");
+    session.setAttribute("User_B",user);
+
+
+    String Budget_id= "DLpfWxZUBCbqtdngpApNUBMxKxgaVkEondmy";
+    request.setParameter("budgetid",Budget_id);
+    request.setSession(session);
+    servlet.doGet(request,response);
+    servlet.doGet(request,response);
+    Budget_VM Budget = (Budget_VM) session.getAttribute("Budget");
+    List<String> colors = (List<String>)request.getAttribute("colors");
+    List<String> types = (List<String>)request.getAttribute("budget_line_types");
+    List<String> status = (List<String>)request.getAttribute("budget_line_status");
+
+    assertNotNull(Budget.getLines());
+
+    assertNotNull(colors);
+    assertNotNull(types);
+    assertNotNull(status);
+    assertEquals(10,Budget.getLines().size());
+    assertEquals(12,colors.size());
+    assertEquals(5,types.size());
+    assertEquals(5,status.size());
+
+
   }
 
   /**

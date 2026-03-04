@@ -12,11 +12,11 @@ public class Budget_Line_ItemVM extends Budget_Line_Item {
   public Budget_Line_ItemVM(){}
 
   public Budget_Line_ItemVM(Budget_Line_Item Budget_Line_Item){
-    super(Budget_Line_Item.getBudget_Line_Item_id(), Budget_Line_Item.getbudget_id(), Budget_Line_Item.getname(), Budget_Line_Item.getdetails(), Budget_Line_Item.getline_item_date(), Budget_Line_Item.getamount(), Budget_Line_Item.getbudget_line_type_id(), Budget_Line_Item.getbudget_line_status_id(), Budget_Line_Item.gettransaction_id(), Budget_Line_Item.getcreated_at(), Budget_Line_Item.getupdated_at());
+    super(Budget_Line_Item.getBudget_Line_Item_id(), Budget_Line_Item.getbudget_id(),Budget_Line_Item.getcolor_id() ,Budget_Line_Item.getname(), Budget_Line_Item.getdetails(), Budget_Line_Item.getline_item_date(), Budget_Line_Item.getamount(), Budget_Line_Item.getbudget_line_type_id(), Budget_Line_Item.getbudget_line_status_id(), Budget_Line_Item.gettransaction_id(), Budget_Line_Item.getcreated_at(), Budget_Line_Item.getupdated_at());
   }
 
   public Budget_Line_ItemVM(Budget_Line_Item Budget_Line_Item,Budget budget,Transaction transaction){
-    super( Budget_Line_Item.getBudget_Line_Item_id(),  Budget_Line_Item.getbudget_id(),  Budget_Line_Item.getname(),  Budget_Line_Item.getdetails(),  Budget_Line_Item.getline_item_date(),  Budget_Line_Item.getamount(),  Budget_Line_Item.getbudget_line_type_id(),  Budget_Line_Item.getbudget_line_status_id(),  Budget_Line_Item.gettransaction_id(),  Budget_Line_Item.getcreated_at(),  Budget_Line_Item.getupdated_at());
+    super( Budget_Line_Item.getBudget_Line_Item_id(),  Budget_Line_Item.getbudget_id(),Budget_Line_Item.getcolor_id() , Budget_Line_Item.getname(),  Budget_Line_Item.getdetails(),  Budget_Line_Item.getline_item_date(),  Budget_Line_Item.getamount(),  Budget_Line_Item.getbudget_line_type_id(),  Budget_Line_Item.getbudget_line_status_id(),  Budget_Line_Item.gettransaction_id(),  Budget_Line_Item.getcreated_at(),  Budget_Line_Item.getupdated_at());
     this.budget = budget;
     this.transaction = transaction;
 

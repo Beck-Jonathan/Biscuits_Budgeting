@@ -1,78 +1,133 @@
-<%--************
-Create the JSP For Viuw/Edit from the budget table
- Created By Jonathan Beck 2/26/2026
-**********--%>
 <%@include file="/WEB-INF/Budget_App/budget_top.jsp"%>
-<div class = "container">
-    <form method="post" action="${appURL}/editBudget" id = "editbudget" >
-        <!-- budget_id -->
-        <div class ="row" id = "row0">
-            <h2>user_id  :
-                ${fn:escapeXml(Budget.user_id)}</h2>
+
+<div class="container mt-4">
+    <form method="post" action="${appURL}/editBudget" id="editbudget">
+        <p hidden id="budgetID">${Budget.budget_id}</p>
+        <div class="row mb-3">
+            <h2>User ID: ${fn:escapeXml(Budget.user_id)}</h2>
         </div>
 
-        <!-- name -->
-        <div class ="row" id = "row2">
-            <label for="inputBudgetname" class="form-label">name</label>
-            <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.budgetnameerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="name" <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputBudgetname" name="inputBudgetname" value="${fn:escapeXml(Budget.name)}">
-                <c:if test="${not empty results.budgetnameerror}">
-                    <div class="invalid-feedback">${results.budgetnameerror}</div>
-                </c:if>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="inputBudgetname" class="form-label">Name</label>
+                <input type="text" class="form-control ${not empty results.budgetnameerror ? 'is-invalid' : ''}"
+                       id="inputBudgetname" name="inputBudgetname" value="${fn:escapeXml(Budget.name)}">
             </div>
-        </div>
-        <!-- details -->
-        <div class ="row" id = "row3">
-            <label for="inputBudgetdetails" class="form-label">details</label>
-            <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.budgetdetailserror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="details" <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputBudgetdetails" name="inputBudgetdetails" value="${fn:escapeXml(Budget.details)}">
-                <c:if test="${not empty results.budgetdetailserror}">
-                    <div class="invalid-feedback">${results.budgetdetailserror}</div>
-                </c:if>
+            <div class="col-md-6">
+                <label for="inputBudgetdetails" class="form-label">Details</label>
+                <input type="text" class="form-control ${not empty results.budgetdetailserror ? 'is-invalid' : ''}"
+                       id="inputBudgetdetails" name="inputBudgetdetails" value="${fn:escapeXml(Budget.details)}">
             </div>
-        </div>
-        <!-- start_date -->
-        <div class ="row" id = "row4">
-            <label for="inputBudgetstart_date" class="form-label">start_date</label>
-            <div class="input-group input-group-lg">
-                <input type="date" class="<c:if test="${not empty results.budgetstart_dateerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="start_date" <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputBudgetstart_date" name="inputBudgetstart_date" value="${fn:escapeXml(Budget.start_date)}">
-                <c:if test="${not empty results.budgetstart_dateerror}">
-                    <div class="invalid-feedback">${results.budgetstart_dateerror}</div>
-                </c:if>
+            <div class="col-md-4">
+                <label for="inputBudgetstart_date" class="form-label">Start Date</label>
+                <input type="date" class="form-control" id="inputBudgetstart_date" name="inputBudgetstart_date" value="${Budget.start_date}">
             </div>
-        </div>
-        <!-- limit_amount -->
-        <div class ="row" id = "row5">
-            <label for="inputBudgetlimit_amount" class="form-label">limit_amount</label>
-            <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.budgetlimit_amounterror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="limit_amount" <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputBudgetlimit_amount" name="inputBudgetlimit_amount" value="${fn:escapeXml(Budget.limit_amount)}">
-                <c:if test="${not empty results.budgetlimit_amounterror}">
-                    <div class="invalid-feedback">${results.budgetlimit_amounterror}</div>
-                </c:if>
+            <div class="col-md-4">
+                <label for="inputBudgetlimit_amount" class="form-label">Limit Amount</label>
+                <input type="number" step="0.01" class="form-control" id="inputBudgetlimit_amount" name="inputBudgetlimit_amount" value="${Budget.limit_amount}">
             </div>
-        </div>
-        <!-- currency_code_id -->
-        <div class ="row" id = "row6">
-            <label for="inputBudgetcurrency_code_id" class="form-label">currency_code_id</label>
-            <div class="input-group input-group-lg">
-                <select  class="<c:if test="${not empty results.budgetcurrency_code_iderror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1"  <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputBudgetcurrency_code_id" name="inputBudgetcurrency_code_id" value="${fn:escapeXml(Budget.currency_code_id)}">
-                    <c:forEach items="${currency_codes}" var="currency_code">
-                        <option value="${currency_code}"<c:if test="${Budget.currency_code_id eq currency_code}"> selected </c:if>>${currency_code}   </option>
+            <div class="col-md-4">
+                <label for="inputBudgetcurrency_code_id" class="form-label">Currency</label>
+                <select class="form-select" id="inputBudgetcurrency_code_id" name="inputBudgetcurrency_code_id">
+                    <c:forEach items="${currency_codes}" var="cc">
+                        <option value="${cc}" ${Budget.currency_code_id eq cc ? 'selected' : ''}>${cc}</option>
                     </c:forEach>
                 </select>
-                <c:if test="${not empty results.budgetcurrency_code_iderror}">
-                    <div class="invalid-feedback">${results.budgetcurrency_code_iderror}</div>
-                </c:if>
             </div>
         </div>
 
-        <div class="align-items-center mt-0">
-            <div class="d-grid"><button id="submitButton" class="btn btn-orange mb-0" type="submit">Edit budget </button></div>
-            <c:if test="${not empty results.dbStatus}"
-            ><p>${results.dbStatus}</p>
-            </c:if>
+        <div class="mt-4 d-grid">
+            <button id="submitButton" class="btn btn-primary" type="submit">Update Budget Settings</button>
         </div>
     </form>
-</div>
-<%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>
 
+    <hr class="my-5">
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="line_card p-3 shadow-sm mb-3">
+                <h4>Summary</h4>
+                <p><strong>Limit:</strong> $<span id="budgetLimit">${Budget.limit_amount}</span></p>
+                <p><strong>Total Used:</strong> $<span id="totalUsed">0.00</span></p>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="line_card p-3 shadow-sm mb-3" style="height: 300px;">
+                <canvas id="budgetChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="line_card shadow-sm p-3">
+        <h3>Line Items</h3>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle" id="lineItemTable">
+                <thead class="table-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Details</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Color</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="lineItemBody">
+                <c:forEach items="${Budget.lines}" var="item">
+                    <tr data-id="${item.budget_Line_Item_id}">
+                        <td class="editable" data-field="name">${fn:escapeXml(item.name)}</td>
+                        <td class="editable" data-field="details">${fn:escapeXml(item.details)}</td>
+                        <td class="editable" data-field="amount">${item.amount}</td>
+                        <td class="editable" data-field="date">${item.line_item_date}</td>
+                        <td class="editable-select" data-field="type">${item.budget_line_type_id}</td>
+                        <td class="editable-select" data-field="status">${item.budget_line_status_id}</td>
+                        <td class="editable-select" data-field="color" data-hex="#${item.color_id}">
+                            <span style="color: #${item.color_id}; font-size: 1.5rem; line-height: 1; vertical-align: middle;">●</span>
+                            <span class="color-label">#${item.color_id}</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger" type="button"
+                                    onclick="deleteLineItem(this, '${item.budget_Line_Item_id}')">Delete</button>
+                        </td>
+                    </tr>
+                </c:forEach>
+
+                <tr id="inputRow" class="table-info">
+                    <td><input type="text" id="name" class="form-control form-control-sm" placeholder="Name"></td>
+                    <td><input type="text" id="details" class="form-control form-control-sm" placeholder="Details"></td>
+                    <td><input type="number" id="amount" class="form-control form-control-sm" placeholder="0.00"></td>
+                    <td><input type="date" id="date" class="form-control form-control-sm"></td>
+                    <td>
+                        <select id="type" class="form-select form-select-sm">
+                            <c:forEach items="${budget_line_types}" var="t">
+                                <option value="${t}">${t}</option></c:forEach>
+                        </select>
+                    </td>
+                    <td>
+                        <select id="status" class="form-select form-select-sm">
+                            <c:forEach items="${budget_line_status}"
+                                       var="s"><option value="${s}">${s}</option></c:forEach>
+                        </select>
+                    </td>
+                    <td class="d-flex align-items-center">
+                        <!--<span id="colorPreview" class="me-2" style="min-width: 25px; display: inline-block; text-align: center;"></span>!-->
+                        <span id="colorPreview"></span>
+                        <select id="color" class="form-select form-select-sm">
+                            <c:forEach items="${colors}" var="color">
+                                <option value="${color}" class="color-option">
+                                        ${color}
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </td>
+                    <td><button type="button" class="btn btn-sm btn-success w-100" id="addButton">Add</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>

@@ -49,7 +49,7 @@ class Budget_Line_ItemTest {
     LocalDate test =  LocalDate.now();
     Budget_Line_Item _Budget_Line_Item= new Budget_Line_Item(
         "CEQSJYTDlaysmaOPTErQWeGQnBCbPHornulM",
-        "pRRbKtIIEqysBLqwEedpKBUWRZJBxfClhM",
+        "pRRbKtIIEqysBLqwEedpKBUWRZJBxfClhM","#FFFFF",
         "awMvCIEQqmIRvCowtPhXhxDrSWxiEXWXCSMoXUIuXISOpUyh",
         "neXInxJEjlaULYWkOcoyHlAfnCwpxBQmxstOfTeWTCwsrEGwKhOEQlIOSUBlubTufXrTEaTMujYwclvxqsnSChgGlPvQSskiBNZLlrdUBJaTLfXCtCnBsxjkbodCtCOgNalFBKxAGmadVsPxYwgIOiKDyRHHRgwEBuPoBdDrZcxALOJdDpiYPmRtxLfrWoGdUxyJXTdPoFJqjIDwWfkHxtDYWACnrWftKdtYVvIZgojGUTTIMscqBOTuMPmRd",
         test
@@ -65,6 +65,7 @@ class Budget_Line_ItemTest {
     );
     Assertions.assertEquals("CEQSJYTDlaysmaOPTErQWeGQnBCbPHornulM",_Budget_Line_Item.getBudget_Line_Item_id());
     Assertions.assertEquals("pRRbKtIIEqysBLqwEedpKBUWRZJBxfClhM",_Budget_Line_Item.getbudget_id());
+    Assertions.assertEquals("#FFFFF",_Budget_Line_Item.getcolor_id());
     Assertions.assertEquals("awMvCIEQqmIRvCowtPhXhxDrSWxiEXWXCSMoXUIuXISOpUyh",_Budget_Line_Item.getname());
     Assertions.assertEquals("neXInxJEjlaULYWkOcoyHlAfnCwpxBQmxstOfTeWTCwsrEGwKhOEQlIOSUBlubTufXrTEaTMujYwclvxqsnSChgGlPvQSskiBNZLlrdUBJaTLfXCtCnBsxjkbodCtCOgNalFBKxAGmadVsPxYwgIOiKDyRHHRgwEBuPoBdDrZcxALOJdDpiYPmRtxLfrWoGdUxyJXTdPoFJqjIDwWfkHxtDYWACnrWftKdtYVvIZgojGUTTIMscqBOTuMPmRd",_Budget_Line_Item.getdetails());
     Assertions.assertEquals(test,_Budget_Line_Item.getline_item_date());
@@ -148,9 +149,75 @@ class Budget_Line_ItemTest {
    */
   @Test
   public void testSetbudget_idSetsbudget_id(){
-    String budget_id = "RtjOniHaAspEUxCUUWxEjlJdFoxDmLQxfN";
+    String budget_id = "b64c4a8b-2b0b-4ad3-bfb9-d44c872d5db9";
     _Budget_Line_Item.setbudget_id(budget_id);
     Assertions.assertEquals(budget_id,_Budget_Line_Item.getbudget_id());
+  }
+
+  /**
+   * Tests that the color_id setter correctly handles valid 6-character hex strings
+   * and strips the leading '#' if present.
+   */
+  @Test
+  public void testBudget_Line_ItemSetsColorIdValid() {
+    // Test with hash and lowercase
+    String inputWithHash = "#4e79a7";
+    _Budget_Line_Item.setcolor_id(inputWithHash);
+    Assertions.assertEquals("4E79A7", _Budget_Line_Item.getcolor_id());
+
+    // Test without hash
+    String inputNoHash = "F28E2B";
+    _Budget_Line_Item.setcolor_id(inputNoHash);
+    Assertions.assertEquals("F28E2B", _Budget_Line_Item.getcolor_id());
+  }
+
+  /**
+   * Tests that an IllegalArgumentException is thrown if the color_id is too short.
+   */
+  @Test
+  public void testBudget_Line_ItemThrowsExceptionIfColorIdTooShort() {
+    String tooShort = "ABC12"; // 5 chars
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      _Budget_Line_Item.setcolor_id(tooShort);
+    });
+  }
+
+  /**
+   * Tests that an IllegalArgumentException is thrown if the color_id is too long.
+   */
+  @Test
+  public void testBudget_Line_ItemThrowsExceptionIfColorIdTooLong() {
+    String tooLong = "ABC1234"; // 7 chars
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      _Budget_Line_Item.setcolor_id(tooLong);
+    });
+  }
+
+  /**
+   * Tests that an IllegalArgumentException is thrown if the color_id contains
+   * non-hexadecimal characters.
+   */
+  @Test
+  public void testBudget_Line_ItemThrowsExceptionIfColorIdInvalidChars() {
+    String invalidChars = "GGGGGG"; // G is not a hex character
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      _Budget_Line_Item.setcolor_id(invalidChars);
+    });
+
+    String withSymbols = "AB!@12";
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      _Budget_Line_Item.setcolor_id(withSymbols);
+    });
+  }
+
+  /**
+   * Tests that the setter handles null input by throwing an exception.
+   */
+  @Test
+  public void testBudget_Line_ItemThrowsExceptionIfColorIdIsNull() {
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      _Budget_Line_Item.setcolor_id(null);
+    });
   }
 
   /**
@@ -288,7 +355,7 @@ class Budget_Line_ItemTest {
    */
   @Test
   public void testSetbudget_line_type_idSetsbudget_line_type_id(){
-    String budget_line_type_id = "qKEChAyegSrlygbORXmihxIekkcumawZkcSKJxZcOFNVkykK";
+    String budget_line_type_id = "qKEChAyeg SrlygbORmihxIekkcumawZkcSKJxZcOFNVkykK";
     _Budget_Line_Item.setbudget_line_type_id(budget_line_type_id);
     Assertions.assertEquals(budget_line_type_id,_Budget_Line_Item.getbudget_line_type_id());
   }
@@ -316,7 +383,7 @@ class Budget_Line_ItemTest {
    */
   @Test
   public void testSetbudget_line_status_idSetsbudget_line_status_id(){
-    String budget_line_status_id = "camFmWvMvItIfDVPyMoNFjTeBlAUhWPfYessjbNGTHwsELcR";
+    String budget_line_status_id = "camFmW MvItIfDVPyMoNFjTeBlAUhWPfYessjbNGTHwsELcR";
     _Budget_Line_Item.setbudget_line_status_id(budget_line_status_id);
     Assertions.assertEquals(budget_line_status_id,_Budget_Line_Item.getbudget_line_status_id());
   }
@@ -417,19 +484,26 @@ class Budget_Line_ItemTest {
     Budget_Line_Item smaller = new Budget_Line_Item();
     Budget_Line_Item bigger = new Budget_Line_Item();
 //to compare a smaller and larger Budget_Line_Item_id
-    smaller.setBudget_Line_Item_id("aaaa");
-    bigger.setBudget_Line_Item_id("bbbb");
+    smaller.setBudget_Line_Item_id("b64c4a8b-2b0b-4ad3-bfb9-d44c872d5db9");
+    bigger.setBudget_Line_Item_id("c64c4a8b-2b0b-4ad3-bfb9-d44c872d5db9");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the Budget_Line_Item_id as equal.
-    smaller.setBudget_Line_Item_id("bbbb");
+    smaller.setBudget_Line_Item_id("c64c4a8b-2b0b-4ad3-bfb9-d44c872d5db9");
 //to compare a smaller and larger budget_id
-    smaller.setbudget_id("aaaa");
-    bigger.setbudget_id("bbbb");
+    smaller.setbudget_id("e1c08287-9e58-408a-bfc3-d5e2dde27810");
+    bigger.setbudget_id("f1c08287-9e58-408a-bfc3-d5e2dde27810");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the budget_id as equal.
-    smaller.setbudget_id("bbbb");
+    smaller.setbudget_id("f1c08287-9e58-408a-bfc3-d5e2dde27810");
+    //to compare a smaller and larger color
+    smaller.setcolor_id("#AAAAAA");
+    bigger.setcolor_id("#BBBBBB");
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the budget_id as equal.
+    smaller.setcolor_id("#BBBBBB");
 //to compare a smaller and larger name
     smaller.setname("aaaa");
     bigger.setname("bbbb");

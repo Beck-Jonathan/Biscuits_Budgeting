@@ -1,5 +1,7 @@
 package com.beck.beck_demos.budget_app.models;
 
+import java.util.List;
+
 /**
  * @ author Jonathan Beck
  * @ version 1.0
@@ -9,6 +11,10 @@ package com.beck.beck_demos.budget_app.models;
 public class Budget_VM extends Budget {
   private User user;
   private Budget_User_Line user_line;
+
+
+
+  private List<Budget_Line_ItemVM> lines;
 
   public Budget_VM(){}
 
@@ -28,6 +34,12 @@ public class Budget_VM extends Budget {
 
   }
 
+  public Budget_VM(Budget budget,List<Budget_Line_ItemVM> lines){
+    super( budget.getbudget_id(),  budget.getuser_id(),  budget.getname(),  budget.getdetails(),  budget.getstart_date(),  budget.getlimit_amount(),  budget.getcurrency_code_id(),  budget.getis_active(),  budget.getcreated_at(),  budget.getupdated_at());
+    this.lines = lines;
+
+  }
+
   public User getuser() {
     return user;
   }
@@ -40,6 +52,14 @@ public class Budget_VM extends Budget {
   }
   public void setUser_line(Budget_User_Line _user_line) {
     this.user_line = _user_line;
+  }
+
+  public List<Budget_Line_ItemVM> getLines() {
+    return lines;
+  }
+
+  public void setLines(List<Budget_Line_ItemVM> lines) {
+    this.lines = lines;
   }
 }
 

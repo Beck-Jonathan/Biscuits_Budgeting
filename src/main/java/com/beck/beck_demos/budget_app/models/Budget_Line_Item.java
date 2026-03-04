@@ -16,6 +16,7 @@ import java.time.chrono.ChronoLocalDate;
 public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
   private String Budget_Line_Item_id;
   private String budget_id;
+  private String color_id;
   private String name;
   private String details;
   private LocalDate line_item_date;
@@ -28,10 +29,11 @@ public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
 
   public Budget_Line_Item(){}
 
-  public Budget_Line_Item(String Budget_Line_Item_id, String budget_id, String name, String details, LocalDate line_item_date, Double amount, String budget_line_type_id, String budget_line_status_id, String transaction_id, LocalDate created_at, LocalDate updated_at) {
+  public Budget_Line_Item(String Budget_Line_Item_id, String budget_id, String color_id, String name, String details, LocalDate line_item_date, Double amount, String budget_line_type_id, String budget_line_status_id, String transaction_id, LocalDate created_at, LocalDate updated_at) {
 
     this.Budget_Line_Item_id = Budget_Line_Item_id;
     this.budget_id = budget_id;
+    this.color_id = color_id;
     this.name = name;
     this.details = details;
     this.line_item_date = line_item_date;
@@ -62,8 +64,7 @@ public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
    * throws IllegalArgumentException if Budget_Line_Item_id under 3 characters or longer than 36 characters
    */
   public void setBudget_Line_Item_id(String Budget_Line_Item_id) {
-    Budget_Line_Item_id = Budget_Line_Item_id.replaceAll("[^.,!()A-Za-z0-9 - ]","");
-    if(Budget_Line_Item_id.length()<4){
+    if(Budget_Line_Item_id.length()<36){
       throw new IllegalArgumentException("Budget_Line_Item_id is too short.");
     }
     if(Budget_Line_Item_id.length()>36){
@@ -86,14 +87,49 @@ public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
    * throws IllegalArgumentException if budget_id under 3 characters or longer than 36 characters
    */
   public void setbudget_id(String budget_id) {
-    budget_id = budget_id.replaceAll("[^.,!()A-Za-z0-9 - ]","");
-    if(budget_id.length()<4){
+
+    if(budget_id.length()<36){
       throw new IllegalArgumentException("budget_id is too short.");
     }
     if(budget_id.length()>36){
       throw new IllegalArgumentException("budget_id is too long.");
     }
     this.budget_id = budget_id;
+  }
+
+  /**
+   * <p> Gets the color_id of the associated budget_line_item object </p>
+   * @return the color_id of this budget_line_item object.
+   */
+  public String getcolor_id() {
+    return color_id;
+  }
+
+  /**
+   * <p> Sets the color_id of the associated budget_line_item object </p>
+   * @param color_id the color_id of the budget_line_item,
+   * throws IllegalArgumentException if color_id under 3 characters or longer than 6 characters
+   */
+  public void setcolor_id(String color_id) {
+    if (color_id == null) {
+      throw new IllegalArgumentException("color_id cannot be null.");
+    }
+
+    // 1. Remove the '#' if it exists (e.g., "#4e79a7" -> "4e79a7")
+    String cleanHex = color_id.startsWith("#") ? color_id.substring(1) : color_id;
+
+    // 2. Validate length (must be exactly 6 characters)
+    if (cleanHex.length() != 6) {
+      throw new IllegalArgumentException("color_id must be exactly 6 hex characters (excluding #). Found: " + cleanHex);
+    }
+
+    // 3. Validate format (must be 0-9, a-f, or A-F)
+    if (!cleanHex.matches("^[0-9a-fA-F]{6}$")) {
+      throw new IllegalArgumentException("color_id contains invalid hexadecimal characters.");
+    }
+
+    // 4. Store consistently (usually uppercase for DB consistency)
+    this.color_id = cleanHex.toUpperCase();
   }
 
   /**
@@ -203,8 +239,7 @@ public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
    * throws IllegalArgumentException if budget_line_type_id under 3 characters or longer than 50 characters
    */
   public void setbudget_line_type_id(String budget_line_type_id) {
-    budget_line_type_id = budget_line_type_id.replaceAll("[^.,!()A-Za-z0-9 - ]","");
-    if(budget_line_type_id.length()<4){
+    budget_line_type_id = budget_line_type_id.replaceAll("[^a-zA-Z0-9.,!()_ \\-]", "");    if(budget_line_type_id.length()<4){
       throw new IllegalArgumentException("budget_line_type_id is too short.");
     }
     if(budget_line_type_id.length()>50){
@@ -324,6 +359,13 @@ public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
     else if(this.budget_id.compareTo(o.budget_id) > 0){
       return 1;
     }
+    if (this.color_id.compareTo(o.color_id)<0){
+      return -1;
+    }
+    else if(this.color_id.compareTo(o.color_id) > 0){
+      return 1;
+    }
+
     if (this.name.compareTo(o.name)<0){
       return -1;
     }

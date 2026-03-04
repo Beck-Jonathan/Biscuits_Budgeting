@@ -14,6 +14,9 @@
     <link href="${appURL}/css/budget/site.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" rel="stylesheet"/>
     <link rel="stylesheet" href="${appURL}/css/loading.css">
+    <c:if test="${pageTitle eq 'Edit Budget'}">
+    <link rel="stylesheet" href="${appURL}/css/budget/EditBudget.css">
+    </c:if>
 
 
 
