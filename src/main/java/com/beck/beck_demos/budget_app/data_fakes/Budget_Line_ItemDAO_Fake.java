@@ -208,9 +208,50 @@ public class Budget_Line_ItemDAO_Fake implements iBudget_Line_ItemDAO {
     Budget_Line_ItemVM budget_line_item_VM = new Budget_Line_ItemVM(budgetLineItem);
     Budget_Line_ItemVMs.add(budget_line_item_VM);
     int newsize = Budget_Line_ItemVMs.size();
+    budgetLineItem.setBudget_Line_Item_id("beadbd90-28a3-4005-a8df-9772238ead4b");
     return newsize-size;
   }
 
+  @Override
+  public int update(Budget_Line_Item oldbudgetLineItem, Budget_Line_Item newbudgetLineItem) throws SQLException {
+    int location =-1;
+    if (duplicateKey(newbudgetLineItem)){
+      return 0;
+    }
+    if (exceptionKey(newbudgetLineItem)){
+      throw new SQLException("error");
+    }
+    for (int i=0;i<Budget_Line_ItemVMs.size();i++){
+      if (Budget_Line_ItemVMs.get(i).getBudget_Line_Item_id().equals(oldbudgetLineItem.getBudget_Line_Item_id())){
+        location =i;
+        break;
+      }
+    }
+    if (location==-1){
+      throw new SQLException();
+    }
+    Budget_Line_ItemVM updated = new Budget_Line_ItemVM(oldbudgetLineItem);
+    Budget_Line_ItemVMs.set(location,updated);
+    return 1;
+  }
+
+  @Override
+  public Integer deleteBudget_Line_Item(String budgetLineItemID) throws SQLException {
+    int size = Budget_Line_ItemVMs.size();
+    int location =-1;
+    for (int i=0;i<Budget_Line_ItemVMs.size();i++){
+      if (Budget_Line_ItemVMs.get(i).getBudget_Line_Item_id().equals(budgetLineItemID)){
+        location =i;
+        break;
+      }
+    }
+    if (location==-1){
+      throw new SQLException("Unable To Find budget_line_item.");
+    }
+    Budget_Line_ItemVMs.remove(location);
+    int newsize = Budget_Line_ItemVMs.size();
+    return size-newsize;
+  }
 
   private boolean duplicateKey(Budget_Line_Item _budget_line_item){
     return _budget_line_item.getname().contains("DUPLICATE");

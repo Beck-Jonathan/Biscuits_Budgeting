@@ -219,7 +219,7 @@ public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
    * throws IllegalArgumentException if amount is outside of a logical range
    */
   public void setamount(Double amount) {
-    if (amount<0||amount>10000){
+    if (amount<0||amount>1000000){
       throw new IllegalArgumentException("amount Can Not Be Negative");
     }
     this.amount = amount;

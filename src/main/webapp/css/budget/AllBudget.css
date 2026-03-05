@@ -1,0 +1,54 @@
+
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 15px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12) !important;
+}
+
+.progress {
+    overflow: visible !important; /* Allows the scaleY to go outside the bar */
+    background-color: #e9ecef;
+    height: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.badge {
+    font-weight: 500;
+    padding: 0.5em 0.8em;
+}
+
+.card-title {
+    color: #2c3e50;
+}
+
+.budget_card{
+    width: 300px;
+    min-height: 150px;
+}
+
+/* The segment separator */
+.progress-bar-item {
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    transition: transform 0.2s ease-in-out, filter 0.2s ease;
+    cursor: pointer;
+    /* This ensures the transform has an anchor point */
+    display: block;
+    position: relative;
+}
+
+/* Remove border from the very last segment to keep it clean */
+.progress-bar-item:last-child {
+    border-right: none;
+}
+
+/* The Highlight Effect */
+.progress-bar-item:hover {
+    filter: brightness(.6); /* Makes the color pop/glow slightly */
+    transform: scaleY(1.2);   /* Makes the segment slightly taller */
+    z-index: 10;
+}

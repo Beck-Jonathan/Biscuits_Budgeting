@@ -2,14 +2,18 @@ package com.beck.beck_demos.budget_app.data;
 
 import com.beck.beck_demos.budget_app.iData.iBudgetDAO;
 import com.beck.beck_demos.budget_app.models.Budget;
+import com.beck.beck_demos.budget_app.models.Budget_Line_ItemVM;
 import com.beck.beck_demos.budget_app.models.Budget_User_Line;
 import com.beck.beck_demos.budget_app.models.Budget_VM;
 
 import java.sql.*;
+import java.text.ParseException;
 import java.util.List;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.beck.beck_demos.budget_app.data.Database.getConnection;
 
@@ -64,51 +68,90 @@ public class BudgetDAO implements iBudgetDAO {
   @Override
   public List<Budget_VM> getAllbudget(int offset, int limit, String search, String user_id, String currency_code_id) throws SQLException {
     List<Budget_VM> result = new ArrayList<>();
+
     try (Connection connection = getConnection()) {
-      if (connection != null) {
-        try(CallableStatement statement = connection.prepareCall("{CALL sp_retrieve_by_all_budget(?,?,?,?,?)}")) {
-          statement.setInt(1,limit)
-          ;statement.setInt(2,offset);
-          statement.setString(3,search);
-          statement.setString(4,user_id);
-          statement.setString(5,currency_code_id);
-          try(ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {
-              String budget_id = resultSet.getString("budget_budget_id");
-              String _user_id = resultSet.getString("budget_user_id");
-              String name = resultSet.getString("budget_name");
-              String details = resultSet.getString("budget_details");
-              LocalDate start_date = resultSet.getObject("budget_start_date", LocalDate.class);
-              Double limit_amount = resultSet.getDouble("budget_limit_amount");
-              String _currency_code_id = resultSet.getString("budget_currency_code_id");
-              boolean is_active = resultSet.getBoolean("budget_is_active");
-              LocalDate created_at = resultSet.getObject("budget_created_at", LocalDate.class);
+      // STEP 1: Fetch Budgets and User/Role Info
+      try (CallableStatement statement = connection.prepareCall("{CALL sp_retrieve_by_all_budget(?,?,?,?,?)}")) {
+        statement.setInt(1, limit);
+        statement.setInt(2, offset);
+        statement.setString(3, search);
+        statement.setString(4, user_id);
+        statement.setString(5, currency_code_id);
 
+        try (ResultSet resultSet = statement.executeQuery()) {
+          while (resultSet.next()) {
+            Budget _budget = new Budget(
+                resultSet.getString("budget_budget_id"),
+                resultSet.getString("budget_user_id"),
+                resultSet.getString("budget_name"),
+                resultSet.getString("budget_details"),
+                resultSet.getObject("budget_start_date", LocalDate.class),
+                resultSet.getDouble("budget_limit_amount"),
+                resultSet.getString("budget_currency_code_id"),
+                resultSet.getBoolean("budget_is_active"),
+                resultSet.getObject("budget_created_at", LocalDate.class),
+                resultSet.getObject("budget_updated_at", LocalDate.class)
+            );
 
-              LocalDate updated_at = resultSet.getObject("budget_updated_at", LocalDate.class);
+            Budget_User_Line line = new Budget_User_Line(
+                resultSet.getString("budget_user_line_budget_user_line_id"),
+                resultSet.getString("budget_user_line_user_id"),
+                resultSet.getString("budget_user_line_budget_id"),
+                resultSet.getString("budget_user_line_budget_role_id"),
+                resultSet.getObject("budget_user_line_created_at", LocalDate.class),
+                resultSet.getObject("budget_user_line_updated_at", LocalDate.class)
+            );
 
-
-              String  user_user_id = resultSet.getString("user_user_id");
-              String user_user_name = resultSet.getString("user_user_name");
-              String user_user_pw = resultSet.getString("user_user_pw");
-              String user_email = resultSet.getString("user_email");
-              String currency_code_currency_code_id = resultSet.getString("currency_code_currency_code_id");
-              String budget_user_line_id = resultSet.getString("budget_user_line_budget_user_line_id");
-              String line_user_id = resultSet.getString("budget_user_line_user_id");
-              String line_budget_id = resultSet.getString("budget_user_line_budget_id");
-              String line_budget_role_id = resultSet.getString("budget_user_line_budget_role_id");
-              LocalDate line_created_at = resultSet.getObject("budget_user_line_created_at", LocalDate.class);
-              LocalDate line_updated_at = resultSet.getObject("budget_user_line_updated_at", LocalDate.class);
-              Budget _budget = new Budget( budget_id, _user_id, name, details, start_date, limit_amount, _currency_code_id, is_active, created_at, updated_at);
-              Budget_User_Line line = new Budget_User_Line( budget_user_line_id, line_user_id, line_budget_id, line_budget_role_id, line_created_at, line_updated_at);
-              Budget_VM vm = new Budget_VM(_budget);
-              vm.setUser_line(line);
-              result.add(vm);
-            }
+            Budget_VM vm = new Budget_VM(_budget);
+            vm.setUser_line(line);
+            vm.setLines(new ArrayList<>()); // Initialize to avoid nulls
+            result.add(vm);
           }
         }
       }
-    } catch (SQLException e) {
+
+      // STEP 2: Batch Load Line Items for all retrieved Budgets
+      if (!result.isEmpty()) {
+        // 1. Map for lookup
+        Map<String, Budget_VM> vmMap = result.stream()
+            .collect(Collectors.toMap(Budget::getbudget_id, vm -> vm));
+
+        // 2. Convert list of IDs to a single comma-separated String
+        String commaSeparatedIds = result.stream()
+            .map(Budget::getbudget_id)
+            .collect(Collectors.joining(","));
+
+        // 3. Call the Stored Procedure
+        try (CallableStatement lineStmt = connection.prepareCall("{CALL sp_retrieve_line_items_batch(?)}")) {
+          lineStmt.setString(1, commaSeparatedIds);
+
+          try (ResultSet rsLines = lineStmt.executeQuery()) {
+            while (rsLines.next()) {
+              String bId = rsLines.getString("budget_id");
+
+              // Create the Line Item Object
+              Budget_Line_ItemVM item = new Budget_Line_ItemVM();
+              item.setBudget_Line_Item_id(rsLines.getString("budget_line_item_id"));
+              item.setamount(rsLines.getDouble("amount"));
+              item.setname(rsLines.getString("name"));
+              item.setline_item_date(rsLines.getObject("line_item_date", LocalDate.class));
+              item.setbudget_line_type_id(rsLines.getString("budget_line_type_id"));
+              item.setbudget_line_status_id(rsLines.getString("budget_line_status_id"));
+              item.setcolor_id(rsLines.getString("color_id"));
+
+              // Add to the correct VM using the map
+              if (vmMap.containsKey(bId)) {
+                vmMap.get(bId).getLines().add(item);
+              }
+            }
+          }
+
+
+        }
+      }
+    } catch (SQLException | ParseException e) {
+      // Log the error for debugging
+      e.printStackTrace();
       throw new RuntimeException("Could not retrieve budgets. Try again later");
     }
     return result;

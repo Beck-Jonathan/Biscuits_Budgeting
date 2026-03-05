@@ -205,8 +205,8 @@ class AddBudget_Line_ItemTest {
     servlet.doPost(request, response);
 
     // Convert response to int to verify it's greater than 0 (the new ID)
-    int result = Integer.parseInt(response.getContentAsString().trim());
-    assertTrue(result > 0, "Expected a positive result/ID from DAO");
+    String result = response.getContentAsString().trim();
+    assertTrue(result.equals("beadbd90-28a3-4005-a8df-9772238ead4b"), "Expected a this uuid: \"beadbd90-28a3-4005-a8df-9772238ead4b\"");
   }
   @Test
   public void testDoPostCanHandleDataBaseError() throws ServletException, IOException {

@@ -46,9 +46,12 @@
     <div class="row">
         <div class="col-md-4">
             <div class="line_card p-3 shadow-sm mb-3">
-                <h4>Summary</h4>
-                <p><strong>Limit:</strong> $<span id="budgetLimit">${Budget.limit_amount}</span></p>
-                <p><strong>Total Used:</strong> $<span id="totalUsed">0.00</span></p>
+                <h4 class="mb-3">Summary</h4>
+                <p><strong>Total Items:</strong> <span id="totalCount">0</span></p>
+                <p><strong>Limit:</strong> <span>$<span id="budgetLimit">${Budget.limit_amount}</span></span></p>
+                <p><strong>Total Used:</strong> <span>$<span id="totalUsed">0.00</span></span></p>
+                <p><strong>Total Remaining:</strong> <span>$<span id="totalRemaining">0.00</span></span></p>
+
             </div>
         </div>
         <div class="col-md-8">

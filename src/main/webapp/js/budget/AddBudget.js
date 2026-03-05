@@ -1,6 +1,12 @@
 $(document).ready(function () {
     // Configuration constants
-    const id = document.getElementById("budgetID").innerText;
+    var id = "";
+    try {
+        id = document.getElementById("budgetID").innerText;
+    } catch (e){
+        id="";
+    }
+
 
     const colorNames = {
         "000000": "Black", "FFFFFF": "White", "808080": "Gray", "A9A9A9": "Dark Gray",
@@ -66,6 +72,7 @@ $(document).ready(function () {
     // ================= FUNCTIONS =================
 
     function initChart() {
+        try{
         const ctx = document.getElementById("budgetChart").getContext("2d");
         chart = new Chart(ctx, {
             type: "pie",
@@ -84,52 +91,75 @@ $(document).ready(function () {
                     legend: { position: 'bottom' }
                 }
             }
-        });
+        });} catch (e){
+
+        }
     }
 
     function updateChart(currentTotal) {
-        const limit = parseFloat($("#budgetLimit").text()) || 0;
-        const labels = [];
-        const data = [];
-        const colors = [];
+        if (chart!=null) {
+            const limit = parseFloat($("#budgetLimit").text()) || 0;
+            const labels = [];
+            const data = [];
+            const colors = [];
 
-        $("#lineItemBody tr").each(function () {
-            if (this.id !== "inputRow") {
-                let name = $(this).find('[data-field="name"]').text().trim();
-                let amt = parseFloat($(this).find('[data-field="amount"]').text());
-                let hex = $(this).find('[data-field="color"]').attr("data-hex") || $(this).find('[data-field="color"]').data("hex");
+            $("#lineItemBody tr").each(function () {
+                if (this.id !== "inputRow") {
+                    let name = $(this).find('[data-field="name"]').text().trim();
+                    let amt = parseFloat($(this).find('[data-field="amount"]').text());
+                    let hex = $(this).find('[data-field="color"]').attr("data-hex") || $(this).find('[data-field="color"]').data("hex");
 
-                if (hex && !hex.startsWith('#')) hex = '#' + hex;
+                    if (hex && !hex.startsWith('#')) hex = '#' + hex;
 
-                if (!isNaN(amt) && amt > 0) {
-                    labels.push(name);
-                    data.push(amt);
-                    colors.push(hex || "#4E79A7");
+                    if (!isNaN(amt) && amt > 0) {
+                        labels.push(name);
+                        data.push(amt);
+                        colors.push(hex || "#4E79A7");
+                    }
                 }
+            });
+
+            if (limit > currentTotal) {
+                labels.push("Available");
+                data.push(limit - currentTotal);
+                colors.push("#e0e0e0");
             }
-        });
 
-        if (limit > currentTotal) {
-            labels.push("Available");
-            data.push(limit - currentTotal);
-            colors.push("#e0e0e0");
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = data;
+            chart.data.datasets[0].backgroundColor = colors;
+            chart.update();
         }
-
-        chart.data.labels = labels;
-        chart.data.datasets[0].data = data;
-        chart.data.datasets[0].backgroundColor = colors;
-        chart.update();
     }
 
     function recalcTotal() {
         let currentTotal = 0;
+        let itemCount = 0;
+
+        // 1. Get the budget limit from the JSP span (remove commas if any)
+        const limit = parseFloat($("#budgetLimit").text().replace(/,/g, '')) || 0;
+
         $("#lineItemBody tr").each(function () {
+            // Skip the input row and ensure we are only counting data rows
             if (this.id !== "inputRow") {
                 let amount = parseFloat($(this).find('[data-field="amount"]').text());
-                if (!isNaN(amount)) currentTotal += amount;
+
+                if (!isNaN(amount)) {
+                    currentTotal += amount;
+                    itemCount++; // Increment count for each valid row
+                }
             }
         });
+
+        // 2. Calculate remaining balance
+        const remaining = limit - currentTotal;
+
+        // 3. Update the UI
         $("#totalUsed").text(currentTotal.toFixed(2));
+        $("#totalRemaining").text(remaining.toFixed(2));
+        $("#totalCount").text(itemCount); // No toFixed here, it's a whole number
+
+        // Update your chart with the new total
         updateChart(currentTotal);
     }
 
@@ -156,8 +186,9 @@ $(document).ready(function () {
                 <td class="editable" data-field="date">${date}</td>
                 <td class="editable-select" data-field="type">${type}</td>
                 <td class="editable-select" data-field="status">${status}</td>
-                <td class="editable-select" data-field="color" data-hex="${color}">
-                    <span style="color:${color}; font-size: 1.5rem; line-height: 1; vertical-align: middle;">●</span>
+                <td class="editable-select" data-field="color" data-hex="#${color}">
+                    <span style="color:#${color}; font-size: 1.5rem; line-height: 1; vertical-align: middle;">●</span>
+                    <span class="color-label">${hexToWord(color)}</span>
                 </td>
                 <td>
                     <button class="btn btn-sm btn-danger" type="button" 
@@ -184,23 +215,46 @@ $(document).ready(function () {
             body: params
         })
             .then(response => response.text())
-            .then(result => {
-                const statusCode = parseInt(result);
-                if (statusCode <= 0) handleError(statusCode);
+            .then(newUuid => {
+                // If the servlet returns a negative error code (like -1)
+                if (parseInt(newUuid) <= 0) {
+                    handleError(parseInt(newUuid));
+                    // Optional: Remove the temp row if the save failed
+                    $(`tr[data-id="${tempId}"]`).remove();
+                    recalcTotal();
+                    return;
+                }
+
+                // 1. Find the row using the tempId
+                const $row = $(`tr[data-id="${tempId}"]`);
+
+                // 2. Update the data-id attribute to the real UUID
+                $row.attr("data-id", newUuid);
+
+                // 3. Update the Delete button's onclick function to use the real UUID
+                const $deleteBtn = $row.find("button.btn-danger");
+                $deleteBtn.attr("onclick", `deleteLineItem(this, '${newUuid}')`);
+
+                console.log(`Swapped ${tempId} for real ID: ${newUuid}`);
             })
-            .catch(error => console.error('Fetch error:', error));
+            .catch(error => {
+                console.error('Fetch error:', error);
+                $(`tr[data-id="${tempId}"]`).remove(); // Cleanup on network failure
+            });
 
         $("#name, #details, #amount, #date").val("");
     };
 
     window.deleteLineItem = function(btn, id) {
+        const params = new URLSearchParams();
+        params.append("budget_line_itemid", id);
         if(confirm("Delete this item?")) {
             $(btn).closest("tr").remove();
             recalcTotal();
-            fetch('/deleteLineItem', {
+            fetch('deleteBudget_line_item', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: id })
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params
             });
         }
     };
@@ -217,10 +271,19 @@ $(document).ready(function () {
             color: row.find('[data-field="color"]').attr("data-hex")
         };
         recalcTotal();
-        fetch('/updateLineItem', {
+        const params = new URLSearchParams();
+        params.append("inputbudget_line_itembudget_line_item_id", data.id);
+        params.append("inputbudget_line_itemname", data.name);
+        params.append("inputbudget_line_itemdetails", data.details);
+        params.append("inputbudget_line_itemamount", data.amount);
+        params.append("inputbudget_line_itemline_item_date", data.line_item_date);
+        params.append("inputbudget_line_itembudget_line_type_id", data.type);
+        params.append("inputbudget_line_itembudget_line_status_id", data.status);
+        params.append("inputbudget_line_itemcolor_id", data.color);
+        fetch('editbudget_line_item', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params
         });
     }
 

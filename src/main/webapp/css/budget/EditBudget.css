@@ -1,43 +1,103 @@
 body { font-family: Arial; margin: 20px; }
 /*.container { max-width: 900px; margin: auto; }*/
-.line_card { padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px #ccc; margin-bottom: 20px; }
-.row { display: flex; gap: 10px; margin-bottom: 10px; }
-input, button { padding: 8px; }
-table { width: 100%; margin-top: 10px; border-collapse: collapse; }
-th, td { border-bottom: 1px solid #ddd; padding: 8px; text-align: left; }
-.btn { cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; }
-#inputRow {
-    background-color: #f8f9fa;
-}
-#inputRow input {
-    width: 100%;
+/* Layout & Card Alignment */
+.row.chart-summary-row {
+    display: flex;
+    align-items: stretch; /* Forces both columns to be the same height */
+    margin-bottom: 20px;
 }
 
-.pieCont #budgetChart{
+.line_card {
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom: 0; /* Let the row gap handle spacing */
+    height: 100%;    /* Fills the flex container */
+    background: #fff;
+    border: 1px solid #eee;
+}
+
+/* Summary Specifics */
+.summary-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers text vertically if chart is tall */
+    height: 100%;
+}
+
+.summary-details p {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #f8f9fa;
+    padding-bottom: 5px;
+}
+
+/* Chart Container Fix */
+.chart-container {
     position: relative;
-    height: 250px !important;
+    height: 300px; /* Fixed height for the canvas to draw into */
     width: 100%;
 }
 
-.editable {
-    cursor: pointer;
+/* Table Enhancements */
+.table-responsive {
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-.editable:hover {
-    background-color: #eef;
+#inputRow {
+    background-color: #f0f7ff; /* Slightly blue to distinguish from list */
+    border-top: 2px solid #007bff;
 }
 
-.color-preview {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
-    display: inline-block;
-    margin-left: 8px;
+/* Color Preview Bullet Fix */
+#colorPreview {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
 }
-
-
 
 #colorPreview span {
-    cursor: default;
-    user-select: none;
+    font-size: 1.8rem; /* Make it nice and big */
+    line-height: 1;
+    display: block;
+}
+
+.line_card p {
+    display: flex;
+    justify-content: space-between; /* Pushes <strong> left and the outer <span> right */
+    margin-bottom: 0.5rem;
+}
+
+/* This targets the wrapper span holding the $ and the number */
+.line_card p > span {
+    text-align: right;
+    font-family: 'Courier New', Courier, monospace; /* Optional: keeps digits aligned */
+}
+
+/* The subtraction line logic */
+.line_card p:has(#totalRemaining) {
+    border-top: 2px solid #dee2e6;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+/* The Subtraction Line */
+/* This selects the 'Total Remaining' paragraph specifically */
+#totalRemaining {
+    font-weight: bold;
+}
+
+/* The subtraction line logic */
+.line_card p:has(#totalRemaining) {
+    border-top: 2px solid #dee2e6;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+/* Optional: Make the numbers look consistent */
+.line_card span {
+    font-family: 'Courier New', Courier, monospace; /* Monospace keeps numbers aligned */
+    font-weight: 500;
 }

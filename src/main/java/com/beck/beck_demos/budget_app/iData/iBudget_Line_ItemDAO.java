@@ -16,4 +16,8 @@ public interface iBudget_Line_ItemDAO {
   List<Budget_Line_ItemVM> getLineItemsByBudget(String budget_ID);
 
   int add(Budget_Line_Item budgetLineItem) throws SQLException;
+
+  int update(Budget_Line_Item oldbudgetLineItem, Budget_Line_Item newbudgetLineItem) throws SQLException;
+
+  Integer deleteBudget_Line_Item(String budgetLineItemID) throws SQLException;
 }

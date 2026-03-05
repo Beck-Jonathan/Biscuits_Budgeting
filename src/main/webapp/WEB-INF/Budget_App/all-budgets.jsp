@@ -40,53 +40,62 @@ Create the JSP  For Viewing All of The  budget table
                 </div>
                 Export budget   <a href="exportbudget?mode=export">Add</a>
                 Write To SQL File budget   <a href="exportbudget?mode=SQL">Add</a>
-                <div class="table-responsive"><table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col"> Details </th>
-                        <th scope="col">Owner</th>
-                        <th scope="col">name</th>
-                        <th scope="col">Role</th>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+                <c:forEach items="${budgets}" var="b">
+                    <div class="col-md-3" id="${b.budget_id}Card">
+                        <div class="budget_card card h-100 shadow-sm border-0">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center border-0 pt-3">
+                                <h5 class="card-title mb-0 fw-bold text-primary">${fn:escapeXml(b.name)}</h5>
+                                <span class="badge ${b.is_active ? 'bg-success' : 'bg-secondary'}">
+                                        ${b.is_active ? 'Active' : 'Inactive'}
+                                </span>
+                            </div>
 
-                        <th scope="col">details</th>
-                        <th scope="col">start_date</th>
-                        <th scope="col">limit_amount</th>
-                        <th scope="col">currency_code_id</th>
-                        <th scope="col">is_active</th>
-                        <th scope="col">created_at</th>
-                        <th scope="col">updated_at</th>
-                        <th scope="col">Edit</th>
-                        <th scope="col">Delete</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach items="${budgets}" var="budget">
-                        <tr id="${budget.budget_id}row">
-                            <td><a href = "editBudget?budgetid=${budget.budget_id}&mode=view"> Details </a></td>
-                            <td>${fn:escapeXml(budget.user.user_name)}</td>
-                            <td>${fn:escapeXml(budget.name)}</td>
-                            <td>${fn:escapeXml(budget.user_line.budget_role_id)}</td>
-                            <td>${fn:escapeXml(budget.details)}</td>
-                            <td>${fn:escapeXml(budget.start_date)}</td>
-                            <td>${fn:escapeXml(budget.limit_amount)}</td>
-                            <td>${fn:escapeXml(budget.currency_code_id)}</td>
-                            <td><input type="checkbox" id="${budget.is_active}" disabled <c:if test="${budget.is_active}">checked</c:if>></td>
-                            <td>${fn:escapeXml(budget.created_at)}</td>
-                            <td>${fn:escapeXml(budget.updated_at)}</td>
-                            <td><a href = "editBudget?budgetid=${budget.budget_id}&mode=edit" > Edit </a></td>
-                            <td><a href = "deleteBudget?budgetid=${budget.budget_id}&mode=<c:choose><c:when test="${budget.is_active}">0</c:when>
-						<c:otherwise>1</c:otherwise>
-						</c:choose>">
-                                <c:if test="${!budget.is_active}">un</c:if>Delete </a></td>
-                            <td>
-                                <div>
-                                    <button class="delButton" href="${budget.budget_id}" >Delete</button> </div>
-                                <div style="display: none;" id="${budget.budget_id}Status"></div>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
+                            <div class="card-body">
+                                <p class="text-muted small">${fn:escapeXml(b.details)}</p>
+
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small fw-bold">Spent: $${b.totalSpent}</span>
+                                    <span class="small text-muted">Limit: $${b.limit_amount} ${b.currency_code_id}</span>
+                                </div>
+
+                                <div class="progress mb-3" style="height: 20px; background-color: #e9ecef; border-radius: 8px; overflow: hidden;">
+                                    <c:forEach items="${b.lines}" var="line">
+                                        <c:set var="itemPercentage" value="${(line.amount / b.limit_amount) * 100}" />
+
+                                        <c:if test="${itemPercentage > 0}">
+                                            <div class="progress-bar progress-bar-item"
+                                                 role="progressbar"
+                                                 style="width: ${itemPercentage}%; background-color: #${line.color_id};"
+                                                 title="${fn:escapeXml(line.name)}: $${line.amount}"
+                                                 data-bs-toggle="tooltip"
+                                                 data-bs-placement="top">
+                                            </div>
+                                        </c:if>
+                                    </c:forEach>
+                                </div>
+
+                                <div class="row g-2 text-center small mb-3">
+                                    <div class="col-6 border-end">
+                                        <div class="text-muted">Start Date</div>
+                                        <div>${b.start_date}</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-muted">Role</div>
+                                        <div class="badge bg-light text-dark border"><!--b.user_line.role-!--></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-footer bg-light border-0 d-flex justify-content-around pb-3">
+                                <a href="editBudget?budgetid=${b.budget_id}&mode=view" class="btn btn-sm btn-outline-primary">Details</a>
+                                <a href="editBudget?budgetid=${b.budget_id}&mode=edit" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                <button class="btn btn-sm btn-outline-danger delButton" data-id="${b.budget_id}">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
                 </div>
             </c:if>
         </div>

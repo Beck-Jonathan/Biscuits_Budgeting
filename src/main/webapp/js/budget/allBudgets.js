@@ -1,5 +1,6 @@
 $(document).ready(function() {
     normalizeHeight();
+    tooltips();
     $("#dialog").dialog({
         modal: true,
         bgiframe: true,
@@ -62,4 +63,19 @@ function normalizeHeight() {
     cards.each(function (index, el) {
         jQuery(el).css("height", big + "px"); //assign largest height to all the divs
     });}
+
+function tooltips(){
+    // Check if bootstrap is defined to avoid the error
+    if (typeof bootstrap !== 'undefined') {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    } else {
+        console.error("Bootstrap JS is not loaded. Tooltips will not work.");
+    }
+    // Initialize all tooltips on the page
+
+    }
+
 

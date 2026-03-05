@@ -11,10 +11,47 @@ import java.util.List;
 public class Budget_VM extends Budget {
   private User user;
   private Budget_User_Line user_line;
-
-
-
   private List<Budget_Line_ItemVM> lines;
+
+  public Double getTotalSpent() {
+    double sum = 0.0;
+    if (lines != null) { // CRITICAL: Prevent NullPointerException
+      for (Budget_Line_ItemVM line : lines) {
+        if (line.getamount() != null) {
+          sum += line.getamount();
+        }
+      }
+    }
+    this.totalSpent = sum;
+    return this.totalSpent;
+  }
+
+  public Double getRemainingAmount() {
+    Double _spent = getTotalSpent();
+    Double limit = getlimit_amount();
+    // Safety check for null limit
+    this.remainingAmount = (limit != null ? limit : 0.0) - _spent;
+    return this.remainingAmount;
+  }
+
+  public Double getUsagePercentage() {
+    Double _spent = getTotalSpent();
+    Double limit = getlimit_amount();
+
+    // Prevent Division by Zero or Null errors
+    if (limit == null || limit == 0) {
+      this.usagePercentage = 0.0;
+    } else {
+      // Multiply by 100 if your progress bar expects 0-100 instead of 0-1
+      this.usagePercentage = (_spent / limit) * 100;
+    }
+    return this.usagePercentage;
+  }
+
+  // Added for Card UI
+  private Double totalSpent;      // Sum of all line items
+  private Double remainingAmount; // limit_amount - totalSpent
+  private Double usagePercentage; // (totalSpent / limit_amount) * 100
 
   public Budget_VM(){}
 
