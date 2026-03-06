@@ -43,7 +43,7 @@ class EditCategoryServletTest {
     rd=null;
   }
   @Test
-  public void TestLoggedInUserGets200OnDoGet() throws ServletException, IOException{
+  public void TestLoggedInUserGets302OnDoGetWithNoIDSet() throws ServletException, IOException{
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
@@ -53,7 +53,7 @@ class EditCategoryServletTest {
     request.setSession(session);
     servlet.doGet(request,response);
     int status = response.getStatus();
-    assertEquals(200,status);
+    assertEquals(302,status);
   }
   @Test
   public void TestLoggedInUserGets200OnDoPost() throws ServletException, IOException{
@@ -112,20 +112,20 @@ class EditCategoryServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
+    user.setUser_ID("ec93ae39-255a-4252-ac50-cde8ecb05b0c");
     session.setAttribute("User_B",user);
-    String Category_ID= "fOmyBlIv";
+    String Category_ID= "lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc";
     request.setParameter("categoryid",Category_ID);
     request.setSession(session);
     servlet.doGet(request,response);
     Category category = (Category) session.getAttribute("category");
     assertNotNull(category);
     assertEquals(Category_ID,category.getCategory_ID());
-    assertEquals("af735dfc-22a9-4214-a8e5-fb8de2305700",category.getUser_ID());
+    assertEquals("ec93ae39-255a-4252-ac50-cde8ecb05b0c",category.getUser_ID());
   }
 
   @Test
-  public void testGetOneCategoryCanFail() throws ServletException, IOException{
+  public void testGetOneCategoryCanFailAndUserIsRedirected() throws ServletException, IOException{
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
@@ -139,9 +139,8 @@ class EditCategoryServletTest {
 
     request.setSession(session);
     servlet.doGet(request,response);
-    Category category = (Category) session.getAttribute("category");
-    assertNull(category.getCategory_ID());
-    assertNull(category.getUser_ID());
+    int code = response.getStatus();
+    assertEquals(302,code);
   }
   @Test
   public void TestUpdateCanAddWithNoErrorsAndRedirects() throws ServletException, IOException{
@@ -153,11 +152,13 @@ class EditCategoryServletTest {
     request.setSession(session);
 //to set the old Category
     Category category = new Category();
-    category.setCategory_ID("fOmyBlIv");
-    category.setUser_ID("8255af1b-2e9f-487d-b192-b30845feabfc");
+    category.setCategory_ID("lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
+    category.setUser_ID("ec93ae39-255a-4252-ac50-cde8ecb05b0c");
+    category.setCategory_Name("test");
     session.setAttribute("category",category);
 //create a new albums parameters
-    request.setParameter("inputcategoryCategory_ID","TestValue");
+    request.setParameter("inputcategoryCategory_Name","46fcffea-d21c-4254-814d-926d0086d77c");
+    request.setParameter("inputcategoryColor_id","#FFFFFF");
 
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
@@ -179,7 +180,7 @@ class EditCategoryServletTest {
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Category_IDError = results.get("categoryCategory_IDerror");
+    String Category_IDError = results.get("categoryCategory_Nameerror");
 
     assertNotEquals("",Category_IDError);
     assertNotNull(Category_IDError);
@@ -202,12 +203,14 @@ class EditCategoryServletTest {
     request.setSession(session);
 //to set the old Category
     Category category = new Category();
-    category.setCategory_ID("DUPLICATE");
+    category.setCategory_ID("DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
+    category.setCategory_Name("DUPLICATE");
     category.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     session.setAttribute("category",category);
 //create a new albums parameters
-    request.setParameter("inputcategoryCategory_ID","DUPLICATE");
+    request.setParameter("inputcategoryCategory_Name","DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
     request.setParameter("inputcategoryUser_ID","406");
+    request.setParameter("inputcategoryColor_id","#FFFFFF");
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
@@ -227,12 +230,15 @@ class EditCategoryServletTest {
     request.setSession(session);
 //to set the old Category
     Category category = new Category();
-    category.setCategory_ID("EXCEPTION");
+    category.setCategory_ID("EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
     category.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
+    category.setCategory_Name("Test");
+    category.setcolor_id("#FFFFFF");
     session.setAttribute("category",category);
 //create a new albums parameters
-    request.setParameter("inputcategoryCategory_ID","EXCEPTION");
+    request.setParameter("inputcategoryCategory_Name","EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
     request.setParameter("inputcategoryUser_ID","406");
+    request.setParameter("inputcategoryColor_id","#FFFFFF");
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");

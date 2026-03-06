@@ -83,14 +83,14 @@ class AllCategoriesServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
+    user.setUser_ID("ec93ae39-255a-4252-ac50-cde8ecb05b0c");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doGet(request,response);
     List<Category_VM> categorys = (List<Category_VM>) request.getAttribute("Categories");
     assertNotNull(categorys);
-    assertEquals(4,categorys.size());
+    assertEquals(6,categorys.size());
   }
 
   @Test

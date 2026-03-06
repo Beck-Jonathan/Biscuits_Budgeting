@@ -14,7 +14,8 @@ Create the JSP  For Viewing All of The  Category table
                 <div class="table-responsive"><table class="table table-bordered">
                     <thead>
                     <tr>
-                        <th scope="col">Category_ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Color</th>
 
                         <th scope="col">Edit</th>
 
@@ -25,8 +26,17 @@ Create the JSP  For Viewing All of The  Category table
                     <tbody>
                     <c:forEach items="${Categories}" var="category">
                         <tr>
-                            <td><a href = "editCategory?categoryid=${category.category_ID}&mode=view">${fn:escapeXml(category.category_ID)}</a></td>
-
+                            <td><a href = "editCategory?categoryid=${category.category_ID}&mode=view">${fn:escapeXml(category.category_Name)}</a></td>
+                            <td style="width: 50px; text-align: center; vertical-align: middle;">
+                                <div style="
+                                        width: 24px;
+                                        height: 24px;
+                                        background-color: ${category.color_id};
+                                        border-radius: 6px;
+                                        border: 1px solid rgba(0,0,0,0.1);
+                                        display: inline-block;">
+                                </div>
+                            </td>
                             <td><a href = "editCategory?categoryid=${category.category_ID}&mode=edit" > Edit </a></td>
 
 
@@ -44,11 +54,11 @@ Create the JSP  For Viewing All of The  Category table
                         <div class="modal-content">
                             <div class="modal-header">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="Cateory_Label">${category.category_ID}"</h1>
+                                    <h1 class="modal-title fs-5" id="Cateory_Label">${category.category_Name}"</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>You are about to delete the category ${category.category_ID}. Any transactions
+                                    <p>You are about to delete the category ${category.category_Name}. Any transactions
                                         that you have assigned to this category will have their category changed to "Uncategorized". This can
                                         not be undone.</p>
                                 </div>

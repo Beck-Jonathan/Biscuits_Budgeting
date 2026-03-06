@@ -1,10 +1,7 @@
 package com.beck.beck_demos.budget_app.data;
 
 import com.beck.beck_demos.budget_app.iData.iBudgetDAO;
-import com.beck.beck_demos.budget_app.models.Budget;
-import com.beck.beck_demos.budget_app.models.Budget_Line_ItemVM;
-import com.beck.beck_demos.budget_app.models.Budget_User_Line;
-import com.beck.beck_demos.budget_app.models.Budget_VM;
+import com.beck.beck_demos.budget_app.models.*;
 
 import java.sql.*;
 import java.text.ParseException;
@@ -131,13 +128,19 @@ public class BudgetDAO implements iBudgetDAO {
 
               // Create the Line Item Object
               Budget_Line_ItemVM item = new Budget_Line_ItemVM();
-              item.setBudget_Line_Item_id(rsLines.getString("budget_line_item_id"));
-              item.setamount(rsLines.getDouble("amount"));
-              item.setname(rsLines.getString("name"));
-              item.setline_item_date(rsLines.getObject("line_item_date", LocalDate.class));
-              item.setbudget_line_type_id(rsLines.getString("budget_line_type_id"));
-              item.setbudget_line_status_id(rsLines.getString("budget_line_status_id"));
-              item.setcolor_id(rsLines.getString("color_id"));
+              item.setBudget_Line_Item_id(rsLines.getString("budget_line_item_budget_line_item_id"));
+              item.setamount(rsLines.getDouble("budget_line_item_amount"));
+              item.setname(rsLines.getString("budget_line_item_name"));
+              item.setline_item_date(rsLines.getObject("budget_line_item_line_item_date", LocalDate.class));
+              item.setbudget_line_type_id(rsLines.getString("budget_line_item_budget_line_type_id"));
+              item.setbudget_line_status_id(rsLines.getString("budget_line_item_budget_line_status_id"));
+
+              Category category = new Category();
+              item.setCategory(category);
+              category.setCategory_ID(rsLines.getString("category_category_id"));
+              category.setCategory_Name(rsLines.getString("category_category_name"));
+              category.setcolor_id(rsLines.getString("category_color_id"));
+
 
               // Add to the correct VM using the map
               if (vmMap.containsKey(bId)) {

@@ -73,7 +73,7 @@
                     <th>Date</th>
                     <th>Type</th>
                     <th>Status</th>
-                    <th>Color</th>
+                    <th>Category</th>
                     <th>Action</th>
                 </tr>
                 </thead>
@@ -86,9 +86,15 @@
                         <td class="editable" data-field="date">${item.line_item_date}</td>
                         <td class="editable-select" data-field="type">${item.budget_line_type_id}</td>
                         <td class="editable-select" data-field="status">${item.budget_line_status_id}</td>
-                        <td class="editable-select" data-field="color" data-hex="#${item.color_id}">
-                            <span style="color: #${item.color_id}; font-size: 1.5rem; line-height: 1; vertical-align: middle;">●</span>
-                            <span class="color-label">#${item.color_id}</span>
+                        <td class="editable-select"
+                            data-field="color"
+                            data-hex="${item.category.color_id}"
+                            data-categoryid="${item.category.category_ID}">
+
+                            <span style="color: ${item.category.color_id}; font-size: 1.5rem; line-height: 1; vertical-align: middle;">●</span>
+
+                            <span class="color-label">${fn:escapeXml(item.category.category_Name)}</span>
+
                         </td>
                         <td>
                             <button class="btn btn-sm btn-outline-danger" type="button"
@@ -115,12 +121,12 @@
                         </select>
                     </td>
                     <td class="d-flex align-items-center">
-                        <!--<span id="colorPreview" class="me-2" style="min-width: 25px; display: inline-block; text-align: center;"></span>!-->
-                        <span id="colorPreview"></span>
-                        <select id="color" class="form-select form-select-sm">
-                            <c:forEach items="${colors}" var="color">
-                                <option value="${color}" class="color-option">
-                                        ${color}
+                        <span id="colorPreview" style="font-size: 1.5rem; line-height: 1; margin-right: 10px; vertical-align: middle;">●</span>
+
+                        <select id="color" name="inputcategory_id" class="form-select form-select-sm">
+                            <c:forEach items="${categories}" var="category">
+                                <option value="${category.category_ID}" data-color="${category.color_id}">
+                                        ${fn:escapeXml(category.category_Name)}
                                 </option>
                             </c:forEach>
                         </select>

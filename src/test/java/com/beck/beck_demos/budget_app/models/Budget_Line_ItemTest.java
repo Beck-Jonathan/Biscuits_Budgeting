@@ -9,7 +9,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 
 class Budget_Line_ItemTest {
   private Budget_Line_Item _Budget_Line_Item;
@@ -49,7 +48,8 @@ class Budget_Line_ItemTest {
     LocalDate test =  LocalDate.now();
     Budget_Line_Item _Budget_Line_Item= new Budget_Line_Item(
         "CEQSJYTDlaysmaOPTErQWeGQnBCbPHornulM",
-        "pRRbKtIIEqysBLqwEedpKBUWRZJBxfClhM","#FFFFF",
+        "pRRbKtIIEqysBLqwEedpKBUWRZJBxfClhM",
+        "a603121e-048c-4602-b44d-f73a0133a545",
         "awMvCIEQqmIRvCowtPhXhxDrSWxiEXWXCSMoXUIuXISOpUyh",
         "neXInxJEjlaULYWkOcoyHlAfnCwpxBQmxstOfTeWTCwsrEGwKhOEQlIOSUBlubTufXrTEaTMujYwclvxqsnSChgGlPvQSskiBNZLlrdUBJaTLfXCtCnBsxjkbodCtCOgNalFBKxAGmadVsPxYwgIOiKDyRHHRgwEBuPoBdDrZcxALOJdDpiYPmRtxLfrWoGdUxyJXTdPoFJqjIDwWfkHxtDYWACnrWftKdtYVvIZgojGUTTIMscqBOTuMPmRd",
         test
@@ -65,7 +65,7 @@ class Budget_Line_ItemTest {
     );
     Assertions.assertEquals("CEQSJYTDlaysmaOPTErQWeGQnBCbPHornulM",_Budget_Line_Item.getBudget_Line_Item_id());
     Assertions.assertEquals("pRRbKtIIEqysBLqwEedpKBUWRZJBxfClhM",_Budget_Line_Item.getbudget_id());
-    Assertions.assertEquals("#FFFFF",_Budget_Line_Item.getcolor_id());
+    Assertions.assertEquals("a603121e-048c-4602-b44d-f73a0133a545",_Budget_Line_Item.getCategory_id());
     Assertions.assertEquals("awMvCIEQqmIRvCowtPhXhxDrSWxiEXWXCSMoXUIuXISOpUyh",_Budget_Line_Item.getname());
     Assertions.assertEquals("neXInxJEjlaULYWkOcoyHlAfnCwpxBQmxstOfTeWTCwsrEGwKhOEQlIOSUBlubTufXrTEaTMujYwclvxqsnSChgGlPvQSskiBNZLlrdUBJaTLfXCtCnBsxjkbodCtCOgNalFBKxAGmadVsPxYwgIOiKDyRHHRgwEBuPoBdDrZcxALOJdDpiYPmRtxLfrWoGdUxyJXTdPoFJqjIDwWfkHxtDYWACnrWftKdtYVvIZgojGUTTIMscqBOTuMPmRd",_Budget_Line_Item.getdetails());
     Assertions.assertEquals(test,_Budget_Line_Item.getline_item_date());
@@ -154,42 +154,37 @@ class Budget_Line_ItemTest {
     Assertions.assertEquals(budget_id,_Budget_Line_Item.getbudget_id());
   }
 
+
   /**
-   * Tests that the color_id setter correctly handles valid 6-character hex strings
-   * and strips the leading '#' if present.
+   * Tests that we can set the category ID
    */
   @Test
-  public void testBudget_Line_ItemSetsColorIdValid() {
-    // Test with hash and lowercase
-    String inputWithHash = "#4e79a7";
-    _Budget_Line_Item.setcolor_id(inputWithHash);
-    Assertions.assertEquals("4E79A7", _Budget_Line_Item.getcolor_id());
-
-    // Test without hash
-    String inputNoHash = "F28E2B";
-    _Budget_Line_Item.setcolor_id(inputNoHash);
-    Assertions.assertEquals("F28E2B", _Budget_Line_Item.getcolor_id());
+  public void testBudget_Line_ItemThrowssetsCategoryID() {
+    String categoryID = "a603121e-048c-4602-b44d-f73a0133a545";
+    _Budget_Line_Item.setCategory_id(categoryID);
+  Assertions.assertEquals(categoryID,_Budget_Line_Item.getCategory_id());
   }
 
+
   /**
-   * Tests that an IllegalArgumentException is thrown if the color_id is too short.
+   * Tests that an IllegalArgumentException is thrown if the categoryID is too short.
    */
   @Test
-  public void testBudget_Line_ItemThrowsExceptionIfColorIdTooShort() {
+  public void testBudget_Line_ItemThrowsExceptionIfCategoryIDIdTooShort() {
     String tooShort = "ABC12"; // 5 chars
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
-      _Budget_Line_Item.setcolor_id(tooShort);
+      _Budget_Line_Item.setCategory_id(tooShort);
     });
   }
 
   /**
-   * Tests that an IllegalArgumentException is thrown if the color_id is too long.
+   * Tests that an IllegalArgumentException is thrown if the categoryID is too long.
    */
   @Test
-  public void testBudget_Line_ItemThrowsExceptionIfColorIdTooLong() {
-    String tooLong = "ABC1234"; // 7 chars
+  public void testBudget_Line_ItemThrowsExceptionIfCategoryIdTooLong() {
+    String tooLong = "a603121e-048c-4602-b44d-f73a0133a545dd"; // 7 chars
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
-      _Budget_Line_Item.setcolor_id(tooLong);
+      _Budget_Line_Item.setCategory_id(tooLong);
     });
   }
 
@@ -201,12 +196,12 @@ class Budget_Line_ItemTest {
   public void testBudget_Line_ItemThrowsExceptionIfColorIdInvalidChars() {
     String invalidChars = "GGGGGG"; // G is not a hex character
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
-      _Budget_Line_Item.setcolor_id(invalidChars);
+      _Budget_Line_Item.setCategory_id(invalidChars);
     });
 
     String withSymbols = "AB!@12";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
-      _Budget_Line_Item.setcolor_id(withSymbols);
+      _Budget_Line_Item.setCategory_id(withSymbols);
     });
   }
 
@@ -216,7 +211,7 @@ class Budget_Line_ItemTest {
   @Test
   public void testBudget_Line_ItemThrowsExceptionIfColorIdIsNull() {
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
-      _Budget_Line_Item.setcolor_id(null);
+      _Budget_Line_Item.setCategory_id(null);
     });
   }
 
@@ -498,12 +493,12 @@ class Budget_Line_ItemTest {
 //to set the budget_id as equal.
     smaller.setbudget_id("f1c08287-9e58-408a-bfc3-d5e2dde27810");
     //to compare a smaller and larger color
-    smaller.setcolor_id("#AAAAAA");
-    bigger.setcolor_id("#BBBBBB");
+    smaller.setCategory_id("a603121e-048c-4602-b44d-f73a0133a545");
+    bigger.setCategory_id("b603121e-048c-4602-b44d-f73a0133a545");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the budget_id as equal.
-    smaller.setcolor_id("#BBBBBB");
+    smaller.setCategory_id("b603121e-048c-4602-b44d-f73a0133a545");
 //to compare a smaller and larger name
     smaller.setname("aaaa");
     bigger.setname("bbbb");

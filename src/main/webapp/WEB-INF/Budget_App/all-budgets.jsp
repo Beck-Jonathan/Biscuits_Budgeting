@@ -66,7 +66,7 @@ Create the JSP  For Viewing All of The  budget table
                                         <c:if test="${itemPercentage > 0}">
                                             <div class="progress-bar progress-bar-item"
                                                  role="progressbar"
-                                                 style="width: ${itemPercentage}%; background-color: #${line.color_id};"
+                                                 style="width: ${itemPercentage}%; background-color: ${line.category.color_id};"
                                                  title="${fn:escapeXml(line.name)}: $${line.amount}"
                                                  data-bs-toggle="tooltip"
                                                  data-bs-placement="top">

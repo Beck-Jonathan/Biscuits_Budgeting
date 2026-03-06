@@ -25,9 +25,10 @@ public class CategoryDAO implements iCategoryDAO {
   public int add(Category _category) {
     int numRowsAffected=0;try (Connection connection = getConnection()) {
       if (connection != null) {
-        try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Category( ?,?)}")){
-          statement.setString(1,_category.getCategory_ID());
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Category( ?,?,?)}")){
+          statement.setString(1,_category.getCategory_Name());
           statement.setString(2,_category.getUser_ID());
+          statement.setString(3,_category.getcolor_id());
           numRowsAffected = statement.executeUpdate();
           if (numRowsAffected == 0) {
             throw new RuntimeException("Could not add Category. Try again later");
@@ -47,14 +48,20 @@ public class CategoryDAO implements iCategoryDAO {
         try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_user_Category(?)}")) {
           statement.setString(1,userID);
           try(ResultSet resultSet = statement.executeQuery()) {
-          while (resultSet.next()) {String Category_ID = resultSet.getString("Category_Category_ID");
-            Category _category = new Category( Category_ID,userID);
+          while (resultSet.next()) {
+            String Category_ID = resultSet.getString("Category_Category_ID");
+
+            String Name = resultSet.getString("Category_Category_Name");
+            String User_ID = resultSet.getString("User_Category_User_ID");
+
+            String Color_ID = resultSet.getString("Category_Color_ID");
+            Category _category = new Category( Category_ID,User_ID,Name, Color_ID);
             result.add(_category);
           }
         }
         }
       }
-    } catch (SQLException e) {
+    } catch (Exception e) {
       throw new RuntimeException("Could not retrieve Categorys. Try again later");
     }
     return result;}
@@ -81,11 +88,15 @@ public class CategoryDAO implements iCategoryDAO {
     int result = 0;
     try (Connection connection = getConnection()) {
       if (connection !=null){
-        try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Category(? ,?,? )}"))
+        try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Category(? ,?,?,?,?,? )}"))
         {
           statement.setString(1,oldCategory.getCategory_ID());
-          statement.setString(2,newCategory.getCategory_ID());
-          statement.setString(3,oldCategory.getUser_ID());
+
+          statement.setString(2,oldCategory.getUser_ID());
+          statement.setString(3,oldCategory.getCategory_Name());
+          statement.setString(4,newCategory.getCategory_Name());
+          statement.setString(5,oldCategory.getcolor_id());
+          statement.setString(6,newCategory.getcolor_id());
           result=statement.executeUpdate();
         } catch (SQLException e) {
           throw new RuntimeException("Could not update Category . Try again later");
@@ -95,6 +106,28 @@ public class CategoryDAO implements iCategoryDAO {
     return result;
   }
 
+  @Override
+  public Category getCategoryByPrimaryKey(Category category) throws SQLException {
+    Category result = null;
+    try(Connection connection = getConnection()) {
+      try(CallableStatement statement = connection.prepareCall("{CALL sp_retrieve_by_pk_category(?,?)}")) {
+        statement.setString(1, category.getCategory_ID().toString());
+        statement.setString(2, category.getUser_ID().toString());
+
+        try (ResultSet resultSet = statement.executeQuery()){
+          if(resultSet.next()){
+            String category_id = resultSet.getString("category_category_id");
+            String category_name = resultSet.getString("category_category_name");
+            String user_id = resultSet.getString("category_user_id");
+            String color_id = resultSet.getString("category_color_id");
+            result = new Category( category_id, user_id,category_name ,color_id);}
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+    return result;
+  }
 
 }
 

@@ -19,6 +19,7 @@ public interface iCategoryDAO {
 
    int update(Category oldCategory, Category newCategory) throws SQLException;
 
+  Category getCategoryByPrimaryKey(Category category) throws SQLException;
 
 }
 

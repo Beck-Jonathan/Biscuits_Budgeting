@@ -3,6 +3,7 @@ package com.beck.beck_demos.budget_app.data;
 import com.beck.beck_demos.budget_app.iData.iBudget_Line_ItemDAO;
 import com.beck.beck_demos.budget_app.models.Budget_Line_Item;
 import com.beck.beck_demos.budget_app.models.Budget_Line_ItemVM;
+import com.beck.beck_demos.budget_app.models.Category;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -93,7 +94,7 @@ public class Budget_Line_ItemDAO implements iBudget_Line_ItemDAO {
             while (resultSet.next()) {
               String budget_line_item_id = resultSet.getString("budget_line_item_budget_line_item_id");
               String budget_id = resultSet.getString("budget_line_item_budget_id");
-              String color_id = resultSet.getString("budget_line_item_color_id");
+              String category_id = resultSet.getString("budget_line_item_category_id");
               String name = resultSet.getString("budget_line_item_name");
               String details = resultSet.getString("budget_line_item_details");
               LocalDate line_item_date = resultSet.getObject("budget_line_item_line_item_date", LocalDate.class);
@@ -105,9 +106,14 @@ public class Budget_Line_ItemDAO implements iBudget_Line_ItemDAO {
                 transaction_id="";}
               LocalDate created_at = resultSet.getObject("budget_line_item_created_at", LocalDate.class);
               LocalDate updated_at = resultSet.getObject("budget_line_item_updated_at", LocalDate.class);
-
-              Budget_Line_Item budget_line_item =  new Budget_Line_Item( budget_line_item_id, budget_id, color_id, name, details, line_item_date, amount, budget_line_type_id, budget_line_status_id, transaction_id, created_at, updated_at);
+              String category_category_id = resultSet.getString("category_category_id");
+              String category_category_name = resultSet.getString("category_category_name");
+              String category_user_id = resultSet.getString("category_user_id");
+              String category_color_id = resultSet.getString("category_color_id");
+              Category category = new Category(category_category_id,category_user_id,category_category_name,category_color_id);
+              Budget_Line_Item budget_line_item =  new Budget_Line_Item( budget_line_item_id, budget_id, category_id, name, details, line_item_date, amount, budget_line_type_id, budget_line_status_id, transaction_id, created_at, updated_at);
               Budget_Line_ItemVM vm = new Budget_Line_ItemVM(budget_line_item);
+              vm.setCategory(category);
               result.add(vm);
             }
           }
@@ -128,7 +134,7 @@ public class Budget_Line_ItemDAO implements iBudget_Line_ItemDAO {
         // Updated to use executeQuery since the SP returns a result set (the ID)
         try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_budget_line_item(?, ?, ?, ?, ?, ?, ?, ?)}")) {
           statement.setString(1, _budget_line_item.getbudget_id());
-          statement.setString(2, _budget_line_item.getcolor_id());
+          statement.setString(2, _budget_line_item.getCategory_id());
           statement.setString(3, _budget_line_item.getname());
           statement.setString(4, _budget_line_item.getdetails());
           statement.setObject(5, _budget_line_item.getline_item_date());
@@ -178,7 +184,7 @@ public class Budget_Line_ItemDAO implements iBudget_Line_ItemDAO {
         try(CallableStatement statement = connection.prepareCall("{CALL sp_update_budget_line_item(?,?,?,?,?,?,?,?)}"))
         {
           statement.setString(1,oldbudget_line_item.getBudget_Line_Item_id());
-          statement.setString(2,newbudget_line_item.getcolor_id());
+          statement.setString(2,newbudget_line_item.getCategory_id());
           statement.setString(3,newbudget_line_item.getname());
           statement.setString(4,newbudget_line_item.getdetails());
           statement.setObject(5,newbudget_line_item.getline_item_date());

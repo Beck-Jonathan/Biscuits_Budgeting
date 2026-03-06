@@ -68,10 +68,10 @@ class DeleteCategoryServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID("8255af1b-2e9f-487d-b192-b30845feabfc");
+    user.setUser_ID("ec93ae39-255a-4252-ac50-cde8ecb05b0c");
     session.setAttribute("User_B",user);
     request.setSession(session);
-    request.setParameter("categoryid","fOmyBlIv");
+    request.setParameter("categoryid","lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
     request.setParameter("mode","0");
     servlet.doGet(request,response);
     int status = (int) request.getAttribute("result");

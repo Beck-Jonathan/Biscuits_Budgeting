@@ -1,12 +1,11 @@
 $(document).ready(function () {
     // Configuration constants
-    var id = "";
+    var budgetId = "";
     try {
-        id = document.getElementById("budgetID").innerText;
+        budgetId = document.getElementById("budgetID").innerText;
     } catch (e){
-        id="";
+        budgetId = "";
     }
-
 
     const colorNames = {
         "000000": "Black", "FFFFFF": "White", "808080": "Gray", "A9A9A9": "Dark Gray",
@@ -15,34 +14,21 @@ $(document).ready(function () {
         "FF6347": "Tomato", "FF7F50": "Coral", "FFC0CB": "Pink", "FF69B4": "Hot Pink",
         "FF1493": "Deep Pink", "C71585": "Medium Violet Red", "DB7093": "Pale Violet Red",
         "FFA500": "Orange", "FF8C00": "Dark Orange", "FFD700": "Gold", "FFFF00": "Yellow",
-        "FFFFE0": "Light Yellow", "FFFACD": "Lemon Chiffon", "FAFAD2": "Light Goldenrod Yellow",
-        "FFEFD5": "Papaya Whip", "FFE4B5": "Moccasin", "F5DEB3": "Wheat",
         "008000": "Green", "00FF00": "Lime", "32CD32": "Lime Green", "228B22": "Forest Green",
-        "006400": "Dark Green", "6B8E23": "Olive Drab", "808000": "Olive", "9ACD32": "Yellow Green",
-        "2E8B57": "Sea Green", "3CB371": "Medium Sea Green", "8FBC8F": "Dark Sea Green",
-        "90EE90": "Light Green", "00FA9A": "Medium Spring Green",
-        "0000FF": "Blue", "00008B": "Dark Blue", "000080": "Navy", "4169E1": "Royal Blue",
-        "1E90FF": "Dodger Blue", "00BFFF": "Deep Sky Blue", "87CEEB": "Sky Blue",
-        "ADD8E6": "Light Blue", "00FFFF": "Cyan", "E0FFFF": "Light Cyan", "AFEEEE": "Pale Turquoise",
-        "40E0D0": "Turquoise", "008B8B": "Dark Cyan", "008080": "Teal",
-        "800080": "Purple", "8B008B": "Dark Magenta", "FF00FF": "Magenta", "9370DB": "Medium Purple",
-        "8A2BE2": "Blue Violet", "4B0082": "Indigo", "A52A2A": "Brown", "8B4513": "Saddle Brown",
-        "D2691E": "Chocolate", "F4A460": "Sandy Brown", "BC8F8F": "Rosy Brown", "DEB887": "Burly Wood"
+        "0000FF": "Blue", "00008B": "Dark Blue", "1E90FF": "Dodger Blue", "00FFFF": "Cyan",
+        "800080": "Purple", "FF00FF": "Magenta", "8A2BE2": "Blue Violet", "A52A2A": "Brown"
     };
 
     const budget_line_types_json = ['Income', 'Expense', 'Transfer', 'Debt_Payment', 'Savings'];
     const budget_line_statuses_json = ['Planned', 'Pending', 'Completed', 'Cancelled', 'Recurring'];
 
+    // We keep this palette for the "Edit" dropdowns in the table
     const color_palette = [
-        {hex: "#FF0000", name: ''}, {hex: "#00FF00", name: ''}, {hex: "#0000FF", name: ''},
-        {hex: "#FFFF00", name: ''}, {hex: "#FF00FF", name: ''}, {hex: "#00FFFF", name: ''},
-        {hex: "#FF8C00", name: ''}, {hex: "#8A2BE2", name: ''}, {hex: "#008080", name: ''},
-        {hex: "#FF1493", name: ''}, {hex: "#32CD32", name: ''}, {hex: "#1E90FF", name: ''}
+        {hex: "#FF0000", name: 'Red'}, {hex: "#00FF00", name: 'Green'}, {hex: "#0000FF", name: 'Blue'},
+        {hex: "#FFFF00", name: 'Yellow'}, {hex: "#FF00FF", name: 'Magenta'}, {hex: "#00FFFF", name: 'Cyan'},
+        {hex: "#FF8C00", name: 'Orange'}, {hex: "#8A2BE2", name: 'Violet'}, {hex: "#008080", name: 'Teal'},
+        {hex: "#FF1493", name: 'Pink'}, {hex: "#32CD32", name: 'Lime'}, {hex: "#1E90FF", name: 'Dodger Blue'}
     ];
-
-    for (let colorObj of color_palette) {
-        colorObj.name = hexToWord(colorObj.hex);
-    }
 
     let chart;
     let submitbutton = document.getElementById("submitButton");
@@ -51,9 +37,8 @@ $(document).ready(function () {
     initChart();
     makeEditable();
     recalcTotal();
-    translateDropdown();
-    prepColorPicker();
     nameExistingColors();
+    prepColorPicker(); // This handles the #color and #colorPreview logic
 
     // ================= EVENT LISTENERS =================
     $("#addButton").click(function () {
@@ -72,32 +57,29 @@ $(document).ready(function () {
     // ================= FUNCTIONS =================
 
     function initChart() {
-        try{
-        const ctx = document.getElementById("budgetChart").getContext("2d");
-        chart = new Chart(ctx, {
-            type: "pie",
-            data: {
-                labels: [],
-                datasets: [{
-                    data: [],
-                    backgroundColor: [],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom' }
+        try {
+            const ctx = document.getElementById("budgetChart").getContext("2d");
+            chart = new Chart(ctx, {
+                type: "pie",
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
                 }
-            }
-        });} catch (e){
-
-        }
+            });
+        } catch (e) { console.warn("Chart.js not loaded or element missing"); }
     }
 
     function updateChart(currentTotal) {
-        if (chart!=null) {
+        if (chart) {
             const limit = parseFloat($("#budgetLimit").text()) || 0;
             const labels = [];
             const data = [];
@@ -107,7 +89,7 @@ $(document).ready(function () {
                 if (this.id !== "inputRow") {
                     let name = $(this).find('[data-field="name"]').text().trim();
                     let amt = parseFloat($(this).find('[data-field="amount"]').text());
-                    let hex = $(this).find('[data-field="color"]').attr("data-hex") || $(this).find('[data-field="color"]').data("hex");
+                    let hex = $(this).find('[data-field="color"]').attr("data-hex");
 
                     if (hex && !hex.startsWith('#')) hex = '#' + hex;
 
@@ -135,31 +117,21 @@ $(document).ready(function () {
     function recalcTotal() {
         let currentTotal = 0;
         let itemCount = 0;
-
-        // 1. Get the budget limit from the JSP span (remove commas if any)
         const limit = parseFloat($("#budgetLimit").text().replace(/,/g, '')) || 0;
 
         $("#lineItemBody tr").each(function () {
-            // Skip the input row and ensure we are only counting data rows
             if (this.id !== "inputRow") {
                 let amount = parseFloat($(this).find('[data-field="amount"]').text());
-
                 if (!isNaN(amount)) {
                     currentTotal += amount;
-                    itemCount++; // Increment count for each valid row
+                    itemCount++;
                 }
             }
         });
 
-        // 2. Calculate remaining balance
-        const remaining = limit - currentTotal;
-
-        // 3. Update the UI
         $("#totalUsed").text(currentTotal.toFixed(2));
-        $("#totalRemaining").text(remaining.toFixed(2));
-        $("#totalCount").text(itemCount); // No toFixed here, it's a whole number
-
-        // Update your chart with the new total
+        $("#totalRemaining").text((limit - currentTotal).toFixed(2));
+        $("#totalCount").text(itemCount);
         updateChart(currentTotal);
     }
 
@@ -170,7 +142,15 @@ $(document).ready(function () {
         const date = $("#date").val();
         const type = $("#type").val();
         const status = $("#status").val();
-        const color = $("#color").val();
+
+        // 1. Grab the Select element
+        const categorySelect = document.getElementById("color");
+        const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+
+        // 2. Extract all 3 parts of the category
+        const categoryId = categorySelect.value;
+        const categoryName = selectedOption.text.trim(); // This gets the text inside the <option>
+        const colorHex = selectedOption.getAttribute("data-color");
 
         if (!name || isNaN(amount) || !date) {
             alert("Please fill in Name, Amount, and Date.");
@@ -179,35 +159,36 @@ $(document).ready(function () {
 
         const tempId = "temp_" + Date.now();
         const row = `
-            <tr data-id="${tempId}">
-                <td class="editable" data-field="name">${name}</td>
-                <td class="editable" data-field="details">${details}</td>
-                <td class="editable" data-field="amount">${amount.toFixed(2)}</td>
-                <td class="editable" data-field="date">${date}</td>
-                <td class="editable-select" data-field="type">${type}</td>
-                <td class="editable-select" data-field="status">${status}</td>
-                <td class="editable-select" data-field="color" data-hex="#${color}">
-                    <span style="color:#${color}; font-size: 1.5rem; line-height: 1; vertical-align: middle;">●</span>
-                    <span class="color-label">${hexToWord(color)}</span>
-                </td>
-                <td>
-                    <button class="btn btn-sm btn-danger" type="button" 
-                            onclick="deleteLineItem(this, '${tempId}')">Delete</button>
-                </td>
-            </tr>`;
+        <tr data-id="${tempId}">
+            <td class="editable" data-field="name">${name}</td>
+            <td class="editable" data-field="details">${details}</td>
+            <td class="editable" data-field="amount">${amount.toFixed(2)}</td>
+            <td class="editable" data-field="date">${date}</td>
+            <td class="editable-select" data-field="type">${type}</td>
+            <td class="editable-select" data-field="status">${status}</td>
+            <td class="editable-select" data-field="color" data-hex="${colorHex}" data-categoryid="${categoryId}">
+                <span style="color:${colorHex}; font-size: 1.5rem; line-height: 1; vertical-align: middle;">●</span>
+                <span class="color-label">${categoryName}</span>
+            </td>
+            <td>
+                <button class="btn btn-sm btn-outline-danger" type="button" 
+                        onclick="deleteLineItem(this, '${tempId}')">Delete</button>
+            </td>
+        </tr>`;
 
         $("#inputRow").before(row);
         recalcTotal();
+        
 
         const params = new URLSearchParams();
-        params.append("inputbudget_line_itembudget_id", id);
+        params.append("inputbudget_line_itembudget_id", budgetId);
         params.append("inputbudget_line_itemname", name);
         params.append("inputbudget_line_itemdetails", details);
         params.append("inputbudget_line_itemamount", amount);
         params.append("inputbudget_line_itemline_item_date", date);
         params.append("inputbudget_line_itembudget_line_type_id", type);
         params.append("inputbudget_line_itembudget_line_status_id", status);
-        params.append("inputbudget_line_itemcolor_id", color);
+        params.append("inputcategory_id", categoryId); // Send the ID, not the color string
 
         fetch('addBudget_line_item', {
             method: 'POST',
@@ -216,39 +197,25 @@ $(document).ready(function () {
         })
             .then(response => response.text())
             .then(newUuid => {
-                // If the servlet returns a negative error code (like -1)
                 if (parseInt(newUuid) <= 0) {
                     handleError(parseInt(newUuid));
-                    // Optional: Remove the temp row if the save failed
                     $(`tr[data-id="${tempId}"]`).remove();
                     recalcTotal();
                     return;
                 }
-
-                // 1. Find the row using the tempId
                 const $row = $(`tr[data-id="${tempId}"]`);
-
-                // 2. Update the data-id attribute to the real UUID
                 $row.attr("data-id", newUuid);
-
-                // 3. Update the Delete button's onclick function to use the real UUID
-                const $deleteBtn = $row.find("button.btn-danger");
-                $deleteBtn.attr("onclick", `deleteLineItem(this, '${newUuid}')`);
-
-                console.log(`Swapped ${tempId} for real ID: ${newUuid}`);
+                $row.find("button").attr("onclick", `deleteLineItem(this, '${newUuid}')`);
             })
-            .catch(error => {
-                console.error('Fetch error:', error);
-                $(`tr[data-id="${tempId}"]`).remove(); // Cleanup on network failure
-            });
+            .catch(err => console.error('Fetch error:', err));
 
         $("#name, #details, #amount, #date").val("");
     };
 
-    window.deleteLineItem = function(btn, id) {
-        const params = new URLSearchParams();
-        params.append("budget_line_itemid", id);
+    window.deleteLineItem = function(btn, lineId) {
         if(confirm("Delete this item?")) {
+            const params = new URLSearchParams();
+            params.append("budget_line_itemid", lineId);
             $(btn).closest("tr").remove();
             recalcTotal();
             fetch('deleteBudget_line_item', {
@@ -260,31 +227,27 @@ $(document).ready(function () {
     };
 
     function updateLineItem(row) {
-        const data = {
-            id: row.data("id"),
-            name: row.find('[data-field="name"]').text().trim(),
-            details: row.find('[data-field="details"]').text().trim(),
-            amount: parseFloat(row.find('[data-field="amount"]').text()),
-            line_item_date: row.find('[data-field="date"]').text().trim(),
-            type: row.find('[data-field="type"]').text().trim(),
-            status: row.find('[data-field="status"]').text().trim(),
-            color: row.find('[data-field="color"]').attr("data-hex")
-        };
-        recalcTotal();
+        const colorCell = row.find('[data-field="color"]');
+
+        // Safety check: if colorCell doesn't exist, we should stop or handle it
+        if (!colorCell.length) {
+            console.error("Could not find the color cell for row:", row.data("id"));
+            return;
+        }
         const params = new URLSearchParams();
-        params.append("inputbudget_line_itembudget_line_item_id", data.id);
-        params.append("inputbudget_line_itemname", data.name);
-        params.append("inputbudget_line_itemdetails", data.details);
-        params.append("inputbudget_line_itemamount", data.amount);
-        params.append("inputbudget_line_itemline_item_date", data.line_item_date);
-        params.append("inputbudget_line_itembudget_line_type_id", data.type);
-        params.append("inputbudget_line_itembudget_line_status_id", data.status);
-        params.append("inputbudget_line_itemcolor_id", data.color);
+        params.append("inputbudget_line_itembudget_line_item_id", row.data("id"));
+        params.append("inputbudget_line_itemname", row.find('[data-field="name"]').text().trim());
+        params.append("inputbudget_line_itemdetails", row.find('[data-field="details"]').text().trim());
+        params.append("inputbudget_line_itemamount", parseFloat(row.find('[data-field="amount"]').text()));
+        params.append("inputbudget_line_itemline_item_date", row.find('[data-field="date"]').text().trim());
+        params.append("inputbudget_line_itembudget_line_type_id", row.find('[data-field="type"]').text().trim());
+        params.append("inputbudget_line_itembudget_line_status_id", row.find('[data-field="status"]').text().trim());
+        params.append("inputbudget_line_itemCategory_id", colorCell.attr("data-categoryid"));
         fetch('editbudget_line_item', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: params
-        });
+        }).then(() => recalcTotal());
     }
 
     function makeEditable() {
@@ -296,39 +259,34 @@ $(document).ready(function () {
             const row = cell.closest("tr");
 
             if (field === "color") {
-                let currentHex = cell.attr("data-hex") || cell.data("hex");
+                let currentId = cell.attr("data-categoryid");
                 let select = $("<select class='form-select form-select-sm'></select>");
 
-                select.css({"background-color": currentHex, "color": isDark(currentHex) ? "white" : "black"});
-
-                color_palette.forEach(c => {
-                    select.append(`<option value="${c.hex}" ${c.hex === currentHex ? "selected" : ""}>${c.name}</option>`);
+                // Pull categories from the hidden/template list or clone the main categorySelect
+                $("#color option").each(function() {
+                    let catId = $(this).val();
+                    let catName = $(this).text().trim();
+                    let catHex = $(this).data("color");
+                    select.append(`<option value="${catId}" data-color="${catHex}" ${catId === currentId ? "selected" : ""}>${catName}</option>`);
                 });
 
-                cell.html(select);
-                select.focus();
-
-                select.on("change", function() {
-                    const newHex = $(this).val();
-                    $(this).css({"background-color": newHex, "color": isDark(newHex) ? "white" : "black"});
-                    cell.attr("data-hex", newHex);
-                    recalcTotal();
-                });
-
-                select.on("blur keydown", function(e) {
-                    if (e.type === "keydown" && e.key !== "Enter") return;
-                    const finalHex = $(this).val();
-                    cell.html(`<span style="color:${finalHex}; font-size: 1.5rem; line-height: 1; vertical-align: middle;">●</span>`);
-                    updateLineItem(row);
-                });
-            } else if (cell.hasClass("editable-select")) {
-                let current = cell.text().trim();
-                let options = field === "type" ? budget_line_types_json : budget_line_statuses_json;
-                let select = $("<select class='form-select form-select-sm'></select>");
-                options.forEach(opt => select.append(`<option value="${opt}" ${opt === current ? "selected" : ""}>${opt}</option>`));
                 cell.html(select);
                 select.focus().on("blur change", function() {
-                    cell.text($(this).val());
+                    const selectedOpt = $(this).find('option:selected');
+                    const finalId = $(this).val();
+                    const finalName = selectedOpt.text();
+                    const finalHex = selectedOpt.data("color");
+
+                    // Update the cell attributes
+                    cell.attr("data-categoryid", finalId);
+                    cell.attr("data-hex", finalHex);
+
+                    // Update the cell display
+                    cell.html(`
+            <span style="color:${finalHex}; font-size: 1.5rem; line-height: 1; vertical-align: middle;">●</span> 
+            <span class="color-label">${finalName}</span>
+        `);
+
                     updateLineItem(row);
                 });
             } else {
@@ -345,18 +303,13 @@ $(document).ready(function () {
         });
     }
 
-    function isDark(color) {
-        const hex = color.replace('#', '');
-        const r = parseInt(hex.substr(0, 2), 16), g = parseInt(hex.substr(2, 2), 16), b = parseInt(hex.substr(4, 2), 16);
-        return ((r * 299) + (g * 587) + (b * 114)) / 1000 < 155;
-    }
-
     function hexToRgb(hex) {
         hex = hex.replace('#', '');
         return { r: parseInt(hex.substring(0, 2), 16), g: parseInt(hex.substring(2, 4), 16), b: parseInt(hex.substring(4, 6), 16) };
     }
 
     function hexToWord(targetHex) {
+        if (!targetHex) return "Unknown";
         const cleanHex = targetHex.replace('#', '').toUpperCase();
         if (colorNames[cleanHex]) return colorNames[cleanHex];
         const targetRgb = hexToRgb(cleanHex);
@@ -369,41 +322,29 @@ $(document).ready(function () {
         return closestName;
     }
 
-    function translateDropdown() {
-        $(".color-option").each(function() {
-            const hex = $(this).val();
-            if (hex) $(this).text(hexToWord(hex));
-        });
-    }
-
     function prepColorPicker() {
-        // Clear any existing content first to prevent "double circles" on re-init
-        $("#colorPreview").empty();
+        const $colorSelect = $("#color");
+        const $preview = $("#colorPreview");
 
-        // Add the initial circle
-        $("#colorPreview").append('<span id="previewBullet" style="font-size: 1.5rem; line-height: 1; vertical-align: middle;">●</span>');
+        $colorSelect.on("change", function() {
+            // Get the hex code from the data-color attribute of the selected option
+            const hex = $(this).find('option:selected').data('color');
 
-        $("#color").on("change", function() {
-            const selectedColor = $(this).val();
-            // Ensure the hex has a hash
-            const cleanHex = selectedColor.startsWith('#') ? selectedColor : '#' + selectedColor;
-
-            // Update the color of the existing bullet
-            $("#previewBullet").css("color", cleanHex);
-        }).trigger("change"); // Trigger immediately to set the initial color
+            if (hex) {
+                // Apply the color to the text (the bullet character)
+                $preview.css("color", hex);
+            }
+        }).trigger("change"); // Initialize immediately
     }
 
-
-function handleError(code) {
-    const errors = { "-1": "Session expired.", "-2": "Invalid Budget ID.", "-10": "Database error." };
-    alert("Error (" + code + "): " + (errors[code] || "Request failed."));
-}
-
-function nameExistingColors(){
-    var existingColors = document.getElementsByClassName("color-label");
-    for (i=0;i<existingColors.length;i++){
-        existingColors[i].textContent = hexToWord(existingColors[i].textContent)
+    function nameExistingColors(){
+       // $(".color-label").each(function() {
+       //     $(this).text(hexToWord($(this).text()));
+       // });
     }
-}
 
+    function handleError(code) {
+        const errors = { "-1": "Session expired.", "-2": "Invalid Budget ID.", "-10": "Database error." };
+        alert("Error (" + code + "): " + (errors[code] || "Request failed."));
+    }
 });

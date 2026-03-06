@@ -142,10 +142,13 @@ class AddCategoryServletTest {
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Category_IDError = results.get("categoryCategory_IDerror");
-    String User_IDError = results.get("categoryUser_IDerror");
-    assertNotEquals("",Category_IDError);
-    assertNotNull(Category_IDError);
+    String Category_NameError = results.get("categoryCategory_Nameerror");
+    //String User_IDError = results.get("categoryUser_IDerror");
+    String Color_IDError = results.get("categoryColor_IDerror");
+    assertNotEquals("",Category_NameError);
+    assertNotNull(Category_NameError);
+    assertNotEquals("",Color_IDError);
+    assertNotNull(Color_IDError);
 
     assertEquals(200,responseStatus);
   }
@@ -161,8 +164,9 @@ class AddCategoryServletTest {
     user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     session.setAttribute("User_B",user);
     request.setSession(session);
-    request.setParameter("inputcategoryCategory_ID","TestValue");
-    request.setParameter("inputcategoryUser_ID","406");
+    request.setParameter("inputcategoryCategory_Name","TestValue");
+    request.setParameter("inputcategoryColor_id","#AABBCC");
+    //request.setParameter("inputcategoryUser_ID","406");
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
@@ -183,8 +187,9 @@ class AddCategoryServletTest {
     user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     session.setAttribute("User_B",user);
     request.setSession(session);
-    request.setParameter("inputcategoryCategory_ID","EXCEPTION");
-    request.setParameter("inputcategoryUser_ID","406");
+    request.setParameter("inputcategoryCategory_Name","EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
+    //request.setParameter("inputcategoryUser_ID","406");
+    request.setParameter("inputcategoryColor_id","#AABBCC");
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
@@ -210,8 +215,9 @@ class AddCategoryServletTest {
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
-    request.setParameter("inputcategoryCategory_ID","DUPLICATE");
-    request.setParameter("inputcategoryUser_ID","406");
+    request.setParameter("inputcategoryCategory_Name","DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
+    //request.setParameter("inputcategoryUser_ID","406");
+    request.setParameter("inputcategoryColor_id","#AABBCC");
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");

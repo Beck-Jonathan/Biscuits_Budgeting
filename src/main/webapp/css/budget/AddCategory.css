@@ -1,0 +1,33 @@
+.picker-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.native-picker {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 60px;
+    height: 60px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+/* These pseudo-elements style the actual 'swatch' inside the input */
+.native-picker::-webkit-color-swatch {
+    border-radius: 12px;
+    border: 2px solid #ddd;
+}
+.native-picker::-moz-color-swatch {
+    border-radius: 12px;
+    border: 2px solid #ddd;
+}
+
+.status-text {
+    font-family: 'Monaco', 'Consolas', monospace;
+    font-size: 1.1rem;
+    color: #444;
+}

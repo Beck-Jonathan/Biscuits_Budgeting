@@ -7,16 +7,13 @@ package com.beck.beck_demos.budget_app.models;
  */
 import org.jetbrains.annotations.NotNull;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 
 public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
   private String Budget_Line_Item_id;
   private String budget_id;
-  private String color_id;
+  private String category_id;
   private String name;
   private String details;
   private LocalDate line_item_date;
@@ -29,11 +26,11 @@ public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
 
   public Budget_Line_Item(){}
 
-  public Budget_Line_Item(String Budget_Line_Item_id, String budget_id, String color_id, String name, String details, LocalDate line_item_date, Double amount, String budget_line_type_id, String budget_line_status_id, String transaction_id, LocalDate created_at, LocalDate updated_at) {
+  public Budget_Line_Item(String Budget_Line_Item_id, String budget_id, String category_id, String name, String details, LocalDate line_item_date, Double amount, String budget_line_type_id, String budget_line_status_id, String transaction_id, LocalDate created_at, LocalDate updated_at) {
 
     this.Budget_Line_Item_id = Budget_Line_Item_id;
     this.budget_id = budget_id;
-    this.color_id = color_id;
+    this.category_id = category_id;
     this.name = name;
     this.details = details;
     this.line_item_date = line_item_date;
@@ -101,35 +98,29 @@ public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
    * <p> Gets the color_id of the associated budget_line_item object </p>
    * @return the color_id of this budget_line_item object.
    */
-  public String getcolor_id() {
-    return color_id;
+  public String getCategory_id() {
+    return category_id;
   }
 
   /**
-   * <p> Sets the color_id of the associated budget_line_item object </p>
-   * @param color_id the color_id of the budget_line_item,
-   * throws IllegalArgumentException if color_id under 3 characters or longer than 6 characters
+   * <p> Sets the category_id of the associated budget_line_item object </p>
+   * @param category_id the category_id of the budget_line_item,
+   * throws IllegalArgumentException if category_id under 3 characters or longer than 6 characters
    */
-  public void setcolor_id(String color_id) {
-    if (color_id == null) {
-      throw new IllegalArgumentException("color_id cannot be null.");
+  public void setCategory_id(String category_id) {
+    if (category_id == null) {
+      throw new IllegalArgumentException("category_id cannot be null.");
     }
 
-    // 1. Remove the '#' if it exists (e.g., "#4e79a7" -> "4e79a7")
-    String cleanHex = color_id.startsWith("#") ? color_id.substring(1) : color_id;
 
-    // 2. Validate length (must be exactly 6 characters)
-    if (cleanHex.length() != 6) {
-      throw new IllegalArgumentException("color_id must be exactly 6 hex characters (excluding #). Found: " + cleanHex);
+    if (category_id.length() != 36) {
+      throw new IllegalArgumentException("category_id must be exactly 6 hex characters . Found: " + category_id);
     }
 
-    // 3. Validate format (must be 0-9, a-f, or A-F)
-    if (!cleanHex.matches("^[0-9a-fA-F]{6}$")) {
-      throw new IllegalArgumentException("color_id contains invalid hexadecimal characters.");
-    }
 
-    // 4. Store consistently (usually uppercase for DB consistency)
-    this.color_id = cleanHex.toUpperCase();
+
+
+    this.category_id = category_id;
   }
 
   /**
@@ -359,10 +350,10 @@ public class Budget_Line_Item implements Comparable<Budget_Line_Item> {
     else if(this.budget_id.compareTo(o.budget_id) > 0){
       return 1;
     }
-    if (this.color_id.compareTo(o.color_id)<0){
+    if (this.category_id.compareTo(o.category_id)<0){
       return -1;
     }
-    else if(this.color_id.compareTo(o.color_id) > 0){
+    else if(this.category_id.compareTo(o.category_id) > 0){
       return 1;
     }
 

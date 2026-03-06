@@ -14,9 +14,6 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 /******************
  Create the Servlet Viuw/Edit from the budget_line_item table
  Created By Jonathan Beck 3/3/2026
@@ -87,9 +84,9 @@ public class EditBudget_Line_ItemServlet extends HttpServlet{
 
 
 
-    String _color_id = req.getParameter("inputbudget_line_itemcolor_id");
-    if (_color_id!=null){
-      _color_id=_color_id.trim();
+    String Category_ID = req.getParameter("inputbudget_line_itemCategory_id");
+    if (Category_ID!=null){
+      Category_ID=Category_ID.trim();
     }
     String _name = req.getParameter("inputbudget_line_itemname");
     if (_name!=null){
@@ -132,7 +129,7 @@ public class EditBudget_Line_ItemServlet extends HttpServlet{
     int errors =0;
 
     try {
-      _newbudget_line_item.setcolor_id(_color_id);
+      _newbudget_line_item.setCategory_id(Category_ID);
     } catch(Exception e) {
       response = -3;
       sendResponse(resp, response);

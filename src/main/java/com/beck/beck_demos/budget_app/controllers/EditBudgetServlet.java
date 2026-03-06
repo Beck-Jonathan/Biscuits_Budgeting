@@ -3,7 +3,9 @@ package com.beck.beck_demos.budget_app.controllers;
 
 import com.beck.beck_demos.budget_app.data.BudgetDAO;
 import com.beck.beck_demos.budget_app.data.Budget_Line_ItemDAO;
+import com.beck.beck_demos.budget_app.data.CategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iBudget_Line_ItemDAO;
+import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
 import com.beck.beck_demos.budget_app.models.*;
 import com.beck.beck_demos.budget_app.iData.iBudgetDAO;
 import jakarta.servlet.ServletException;
@@ -51,16 +53,18 @@ import java.util.Map;
 public class EditBudgetServlet extends HttpServlet{
   private iBudgetDAO budgetDAO;
   private iBudget_Line_ItemDAO budgetLineItemDAO;
+  private iCategoryDAO categoryDAO;
 
   @Override
   public void init() {
     budgetDAO = new BudgetDAO();
     budgetLineItemDAO = new Budget_Line_ItemDAO();
-
+    categoryDAO = new CategoryDAO();
   }
-  public void init(iBudgetDAO budgetDAO, iBudget_Line_ItemDAO budgetLineItemDAO){
+  public void init(iBudgetDAO budgetDAO, iBudget_Line_ItemDAO budgetLineItemDAO, iCategoryDAO categoryDAO){
     this.budgetDAO = budgetDAO;
     this.budgetLineItemDAO = budgetLineItemDAO;
+    this.categoryDAO = categoryDAO;
   }
 
   @Override
@@ -106,27 +110,28 @@ public class EditBudgetServlet extends HttpServlet{
       resp.sendRedirect("all-budgets");
       return;
     }
-    List<String> allcolors = null;
+    List<Category> allCategories = null;
     List<String> allbudget_line_types = null;
     List<String> allbudget_line_statuss = null;
     List<String> allcurrency_codes = null;
     try{
 
-      allcolors = budgetLineItemDAO.getDistinctcolorForDropdown();
+      allCategories = categoryDAO.getCategoryByUser(user.getUser_ID());
       allbudget_line_types = budgetLineItemDAO.getDistinctbudget_line_typeForDropdown();
       allbudget_line_statuss = budgetLineItemDAO.getDistinctbudget_line_statusForDropdown();
       allcurrency_codes = budgetDAO.getDistinctcurrency_codeForDropdown();
 
     } catch (Exception e){
 
-      allcolors= new ArrayList<>();
+      allCategories= new ArrayList<>();
       allbudget_line_types= new ArrayList<>();
       allbudget_line_statuss= new ArrayList<>();
       allcurrency_codes = new ArrayList<>();
       resp.sendRedirect("all-budgets");
+      return;
     }
 
-    req.setAttribute("colors", allcolors);
+    req.setAttribute("categories", allCategories);
     req.setAttribute("budget_line_types", allbudget_line_types);
     req.setAttribute("budget_line_status", allbudget_line_statuss);
     req.setAttribute("currency_codes", allcurrency_codes);

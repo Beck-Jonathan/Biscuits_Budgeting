@@ -20,6 +20,9 @@
     <c:if test="${pageTitle eq 'All Budgets'}">
     <link rel="stylesheet" href="${appURL}/css/budget/AllBudget.css">
     </c:if>
+    <c:if test="${pageTitle eq 'Add Category' || pageTitle eq 'Edit a Category'}">
+    <link rel="stylesheet" href="${appURL}/css/budget/AddCategory.css">
+    </c:if>
 
 
 

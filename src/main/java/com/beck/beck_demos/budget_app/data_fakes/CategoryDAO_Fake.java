@@ -14,21 +14,21 @@ public class CategoryDAO_Fake implements iCategoryDAO {
   private  List<Category> categories;
   public CategoryDAO_Fake(){
     categories = new ArrayList<>();
-    Category category0 = new Category("fOmyBlIv", "8255af1b-2e9f-487d-b192-b30845feabfc");
-    Category category1 = new Category("GLMVFfOv", "8255af1b-2e9f-487d-b192-b30845feabfc");
-    Category category2 = new Category("HBYSCtHU", "8255af1b-2e9f-487d-b192-b30845feabfc");
-    Category category3 = new Category("khvySdbm", "8255af1b-2e9f-487d-b192-b30845feabfc");
-    Category category4 = new Category("ZTKajGXn", "8255af1b-2e9f-487d-b192-b30845feabfc");
-    Category category5 = new Category("yTLuvxGG", "6b840299-407f-4c2b-a86b-53119cd8449d");
-    Category category6 = new Category("IMrVdPEL", "6b840299-407f-4c2b-a86b-53119cd8449d");
-    Category category7 = new Category("wmbdbfRl", "6b840299-407f-4c2b-a86b-53119cd8449d");
-    Category category8 = new Category("ksbVeGEU", "6b840299-407f-4c2b-a86b-53119cd8449d");
-    Category category9 = new Category("WBZWffQG", "6b840299-407f-4c2b-a86b-53119cd8449d");
-    Category category10 = new Category("nvMJdMZW", "6b840299-407f-4c2b-a86b-53119cd8449d");
-    Category category11 = new Category("htInVYNl", "fec75744-130e-4bcb-8bbe-9bee18080428");
-    Category category12 = new Category("blROscKW", "fec75744-130e-4bcb-8bbe-9bee18080428");
-    Category category13 = new Category("vIuUKHwc", "fec75744-130e-4bcb-8bbe-9bee18080428");
-    Category category14 = new Category("SYDMAsdx", "fec75744-130e-4bcb-8bbe-9bee18080428");
+    Category category0 = new Category("lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc", "ec93ae39-255a-4252-ac50-cde8ecb05b0c", "sqiidVcxEgAxPSmbAlPuyyPqlajALcCishjt", "#FFFFFF");
+    Category category1 = new Category("CptdvYCqiIfQbZZYnDSelOjeuWoIaPIoSyqN", "ec93ae39-255a-4252-ac50-cde8ecb05b0c", "sqiidVcxEgAxPSmbAlPuyyPqlajALcCishjt", "#FFFFFF");
+    Category category2 = new Category("tqwOoIpqAWlTCXgHIWbRoWGDeWkRLuUjMrUK", "ec93ae39-255a-4252-ac50-cde8ecb05b0c", "sqiidVcxEgAxPSmbAlPuyyPqlajALcCishjt", "#FFFFFF");
+    Category category3 = new Category("VbNXjdaXScgqBlggjkqLldrnWVJfkrCAoHXH", "ec93ae39-255a-4252-ac50-cde8ecb05b0c", "sqiidVcxEgAxPSmbAlPuyyPqlajALcCishjt", "#FFFFFF");
+    Category category4 = new Category("vdoqmRiVgdUosYCZMDkucIbBqIHNMhyUoGbS", "ec93ae39-255a-4252-ac50-cde8ecb05b0c", "sqiidVcxEgAxPSmbAlPuyyPqlajALcCishjt", "#FFFFFF");
+    Category category5 = new Category("ucYKgZgvfLUTdJVbOhDchrUawsfqUPTPkdNG", "ec93ae39-255a-4252-ac50-cde8ecb05b0c", "hCraEvQYiLHHoPurvcIVYtHtPbwnprHMRKEN", "#FFFFFF");
+    Category category6 = new Category("bNQxZYSVjLmJDvJLVyOYNLdJGFKIWpjLhEsF", "333d977a-a025-428c-83ca-76a1741d6e0c", "hCraEvQYiLHHoPurvcIVYtHtPbwnprHMRKEN", "#FFFFFF");
+    Category category7 = new Category("uEmuNJVOsGTRrqaxFojdSgRvKTJurHbjCDEZ", "333d977a-a025-428c-83ca-76a1741d6e0c", "hCraEvQYiLHHoPurvcIVYtHtPbwnprHMRKEN", "#FFFFFF");
+    Category category8 = new Category("tlbsafOfuDUGULgwOiEkiYHEiGDAYdOipASn", "333d977a-a025-428c-83ca-76a1741d6e0c", "hCraEvQYiLHHoPurvcIVYtHtPbwnprHMRKEN", "#FFFFFF");
+    Category category9 = new Category("kLRYjKtYnicVOWdVfsswWiDgaxdIjFoaxvxg", "333d977a-a025-428c-83ca-76a1741d6e0c", "hCraEvQYiLHHoPurvcIVYtHtPbwnprHMRKEN", "#FFFFFF");
+    Category category10 = new Category("XTCGeIIYvATsbcwLadRCtYlKcQHsDKndeJJC", "91c9e669-6696-4902-8446-d4eebdc8acea", "XOaLTGEQbNNrHcYrPPpEOTlLxhePgsupNJgh", "#FFFFFF");
+    Category category11 = new Category("BsdJLFpQtWEFWvYKBMsLtGiKiKGHXwUOlikP", "91c9e669-6696-4902-8446-d4eebdc8acea", "XOaLTGEQbNNrHcYrPPpEOTlLxhePgsupNJgh", "#FFFFFF");
+    Category category12 = new Category("cqHALvMmMJwUecFCNpXLZicMHuywqThfjQfn", "91c9e669-6696-4902-8446-d4eebdc8acea", "XOaLTGEQbNNrHcYrPPpEOTlLxhePgsupNJgh", "#FFFFFF");
+    Category category13 = new Category("yXfCtVnlIoyTsOFhxiMudRQvqubgvRCCGLsJ", "46fcffea-d21c-4254-814d-926d0086d77c", "XOaLTGEQbNNrHcYrPPpEOTlLxhePgsupNJgh", "#FFFFFF");
+    Category category14 = new Category("MowPYhMmEqfgtCEmbZMyrXMnsrBXtKlRuMJu", "46fcffea-d21c-4254-814d-926d0086d77c", "XOaLTGEQbNNrHcYrPPpEOTlLxhePgsupNJgh", "#FFFFFF");
 
     categories.add(category0);
     categories.add(category1);
@@ -120,10 +120,27 @@ public class CategoryDAO_Fake implements iCategoryDAO {
       return 1;
     }
 
+  @Override
+  public Category getCategoryByPrimaryKey(Category category) throws SQLException {
+    Category result = null;
+    for (Category _category : categories) {
+      if (category.getCategory_ID().equals(_category.getCategory_ID())&&category.getUser_ID().equals(_category.getUser_ID())){
+        result = category;
+        break;
+      }
+    }
+    if (result == null){
+      throw new SQLException("category not found");
+    }
+    return result;
+  }
+
+
+
   private boolean duplicateKey(Category _category){
-    return _category.getCategory_ID().equals("DUPLICATE");
+    return (_category==null ||_category.getCategory_Name().contains("DUPLICATE"));
   }
   private boolean exceptionKey(Category _category){
-    return _category.getCategory_ID().equals("EXCEPTION");
+    return (_category==null ||_category.getCategory_Name().contains("EXCEPTION"));
   }
 }

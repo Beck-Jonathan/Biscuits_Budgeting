@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 /******************
@@ -45,6 +46,7 @@ public class EditCategoryServlet extends HttpServlet{
 
     String mode = req.getParameter("mode");
     String primaryKey = "";
+    int errors = 0;
     try{
       primaryKey = req.getParameter("categoryid");
     }catch (Exception e) {
@@ -54,14 +56,29 @@ public class EditCategoryServlet extends HttpServlet{
     try{
       category.setCategory_ID(primaryKey);
       category.setUser_ID(user.getUser_ID());
+      //errors ++;
     } catch (Exception e){
       req.setAttribute("dbStatus",e.getMessage());
+      errors++;
+      category=null;
+    }
+    if (errors ==0) {
+      try {
+        category = categoryDAO.getCategoryByPrimaryKey(category);
+      } catch (SQLException e) {
+        req.setAttribute("dbStatus", e.getMessage());
+        category = null;
+      }
+    }
+    else {
+      resp.sendRedirect("budget_home");
+      return;
     }
 
     session.setAttribute("category",category);
     req.setAttribute("mode",mode);
     session.setAttribute("currentPage",req.getRequestURL());
-    req.setAttribute("pageTitle", "Edit Category");
+    req.setAttribute("pageTitle", "Edit a Category");
 
     req.getRequestDispatcher("WEB-INF/Budget_App/edit_category.jsp").forward(req, resp);
 
@@ -89,23 +106,33 @@ public class EditCategoryServlet extends HttpServlet{
     Category _oldCategory= (Category)session.getAttribute("category");
     int errors =0;
 //to get the new event's info
-    String _Category_ID = req.getParameter("inputcategoryCategory_ID");
+    String _Category_Name = req.getParameter("inputcategoryCategory_Name");
     try {
-      _Category_ID = _Category_ID.trim();
+      _Category_Name = _Category_Name.trim();
 
     } catch (Exception e){
       errors++;
-      results.put("categoryCategory_IDerror", e.getMessage());
+      results.put("categoryCategory_Nameerror", e.getMessage());
+    }
+    String _color_id = req.getParameter("inputcategoryColor_id");
+    if (_color_id!=null){
+      _color_id=_color_id.trim();
     }
 
-    results.put("Category_ID",_Category_ID);
+    results.put("Category_Name",_Category_Name);
+    results.put("Color_ID",_color_id);
 
     Category _newCategory = new Category();
 
     try {
-      _newCategory.setCategory_ID(_Category_ID);
+      _newCategory.setCategory_Name(_Category_Name);
     } catch(Exception e) {
-      results.put("categoryCategory_IDerror", e.getMessage());
+      results.put("categoryCategory_Nameerror", e.getMessage());
+      errors++;
+    }
+    try {
+      _newCategory.setcolor_id(_color_id);
+    } catch(Exception e) {results.put("categorycolor_iderror", e.getMessage());
       errors++;
     }
 
@@ -128,7 +155,7 @@ public class EditCategoryServlet extends HttpServlet{
     }
 //standard
     req.setAttribute("results", results);
-    req.setAttribute("pageTitle", "Edit a Category ");
+    req.setAttribute("pageTitle", "Edit a Category");
     req.getRequestDispatcher("WEB-INF/Budget_App/edit_category.jsp").forward(req, resp);
   }
 }

@@ -13,10 +13,6 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 /******************
  Create the Servlet  For adding to The  budget_line_item table
  Created By Jonathan Beck 3/3/2026
@@ -78,9 +74,9 @@ public class AddBudget_Line_Item extends HttpServlet {
     if (_budget_id != null) {
       _budget_id = _budget_id.trim();
     }
-    String _color_id = req.getParameter("inputbudget_line_itemcolor_id");
-    if (_color_id != null) {
-      _color_id = _color_id.trim();
+    String _Category_id = req.getParameter("inputcategory_id");
+    if (_Category_id != null) {
+      _Category_id = _Category_id.trim();
     }
     String _name = req.getParameter("inputbudget_line_itemname");
     if (_name != null) {
@@ -118,7 +114,7 @@ public class AddBudget_Line_Item extends HttpServlet {
       return;
     }
     try {
-      budget_line_item.setcolor_id(_color_id);
+      budget_line_item.setCategory_id(_Category_id);
     } catch (Exception e) {
       response = "-3";
       sendResponse(resp, response);

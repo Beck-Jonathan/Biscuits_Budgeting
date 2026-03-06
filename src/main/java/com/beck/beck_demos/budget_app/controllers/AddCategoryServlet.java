@@ -61,18 +61,28 @@ public class AddCategoryServlet extends HttpServlet{
       return;
     }
 
-    String _Category_ID = req.getParameter("inputcategoryCategory_ID");
-    if (_Category_ID!=null) {
-      _Category_ID=_Category_ID.trim();
+    String _Category_Name = req.getParameter("inputcategoryCategory_Name");
+    if (_Category_Name!=null) {
+      _Category_Name=_Category_Name.trim();
+    }
+    String _color_id = req.getParameter("inputcategoryColor_id");
+    if (_color_id!=null) {
+      _color_id=_color_id.trim();
     }
     Map<String, String> results = new HashMap<>();
-    results.put("Category_ID",_Category_ID);
+    results.put("Category_Name",_Category_Name);
+    results.put("color_id",_color_id);
     Category category = new Category();
     int errors =0;
     try {
-      category.setCategory_ID(_Category_ID);
+      category.setCategory_Name(_Category_Name);
       category.setUser_ID(user.getUser_ID());
-    } catch(Exception e) {results.put("categoryCategory_IDerror", e.getMessage());
+    } catch(Exception e) {results.put("categoryCategory_Nameerror", e.getMessage());
+      errors++;
+    }
+    try {
+      category.setcolor_id(_color_id);
+    } catch(Exception e) {results.put("categoryColor_IDerror", e.getMessage());
       errors++;
     }
     int result=0;
@@ -93,7 +103,7 @@ public class AddCategoryServlet extends HttpServlet{
       }
     }
     req.setAttribute("results", results);
-    req.setAttribute("pageTitle", "Create a Category ");
+    req.setAttribute("pageTitle", "Add Category");
     req.getRequestDispatcher("WEB-INF/Budget_App/add_category.jsp").forward(req, resp);
 
   }
