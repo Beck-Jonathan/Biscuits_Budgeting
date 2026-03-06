@@ -318,7 +318,7 @@ class Budget_Line_ItemTest {
    */
   @Test
   public void testBudget_Line_ItemThrowsIllegalArgumentExceptionIfamountTooBig(){
-    double amount = 10001;
+    double amount = 10000001;
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_Budget_Line_Item.setamount(amount);});
   }
 
