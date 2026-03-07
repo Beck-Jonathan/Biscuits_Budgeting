@@ -107,8 +107,7 @@ class AddBudget_Line_ItemTest {
   public void testDoPostReturnsNegativeFourIfNameInvalid() throws ServletException, IOException {
     setupValidUser();
     request.setParameter("inputbudget_line_itembudget_id", "b64c4a8b-2b0b-4ad3-bfb9-d44c872d5db9");
-    request.setParameter("inputbudget_line_itemcolor_id", "FF0000");
-
+    request.setParameter("inputcategory_id","87cd7359-9374-4270-be0c-ef6ffd69ec4d");
     request.setParameter("inputbudget_line_itemname", "");
 
     servlet.doPost(request, response);
@@ -119,7 +118,7 @@ class AddBudget_Line_ItemTest {
   public void testDoPostReturnsNegativeFiveIfDetailsInvalid() throws ServletException, IOException {
     setupValidUser();
     request.setParameter("inputbudget_line_itembudget_id", "b64c4a8b-2b0b-4ad3-bfb9-d44c872d5db9");
-    request.setParameter("inputbudget_line_itemcolor_id", "FF0000");
+    request.setParameter("inputcategory_id","87cd7359-9374-4270-be0c-ef6ffd69ec4d");
     request.setParameter("inputbudget_line_itemname", "Groceries");
     // Assuming setdetails has a character limit (e.g., > 255) that triggers an exception
 
@@ -133,7 +132,7 @@ class AddBudget_Line_ItemTest {
   public void testDoPostReturnsNegativeSixIfDateInvalid() throws ServletException, IOException {
     setupValidUser();
     request.setParameter("inputbudget_line_itembudget_id", "b64c4a8b-2b0b-4ad3-bfb9-d44c872d5db9");
-    request.setParameter("inputbudget_line_itemcolor_id", "FF0000");
+    request.setParameter("inputcategory_id","87cd7359-9374-4270-be0c-ef6ffd69ec4d");
     request.setParameter("inputbudget_line_itemname", "Groceries");
     request.setParameter("inputbudget_line_itemdetails", "Weekly trip");
     request.setParameter("inputbudget_line_itemline_item_date", "not-a-date"); // Invalid format
@@ -146,7 +145,7 @@ class AddBudget_Line_ItemTest {
   public void testDoPostReturnsNegativeSevenIfAmountNotNumeric() throws ServletException, IOException {
     setupValidUser();
     request.setParameter("inputbudget_line_itembudget_id", "b64c4a8b-2b0b-4ad3-bfb9-d44c872d5db9");
-    request.setParameter("inputbudget_line_itemcolor_id", "FF0000");
+    request.setParameter("inputcategory_id","87cd7359-9374-4270-be0c-ef6ffd69ec4d");
     request.setParameter("inputbudget_line_itemname", "Groceries");
     request.setParameter("inputbudget_line_itemdetails", "Weekly trip");
     request.setParameter("inputbudget_line_itemline_item_date", "2026-03-03");
@@ -160,7 +159,7 @@ class AddBudget_Line_ItemTest {
   public void testDoPostReturnsNegativeEightIfTypeInvalid() throws ServletException, IOException {
     setupValidUser();
     request.setParameter("inputbudget_line_itembudget_id", "b64c4a8b-2b0b-4ad3-bfb9-d44c872d5db9");
-    request.setParameter("inputbudget_line_itemcolor_id", "FF0000");
+    request.setParameter("inputcategory_id","87cd7359-9374-4270-be0c-ef6ffd69ec4d");
     request.setParameter("inputbudget_line_itemname", "Groceries");
     request.setParameter("inputbudget_line_itemdetails", "Weekly food");
     request.setParameter("inputbudget_line_itemline_item_date", "2026-03-03");
@@ -176,7 +175,7 @@ class AddBudget_Line_ItemTest {
   public void testDoPostReturnsNegativeNineIfStatusInvalid() throws ServletException, IOException {
     setupValidUser();
     request.setParameter("inputbudget_line_itembudget_id", "b64c4a8b-2b0b-4ad3-bfb9-d44c872d5db9");
-    request.setParameter("inputbudget_line_itemcolor_id", "FF0000");
+    request.setParameter("inputcategory_id","87cd7359-9374-4270-be0c-ef6ffd69ec4d");
     request.setParameter("inputbudget_line_itemname", "Groceries");
     request.setParameter("inputbudget_line_itemdetails", "Weekly food");
     request.setParameter("inputbudget_line_itemline_item_date", "2026-03-03");
@@ -194,7 +193,7 @@ class AddBudget_Line_ItemTest {
     setupValidUser();
     // Fill all required fields with valid data
     request.setParameter("inputbudget_line_itembudget_id", "b64c4a8b-2b0b-4ad3-bfb9-d44c872d5db9");
-    request.setParameter("inputbudget_line_itemcolor_id", "FF0000");
+    request.setParameter("inputcategory_id","87cd7359-9374-4270-be0c-ef6ffd69ec4d");
     request.setParameter("inputbudget_line_itemname", "Rent");
     request.setParameter("inputbudget_line_itemdetails", "Monthly Rent");
     request.setParameter("inputbudget_line_itemline_item_date", "2026-03-03");
@@ -213,7 +212,7 @@ class AddBudget_Line_ItemTest {
     setupValidUser();
     // Fill all required fields with valid data
     request.setParameter("inputbudget_line_itembudget_id", "b64c4a8b-2b0b-4ad3-bfb9-d44c872d5db9");
-    request.setParameter("inputbudget_line_itemcolor_id", "FF0000");
+    request.setParameter("inputcategory_id","87cd7359-9374-4270-be0c-ef6ffd69ec4d");
     request.setParameter("inputbudget_line_itemname", "EXCEPTION");
     request.setParameter("inputbudget_line_itemdetails", "Monthly Rent");
     request.setParameter("inputbudget_line_itemline_item_date", "2026-03-03");
@@ -232,7 +231,7 @@ class AddBudget_Line_ItemTest {
     setupValidUser();
     // Fill all required fields with valid data
     request.setParameter("inputbudget_line_itembudget_id", "b64c4a8b-2b0b-4ad3-bfb9-d44c872d5db9");
-    request.setParameter("inputbudget_line_itemcolor_id", "FF0000");
+    request.setParameter("inputcategory_id","87cd7359-9374-4270-be0c-ef6ffd69ec4d");
     request.setParameter("inputbudget_line_itemname", "DUPLICATE");
     request.setParameter("inputbudget_line_itemdetails", "Monthly Rent");
     request.setParameter("inputbudget_line_itemline_item_date", "2026-03-03");

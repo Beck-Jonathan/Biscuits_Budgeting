@@ -9,10 +9,7 @@ import com.beck.beck_demos.budget_app.controllers.EditBudgetServlet;
 import com.beck.beck_demos.budget_app.data_fakes.BudgetDAO_Fake;
 import com.beck.beck_demos.budget_app.data_fakes.Budget_Line_ItemDAO_Fake;
 import com.beck.beck_demos.budget_app.data_fakes.CategoryDAO_Fake;
-import com.beck.beck_demos.budget_app.models.Budget;
-import com.beck.beck_demos.budget_app.models.Budget_Line_ItemVM;
-import com.beck.beck_demos.budget_app.models.Budget_VM;
-import com.beck.beck_demos.budget_app.models.User;
+import com.beck.beck_demos.budget_app.models.*;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
@@ -228,17 +225,17 @@ public class EditBudgetServletTest {
     servlet.doGet(request,response);
     servlet.doGet(request,response);
     Budget_VM Budget = (Budget_VM) session.getAttribute("Budget");
-    List<String> colors = (List<String>)request.getAttribute("colors");
+    List<Category> categories = (List<Category>) request.getAttribute("categories");
     List<String> types = (List<String>)request.getAttribute("budget_line_types");
     List<String> status = (List<String>)request.getAttribute("budget_line_status");
 
     assertNotNull(Budget.getLines());
 
-    assertNotNull(colors);
+    assertNotNull(categories);
     assertNotNull(types);
     assertNotNull(status);
     assertEquals(10,Budget.getLines().size());
-    assertEquals(12,colors.size());
+    assertEquals(2,categories.size());
     assertEquals(5,types.size());
     assertEquals(5,status.size());
 

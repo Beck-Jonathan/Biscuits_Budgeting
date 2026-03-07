@@ -148,7 +148,7 @@ public class EditBudget_Line_ItemServletTest {
 //create a new budget_line_items parameters
     request.setParameter("inputbudget_line_itembudget_line_item_id","yLhmvdKflpQXUhKJRPyCwnlbDYNkrTfDSXeK");
 
-    request.setParameter("inputbudget_line_itemcolor_id","FFFFFF");
+    request.setParameter("inputbudget_line_itemCategory_id","87cd7359-9374-4270-be0c-ef6ffd69ec4d");
     request.setParameter("inputbudget_line_itemname","TestValue");
     request.setParameter("inputbudget_line_itemdetails","TestValue");
     request.setParameter("inputbudget_line_itemline_item_date","2026-02-02");
@@ -174,8 +174,8 @@ public class EditBudget_Line_ItemServletTest {
 
 //create a new budget_line_items parameters
     request.setParameter("inputbudget_line_itembudget_line_item_id","DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
-    request.setParameter("inputbudget_line_itembudget_id","TestValue");
-    request.setParameter("inputbudget_line_itemcolor_id","FFFFFF");
+    request.setParameter("inputbudget_line_itemCategory_id","87cd7359-9374-4270-be0c-ef6ffd69ec4d");
+    request.setParameter("inputcategory_id","87cd7359-9374-4270-be0c-ef6ffd69ec4d");
     request.setParameter("inputbudget_line_itemname","DUPLICATE");
     request.setParameter("inputbudget_line_itemdetails","TestValue");
     request.setParameter("inputbudget_line_itemline_item_date","2026-02-02");
@@ -199,7 +199,7 @@ public class EditBudget_Line_ItemServletTest {
 //create a new budget_line_items parameters
     request.setParameter("inputbudget_line_itembudget_line_item_id","EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
     request.setParameter("inputbudget_line_itembudget_id","TestValue");
-    request.setParameter("inputbudget_line_itemcolor_id","FFFFFF");
+    request.setParameter("inputbudget_line_itemCategory_id","87cd7359-9374-4270-be0c-ef6ffd69ec4d");
     request.setParameter("inputbudget_line_itemname","TestValue");
     request.setParameter("inputbudget_line_itemdetails","TestValue");
     request.setParameter("inputbudget_line_itemline_item_date","2026-02-02");
