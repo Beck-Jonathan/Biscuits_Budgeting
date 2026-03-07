@@ -96,9 +96,9 @@ class AllTransactionsServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID("618052e9-c69b-4d9b-880e-e22e4a970bd6");
+    user.setUser_ID("4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc");
     session.setAttribute("User_B",user);
-    String category = "mMvMlyeB";
+    String category = "e6c68360-1216-4c12-8831-294146908356";
     request.setParameter("category",category);
 
     String Category_ID= null;
@@ -107,7 +107,7 @@ class AllTransactionsServletTest {
     servlet.doGet(request,response);
     List<Transaction> transactions = (List<Transaction>) request.getAttribute("Transactions");
     assertNotNull(transactions);
-    assertEquals(1,transactions.size());
+    assertEquals(3,transactions.size());
   }
   @Test
   public void testInitWithNoParametersDoesNotThrowException() throws ServletException {
