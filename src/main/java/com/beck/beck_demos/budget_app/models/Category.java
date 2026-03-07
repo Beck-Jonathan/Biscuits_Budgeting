@@ -94,11 +94,14 @@ public class Category implements Comparable<Category> {
    * throws IllegalArgumentException if category_name under 3 characters or longer than 100 characters
    */
   public void setCategory_Name(String category_name) {
-    category_name = category_name.replaceAll("[^.,!()A-Za-z0-9 - ]","");
-    if(category_name.length()<4){
+    // Added '_' and kept the space.
+    // Placing the hyphen at the very end ensures it's treated as a literal character.
+    category_name = category_name.replaceAll("[^.,!()A-Za-z0-9_ ]", "");
+
+    if(category_name.length() < 3){
       throw new IllegalArgumentException("category_name is too short.");
     }
-    if(category_name.length()>100){
+    if(category_name.length() > 100){
       throw new IllegalArgumentException("category_name is too long.");
     }
     this.Category_Name = category_name;
