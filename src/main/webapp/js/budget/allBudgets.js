@@ -1,81 +1,116 @@
 $(document).ready(function() {
+    // 1. Initial UI Setup
     normalizeHeight();
     tooltips();
+
+    // 2. Pre-initialize the dialog container (hidden by default)
     $("#dialog").dialog({
-        modal: true,
-        bgiframe: true,
         autoOpen: false,
-        width: 500,
-        height: 400,
+        modal: true,
+        width: 450,
+        height: "auto", // Responsive height based on content
+        resizable: false
     });
-    $(".delButton").click(function(e) {
+
+    // 3. Delete Button Logic
+    $(".delButton").on("click", function(e) {
         e.preventDefault();
-        var headers = document.getElementsByClassName('table-responsive')[0].childNodes[0].childNodes[1].childNodes[1].childNodes;
-        var parentrow = this.parentElement.parentElement.parentElement.children;var rowid ="#"+ targetUrl+"row";
-        var text = "";
-        for (i=1;i<headers.length-2;i=i+2){
-            text +=headers[i].textContent+": "+parentrow[(i-1)/2].innerHTML+"</br>";
-        }
-        document.getElementById("dialog").innerHTML=text;var targetUrl = $(this).attr("href");
-        $('#dialog').dialog('option', 'title', 'Delete '+parentrow[1].innerHTML+"???");
-        $("#dialog").dialog({
-            hide: {
-                effect: "explode",
-                duration: 300
-            },
-            show: {
-                effect: "explode",
-                duration: 300
-            },
-            buttons : {
-                "Delete For Real" : function() {
-                    console.log("try");
+
+        // Get ID and DOM references
+        var budgetId = $(this).data("id");
+        var $cardContainer = $("#" + budgetId + "Card");
+        var $card = $(this).closest('.budget_card');
+
+        // Extract data for the confirmation popup
+        var budgetName = $card.find('.card-title').text().trim();
+        // Grabs the text from the "Limit" span
+        var budgetLimit = $card.find('.progress').prev().find('span:last').text().trim();
+
+        // Construct the confirmation message
+        var confirmationHtml = `
+            <div class="p-2">
+                <p>Are you sure you want to delete this budget?</p>
+                <ul class="list-unstyled">
+                    <li><strong>Name:</strong> ${budgetName}</li>
+                    <li><strong>Amount:</strong> ${budgetLimit}</li>
+                </ul>
+                <p class="text-danger small"><i class="bi bi-exclamation-triangle"></i> This action cannot be undone.</p>
+            </div>`;
+
+        var $dialog = $("#dialog");
+        $dialog.html(confirmationHtml);
+
+        // Configure and open the dialog
+        $dialog.dialog({
+            title: "Confirm Deletion",
+            hide: { effect: "explode", duration: 300 },
+            show: { effect: "fade", duration: 200 },
+            buttons: {
+                "Delete For Real": function() {
+                    var dialogSelf = this;
+
                     $.ajax({
                         url: 'deleteBudget',
-                        data: "budgetid=" + targetUrl ,
-                        type: 'get',
-                        async: true,
-                        success: function (response) {
-                            if (response==1){
-                                $(rowid).slideUp();}
-                            else {
-                                $(rowid).addClass("ui-state-error");
+                        data: { budgetid: budgetId },
+                        type: 'GET',
+                        success: function(response) {
+                            // Assuming '1' is success from your backend
+                            if (response == 1 || response == "1") {
+                                $cardContainer.slideUp(400, function() {
+                                    $(this).remove();
+                                    normalizeHeight(); // Recalculate heights after one disappears
+                                });
+                            } else {
+                                $cardContainer.addClass("border border-danger animate__animated animate__shakeX");
+                                alert("Server could not delete this item.");
                             }
-                        }})
-                    $(this).dialog("close");
-                    var rowid ="#"+ targetUrl+"_row";
-                    $(rowid).slideUp();
+                        },
+                        error: function() {
+                            alert("Connection error. Please try again.");
+                        },
+                        complete: function() {
+                            $(dialogSelf).dialog("close");
+                        }
+                    });
                 },
-                "Let It Stay" : function() {
+                "Let It Stay": function() {
                     $(this).dialog("close");
                 }
             }
         });
-        $("#dialog").dialog("open"); });
-})
-function normalizeHeight() {
-    var cards = jQuery("span.card");
-    var big = 0;
-    cards.each(function (index, el) {
-        if (jQuery(el).height() > big)
-            big = jQuery(el).height(); //find the largest height
-    });
-    cards.each(function (index, el) {
-        jQuery(el).css("height", big + "px"); //assign largest height to all the divs
-    });}
 
-function tooltips(){
-    // Check if bootstrap is defined to avoid the error
-    if (typeof bootstrap !== 'undefined') {
+        $dialog.dialog("open");
+    });
+});
+
+/**
+ * Ensures all budget cards in a row have equal height for a clean UI.
+ */
+function normalizeHeight() {
+    var $cards = $(".budget_card");
+    $cards.css("height", "auto"); // Reset heights first
+
+    var maxHeight = 0;
+    $cards.each(function() {
+        var thisHeight = $(this).outerHeight();
+        if (thisHeight > maxHeight) {
+            maxHeight = thisHeight;
+        }
+    });
+
+    $cards.css("height", maxHeight + "px");
+}
+
+/**
+ * Initializes Bootstrap 5 Tooltips for the progress bars.
+ */
+function tooltips() {
+    if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     } else {
-        console.error("Bootstrap JS is not loaded. Tooltips will not work.");
+        console.warn("Bootstrap Tooltip library not found.");
     }
-    // Initialize all tooltips on the page
-
-    }
-
-
+}
