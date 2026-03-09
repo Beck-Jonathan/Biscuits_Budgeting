@@ -1,5 +1,4 @@
 <%@include file="/WEB-INF/Budget_App/budget_top.jsp"%>
-
 <div class="container mt-4">
     <form method="post" action="${appURL}/editBudget" id="editbudget">
         <p hidden id="budgetID">${Budget.budget_id}</p>
@@ -107,7 +106,7 @@
                     <td><input type="text" id="name" class="form-control form-control-sm" placeholder="Name"></td>
                     <td><input type="text" id="details" class="form-control form-control-sm" placeholder="Details"></td>
                     <td><input type="number" id="amount" class="form-control form-control-sm" placeholder="0.00"></td>
-                    <td><input type="date" id="date" class="form-control form-control-sm"></td>
+                    <td><input type="date" id="date" class="form-control form-control-sm" value="${Budget.start_date}" /></td>
                     <td>
                         <select id="type" class="form-select form-select-sm">
                             <c:forEach items="${budget_line_types}" var="t">

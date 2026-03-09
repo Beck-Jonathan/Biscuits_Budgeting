@@ -39,6 +39,7 @@ $(document).ready(function () {
     recalcTotal();
     nameExistingColors();
     prepColorPicker(); // This handles the #color and #colorPreview logic
+    addTableHeaders();
 
     // ================= EVENT LISTENERS =================
     $("#addButton").click(function () {
@@ -209,7 +210,7 @@ $(document).ready(function () {
             })
             .catch(err => console.error('Fetch error:', err));
 
-        $("#name, #details, #amount, #date").val("");
+        $("#name, #details, #amount").val("");
     };
 
     window.deleteLineItem = function(btn, lineId) {
@@ -346,5 +347,53 @@ $(document).ready(function () {
     function handleError(code) {
         const errors = { "-1": "Session expired.", "-2": "Invalid Budget ID.", "-10": "Database error." };
         alert("Error (" + code + "): " + (errors[code] || "Request failed."));
+    }
+
+    function addTableHeaders(){
+            const table = document.getElementById('lineItemTable');
+            const headers = table.querySelectorAll('thead th');
+            const tableBody = table.querySelector('#lineItemBody');
+            const inputRow = document.getElementById('inputRow'); // Keep the input row at the bottom
+
+            let sortDirection = true; // true = asc, false = desc
+
+            headers.forEach((header, index) => {
+                // Skip the "Action" column since it doesn't make sense to sort
+                if (header.innerText === 'Action') return;
+
+                header.style.cursor = 'pointer';
+                header.addEventListener('click', () => {
+                    sortDirection = !sortDirection;
+                    sortTable(index, sortDirection);
+                });
+            });
+
+            function sortTable(columnIndex, ascending) {
+                const rows = Array.from(tableBody.querySelectorAll('tr:not(#inputRow)'));
+
+                const sortedRows = rows.sort((a, b) => {
+                    let cellA = a.children[columnIndex].innerText.trim();
+                    let cellB = b.children[columnIndex].innerText.trim();
+
+                    // Special handling for the "Amount" column (numeric sort)
+                    if (columnIndex === 2) {
+                        return ascending
+                            ? parseFloat(cellA) - parseFloat(cellB)
+                            : parseFloat(cellB) - parseFloat(cellA);
+                    }
+
+                    // Default string sort for other columns
+                    return ascending
+                        ? cellA.localeCompare(cellB)
+                        : cellB.localeCompare(cellA);
+                });
+
+                // Re-append rows to the body
+                sortedRows.forEach(row => tableBody.appendChild(row));
+
+                // Always ensure the inputRow stays at the very bottom
+                if (inputRow) tableBody.appendChild(inputRow);
+            }
+       
     }
 });

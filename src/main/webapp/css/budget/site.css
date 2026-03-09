@@ -199,6 +199,62 @@ hr {
     margin-top: 28px;
 }
 
+.category-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12) !important;
+}
+
+/* Ensure buttons remain clickable over the stretched-link */
+.category-card .btn {
+    position: relative;
+    z-index: 5;
+}
+
+/* Modal styling for jquery-modal compatibility */
+.modal a.close-modal {
+    top: 15px !important;
+    right: 15px !important;
+}
+
+/* Short cards with hover effect */
+.category-card-mini {
+    transition: all 0.2s ease;
+    min-height: 50px; /* Forces a consistent, low profile */
+    overflow: hidden;
+}
+
+.category-card-mini:hover {
+    background-color: #f8f9fa;
+    transform: translateX(3px); /* Subtle shift instead of a lift */
+}
+
+/* The small 'x' delete button */
+.btn-delete-corner {
+    position: absolute;
+    top: 2px;
+    right: 5px;
+    z-index: 10;
+    color: red;
+    text-decoration: none;
+    font-size: 1.2rem;
+    line-height: 1;
+    padding: 2px 5px;
+    transition: color 0.2s;
+}
+
+.btn-delete-corner:hover {
+    color: #dc3545; /* Turns red on hover */
+}
+
+/* Ensure the stretched link doesn't cover the delete button */
+.category-card-mini .stretched-link {
+    z-index: 1;
+}
+
 
 
 
