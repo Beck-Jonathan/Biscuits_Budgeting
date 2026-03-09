@@ -108,8 +108,8 @@ class EditSaved_Search_OrderServletTest {
     user.setRoles(roles);
     session.setAttribute("User_B",user);
 
-    Integer Saved_Search_Order_ID= 34;
-    request.setParameter("saved_search_orderid",Saved_Search_Order_ID.toString());
+    String Saved_Search_Order_ID= "1b076c01-2790-47f4-a5ed-a43f2c6772ca";
+    request.setParameter("saved_search_orderid",Saved_Search_Order_ID);
     request.setSession(session);
     servlet.doGet(request,response);
     Saved_Search_Order saved_search_order = (Saved_Search_Order) session.getAttribute("saved_search_order");
@@ -144,7 +144,7 @@ class EditSaved_Search_OrderServletTest {
     request.setSession(session);
 //to set the old Saved_Search_Order
     Saved_Search_Order saved_search_order = new Saved_Search_Order();
-    saved_search_order.setSaved_Search_Order_ID(34);
+    saved_search_order.setSaved_Search_Order_ID("1b076c01-2790-47f4-a5ed-a43f2c6772ca");
     saved_search_order.setOwned_User("af735dfc-22a9-4214-a8e5-fb8de2305700");
     saved_search_order.setNickname("testSaved_Search_Order");
     saved_search_order.setDescription("testSaved_Search_Order");
@@ -204,7 +204,7 @@ class EditSaved_Search_OrderServletTest {
     request.setSession(session);
 //to set the old Saved_Search_Order
     Saved_Search_Order saved_search_order = new Saved_Search_Order();
-    saved_search_order.setSaved_Search_Order_ID(43);
+    saved_search_order.setSaved_Search_Order_ID("1b076c01-2790-47f4-a5ed-a43f2c6772ca");
     saved_search_order.setOwned_User("af735dfc-22a9-4214-a8e5-fb8de2305700");
     saved_search_order.setNickname("DUPLICATE");
     saved_search_order.setDescription("DUPLICATE");
@@ -236,7 +236,7 @@ class EditSaved_Search_OrderServletTest {
     request.setSession(session);
 //to set the old Saved_Search_Order
     Saved_Search_Order saved_search_order = new Saved_Search_Order();
-    saved_search_order.setSaved_Search_Order_ID(43);
+    saved_search_order.setSaved_Search_Order_ID("1b076c01-2790-47f4-a5ed-a43f2c6772ca");
     saved_search_order.setOwned_User("af735dfc-22a9-4214-a8e5-fb8de2305700");
     saved_search_order.setNickname("EXCEPTION");
     saved_search_order.setDescription("EXCEPTION");

@@ -111,13 +111,13 @@
                     <td>
                         <select id="type" class="form-select form-select-sm">
                             <c:forEach items="${budget_line_types}" var="t">
-                                <option value="${t}">${t}</option></c:forEach>
+                                <option value="${t}" ${t == 'Expense' ? 'selected' : ''}>${t}</option></c:forEach>
                         </select>
                     </td>
                     <td>
                         <select id="status" class="form-select form-select-sm">
                             <c:forEach items="${budget_line_status}"
-                                       var="s"><option value="${s}">${s}</option></c:forEach>
+                                       var="s"><option value="${s}" ${s == 'Pending' ? 'selected' : ''}> ${s}</option></c:forEach>
                         </select>
                     </td>
                     <td class="d-flex align-items-center">

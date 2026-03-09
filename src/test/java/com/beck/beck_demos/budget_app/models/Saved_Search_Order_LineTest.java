@@ -30,14 +30,14 @@ class Saved_Search_Order_LineTest {
   @Test
   public void testSaved_Search_Order_LineParameterizedConstructorSetsAllVariables(){
     Saved_Search_Order_Line _saved_search_order_line= new Saved_Search_Order_Line(
-        6151,
+        "1b076c01-2790-47f4-a5ed-a43f2c6772ca",
         3215,
         "REIgRuBpxqGJOcvVhBWCikBdLECBANExCGNqlJbKQYsohcibNePgcZwtWesYpGvWQapPurnUkQqMucUZmVwWUbIgwUhlRwYWBs",
         "f503f3ba-3375-40d4-8a0f-5c5aee018c6b",
         "jiWsOhfihBxCkxyvygcaaTGcQysmaICfaFswOsJmXyYCLiJIClfXgotvDpAEWpFLeRgqvosYtUDPYskZnIUvBGwXbwevADqKop",
         true
     );
-    Assertions.assertEquals(6151,_saved_search_order_line.getSaved_Search_Order_ID());
+    Assertions.assertEquals("1b076c01-2790-47f4-a5ed-a43f2c6772ca",_saved_search_order_line.getSaved_Search_Order_ID());
     Assertions.assertEquals(3215,_saved_search_order_line.getLine_No());
     Assertions.assertEquals("REIgRuBpxqGJOcvVhBWCikBdLECBANExCGNqlJbKQYsohcibNePgcZwtWesYpGvWQapPurnUkQqMucUZmVwWUbIgwUhlRwYWBs",_saved_search_order_line.getCategory_ID());
     Assertions.assertEquals("f503f3ba-3375-40d4-8a0f-5c5aee018c6b",_saved_search_order_line.getUser_ID());
@@ -47,10 +47,10 @@ class Saved_Search_Order_LineTest {
   @Test
   public void testSaved_Search_Order_LineKeyedParameterizedConstructorSetsKeyedVariables(){
     Saved_Search_Order_Line _saved_search_order_line= new Saved_Search_Order_Line(
-        5343,
+        "1b076c01-2790-47f4-a5ed-a43f2c6772ca",
         2508
     );
-    Assertions.assertEquals(5343,_saved_search_order_line.getSaved_Search_Order_ID());
+    Assertions.assertEquals("1b076c01-2790-47f4-a5ed-a43f2c6772ca",_saved_search_order_line.getSaved_Search_Order_ID());
     Assertions.assertEquals(2508,_saved_search_order_line.getLine_No());
     Assertions.assertNull(_saved_search_order_line.getCategory_ID());
     Assertions.assertNull(_saved_search_order_line.getUser_ID());
@@ -59,17 +59,17 @@ class Saved_Search_Order_LineTest {
   }
   @Test
   public void testSaved_Search_Order_LineThrowsIllegalArgumentExceptionIfSaved_Search_Order_IDTooSmall(){
-    int Saved_Search_Order_ID = -1;
+    String Saved_Search_Order_ID = "1b076c01-2790-47f4-a5ed-a43f2c67";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_saved_search_order_line.setSaved_Search_Order_ID(Saved_Search_Order_ID);});
   }
   @Test
   public void testSaved_Search_Order_LineThrowsIllegalArgumentExceptionIfSaved_Search_Order_IDTooBig(){
-    int Saved_Search_Order_ID = 10001;
+    String Saved_Search_Order_ID = "1b076c01-2790-47f4-a5ed-a43f2c6772cadddd";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_saved_search_order_line.setSaved_Search_Order_ID(Saved_Search_Order_ID);});
   }
   @Test
   public void testSaved_Search_Order_LineSetsSaved_Search_Order_ID(){
-    int Saved_Search_Order_ID = 9146;
+    String Saved_Search_Order_ID = "1b076c01-2790-47f4-a5ed-a43f2c6772ca";
     _saved_search_order_line.setSaved_Search_Order_ID(Saved_Search_Order_ID);
     Assertions.assertEquals(Saved_Search_Order_ID, _saved_search_order_line.getSaved_Search_Order_ID());
   }
@@ -154,12 +154,12 @@ class Saved_Search_Order_LineTest {
     Saved_Search_Order_Line smaller = new Saved_Search_Order_Line();
     Saved_Search_Order_Line bigger = new Saved_Search_Order_Line();
 //to compare a smaller and larger Saved_Search_Order_ID
-    smaller.setSaved_Search_Order_ID(10);
-    bigger.setSaved_Search_Order_ID(20);
+    smaller.setSaved_Search_Order_ID("0b076c01-2790-47f4-a5ed-a43f2c6772ca");
+    bigger.setSaved_Search_Order_ID("1b076c01-2790-47f4-a5ed-a43f2c6772ca");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the Saved_Search_Order_ID as equal.
-    smaller.setSaved_Search_Order_ID(20);
+    smaller.setSaved_Search_Order_ID("1b076c01-2790-47f4-a5ed-a43f2c6772ca");
 //to compare a smaller and larger Line_No
     smaller.setLine_No(10);
     bigger.setLine_No(20);

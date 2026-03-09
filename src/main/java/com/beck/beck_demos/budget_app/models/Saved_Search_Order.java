@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public class Saved_Search_Order implements Comparable<Saved_Search_Order> {
-  private Integer Saved_Search_Order_ID;
+  private String Saved_Search_Order_ID;
   private String Owned_User;
   private String Nickname;
   private String Description;
@@ -22,7 +22,7 @@ public class Saved_Search_Order implements Comparable<Saved_Search_Order> {
 
   public Saved_Search_Order(){}
 
-  public Saved_Search_Order(Integer Saved_Search_Order_ID, String Owned_User, String Nickname, String Description, Date Last_Used, Date Last_Updated, Integer Times_Ran) {
+  public Saved_Search_Order(String Saved_Search_Order_ID, String Owned_User, String Nickname, String Description, Date Last_Used, Date Last_Updated, Integer Times_Ran) {
 
     this.Saved_Search_Order_ID = Saved_Search_Order_ID;
     this.Owned_User = Owned_User;
@@ -33,16 +33,16 @@ public class Saved_Search_Order implements Comparable<Saved_Search_Order> {
     this.Times_Ran = Times_Ran;
   }
 
-  public Saved_Search_Order(Integer Saved_Search_Order_ID) {
+  public Saved_Search_Order(String Saved_Search_Order_ID) {
 
     this.Saved_Search_Order_ID = Saved_Search_Order_ID;
   }
-  public Integer getSaved_Search_Order_ID() {
+  public String getSaved_Search_Order_ID() {
     return Saved_Search_Order_ID;
   }
-  public void setSaved_Search_Order_ID(Integer Saved_Search_Order_ID) {
-    if (Saved_Search_Order_ID<0||Saved_Search_Order_ID>10000){
-      throw new IllegalArgumentException("Saved_Search_Order_ID Can Not Be Negative");
+  public void setSaved_Search_Order_ID(String Saved_Search_Order_ID) {
+    if (Saved_Search_Order_ID.length() != 36){
+      throw new IllegalArgumentException("Saved_Search_Order_ID Must be 36 Chars");
     }
     this.Saved_Search_Order_ID = Saved_Search_Order_ID;
   }
@@ -50,7 +50,7 @@ public class Saved_Search_Order implements Comparable<Saved_Search_Order> {
     return Owned_User;
   }
   public void setOwned_User(String Owned_User) {
-    if (Owned_User.length()<36||Owned_User.length()>36){
+    if (Owned_User.length() != 36){
       throw new IllegalArgumentException("Owned_User Can Not Be Negative");
     }
     this.Owned_User = Owned_User;

@@ -7,7 +7,7 @@ package com.beck.beck_demos.budget_app.models;
 import org.jetbrains.annotations.NotNull;
 
 public class Saved_Search_Order_Line implements Comparable<Saved_Search_Order_Line> {
-  private Integer Saved_Search_Order_ID;
+  private String Saved_Search_Order_ID;
   private Integer Line_No;
   private String Category_ID;
   private String User_ID;
@@ -16,7 +16,7 @@ public class Saved_Search_Order_Line implements Comparable<Saved_Search_Order_Li
 
   public Saved_Search_Order_Line(){}
 
-  public Saved_Search_Order_Line(Integer Saved_Search_Order_ID, Integer Line_No, String Category_ID, String User_ID, String Search_Phrase, boolean Is_Active) {
+  public Saved_Search_Order_Line(String Saved_Search_Order_ID, Integer Line_No, String Category_ID, String User_ID, String Search_Phrase, boolean Is_Active) {
 
     this.Saved_Search_Order_ID = Saved_Search_Order_ID;
     this.Line_No = Line_No;
@@ -26,17 +26,17 @@ public class Saved_Search_Order_Line implements Comparable<Saved_Search_Order_Li
     this.Is_Active = Is_Active;
   }
 
-  public Saved_Search_Order_Line(Integer Saved_Search_Order_ID, Integer Line_No) {
+  public Saved_Search_Order_Line(String Saved_Search_Order_ID, Integer Line_No) {
 
     this.Saved_Search_Order_ID = Saved_Search_Order_ID;
     this.Line_No = Line_No;
   }
-  public Integer getSaved_Search_Order_ID() {
+  public String getSaved_Search_Order_ID() {
     return Saved_Search_Order_ID;
   }
-  public void setSaved_Search_Order_ID(Integer Saved_Search_Order_ID) {
-    if (Saved_Search_Order_ID<0||Saved_Search_Order_ID>10000){
-      throw new IllegalArgumentException("Saved_Search_Order_ID Can Not Be Negative");
+  public void setSaved_Search_Order_ID(String Saved_Search_Order_ID) {
+    if (Saved_Search_Order_ID.length()!=36){
+      throw new IllegalArgumentException("Saved_Search_Order_ID Must Be 36 characters");
     }
     this.Saved_Search_Order_ID = Saved_Search_Order_ID;
   }

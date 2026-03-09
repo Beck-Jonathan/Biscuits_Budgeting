@@ -45,9 +45,9 @@ public class ApplySaved_Search_Order extends HttpServlet {
     }
 
     session.setAttribute("currentPage",req.getRequestURL());
-    int primaryKey = -1;
+    String primaryKey = "";
     try{
-      primaryKey = Integer.parseInt(req.getParameter("saved_search_orderid"));
+      primaryKey = req.getParameter("saved_search_orderid");
     }catch (Exception e) {
       req.setAttribute("dbStatus",e.getMessage());
     }

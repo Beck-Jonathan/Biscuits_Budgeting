@@ -37,7 +37,7 @@ class Saved_Search_OrderTest {
     Date date1 = new Date();
     Date date2 = new Date();
     Saved_Search_Order _saved_search_order= new Saved_Search_Order(
-        1774,
+        "1b076c01-2790-47f4-a5ed-a43f2c6772ca",
         "f503f3ba-3375-40d4-8a0f-5c5aee018c6b",
         "CbBxFLoYyknxhlJYaTMRWiRoCqpgCVOGFEfwsshtUtvxlcGONfrjICUyukwOXjaRETuWTYhovTHtrnJYWGAbVvcctwvwGDKVgg",
         "IhiuowDmouZGGbrRiGiiXRnZlqpPwLHAkgKKbGhImqUYOkOwxkVuULLwxuuyalKGcKGQdefcWYaPNIPUkioRRebjNqqmgDevflrZlQoknmVAegqRWZWiQsisXnldlscPpctDObNbKAPdNNUsWkrsAyJBrGwBLanyemTMGfodkIteQObsEjbsETWQxZyejcaJdMDVOBwfmcgWDWcZqpfUPeQJAPuggDjoRwYydmVmcXNGCHhTwqnkwrhaxGwvr",
@@ -45,7 +45,7 @@ class Saved_Search_OrderTest {
         date2,
         1054
     );
-    Assertions.assertEquals(1774,_saved_search_order.getSaved_Search_Order_ID());
+    Assertions.assertEquals("1b076c01-2790-47f4-a5ed-a43f2c6772ca",_saved_search_order.getSaved_Search_Order_ID());
     Assertions.assertEquals("f503f3ba-3375-40d4-8a0f-5c5aee018c6b",_saved_search_order.getOwned_User());
     Assertions.assertEquals("CbBxFLoYyknxhlJYaTMRWiRoCqpgCVOGFEfwsshtUtvxlcGONfrjICUyukwOXjaRETuWTYhovTHtrnJYWGAbVvcctwvwGDKVgg",_saved_search_order.getNickname());
     Assertions.assertEquals("IhiuowDmouZGGbrRiGiiXRnZlqpPwLHAkgKKbGhImqUYOkOwxkVuULLwxuuyalKGcKGQdefcWYaPNIPUkioRRebjNqqmgDevflrZlQoknmVAegqRWZWiQsisXnldlscPpctDObNbKAPdNNUsWkrsAyJBrGwBLanyemTMGfodkIteQObsEjbsETWQxZyejcaJdMDVOBwfmcgWDWcZqpfUPeQJAPuggDjoRwYydmVmcXNGCHhTwqnkwrhaxGwvr",_saved_search_order.getDescription());
@@ -56,9 +56,9 @@ class Saved_Search_OrderTest {
   @Test
   public void testSaved_Search_OrderKeyedParameterizedConstructorSetsKeyedVariables(){
     Saved_Search_Order _saved_search_order= new Saved_Search_Order(
-        7417
+        "1b076c01-2790-47f4-a5ed-a43f2c6772ca"
     );
-    Assertions.assertEquals(7417,_saved_search_order.getSaved_Search_Order_ID());
+    Assertions.assertEquals("1b076c01-2790-47f4-a5ed-a43f2c6772ca",_saved_search_order.getSaved_Search_Order_ID());
     Assertions.assertNull(_saved_search_order.getOwned_User());
     Assertions.assertNull(_saved_search_order.getNickname());
     Assertions.assertNull(_saved_search_order.getDescription());
@@ -68,17 +68,17 @@ class Saved_Search_OrderTest {
   }
   @Test
   public void testSaved_Search_OrderThrowsIllegalArgumentExceptionIfSaved_Search_Order_IDTooSmall(){
-    int Saved_Search_Order_ID = -1;
+    String Saved_Search_Order_ID = "1b076c01-2790-47f4-a5ed-a43f2c677";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_saved_search_order.setSaved_Search_Order_ID(Saved_Search_Order_ID);});
   }
   @Test
   public void testSaved_Search_OrderThrowsIllegalArgumentExceptionIfSaved_Search_Order_IDTooBig(){
-    int Saved_Search_Order_ID = 10001;
+    String Saved_Search_Order_ID = "1b076c01-2790-47f4-a5ed-a43f2c6772caddd";
     Assertions.assertThrows(IllegalArgumentException.class, () -> {_saved_search_order.setSaved_Search_Order_ID(Saved_Search_Order_ID);});
   }
   @Test
   public void testSaved_Search_OrderSetsSaved_Search_Order_ID(){
-    int Saved_Search_Order_ID = 1376;
+    String Saved_Search_Order_ID = "1b076c01-2790-47f4-a5ed-a43f2c6772ca";
     _saved_search_order.setSaved_Search_Order_ID(Saved_Search_Order_ID);
     Assertions.assertEquals(Saved_Search_Order_ID, _saved_search_order.getSaved_Search_Order_ID());
   }
@@ -197,12 +197,12 @@ class Saved_Search_OrderTest {
   Saved_Search_Order smaller = new Saved_Search_Order();
   Saved_Search_Order bigger = new Saved_Search_Order();
 //to compare a smaller and larger Saved_Search_Order_ID
-smaller.setSaved_Search_Order_ID(10);
-bigger.setSaved_Search_Order_ID(20);
+smaller.setSaved_Search_Order_ID("0b076c01-2790-47f4-a5ed-a43f2c6772ca");
+bigger.setSaved_Search_Order_ID("1b076c01-2790-47f4-a5ed-a43f2c6772ca");
 Assertions.assertTrue(smaller.compareTo(bigger)<0);
 Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the Saved_Search_Order_ID as equal.
-smaller.setSaved_Search_Order_ID(20);
+smaller.setSaved_Search_Order_ID("1b076c01-2790-47f4-a5ed-a43f2c6772ca");
 //to compare a smaller and larger Owned_User
 smaller.setOwned_User("f503f3ba-3375-40d4-8a0f-5c5aee018c6b");
 bigger.setOwned_User("g503f3ba-3375-40d4-8a0f-5c5aee018c6b");

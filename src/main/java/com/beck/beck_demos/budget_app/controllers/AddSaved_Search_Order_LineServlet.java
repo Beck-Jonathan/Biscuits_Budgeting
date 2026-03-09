@@ -93,7 +93,7 @@ public class AddSaved_Search_Order_LineServlet extends HttpServlet {
     Saved_Search_Order_Line saved_search_order_line = new Saved_Search_Order_Line();
     int errors =0;
     try {
-      saved_search_order_line.setSaved_Search_Order_ID(Integer.valueOf(_Saved_Search_Order_ID));
+      saved_search_order_line.setSaved_Search_Order_ID(_Saved_Search_Order_ID);
     } catch(Exception e) {results.put("saved_search_order_lineSaved_Search_Order_IDerror", e.getMessage());
       errors++;
     }

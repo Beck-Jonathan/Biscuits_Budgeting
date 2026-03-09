@@ -56,9 +56,9 @@ public class EditSaved_Search_OrderServlet extends HttpServlet{
     }
 
     String mode = req.getParameter("mode");
-    int primaryKey = -1;
+    String primaryKey = "";
     try{
-      primaryKey = Integer.parseInt(req.getParameter("saved_search_orderid"));
+      primaryKey = req.getParameter("saved_search_orderid");
     }catch (Exception e) {
       req.setAttribute("dbStatus",e.getMessage());
     }

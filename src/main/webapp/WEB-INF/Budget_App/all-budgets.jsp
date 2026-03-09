@@ -38,12 +38,11 @@ Create the JSP  For Viewing All of The  budget table
                         <button type="submit"><i class="fa fa-search"search></i></button>
                     </form>
                 </div>
-                Export budget   <a href="exportbudget?mode=export">Add</a>
-                Write To SQL File budget   <a href="exportbudget?mode=SQL">Add</a>
+
             <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
                 <c:forEach items="${budgets}" var="b">
                     <div class="col-md-3" id="${b.budget_id}Card">
-                        <div class="budget_card card h-100 shadow-sm border-0">
+                        <div class="budget_card card h-100 shadow-sm border-0 position-relative">
                             <div class="card-header bg-white d-flex justify-content-between align-items-center border-0 pt-3">
                                 <h5 class="card-title mb-0 fw-bold text-primary">${fn:escapeXml(b.name)}</h5>
                                 <span class="badge ${b.is_active ? 'bg-success' : 'bg-secondary'}">
@@ -88,9 +87,9 @@ Create the JSP  For Viewing All of The  budget table
                             </div>
 
                             <div class="card-footer bg-light border-0 d-flex justify-content-around pb-3">
-                                <a href="editBudget?budgetid=${b.budget_id}&mode=view" class="btn btn-sm btn-outline-primary">Details</a>
-                                <a href="editBudget?budgetid=${b.budget_id}&mode=edit" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                <button class="btn btn-sm btn-outline-danger delButton" data-id="${b.budget_id}">Delete</button>
+                                <a href="editBudget?budgetid=${b.budget_id}&mode=view" class="btn btn-sm btn-outline-primary stretched-link" style="z-index: 3;">Details</a>
+                                <a href="editBudget?budgetid=${b.budget_id}&mode=edit" class="btn btn-sm btn-outline-secondary" style="z-index: 3;">Edit</a>
+                                <button class="btn btn-sm btn-outline-danger delButton" data-id="${b.budget_id}" style="z-index: 3;">Delete</button>
                             </div>
                         </div>
                     </div>

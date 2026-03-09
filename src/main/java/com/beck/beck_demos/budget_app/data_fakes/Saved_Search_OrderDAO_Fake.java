@@ -15,31 +15,31 @@ public class Saved_Search_OrderDAO_Fake implements iSaved_Search_OrderDAO {
   public Saved_Search_OrderDAO_Fake() {
     saved_search_orderVMs = new ArrayList<>();
     List<Saved_Search_Order_Line> lines = new ArrayList<>();
-    Saved_Search_Order_Line saved_search_order_line0 = new Saved_Search_Order_Line(59, 27, "WKTFwUjn", "0607a176-01de-46ea-a463-1d59db87491a", "gGUbGDSf", true);
-    Saved_Search_Order_Line saved_search_order_line1 = new Saved_Search_Order_Line(59, 33, "jmWpYbQX", "1607a176-01de-46ea-a463-1d59db87491a", "RkPqpgka", false);
-    Saved_Search_Order_Line saved_search_order_line2 = new Saved_Search_Order_Line(59, 51, "xfkjekxF","2607a176-01de-46ea-a463-1d59db87491a" , "lZatgahB", true);
-    Saved_Search_Order_Line saved_search_order_line3 = new Saved_Search_Order_Line(59, 40, "fPndDqMy","3607a176-01de-46ea-a463-1d59db87491a" , "ovoGflKh", false);
-    Saved_Search_Order_Line saved_search_order_line4 = new Saved_Search_Order_Line(59, 21, "drJdbQIM","4607a176-01de-46ea-a463-1d59db87491a" , "eJRVvFbt", false);
+    Saved_Search_Order_Line saved_search_order_line0 = new Saved_Search_Order_Line("1b076c01-2790-47f4-a5ed-a43f2c6772ca", 27, "WKTFwUjn", "0607a176-01de-46ea-a463-1d59db87491a", "gGUbGDSf", true);
+    Saved_Search_Order_Line saved_search_order_line1 = new Saved_Search_Order_Line("2b076c01-2790-47f4-a5ed-a43f2c6772ca", 33, "jmWpYbQX", "1607a176-01de-46ea-a463-1d59db87491a", "RkPqpgka", false);
+    Saved_Search_Order_Line saved_search_order_line2 = new Saved_Search_Order_Line("1c076c01-2790-47f4-a5ed-a43f2c6772ca", 51, "xfkjekxF","2607a176-01de-46ea-a463-1d59db87491a" , "lZatgahB", true);
+    Saved_Search_Order_Line saved_search_order_line3 = new Saved_Search_Order_Line("1d076c01-2790-47f4-a5ed-a43f2c6772ca", 40, "fPndDqMy","3607a176-01de-46ea-a463-1d59db87491a" , "ovoGflKh", false);
+    Saved_Search_Order_Line saved_search_order_line4 = new Saved_Search_Order_Line("1e076c01-2790-47f4-a5ed-a43f2c6772ca", 21, "drJdbQIM","4607a176-01de-46ea-a463-1d59db87491a" , "eJRVvFbt", false);
     lines.add(saved_search_order_line0);
     lines.add(saved_search_order_line1);
     lines.add(saved_search_order_line2);
     lines.add(saved_search_order_line3);
     lines.add(saved_search_order_line4);
-    Saved_Search_Order saved_search_order0 = new Saved_Search_Order(34, "0607a176-01de-46ea-a463-1d59db87491a", "PteeostC", "MGSTWDKM", new Date(), new Date(), 23);
-    Saved_Search_Order saved_search_order1 = new Saved_Search_Order(38, "0607a176-01de-46ea-a463-1d59db87491a", "XOHBUiTK", "HoEoUIxd", new Date(), new Date(), 27);
-    Saved_Search_Order saved_search_order2 = new Saved_Search_Order(53, "0607a176-01de-46ea-a463-1d59db87491a", "DqskgZuC", "ERWvJHsP", new Date(), new Date(), 65);
-    Saved_Search_Order saved_search_order3 = new Saved_Search_Order(39, "0607a176-01de-46ea-a463-1d59db87491a", "ilNHRHJU", "sYtJdfTs", new Date(), new Date(), 26);
-    Saved_Search_Order saved_search_order4 = new Saved_Search_Order(58, "0607a176-01de-46ea-a463-1d59db87491a", "gMmyxMoV", "kAnaIGTV", new Date(), new Date(), 30);
-    Saved_Search_Order saved_search_order5 = new Saved_Search_Order(19, "1607a176-01de-46ea-a463-1d59db87491a", "cHbHlXfW", "fgBHmJwh", new Date(), new Date(), 63);
-    Saved_Search_Order saved_search_order6 = new Saved_Search_Order(51, "1607a176-01de-46ea-a463-1d59db87491a", "cXARxyeD", "jeWVLoIu", new Date(), new Date(), 22);
-    Saved_Search_Order saved_search_order7 = new Saved_Search_Order(46, "1607a176-01de-46ea-a463-1d59db87491a", "HsGaCMbK", "SdFmNtQA", new Date(), new Date(), 49);
-    Saved_Search_Order saved_search_order8 = new Saved_Search_Order(18, "1607a176-01de-46ea-a463-1d59db87491a", "rfBwpojX", "xIWbQiUq", new Date(), new Date(), 67);
-    Saved_Search_Order saved_search_order9 = new Saved_Search_Order(15, "1607a176-01de-46ea-a463-1d59db87491a", "WTgBwvXp", "tolfkrIj", new Date(), new Date(), 23);
-    Saved_Search_Order saved_search_order10 = new Saved_Search_Order(20, "1607a176-01de-46ea-a463-1d59db87491a", "MKMRwTpv", "IhCJyyys", new Date(), new Date(), 34);
-    Saved_Search_Order saved_search_order11 = new Saved_Search_Order(23, "2607a176-01de-46ea-a463-1d59db87491a", "bDTtppEp", "LGkcMHoZ", new Date(), new Date(), 48);
-    Saved_Search_Order saved_search_order12 = new Saved_Search_Order(37, "2607a176-01de-46ea-a463-1d59db87491a", "JyxfoiMr", "IqnPbIqS", new Date(), new Date(), 50);
-    Saved_Search_Order saved_search_order13 = new Saved_Search_Order(38, "2607a176-01de-46ea-a463-1d59db87491a", "XOyjCvZw", "WKOwCbFg", new Date(), new Date(), 14);
-    Saved_Search_Order saved_search_order14 = new Saved_Search_Order(16, "2607a176-01de-46ea-a463-1d59db87491a", "UScxCPvT", "dydmJCuy", new Date(), new Date(), 24);
+    Saved_Search_Order saved_search_order0 = new Saved_Search_Order("1b076c01-2790-47f4-a5ed-a43f2c6772ca", "0607a176-01de-46ea-a463-1d59db87491a", "PteeostC", "MGSTWDKM", new Date(), new Date(), 23);
+    Saved_Search_Order saved_search_order1 = new Saved_Search_Order("1c076c01-2790-47f4-a5ed-a43f2c6772ca", "0607a176-01de-46ea-a463-1d59db87491a", "XOHBUiTK", "HoEoUIxd", new Date(), new Date(), 27);
+    Saved_Search_Order saved_search_order2 = new Saved_Search_Order("1d076c01-2790-47f4-a5ed-a43f2c6772ca", "0607a176-01de-46ea-a463-1d59db87491a", "DqskgZuC", "ERWvJHsP", new Date(), new Date(), 65);
+    Saved_Search_Order saved_search_order3 = new Saved_Search_Order("1e076c01-2790-47f4-a5ed-a43f2c6772ca", "0607a176-01de-46ea-a463-1d59db87491a", "ilNHRHJU", "sYtJdfTs", new Date(), new Date(), 26);
+    Saved_Search_Order saved_search_order4 = new Saved_Search_Order("1f076c01-2790-47f4-a5ed-a43f2c6772ca", "0607a176-01de-46ea-a463-1d59db87491a", "gMmyxMoV", "kAnaIGTV", new Date(), new Date(), 30);
+    Saved_Search_Order saved_search_order5 = new Saved_Search_Order("1g076c01-2790-47f4-a5ed-a43f2c6772ca", "1607a176-01de-46ea-a463-1d59db87491a", "cHbHlXfW", "fgBHmJwh", new Date(), new Date(), 63);
+    Saved_Search_Order saved_search_order6 = new Saved_Search_Order("10076c01-2790-47f4-a5ed-a43f2c6772ca", "1607a176-01de-46ea-a463-1d59db87491a", "cXARxyeD", "jeWVLoIu", new Date(), new Date(), 22);
+    Saved_Search_Order saved_search_order7 = new Saved_Search_Order("11076c01-2790-47f4-a5ed-a43f2c6772ca", "1607a176-01de-46ea-a463-1d59db87491a", "HsGaCMbK", "SdFmNtQA", new Date(), new Date(), 49);
+    Saved_Search_Order saved_search_order8 = new Saved_Search_Order("12076c01-2790-47f4-a5ed-a43f2c6772ca", "1607a176-01de-46ea-a463-1d59db87491a", "rfBwpojX", "xIWbQiUq", new Date(), new Date(), 67);
+    Saved_Search_Order saved_search_order9 = new Saved_Search_Order("13076c01-2790-47f4-a5ed-a43f2c6772ca", "1607a176-01de-46ea-a463-1d59db87491a", "WTgBwvXp", "tolfkrIj", new Date(), new Date(), 23);
+    Saved_Search_Order saved_search_order10 = new Saved_Search_Order("14076c01-2790-47f4-a5ed-a43f2c6772ca", "1607a176-01de-46ea-a463-1d59db87491a", "MKMRwTpv", "IhCJyyys", new Date(), new Date(), 34);
+    Saved_Search_Order saved_search_order11 = new Saved_Search_Order("15076c01-2790-47f4-a5ed-a43f2c6772ca", "2607a176-01de-46ea-a463-1d59db87491a", "bDTtppEp", "LGkcMHoZ", new Date(), new Date(), 48);
+    Saved_Search_Order saved_search_order12 = new Saved_Search_Order("16076c01-2790-47f4-a5ed-a43f2c6772ca", "2607a176-01de-46ea-a463-1d59db87491a", "JyxfoiMr", "IqnPbIqS", new Date(), new Date(), 50);
+    Saved_Search_Order saved_search_order13 = new Saved_Search_Order("17076c01-2790-47f4-a5ed-a43f2c6772ca", "2607a176-01de-46ea-a463-1d59db87491a", "XOyjCvZw", "WKOwCbFg", new Date(), new Date(), 14);
+    Saved_Search_Order saved_search_order14 = new Saved_Search_Order("18076c01-2790-47f4-a5ed-a43f2c6772ca", "2607a176-01de-46ea-a463-1d59db87491a", "UScxCPvT", "dydmJCuy", new Date(), new Date(), 24);
     Saved_Search_Order_VM saved_search_order_VM0= new Saved_Search_Order_VM(saved_search_order0,lines);
     Saved_Search_Order_VM saved_search_order_VM1= new Saved_Search_Order_VM(saved_search_order1,lines);
     Saved_Search_Order_VM saved_search_order_VM2= new Saved_Search_Order_VM(saved_search_order2,lines);
@@ -139,11 +139,11 @@ public class Saved_Search_OrderDAO_Fake implements iSaved_Search_OrderDAO {
     return 1;
   }
   @Override
-  public int delete(int Saved_Search_Order_ID, String user_ID) throws SQLException{
+  public int delete(Saved_Search_Order _order) throws SQLException{
     int size = saved_search_orderVMs.size();
     int location =-1;
     for (int i=0;i<saved_search_orderVMs.size();i++){
-      if (saved_search_orderVMs.get(i).getSaved_Search_Order_ID().equals(Saved_Search_Order_ID) && saved_search_orderVMs.get(i).getOwned_User().equals(user_ID)){
+      if (saved_search_orderVMs.get(i).getSaved_Search_Order_ID().equals(_order.getSaved_Search_Order_ID()) && saved_search_orderVMs.get(i).getOwned_User().equals(_order.getOwned_User())){
         location =i;
         break;
       }

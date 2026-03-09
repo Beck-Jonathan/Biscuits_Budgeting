@@ -71,7 +71,7 @@ class DeleteSaved_Search_OrderTest {
     user.setUser_ID("0607a176-01de-46ea-a463-1d59db87491a");
     session.setAttribute("User_B",user);
     request.setSession(session);
-    request.setParameter("saved_search_orderid","34");
+    request.setParameter("saved_search_orderid","1b076c01-2790-47f4-a5ed-a43f2c6772ca");
 
     servlet.doGet(request,response);
     int status = (int) request.getAttribute("result");
@@ -100,7 +100,7 @@ class DeleteSaved_Search_OrderTest {
     user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     session.setAttribute("User_B",user);
     request.setSession(session);
-    request.setParameter("saved_search_orderid","1");
+    request.setParameter("saved_search_orderid","1b076c01-2790-47f4-a5ed-a43f2c677ccc");
 
     servlet.doGet(request,response);
     int status = (int) request.getAttribute("result");

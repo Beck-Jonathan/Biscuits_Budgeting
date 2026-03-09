@@ -1,6 +1,7 @@
 package com.beck.beck_demos.budget_app.controllers;
 
 import com.beck.beck_demos.budget_app.data.Saved_Search_OrderDAO;
+import com.beck.beck_demos.budget_app.models.Saved_Search_Order;
 import com.beck.beck_demos.budget_app.models.User;
 import com.beck.beck_demos.budget_app.iData.iSaved_Search_OrderDAO;
 import jakarta.servlet.ServletException;
@@ -41,19 +42,27 @@ public class DeleteSaved_Search_Order extends HttpServlet {
       resp.sendRedirect("budget_home");
       return;
     }
+    int errors = 0;
 
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Delete Saved_Search_Order");
     String _Saved_Search_OrderID = req.getParameter("saved_search_orderid");
 
-    int Saved_Search_OrderID = -1;
+    String Saved_Search_OrderID = "";
     if (_Saved_Search_OrderID!=null && !_Saved_Search_OrderID.equals("")){
-      Saved_Search_OrderID = Integer.parseInt(_Saved_Search_OrderID);
+      Saved_Search_OrderID = _Saved_Search_OrderID;
+    }
+    Saved_Search_Order _order = new Saved_Search_Order();
+    try {
+      _order.setSaved_Search_Order_ID(_Saved_Search_OrderID);
+      _order.setOwned_User(user.getUser_ID());
+    } catch   (Exception e){
+      errors++;
     }
     int result = 0;
-    if (Saved_Search_OrderID!= -1) {
+    if (errors==0) {
       try {
-        result = saved_search_orderDAO.delete(Saved_Search_OrderID,user.getUser_ID());
+        result = saved_search_orderDAO.delete(_order);
       } catch (Exception ex) {
         results.put("dbStatus", ex.getMessage());
       }

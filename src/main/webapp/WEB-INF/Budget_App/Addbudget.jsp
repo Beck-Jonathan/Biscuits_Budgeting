@@ -52,7 +52,9 @@ Create the JSP  For adding to The  budget table
             <div class="input-group input-group-lg">
                 <select  class="<c:if test="${not empty results.budgetcurrency_code_iderror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="currency_code_id" id="inputbudgetcurrency_code_id" name="inputbudgetcurrency_code_id" value="${fn:escapeXml(results.currency_code_id)}">
                     <c:forEach items="${currency_codes}" var="currency_code">
-                        <option value="${currency_code}">${currency_code}   </option>
+                        <option value="${currency_code}" ${currency_code == 'USD' ? 'selected' : ''}>
+                                ${currency_code}
+                        </option>
                     </c:forEach>
                 </select>
                 <c:if test="${not empty results.budgetcurrency_code_iderror}">

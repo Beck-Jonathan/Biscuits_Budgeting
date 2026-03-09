@@ -144,7 +144,7 @@ class AddSaved_Search_Order_LineServletTest {
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
-    request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID","34");
+    request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID","1b076c01-2790-47f4-a5ed-a43f2c6772ca");
     request.setParameter("inputsaved_search_order_lineLine_No","406");
     request.setParameter("inputsaved_search_order_lineCategory_ID","TestValue");
     request.setParameter("inputsaved_search_order_lineUser_ID","406");
@@ -168,7 +168,7 @@ class AddSaved_Search_Order_LineServletTest {
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
-    request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID","406");
+    request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID","1b076c01-2790-47f4-a5ed-a43f2c6772ca");
     request.setParameter("inputsaved_search_order_lineLine_No","406");
     request.setParameter("inputsaved_search_order_lineCategory_ID","EXCEPTION");
     request.setParameter("inputsaved_search_order_lineUser_ID","406");

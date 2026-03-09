@@ -91,7 +91,7 @@ class EditSaved_Search_Order_LineServletTest {
     request.setSession(session);
 //to set the old Saved_Search_Order_Line
     Saved_Search_Order_Line saved_search_order_line = new Saved_Search_Order_Line();
-    saved_search_order_line.setSaved_Search_Order_ID(34);
+    saved_search_order_line.setSaved_Search_Order_ID("1b076c01-2790-47f4-a5ed-a43f2c6772ca");
     saved_search_order_line.setLine_No(27);
     saved_search_order_line.setCategory_ID("testSaved_Search_Order_Line");
     saved_search_order_line.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
@@ -99,7 +99,7 @@ class EditSaved_Search_Order_LineServletTest {
     saved_search_order_line.setIs_Active(true);
     session.setAttribute("saved_search_order_line",saved_search_order_line);
 //create a new albums parameters
-    request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID","34");
+    request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID","1b076c01-2790-47f4-a5ed-a43f2c6772ca");
     request.setParameter("inputsaved_search_order_lineLine_No","27");
     request.setParameter("inputsaved_search_order_lineCategory_ID","TestValue");
     request.setParameter("inputsaved_search_order_lineUser_ID","406");
@@ -162,7 +162,7 @@ class EditSaved_Search_Order_LineServletTest {
     request.setSession(session);
 //to set the old Saved_Search_Order_Line
     Saved_Search_Order_Line saved_search_order_line = new Saved_Search_Order_Line();
-    saved_search_order_line.setSaved_Search_Order_ID(43);
+    saved_search_order_line.setSaved_Search_Order_ID("1b076c01-2790-47f4-a5ed-a43f2c6772ca");
     saved_search_order_line.setLine_No(43);
     saved_search_order_line.setCategory_ID("DUPLICATE");
     saved_search_order_line.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
@@ -170,7 +170,7 @@ class EditSaved_Search_Order_LineServletTest {
     saved_search_order_line.setIs_Active(true);
     session.setAttribute("saved_search_order_line",saved_search_order_line);
 //create a new albums parameters
-    request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID","406");
+    request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID","1b076c01-2790-47f4-a5ed-a43f2c6772ca");
     request.setParameter("inputsaved_search_order_lineLine_No","406");
     request.setParameter("inputsaved_search_order_lineCategory_ID","DUPLICATE");
     request.setParameter("inputsaved_search_order_lineUser_ID","406");
@@ -198,7 +198,7 @@ class EditSaved_Search_Order_LineServletTest {
     request.setSession(session);
 //to set the old Saved_Search_Order_Line
     Saved_Search_Order_Line saved_search_order_line = new Saved_Search_Order_Line();
-    saved_search_order_line.setSaved_Search_Order_ID(43);
+    saved_search_order_line.setSaved_Search_Order_ID("1b076c01-2790-47f4-a5ed-a43f2c6772ca");
     saved_search_order_line.setLine_No(43);
     saved_search_order_line.setCategory_ID("EXCEPTION");
     saved_search_order_line.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
@@ -206,7 +206,7 @@ class EditSaved_Search_Order_LineServletTest {
     saved_search_order_line.setIs_Active(true);
     session.setAttribute("saved_search_order_line",saved_search_order_line);
 //create a new albums parameters
-    request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID","406");
+    request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID","1b076c01-2790-47f4-a5ed-a43f2c6772ca");
     request.setParameter("inputsaved_search_order_lineLine_No","406");
     request.setParameter("inputsaved_search_order_lineCategory_ID","EXCEPTION");
     request.setParameter("inputsaved_search_order_lineUser_ID","406");
