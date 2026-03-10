@@ -101,3 +101,14 @@ body { font-family: Arial; margin: 20px; }
     font-family: 'Courier New', Courier, monospace; /* Monospace keeps numbers aligned */
     font-weight: 500;
 }
+
+.table-edit-input {
+    border: 1px solid transparent;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.table-edit-input:hover, .table-edit-input:focus {
+    border-color: #dee2e6;
+    background-color: #fff;
+}

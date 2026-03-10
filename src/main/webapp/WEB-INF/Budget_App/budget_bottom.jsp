@@ -63,6 +63,11 @@
     <script src="js/budget/AddCategory.js"></script>
 </c:if>
 
+<c:if test="${pageTitle eq 'All Categories'}">
+    <script src="js/budget/AllCategories.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+</c:if>
+
 <c:if test="${pageTitle eq 'All Suggestions'}">
     <script src="js/budget/allSuggestion.js"></script>
 </c:if>

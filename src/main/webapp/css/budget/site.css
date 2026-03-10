@@ -198,76 +198,82 @@ hr {
  vertical-align: bottom;
     margin-top: 28px;
 }
-
-.category-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.category-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12) !important;
-}
-
-/* Ensure buttons remain clickable over the stretched-link */
-.category-card .btn {
-    position: relative;
-    z-index: 5;
-}
-
-/* Modal styling for jquery-modal compatibility */
-.modal a.close-modal {
-    top: 15px !important;
-    right: 15px !important;
-}
-
-/* Short cards with hover effect */
 .category-card-mini {
-    transition: all 0.2s ease;
-    min-height: 50px; /* Forces a consistent, low profile */
-    overflow: hidden;
+    position: relative;
+    height: 42px;
+    border: 1px solid #d1d1d1 !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: visible; /* Required for wheel to pop out */
+    border-radius: 6px;
 }
 
-.category-card-mini:hover {
-    background-color: #f8f9fa;
-    transform: translateX(3px); /* Subtle shift instead of a lift */
+/* Wider Swatch */
+.swatch-container {
+    position: relative;
+    height: 100%;
+    width: 40px;
 }
 
-/* The small 'x' delete button */
+.color-swatch-trigger {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border-right: 1px solid #d1d1d1;
+}
+
+/* The Wheel Container */
+.wheel-picker-container {
+    display: none;
+    position: absolute;
+    top: 45px;
+    left: 0;
+    z-index: 1000;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.wheel-picker-container.active { display: block; }
+
+.btn-save-color {
+    margin-top: 10px;
+    width: 100%;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    padding: 5px;
+}
+
+/* Text & Delete */
+.category-text {
+    font-weight: 900 !important; /* Extra Bolder */
+    font-size: 0.85rem;
+    padding-left: 10px;
+    outline: none;
+    flex-grow: 1;
+}
+
+/* Red Delete Button */
 .btn-delete-corner {
     position: absolute;
-    top: 2px;
+    top: -4px;
     right: 5px;
-    z-index: 10;
-    color: red;
+    color: #dc3545; /* Red Color */
+    font-size: 1.3rem;
+    font-weight: bold;
     text-decoration: none;
-    font-size: 1.2rem;
-    line-height: 1;
-    padding: 2px 5px;
-    transition: color 0.2s;
+    z-index: 5;
+    transition: transform 0.1s ease;
 }
 
 .btn-delete-corner:hover {
-    color: #dc3545; /* Turns red on hover */
+    color: #a71d2a;
+    transform: scale(1.2);
 }
-
-/* Ensure the stretched link doesn't cover the delete button */
-.category-card-mini .stretched-link {
-    z-index: 1;
-}
-
-
-
-
-
-@media screen and (max-width: 900px){ html,body {min-width:900px} }
-
-
-
-
-
-
-
-
-
-
-

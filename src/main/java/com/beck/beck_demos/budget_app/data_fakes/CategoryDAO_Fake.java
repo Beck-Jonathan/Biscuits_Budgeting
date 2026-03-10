@@ -99,21 +99,20 @@ public class CategoryDAO_Fake implements iCategoryDAO {
   @Override
   public int update(Category oldCategory, Category newCategory) throws SQLException {
     int location =-1;
-    if (duplicateKey(oldCategory)){
+    if (duplicateKey(newCategory)){
       return 0;
     }
-    if (exceptionKey(oldCategory)){
+    if (exceptionKey(newCategory)){
       throw new SQLException("error");
     }
     for (int i=0;i<categories.size();i++){
-      if (categories.get(i).getCategory_ID().equals(oldCategory.getCategory_ID())
-&&categories.get(i).getUser_ID().equals(oldCategory.getUser_ID())){
+      if (categories.get(i).getCategory_ID().equals(oldCategory.getCategory_ID())){
           location =i;
           break;
         }
       }
       if (location==-1){
-        throw new SQLException();
+        return 0;
       }
 
     categories.set(location,newCategory);

@@ -42,19 +42,7 @@ class EditCategoryServletTest {
     session=null;
     rd=null;
   }
-  @Test
-  public void TestLoggedInUserGets302OnDoGetWithNoIDSet() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
-    user.setRoles(roles);
-    session.setAttribute("User_B",user);
-    request.setSession(session);
-    servlet.doGet(request,response);
-    int status = response.getStatus();
-    assertEquals(302,status);
-  }
+
   @Test
   public void TestLoggedInUserGets200OnDoPost() throws ServletException, IOException{
     User user = new User();
@@ -67,35 +55,20 @@ class EditCategoryServletTest {
     servlet.doPost(request,response);
     int status = response.getStatus();
     assertEquals(200,status);
+
   }
+
   @Test
-  public void TestLoggedOutUserGets302OnDoGet() throws ServletException, IOException{
-    request.setSession(session);
-    servlet.doGet(request,response);
-    int status = response.getStatus();
-    assertEquals(302,status);
-  }
-  @Test
-  public void TestLoggedOutUserGets302OnDoPost() throws ServletException, IOException{
+  public void TestLoggedOutHasInvalidSessionAndResponseNeg1OnOnDoPost() throws ServletException, IOException{
     request.setSession(session);
     servlet.doPost(request,response);
-    int status = response.getStatus();
-    assertEquals(302,status);
+    session = request.getSession(false);
+    assertNull(session);
+    assertEquals("-1", response.getContentAsString().trim());
   }
+
   @Test
-  public void TestWrongRoleGets302onDoGet() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("WrongRole");
-    user.setRoles(roles);
-    session.setAttribute("User_B",user);
-    request.setSession(session);
-    servlet.doGet(request,response);
-    int status = response.getStatus();
-    assertEquals(302,status);
-  }
-  @Test
-  public void TestWrongRoleGets302onDoPost() throws ServletException, IOException{
+  public void TestWrongRoleInvalidSessionAndResponseNeg1OnOnDoPost() throws ServletException, IOException{
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("WrongRole");
@@ -103,45 +76,13 @@ class EditCategoryServletTest {
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doPost(request,response);
-    int status = response.getStatus();
-    assertEquals(302,status);
-  }
-  @Test
-  public void testGetOneCategoryGetsOneCategory_ID() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setRoles(roles);
-    user.setUser_ID("ec93ae39-255a-4252-ac50-cde8ecb05b0c");
-    session.setAttribute("User_B",user);
-    String Category_ID= "lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc";
-    request.setParameter("categoryid",Category_ID);
-    request.setSession(session);
-    servlet.doGet(request,response);
-    Category category = (Category) session.getAttribute("category");
-    assertNotNull(category);
-    assertEquals(Category_ID,category.getCategory_ID());
-    assertEquals("ec93ae39-255a-4252-ac50-cde8ecb05b0c",category.getUser_ID());
+    session = request.getSession(false);
+    assertNull(session);
+    assertEquals("-1", response.getContentAsString().trim());
   }
 
-  @Test
-  public void testGetOneCategoryCanFailAndUserIsRedirected() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setRoles(roles);
-    session.setAttribute("User_B",user);
-    String Category_ID= "";
-    request.setParameter("categoryid",Category_ID);
 
-    Integer User_ID= 1;
-    request.setParameter("userid",User_ID.toString());
 
-    request.setSession(session);
-    servlet.doGet(request,response);
-    int code = response.getStatus();
-    assertEquals(302,code);
-  }
   @Test
   public void TestUpdateCanAddWithNoErrorsAndRedirects() throws ServletException, IOException{
     User user = new User();
@@ -150,27 +91,18 @@ class EditCategoryServletTest {
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
-//to set the old Category
-    Category category = new Category();
-    category.setCategory_ID("lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
-    category.setUser_ID("ec93ae39-255a-4252-ac50-cde8ecb05b0c");
-    category.setCategory_Name("test");
-    session.setAttribute("category",category);
+
+
 //create a new albums parameters
+    request.setParameter("category_ID","lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
     request.setParameter("inputcategoryCategory_Name","46fcffea-d21c-4254-814d-926d0086d77c");
     request.setParameter("inputcategoryColor_id","#FFFFFF");
 
     servlet.doPost(request,response);
-    int responseStatus = response.getStatus();
-    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Category_Updated = results.get("dbStatus");
-    assertEquals(302,responseStatus);
-    assertNotNull(Category_Updated);
-    assertEquals("Category updated",Category_Updated);
-    assertNotEquals("",Category_Updated);
+    assertEquals("1", response.getContentAsString().trim());
   }
   @Test
-  public void TestUpdateHasErrorsForEachFiledAndKeepsOnSamePage() throws ServletException, IOException{
+  public void TestInvalidCategoryIDRespondsNeg2() throws ServletException, IOException{
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
@@ -178,14 +110,32 @@ class EditCategoryServletTest {
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doPost(request,response);
-    int responseStatus = response.getStatus();
-    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Category_IDError = results.get("categoryCategory_Nameerror");
-
-    assertNotEquals("",Category_IDError);
-    assertNotNull(Category_IDError);
-
-    assertEquals(200,responseStatus);
+    assertEquals("-2", response.getContentAsString().trim());
+  }
+  @Test
+  public void TestInvalidCategoryNameRespondsNeg3() throws ServletException, IOException{
+    User user = new User();
+    List<String> roles = new ArrayList<>();
+    roles.add("User");
+    user.setRoles(roles);
+    session.setAttribute("User_B",user);
+    request.setSession(session);
+    request.setParameter("category_ID","lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
+    servlet.doPost(request,response);
+    assertEquals("-3", response.getContentAsString().trim());
+  }
+  @Test
+  public void TestInvalidColorRespondsNeg4() throws ServletException, IOException{
+    User user = new User();
+    List<String> roles = new ArrayList<>();
+    roles.add("User");
+    user.setRoles(roles);
+    session.setAttribute("User_B",user);
+    request.setParameter("category_ID","lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
+    request.setParameter("inputcategoryCategory_Name","46fcffea-d21c-4254-814d-926d0086d77c");
+    request.setSession(session);
+    servlet.doPost(request,response);
+    assertEquals("-4", response.getContentAsString().trim());
   }
   @Test
   public void testInitWithNoParametersDoesNotThrowException() throws ServletException {
@@ -201,24 +151,11 @@ class EditCategoryServletTest {
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
-//to set the old Category
-    Category category = new Category();
-    category.setCategory_ID("DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
-    category.setCategory_Name("DUPLICATE");
-    category.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
-    session.setAttribute("category",category);
-//create a new albums parameters
-    request.setParameter("inputcategoryCategory_Name","DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
-    request.setParameter("inputcategoryUser_ID","406");
+    request.setParameter("category_ID","lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
+    request.setParameter("inputcategoryCategory_Name","DUPLICATE");
     request.setParameter("inputcategoryColor_id","#FFFFFF");
     servlet.doPost(request,response);
-    int responseStatus = response.getStatus();
-    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Category_Updated = results.get("dbStatus");
-    assertEquals(200,responseStatus);
-    assertNotNull(Category_Updated);
-    assertEquals("Category Not Updated",Category_Updated);
-    assertNotEquals("",Category_Updated);
+    assertEquals("0", response.getContentAsString().trim());
   }
   @Test
   public void testUpdateCanThrowSQLException() throws ServletException, IOException{
@@ -229,28 +166,13 @@ class EditCategoryServletTest {
     session.setAttribute("User_B",user);
     request.setSession(session);
 //to set the old Category
-    Category category = new Category();
-    category.setCategory_ID("EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
-    category.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
-    category.setCategory_Name("Test");
-    category.setcolor_id("#FFFFFF");
-    session.setAttribute("category",category);
+
 //create a new albums parameters
-    request.setParameter("inputcategoryCategory_Name","EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
-    request.setParameter("inputcategoryUser_ID","406");
+    request.setParameter("category_ID","lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
+    request.setParameter("inputcategoryCategory_Name","EXCEPTION");
     request.setParameter("inputcategoryColor_id","#FFFFFF");
     servlet.doPost(request,response);
-    int responseStatus = response.getStatus();
-    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Category_Updated = results.get("dbStatus");
-    String dbError = results.get("dbError");
-    assertEquals(200,responseStatus);
-    assertNotNull(Category_Updated);
-    assertNotEquals("",Category_Updated);
-    assertEquals("Category Not Updated",Category_Updated);
-    assertNotNull(dbError);
-    assertNotEquals("",dbError);
-    assertEquals("Database Error",dbError);
+    assertEquals("-5", response.getContentAsString().trim());
   }
 
 }

@@ -55,6 +55,8 @@ $(document).ready(function () {
         $(this).toggleClass("is-invalid", !isValid).toggleClass("is-valid", isValid);
     });
 
+});
+
     // ================= FUNCTIONS =================
 
     function initChart() {
@@ -228,28 +230,47 @@ $(document).ready(function () {
     };
 
     function updateLineItem(row) {
+        // 'row' is a jQuery object representing the <tr>
         const colorCell = row.find('[data-field="color"]');
 
-        // Safety check: if colorCell doesn't exist, we should stop or handle it
         if (!colorCell.length) {
             console.error("Could not find the color cell for row:", row.data("id"));
             return;
         }
+
         const params = new URLSearchParams();
         params.append("inputbudget_line_itembudget_line_item_id", row.data("id"));
+
+        // Standard text fields
         params.append("inputbudget_line_itemname", row.find('[data-field="name"]').text().trim());
         params.append("inputbudget_line_itemdetails", row.find('[data-field="details"]').text().trim());
-        params.append("inputbudget_line_itemamount", parseFloat(row.find('[data-field="amount"]').text()));
+        params.append("inputbudget_line_itemamount", parseFloat(row.find('[data-field="amount"]').text()) || 0);
         params.append("inputbudget_line_itemline_item_date", row.find('[data-field="date"]').text().trim());
-        params.append("inputbudget_line_itembudget_line_type_id", row.find('[data-field="type"]').text().trim());
-        params.append("inputbudget_line_itembudget_line_status_id", row.find('[data-field="status"]').text().trim());
+
+        // UPDATED: Grab values from the dropdowns
+        // We look for the select inside the cell; if it's not a select, we fallback to text
+        const typeVal = row.find('[data-field="type"] select').val() || row.find('[data-field="type"]').text().trim();
+        const statusVal = row.find('[data-field="status"] select').val() || row.find('[data-field="status"]').text().trim();
+
+        params.append("inputbudget_line_itembudget_line_type_id", typeVal);
+        params.append("inputbudget_line_itembudget_line_status_id", statusVal);
+
+        // Category ID from data attribute
         params.append("inputbudget_line_itemCategory_id", colorCell.attr("data-categoryid"));
+
         fetch('editbudget_line_item', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: params
-        }).then(() => recalcTotal());
-    }
+        }).then(response => {
+            if (response.ok) {
+                recalcTotal();
+                // Optional: Provide a small visual "saved" flash
+                row.css('background-color', '#f0fff0');
+                setTimeout(() => row.css('background-color', ''), 500);
+            }
+        })}
+
 
     function makeEditable() {
         $(document).off("click", ".editable, .editable-select").on("click", ".editable, .editable-select", function () {
@@ -369,6 +390,13 @@ $(document).ready(function () {
             });
 
             function sortTable(columnIndex, ascending) {
+                let cellA = a.children[columnIndex].querySelector('select')
+                    ? a.children[columnIndex].querySelector('select').value
+                    : a.children[columnIndex].innerText.trim();
+
+                let cellB = b.children[columnIndex].querySelector('select')
+                    ? b.children[columnIndex].querySelector('select').value
+                    : b.children[columnIndex].innerText.trim();
                 const rows = Array.from(tableBody.querySelectorAll('tr:not(#inputRow)'));
 
                 const sortedRows = rows.sort((a, b) => {
@@ -394,6 +422,122 @@ $(document).ready(function () {
                 // Always ensure the inputRow stays at the very bottom
                 if (inputRow) tableBody.appendChild(inputRow);
             }
-       
+
     }
-});
+
+window.saveTheRest = function() {
+    // 1. Pull current numbers from Summary div
+    const remainingText = $('#totalRemaining').text().replace(/[^0-9.-]+/g,"");
+    const remainingBalance = parseFloat(remainingText);
+
+    // Attempt to get budgetId from your defined variable or the DOM
+    var budgetId = "";
+    try {
+        budgetId = document.getElementById("budgetID").innerText.trim();
+    } catch (e) {
+        console.error("Could not find budgetID element");
+        return;
+    }
+
+    // 2. Validation
+    if (isNaN(remainingBalance) || remainingBalance <= 0) {
+        alert("There is no remaining balance to save!");
+        return;
+    }
+
+    // 3. Confirmation
+    if (confirm(`Move the remaining $${remainingBalance.toFixed(2)} to Savings?`)) {
+        // Prepare Data for Row Injection
+        const name = "Budget Surplus";
+        const details = "Automated surplus transfer";
+        const amount = remainingBalance;
+        const date = new Date().toISOString().split('T')[0];
+        const type = "Savings";
+        const status = "Planned";
+
+        // 1. Find the specific 'Savings' option in your existing category dropdown
+        const categorySelect = document.getElementById("color");
+        let savingsOption = Array.from(categorySelect.options).find(opt =>
+            opt.text.trim().toLowerCase() === 'savings'
+        );
+
+// 2. Fallback: If no "Savings" category exists, use the currently selected one
+        if (!savingsOption) {
+            console.warn("Savings category not found in dropdown, using current selection.");
+            savingsOption = categorySelect.options[categorySelect.selectedIndex];
+        }
+
+// 3. Extract the 3 parts needed for the dynamic row and the Servlet
+        const categoryId   = savingsOption.value;
+        const categoryName = savingsOption.text.trim();
+        const colorHex     = savingsOption.getAttribute("data-color") || "#808080"; // Default gray if missing
+
+        // Create Temporary ID for dynamic row
+        const tempId = "temp_" + Date.now();
+
+        // 4. Construct and Inject the Row immediately (Optimistic UI)
+        const rowHTML = `
+        <tr data-id="${tempId}">
+            <td  data-field="name">${name}</td>
+            <td  data-field="details">${details}</td>
+            <td class="editable" data-field="amount">${amount.toFixed(2)}</td>
+            <td class="editable" data-field="date">${date}</td>
+            <td  data-field="type">${type}</td>
+            <td  data-field="status">${status}</td>
+            <td class="editable-select" data-field="color" data-hex="${colorHex}" data-categoryid="${categoryId}">
+                <span style="color:${colorHex}; font-size: 1.5rem; line-height: 1; vertical-align: middle;">●</span>
+                <span class="color-label">${categoryName}</span>
+            </td>
+            <td>
+                <button class="btn btn-sm btn-outline-danger" type="button" 
+                        onclick="deleteLineItem(this, '${tempId}')">Delete</button>
+            </td>
+        </tr>`;
+
+        $("#inputRow").before(rowHTML);
+        recalcTotal(); // Updates Summary card and Chart immediately
+
+        // 5. Prepare Payload for Servlet
+        const params = new URLSearchParams();
+        params.append("inputbudget_line_itembudget_id", budgetId);
+        params.append("inputbudget_line_itemname", name);
+        params.append("inputbudget_line_itemdetails", details);
+        params.append("inputbudget_line_itemamount", amount.toFixed(2));
+        params.append("inputbudget_line_itemline_item_date", date);
+        params.append("inputbudget_line_itembudget_line_type_id", type);
+        params.append("inputbudget_line_itembudget_line_status_id", status);
+        params.append("inputcategory_id", categoryId);
+
+        // 6. Async Fetch to Database
+        fetch('addBudget_line_item', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params
+        })
+            .then(response => response.text())
+            .then(newUuid => {
+                // Check for servlet error codes (matching your handleError logic)
+                if (parseInt(newUuid) <= 0) {
+                    handleError(parseInt(newUuid));
+                    $(`tr[data-id="${tempId}"]`).remove();
+                    recalcTotal();
+                    return;
+                }
+
+                // Update the temporary row with the real UUID from the DB
+                const $row = $(`tr[data-id="${tempId}"]`);
+                $row.attr("data-id", newUuid);
+                $row.find("button").attr("onclick", `deleteLineItem(this, '${newUuid}')`);
+
+                // Visual feedback of successful save
+                $row.css('background-color', '#d4edda');
+                setTimeout(() => $row.css('background-color', ''), 800);
+            })
+            .catch(err => {
+                console.error('Fetch error:', err);
+                $(`tr[data-id="${tempId}"]`).remove();
+                recalcTotal();
+                alert("Network error: Item was not saved.");
+            });
+    }
+};

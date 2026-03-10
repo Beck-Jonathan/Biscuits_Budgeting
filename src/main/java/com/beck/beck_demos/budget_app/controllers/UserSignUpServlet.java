@@ -145,6 +145,7 @@ public class UserSignUpServlet extends HttpServlet{
           id  = userDAO.getUserID(_Email);
           userDAO.addRole("User",id);
           userDAO.addDefaultCategories(id);
+          
           results.put("UserID", String.valueOf(id));
           //TwoFA twofa = new TwoFA(id);
           //TwoFADAO.add(twofa);

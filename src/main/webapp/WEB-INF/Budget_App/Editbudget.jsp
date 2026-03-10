@@ -83,8 +83,21 @@
                         <td class="editable" data-field="details">${fn:escapeXml(item.details)}</td>
                         <td class="editable" data-field="amount">${item.amount}</td>
                         <td class="editable" data-field="date">${item.line_item_date}</td>
-                        <td class="editable-select" data-field="type">${item.budget_line_type_id}</td>
-                        <td class="editable-select" data-field="status">${item.budget_line_status_id}</td>
+                        <td data-field="type">
+                            <select class="form-select form-select-sm table-edit-input" onchange="updateLineItem($(this).closest('tr'))">
+                                <c:forEach items="${budget_line_types}" var="t">
+                                    <option value="${t}" ${t == item.budget_line_type_id ? 'selected' : ''}>${t}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+
+                        <td data-field="status">
+                            <select class="form-select form-select-sm table-edit-input" onchange="updateLineItem($(this).closest('tr'))">
+                                <c:forEach items="${budget_line_status}" var="s">
+                                    <option value="${s}" ${s == item.budget_line_status_id ? 'selected' : ''}>${s}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
                         <td class="editable-select"
                             data-field="color"
                             data-hex="${item.category.color_id}"
@@ -100,6 +113,9 @@
                                     onclick="deleteLineItem(this, '${item.budget_Line_Item_id}')">Delete</button>
                         </td>
                     </tr>
+
+
+
                 </c:forEach>
 
                 <tr id="inputRow" class="table-info">
@@ -133,6 +149,13 @@
                     <td><button type="button" class="btn btn-sm btn-success w-100" id="addButton">Add</button></td>
                 </tr>
                 </tbody>
+                <tfoot>
+                <div class="d-flex justify-content-end mb-3">
+                    <button type="button" class="btn btn-info" onclick="saveTheRest()">
+                        <i class="bi bi-piggy-bank"></i> Save the Rest
+                    </button>
+                </div>
+                </tfoot>
             </table>
         </div>
     </div>

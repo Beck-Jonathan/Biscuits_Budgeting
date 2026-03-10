@@ -49,7 +49,7 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
   categories =categoryDAO.getCategoryByUser(user.getUser_ID());
 
   req.setAttribute("Categories", categories);
-  req.setAttribute("pageTitle", "All categories");
+  req.setAttribute("pageTitle", "All Categories");
   req.getRequestDispatcher("WEB-INF/Budget_App/all_categories.jsp").forward(req,resp);
 
 }

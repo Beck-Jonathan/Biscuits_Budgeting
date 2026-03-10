@@ -88,15 +88,13 @@ public class CategoryDAO implements iCategoryDAO {
     int result = 0;
     try (Connection connection = getConnection()) {
       if (connection !=null){
-        try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Category(? ,?,?,?,?,? )}"))
+        try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Category(? ,?,?)}"))
         {
           statement.setString(1,oldCategory.getCategory_ID());
 
-          statement.setString(2,oldCategory.getUser_ID());
-          statement.setString(3,oldCategory.getCategory_Name());
-          statement.setString(4,newCategory.getCategory_Name());
-          statement.setString(5,oldCategory.getcolor_id());
-          statement.setString(6,newCategory.getcolor_id());
+          statement.setString(2,newCategory.getCategory_Name());
+          statement.setString(3,newCategory.getcolor_id());
+
           result=statement.executeUpdate();
         } catch (SQLException e) {
           throw new RuntimeException("Could not update Category . Try again later");

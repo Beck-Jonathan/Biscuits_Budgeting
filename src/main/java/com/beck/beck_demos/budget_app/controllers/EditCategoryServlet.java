@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,58 +32,7 @@ public class EditCategoryServlet extends HttpServlet{
   public void init(iCategoryDAO categoryDAO){
     this.categoryDAO = categoryDAO;
   }
-  @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-
-//To restrict this page based on privilege level
-    int PRIVILEGE_NEEDED = 0;
-    HttpSession session = req.getSession();
-    User user = (User)session.getAttribute("User_B");
-    if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("budget_home");
-      return;
-    }
-
-    String mode = req.getParameter("mode");
-    String primaryKey = "";
-    int errors = 0;
-    try{
-      primaryKey = req.getParameter("categoryid");
-    }catch (Exception e) {
-      req.setAttribute("dbStatus",e.getMessage());
-    }
-    Category category= new Category();
-    try{
-      category.setCategory_ID(primaryKey);
-      category.setUser_ID(user.getUser_ID());
-      //errors ++;
-    } catch (Exception e){
-      req.setAttribute("dbStatus",e.getMessage());
-      errors++;
-      category=null;
-    }
-    if (errors ==0) {
-      try {
-        category = categoryDAO.getCategoryByPrimaryKey(category);
-      } catch (SQLException e) {
-        req.setAttribute("dbStatus", e.getMessage());
-        category = null;
-      }
-    }
-    else {
-      resp.sendRedirect("budget_home");
-      return;
-    }
-
-    session.setAttribute("category",category);
-    req.setAttribute("mode",mode);
-    session.setAttribute("currentPage",req.getRequestURL());
-    req.setAttribute("pageTitle", "Edit a Category");
-
-    req.getRequestDispatcher("WEB-INF/Budget_App/edit_category.jsp").forward(req, resp);
-
-  }
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -91,72 +41,78 @@ public class EditCategoryServlet extends HttpServlet{
     int PRIVILEGE_NEEDED = 0;
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User_B");
+    Integer response = 0;
     if (user==null||!user.getRoles().contains("User")){
-      resp.sendRedirect("budget_home");
+      session.invalidate();
+      response = -1;
+      sendResponse(resp,response);
       return;
     }
 
-    Map<String, String> results = new HashMap<>();
-    String mode = req.getParameter("mode");
-    req.setAttribute("mode",mode);
-//to set the drop downs
 
-//to get the old Category
-
-    Category _oldCategory= (Category)session.getAttribute("category");
-    int errors =0;
-//to get the new event's info
+    Category _oldCategory = new Category();
+    Category _newCategory = new Category();
+    String _Category_ID = req.getParameter("category_ID");
     String _Category_Name = req.getParameter("inputcategoryCategory_Name");
+    String _color_id = req.getParameter("inputcategoryColor_id");
+    try {
+      _oldCategory.setCategory_ID(_Category_ID);
+    }
+    catch(Exception e){
+      response = -2;
+      sendResponse(resp,response);
+      return;
+    }
+
     try {
       _Category_Name = _Category_Name.trim();
-
-    } catch (Exception e){
-      errors++;
-      results.put("categoryCategory_Nameerror", e.getMessage());
-    }
-    String _color_id = req.getParameter("inputcategoryColor_id");
-    if (_color_id!=null){
-      _color_id=_color_id.trim();
-    }
-
-    results.put("Category_Name",_Category_Name);
-    results.put("Color_ID",_color_id);
-
-    Category _newCategory = new Category();
-
-    try {
       _newCategory.setCategory_Name(_Category_Name);
     } catch(Exception e) {
-      results.put("categoryCategory_Nameerror", e.getMessage());
-      errors++;
+      response = -3;
+      sendResponse(resp,response);
+      return;
     }
     try {
       _newCategory.setcolor_id(_color_id);
-    } catch(Exception e) {results.put("categorycolor_iderror", e.getMessage());
-      errors++;
+    } catch(Exception e) {
+      response = -4;
+      sendResponse(resp,response);
+      return;
     }
 
 //to update the database
-    int result=0;
-    if (errors==0){
+
       try{
-        result=categoryDAO.update(_oldCategory,_newCategory);
+        response=categoryDAO.update(_oldCategory,_newCategory);
+
+          sendResponse(resp,response);
+          return;
+
       }catch(Exception ex){
-        results.put("dbError","Database Error");
-      }
-      if (result>0){
-        results.put("dbStatus","Category updated");
-        req.setAttribute("results", results);
-        resp.sendRedirect("all-Categories");
+        response = -5;
+        sendResponse(resp,response);
         return;
-      } else {
-        results.put("dbStatus","Category Not Updated");
       }
+
+  }
+
+  private void sendResponse(HttpServletResponse response, Integer Result) {
+    try {
+      // 1. Set the status and headers before getting the writer
+      response.setStatus(200);
+      response.setContentType("text/plain");
+      response.setCharacterEncoding("UTF-8");
+
+      // 2. Use try-with-resources if you want to be safe,
+      // though Tomcat generally manages the response writer for you.
+      PrintWriter out = response.getWriter();
+      out.print(Result.toString());
+      out.flush();
+
+    } catch (IOException e) {
+      // Log the error if the connection was closed before we could write
+      System.err.println("Error writing response: " + e.getMessage());
     }
-//standard
-    req.setAttribute("results", results);
-    req.setAttribute("pageTitle", "Edit a Category");
-    req.getRequestDispatcher("WEB-INF/Budget_App/edit_category.jsp").forward(req, resp);
   }
 }
 
