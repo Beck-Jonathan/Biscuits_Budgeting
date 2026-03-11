@@ -11,6 +11,7 @@ import jakarta.servlet.http.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -29,6 +30,7 @@ public class add_transaction extends HttpServlet {
   public void init() throws ServletException {
     transactionDAO = new TransactionDAO();
   }
+
   public void init(iTransactionDAO transactionDAO) {
     this.transactionDAO = transactionDAO;
   }
@@ -38,12 +40,12 @@ public class add_transaction extends HttpServlet {
     HttpSession session = req.getSession();
     String Role = "User";
 
-    User user = (User)session.getAttribute("User_B");
-    if (user==null||!user.getRoles().contains("User")){
+    User user = (User) session.getAttribute("User_B");
+    if (user == null || !user.getRoles().contains("User")) {
       resp.sendRedirect("budget_home");
       return;
     }
-    session.setAttribute("currentPage",req.getRequestURL());
+    session.setAttribute("currentPage", req.getRequestURL());
     req.setAttribute("pageTitle", "Budget Home");
     req.getRequestDispatcher("WEB-INF/Budget_App/add_transaction.jsp").forward(req, resp);
   }
@@ -52,81 +54,64 @@ public class add_transaction extends HttpServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     HttpSession session = req.getSession();
     User user = (User) session.getAttribute("User_B");
-    if (user==null||!user.getRoles().contains("User")){
+    if (user == null || !user.getRoles().contains("User")) {
       resp.sendRedirect("budget_home");
       return;
     }
-    String applicationPath = req.getServletContext().getRealPath("");
-    String uploadFilePath = applicationPath +  UPLOAD_DIR;
-    File fileSaveDir = new File(uploadFilePath);
-    if (!fileSaveDir.exists()) {
-      fileSaveDir.mkdirs();
-    }
+
     Map<String, String> results = new HashMap<>();
-    String fileName = "";
     Part filePart = req.getPart("upload_transactions");
-    Collection<Part> x = req.getParts();
-    int y = 0;
-    if (filePart!=null) {
 
-      fileName = filePart.getSubmittedFileName();
-      File checkFile = new File(uploadFilePath + File.separator + fileName);
-      if (checkFile.exists()) {
-        int zz=0;
-        checkFile.delete();
-      }
-    }
-    else {
-      results.put("FileEmptyError", "File is empty");
-    }
-    try {
-      for (Part part : req.getParts()) {
-        part.write(uploadFilePath + File.separator + fileName);
-
-      }
-    } catch (Exception ex){
-      results.put("dbStatus",ex.getMessage());
+    if (filePart == null || filePart.getSize() == 0) {
+      results.put("FileEmptyError", "Please select a file.");
       req.setAttribute("results", results);
-      req.setAttribute("pageTitle", "Upload a file ");
       req.getRequestDispatcher("WEB-INF/Budget_App/add_transaction.jsp").forward(req, resp);
       return;
     }
-    File uploadedFile = new File(uploadFilePath + File.separator + fileName);
-    List<Transaction> transactions = null;
 
+    // 1. Use the System Temp Directory instead of getRealPath
+    // This works on Windows, Linux, and inside .war deployments
+    String tempDir = System.getProperty("java.io.tmpdir");
+    String fileName = java.nio.file.Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+    java.nio.file.Path targetFilePath = java.nio.file.Paths.get(tempDir).resolve(fileName);
+
+    // 2. Perform the copy to the server's temp storage
+    try (InputStream input = filePart.getInputStream()) {
+      java.nio.file.Files.copy(input, targetFilePath, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException ex) {
+      results.put("dbStatus", "Server storage error: " + ex.getMessage());
+      req.setAttribute("results", results);
+      req.getRequestDispatcher("WEB-INF/Budget_App/add_transaction.jsp").forward(req, resp);
+      return;
+    }
+
+    // 3. Process the file
+    File uploadedFile = targetFilePath.toFile();
     try {
-      transactions = transactionDAO.getTransactionFromFile(uploadedFile,"Altra");
+      List<Transaction> transactions = transactionDAO.getTransactionFromFile(uploadedFile, "Altra");
+
+      int totalTrans = transactions.size();
+      int newTrans = transactionDAO.addBatch(transactions, user.getUser_ID());
+      int oldTrans = totalTrans - newTrans;
+
+      results.put("AddedCount", String.format("Uploaded %d transactions. %d new, %d duplicates.",
+          totalTrans, newTrans, oldTrans));
+
     } catch (SQLException e) {
-      results.put("dbError",e.getMessage());
-      session.setAttribute("currentPage",req.getRequestURL());
-      req.setAttribute("pageTitle", "Budget Home");
-      req.getRequestDispatcher("WEB-INF/Budget_App/add_transaction.jsp").forward(req, resp);
-
-      return;
-    }
-    int NewTrans = 0;
-    int oldTrans = 0;
-    int totalTrans = transactions.size();
-
-
-    try {
-      NewTrans = transactionDAO.addBatch(transactions, user.getUser_ID());
-    } catch (Exception e) {
-      results.put("dbStatus",e.getMessage());
+      results.put("dbError", "Database Error: " + e.getMessage());
+    } finally {
+      // 4. CLEANUP: This is critical for server health
+      // We delete the file immediately after the DAO is done with it.
+      if (uploadedFile.exists()) {
+        boolean deleted = uploadedFile.delete();
+        if (!deleted) {
+          // If the OS won't let us delete it now, mark it for deletion when the server restarts
+          uploadedFile.deleteOnExit();
+        }
+      }
     }
 
-    oldTrans=totalTrans-NewTrans;
-
-
-    uploadedFile.delete();
-    results.put("AddedCount","You uploaded "+totalTrans+" transactions. "+NewTrans+" of them were new. "+ oldTrans+" of them were old, and not added to the database.");
-    session.setAttribute("results",results);
-
+    session.setAttribute("results", results);
     resp.sendRedirect("budget_home");
-
-    //session.setAttribute("currentPage",req.getRequestURL());
-    //req.setAttribute("pageTitle", "Budget Home");
-    //req.getRequestDispatcher("WEB-INF/Budget_App/add_transaction.jsp").forward(req, resp);
-
   }
 }

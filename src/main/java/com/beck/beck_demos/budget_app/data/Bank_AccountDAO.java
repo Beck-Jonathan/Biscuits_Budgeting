@@ -95,7 +95,7 @@ public class Bank_AccountDAO implements iBank_AccountDAO {
               String Account_Nickname = resultSet.getString("Bank_Account_Account_Nickname");
               Double Balance = resultSet.getDouble("Bank_Account_Balance");
               Date Balance_Date = resultSet.getDate("Bank_Account_Balance_Date");
-              Integer User_User_ID = resultSet.getInt("User_User_ID");
+              String User_User_ID = resultSet.getString("User_User_ID");
               String User_User_Name = resultSet.getString("User_User_Name");
               String User_User_PW = resultSet.getString("User_User_PW");
               String User_Email = resultSet.getString("User_Email");

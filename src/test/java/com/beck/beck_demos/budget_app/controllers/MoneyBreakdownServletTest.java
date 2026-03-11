@@ -4,11 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.util.*;
 
-import com.beck.beck_demos.budget_app.data_fakes.CategoryDAO_Fake;
 import com.beck.beck_demos.budget_app.data_fakes.TransactionDAO_Fake;
-import com.beck.beck_demos.budget_app.data_fakes.UserDAO_Fake;
-import com.beck.beck_demos.budget_app.models.Category_VM;
-import com.beck.beck_demos.budget_app.models.Transaction;
 
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.RequestDispatcher;
@@ -18,7 +14,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class MoneyBreakdownServletTest {
 

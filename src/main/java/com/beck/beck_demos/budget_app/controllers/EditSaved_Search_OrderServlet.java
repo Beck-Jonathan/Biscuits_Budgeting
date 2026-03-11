@@ -4,7 +4,7 @@ package com.beck.beck_demos.budget_app.controllers;
 import com.beck.beck_demos.budget_app.data.CategoryDAO;
 import com.beck.beck_demos.budget_app.data.Saved_Search_OrderDAO;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
-import com.beck.beck_demos.budget_app.models.Category;
+import com.beck.beck_demos.budget_app.models.SubCategory;
 import com.beck.beck_demos.budget_app.models.Saved_Search_Order;
 import com.beck.beck_demos.budget_app.models.User;
 import com.beck.beck_demos.budget_app.iData.iSaved_Search_OrderDAO;
@@ -63,7 +63,7 @@ public class EditSaved_Search_OrderServlet extends HttpServlet{
       req.setAttribute("dbStatus",e.getMessage());
     }
     Saved_Search_Order saved_search_order= new Saved_Search_Order();
-    List<Category> allCategorys = new ArrayList<>();
+    List<SubCategory> allCategorys = new ArrayList<>();
     try{
       saved_search_order.setSaved_Search_Order_ID(primaryKey);
       saved_search_order.setOwned_User(user.getUser_ID());
@@ -72,7 +72,7 @@ public class EditSaved_Search_OrderServlet extends HttpServlet{
     }
     try{
       saved_search_order=saved_search_orderDAO.getSaved_Search_OrderByPrimaryKey(saved_search_order);
-      allCategorys = categoryDAO.getCategoryByUser(user.getUser_ID());
+      allCategorys = categoryDAO.getsubCategoryByUser(user.getUser_ID());
     } catch (Exception e) {
       req.setAttribute("dbStatus",e.getMessage());
 

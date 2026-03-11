@@ -48,7 +48,7 @@ Create the JSP  For Viewing All of The  Transaction table
                                 <input type="hidden" name="t_id" value =${transaction.transaction_ID}>
                                 <select  class="category" name="category" onchange="" id="${transaction.transaction_ID}">
                                     <c:forEach items="${Categories}" var="category" >
-                                        <option  value="${category.category_ID}"  ${category.category_ID == transaction.category_ID ? 'selected' : ''}>${category.category_ID}</option>
+                                        <option  value="${category.category_ID}"  ${category.category_ID == transaction.category_ID ? 'selected' : ''}>${category.category_Name}</option>
                                     </c:forEach>
                                 </select>
                             <td style="width:50px">

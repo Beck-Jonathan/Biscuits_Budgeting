@@ -7,7 +7,8 @@ package com.beck.beck_demos.budget_app.controllers;
 
 import com.beck.beck_demos.budget_app.data.CategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
-import com.beck.beck_demos.budget_app.models.Category;
+import com.beck.beck_demos.budget_app.models.ParentCategory;
+import com.beck.beck_demos.budget_app.models.SubCategory;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -44,11 +45,20 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
     }
 
   session.setAttribute("currentPage",req.getRequestURL());
-  List<Category> categories = null;
+  List<SubCategory> categories = null;
+    List<ParentCategory> allparent_categorys = null;
+  try {
+    categories =categoryDAO.getsubCategoryByUser(user.getUser_ID());
+    allparent_categorys = categoryDAO.getParentCategoryByUser(user.getUser_ID());
+  } catch (Exception e) {
+     categories = null;
+     allparent_categorys = null;
+     resp.sendRedirect("budget_home");
+  }
 
-  categories =categoryDAO.getCategoryByUser(user.getUser_ID());
 
   req.setAttribute("Categories", categories);
+    req.setAttribute("ParentCategories", allparent_categorys);
   req.setAttribute("pageTitle", "All Categories");
   req.getRequestDispatcher("WEB-INF/Budget_App/all_categories.jsp").forward(req,resp);
 

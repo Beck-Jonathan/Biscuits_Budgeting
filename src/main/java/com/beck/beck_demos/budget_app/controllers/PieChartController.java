@@ -2,7 +2,7 @@ package com.beck.beck_demos.budget_app.controllers;
 
 import com.beck.beck_demos.budget_app.data.TransactionDAO;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-import com.beck.beck_demos.budget_app.models.Category_VM;
+import com.beck.beck_demos.budget_app.models.SubCategory_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -39,7 +39,7 @@ public class PieChartController extends HttpServlet {
       return;
     }
     Map<String,String> results = new HashMap<>();
-    List<List<Category_VM>> breakdown = new ArrayList<>();
+    List<List<SubCategory_VM>> breakdown = new ArrayList<>();
     List<Integer> allYears = new ArrayList<>();
     List<String> allCategories = new ArrayList<>();
 
@@ -54,11 +54,11 @@ public class PieChartController extends HttpServlet {
         req.getRequestDispatcher("WEB-INF/Budget_App/PieChart.jsp").forward(req, resp);
         return;
       }
-      for (List<Category_VM> category_vms : breakdown) {
+      for (List<SubCategory_VM> category_vms : breakdown) {
         for (int i = 0; i < category_vms.size(); i++) {
           if (category_vms.get(i).getCategory_ID().equals("total in")) {
             while (i < category_vms.size() - 1) {
-              Category_VM temp = category_vms.get(i + 1);
+              SubCategory_VM temp = category_vms.get(i + 1);
               category_vms.set(i + 1, category_vms.get(i));
               category_vms.set(i, temp);
               i++;
@@ -66,11 +66,11 @@ public class PieChartController extends HttpServlet {
           }
         }
       }
-      for (List<Category_VM> category_vms : breakdown) {
+      for (List<SubCategory_VM> category_vms : breakdown) {
         for (int i = 0; i < category_vms.size(); i++) {
           if (category_vms.get(i).getCategory_ID().equals("total out")) {
             while (i < category_vms.size() - 1) {
-              Category_VM temp = category_vms.get(i + 1);
+              SubCategory_VM temp = category_vms.get(i + 1);
               category_vms.set(i + 1, category_vms.get(i));
               category_vms.set(i, temp);
               i++;
@@ -79,12 +79,12 @@ public class PieChartController extends HttpServlet {
         }
       }
 
-      for (List<Category_VM> categories : breakdown) {
+      for (List<SubCategory_VM> categories : breakdown) {
         allYears.add(categories.get(0).getYear());
       }
 
 
-      for (Category_VM category : breakdown.get(0)) {
+      for (SubCategory_VM category : breakdown.get(0)) {
         allCategories.add(category.getCategory_ID());
       }
     }

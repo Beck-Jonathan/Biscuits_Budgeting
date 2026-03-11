@@ -3,8 +3,6 @@ package com.beck.beck_demos.budget_app.controllers;
 import java.io.IOException;
 import java.util.*;
 import com.beck.beck_demos.budget_app.data_fakes.CategoryDAO_Fake;
-import com.beck.beck_demos.budget_app.models.Category;
-import com.beck.beck_demos.budget_app.models.Category_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -18,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class EditCategoryServletTest {
 
   private static final String PAGE="WEB-INF/budget_app/Edit_Category.jsp";
-  EditCategoryServlet servlet;
+  EditSubCategoryServlet servlet;
   MockHttpServletRequest request;
   MockHttpServletResponse response;
   HttpSession session;
@@ -26,7 +24,7 @@ class EditCategoryServletTest {
   @BeforeEach
   public void setup() throws ServletException{
 
-    servlet = new EditCategoryServlet();
+    servlet = new EditSubCategoryServlet();
     servlet.init(new CategoryDAO_Fake());
     request =  new MockHttpServletRequest();
     response = new MockHttpServletResponse();
@@ -95,6 +93,7 @@ class EditCategoryServletTest {
 
 //create a new albums parameters
     request.setParameter("category_ID","lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
+    request.setParameter("inputsub_categoryparent_category_id","lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
     request.setParameter("inputcategoryCategory_Name","46fcffea-d21c-4254-814d-926d0086d77c");
     request.setParameter("inputcategoryColor_id","#FFFFFF");
 
@@ -140,7 +139,7 @@ class EditCategoryServletTest {
   @Test
   public void testInitWithNoParametersDoesNotThrowException() throws ServletException {
     servlet = null;
-    servlet = new EditCategoryServlet();
+    servlet = new EditSubCategoryServlet();
     servlet.init();
   }
   @Test
@@ -152,6 +151,8 @@ class EditCategoryServletTest {
     session.setAttribute("User_B",user);
     request.setSession(session);
     request.setParameter("category_ID","lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
+    request.setParameter("inputsub_categoryparent_category_id","lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
+
     request.setParameter("inputcategoryCategory_Name","DUPLICATE");
     request.setParameter("inputcategoryColor_id","#FFFFFF");
     servlet.doPost(request,response);
@@ -169,10 +170,12 @@ class EditCategoryServletTest {
 
 //create a new albums parameters
     request.setParameter("category_ID","lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
+    request.setParameter("inputsub_categoryparent_category_id","lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
+
     request.setParameter("inputcategoryCategory_Name","EXCEPTION");
     request.setParameter("inputcategoryColor_id","#FFFFFF");
     servlet.doPost(request,response);
-    assertEquals("-5", response.getContentAsString().trim());
+    assertEquals("-6", response.getContentAsString().trim());
   }
 
 }

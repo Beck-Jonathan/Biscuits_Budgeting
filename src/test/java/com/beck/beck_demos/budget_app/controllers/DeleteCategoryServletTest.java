@@ -3,8 +3,6 @@ package com.beck.beck_demos.budget_app.controllers;
 import java.io.IOException;
 import java.util.*;
 import com.beck.beck_demos.budget_app.data_fakes.CategoryDAO_Fake;
-import com.beck.beck_demos.budget_app.models.Category;
-import com.beck.beck_demos.budget_app.models.Category_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -68,7 +66,7 @@ class DeleteCategoryServletTest {
     List<String> roles = new ArrayList<>();
     roles.add("User");
     user.setRoles(roles);
-    user.setUser_ID("ec93ae39-255a-4252-ac50-cde8ecb05b0c");
+    user.setUser_ID("sqiidVcxEgAxPSmbAlPuyyPqlajALcCishjt");
     session.setAttribute("User_B",user);
     request.setSession(session);
     request.setParameter("categoryid","lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");

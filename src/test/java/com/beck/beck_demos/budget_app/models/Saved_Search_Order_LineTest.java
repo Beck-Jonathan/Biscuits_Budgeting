@@ -101,7 +101,7 @@ class Saved_Search_Order_LineTest {
   }
   @Test
   public void testSetCategory_IDSetsCategory_ID(){
-    String Category_ID = "pJobeExhmueXhjfrYNUxxyddRivQSKedQoLgMyfnrxdcSaWAkyKULpbAslOkclDYpfnMNigFAVBRkRvqKPFxcfSNWCWVIpPHTw";
+    String Category_ID = "ecac8ef8-a96a-472f-b83a-122c136b2517";
     _saved_search_order_line.setCategory_ID(Category_ID);
     Assertions.assertEquals(Category_ID,_saved_search_order_line.getCategory_ID());
   }
@@ -168,12 +168,12 @@ class Saved_Search_Order_LineTest {
 //to set the Line_No as equal.
     smaller.setLine_No(20);
 //to compare a smaller and larger Category_ID
-    smaller.setCategory_ID("aaaa");
-    bigger.setCategory_ID("bbbb");
+    smaller.setCategory_ID("dcac8ef8-a96a-472f-b83a-122c136b2517");
+    bigger.setCategory_ID("ecac8ef8-a96a-472f-b83a-122c136b2517");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the Category_ID as equal.
-    smaller.setCategory_ID("bbbb");
+    smaller.setCategory_ID("ecac8ef8-a96a-472f-b83a-122c136b2517");
 //to compare a smaller and larger User_ID
     smaller.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
     bigger.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");

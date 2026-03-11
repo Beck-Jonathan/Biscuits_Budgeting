@@ -1,6 +1,6 @@
 package com.beck.beck_demos.budget_app.iData;
 
-import com.beck.beck_demos.budget_app.models.Category_VM;
+import com.beck.beck_demos.budget_app.models.SubCategory_VM;
 import com.beck.beck_demos.budget_app.models.Transaction;
 import com.beck.beck_demos.budget_app.models.Transaction_VM;
 
@@ -34,7 +34,7 @@ public interface iTransactionDAO {
 
     List<Transaction_VM> searchTransactionByUser(String userID, String query) throws SQLException;
 
-   List<List<Category_VM>> getAnalysis(List<List<Category_VM>> years, String user_ID) throws SQLException;
+   List<List<SubCategory_VM>> getAnalysis(List<List<SubCategory_VM>> years, String user_ID) throws SQLException;
 
    int getTransactionCountByUser(String userID, String category, int year) throws SQLException;
 
@@ -59,7 +59,7 @@ public interface iTransactionDAO {
   int toggleLockTransaction( Transaction transaction) throws SQLException;
 
   int writeTransactionToFile(List<Transaction> transactions, String path) throws IOException;
-  List<List<Category_VM>> getMonthlyAnalysis(List<List<Category_VM>> months, String user_ID, int year) throws SQLException;
+  List<List<SubCategory_VM>> getMonthlyAnalysis(List<List<SubCategory_VM>> months, String user_ID, int year) throws SQLException;
   List<Transaction> getDistinctTransactionForDropdown(String user_ID) throws SQLException;
 
 }

@@ -90,11 +90,11 @@ public class ViewEditTransactionServlet extends HttpServlet{
     req.setAttribute("mode",mode);
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Edit Transaction");
-    List<Category> allCategories = null;
+    List<SubCategory> allCategories = null;
     try{
-      allCategories = categoryDAO.getCategoryByUser(user.getUser_ID());
+      allCategories = categoryDAO.getsubCategoryByUser(user.getUser_ID());
     }catch(Exception e){
-      allCategories = new ArrayList<Category>();
+      allCategories = new ArrayList<SubCategory>();
     }
 
     req.setAttribute("Categorys", allCategories);
@@ -227,11 +227,11 @@ public class ViewEditTransactionServlet extends HttpServlet{
         results.put("dbStatus","Transaction Not Updated");
       }
     }
-    List<Category> allCategories = null;
+    List<SubCategory> allCategories = null;
     try{
-      allCategories = categoryDAO.getCategoryByUser(user.getUser_ID());
+      allCategories = categoryDAO.getsubCategoryByUser(user.getUser_ID());
     }catch(Exception e){
-      allCategories = new ArrayList<Category>();
+      allCategories = new ArrayList<SubCategory>();
     }
 
     req.setAttribute("Categorys", allCategories);

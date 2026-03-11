@@ -135,7 +135,7 @@ public class BudgetDAO implements iBudgetDAO {
               item.setbudget_line_type_id(rsLines.getString("budget_line_item_budget_line_type_id"));
               item.setbudget_line_status_id(rsLines.getString("budget_line_item_budget_line_status_id"));
 
-              Category category = new Category();
+              SubCategory category = new SubCategory();
               item.setCategory(category);
               category.setCategory_ID(rsLines.getString("category_category_id"));
               category.setCategory_Name(rsLines.getString("category_category_name"));

@@ -15,8 +15,8 @@ Create the JSP  For Viewing All of The  Saved_Search_Order_Line table
                     <tr>
 
                         <th scope="col">Line_No</th>
-                        <th scope="col">Category_ID</th>
-                        <th scope="col">Search_Phrase</th>
+                        <th scope="col">Category Name</th>
+                        <th scope="col">Search Term</th>
 
 
                         <th scope="col">Edit/Create</th>
@@ -39,7 +39,7 @@ Create the JSP  For Viewing All of The  Saved_Search_Order_Line table
                                 <div class="input-group input-group-lg">
                                     <select  class="<c:if test="${not empty results.saved_search_order_lineCategory_IDerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1"   id="inputsaved_search_order_lineCategory_ID" name="inputsaved_search_order_lineCategory_ID" value="${fn:escapeXml(saved_search_order_line.category_ID)}">
                                         <c:forEach items="${Categorys}" var="Category">
-                                            <option value="${Category.category_ID}"<c:if test="${saved_search_order_line.category_ID eq Category.category_ID}"> selected </c:if>>${Category.category_ID}   </option>
+                                            <option value="${Category.category_ID}"<c:if test="${saved_search_order_line.category_ID eq Category.category_ID}"> selected </c:if>>${Category.category_Name}   </option>
                                         </c:forEach>
                                     </select>
                                     <c:if test="${not empty results.saved_search_order_lineCategory_IDerror}">
@@ -85,7 +85,7 @@ Create the JSP  For Viewing All of The  Saved_Search_Order_Line table
                             <div class="input-group input-group-lg">
                                 <select  class="<c:if test="${not empty results.saved_search_order_lineCategory_IDerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Category_ID" id="inputsaved_search_order_lineCategory_ID" name="inputsaved_search_order_lineCategory_ID" value="${fn:escapeXml(results.Category_ID)}">
                                     <c:forEach items="${Categorys}" var="Category">
-                                        <option value="${Category.category_ID}">${Category.category_ID}   </option>
+                                        <option value="${Category.category_ID}">${Category.category_Name}   </option>
                                     </c:forEach>
                                 </select>
                                 <c:if test="${not empty results.saved_search_order_lineCategory_IDerror}">

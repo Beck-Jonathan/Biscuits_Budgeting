@@ -53,13 +53,10 @@ public class Saved_Search_Order_Line implements Comparable<Saved_Search_Order_Li
     return Category_ID;
   }
   public void setCategory_ID(String Category_ID) {
-    Category_ID = Category_ID.replaceAll("[^A-Za-z0-9 - ]","");
-    if(Category_ID.length()<2){
-      throw new IllegalArgumentException("Category_ID is too short.");
+    if (Category_ID.length()!=36){
+      throw new IllegalArgumentException("CategoryID Must Be 36 characters");
     }
-    if(Category_ID.length()>100){
-      throw new IllegalArgumentException("Category_ID is too long.");
-    }
+
     this.Category_ID = Category_ID;
   }
   public String getUser_ID() {

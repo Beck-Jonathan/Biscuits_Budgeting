@@ -11,7 +11,7 @@ public class Budget_Line_ItemVM extends Budget_Line_Item {
 
 
 
-  private Category category;
+  private SubCategory category;
 
   public Budget_Line_ItemVM(){}
 
@@ -41,11 +41,11 @@ public class Budget_Line_ItemVM extends Budget_Line_Item {
     this.transaction = _transaction;
   }
 
-  public Category getCategory() {
+  public SubCategory getCategory() {
     return category;
   }
 
-  public void setCategory(Category category) {
+  public void setCategory(SubCategory category) {
     this.category = category;
   }
 

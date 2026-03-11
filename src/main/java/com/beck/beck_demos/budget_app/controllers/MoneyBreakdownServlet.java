@@ -2,7 +2,7 @@ package com.beck.beck_demos.budget_app.controllers;
 
 import com.beck.beck_demos.budget_app.data.TransactionDAO;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-import com.beck.beck_demos.budget_app.models.Category_VM;
+import com.beck.beck_demos.budget_app.models.SubCategory_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -41,17 +41,17 @@ public class MoneyBreakdownServlet extends HttpServlet {
       resp.sendRedirect("budget_home");
       return;
     }
-    List<List<Category_VM>> breakdown = new ArrayList<>();
+    List<List<SubCategory_VM>> breakdown = new ArrayList<>();
     try {
       breakdown = transactionDAO.getAnalysis(breakdown, user.getUser_ID());
     } catch (Exception e) {
       results.put("dbError","database Error");
     }
-    for (List<Category_VM> category_vms : breakdown) {
+    for (List<SubCategory_VM> category_vms : breakdown) {
       for (int i =0;i<category_vms.size();i++) {
         if (category_vms.get(i).getCategory_ID().equals("total in")){
           while (i<category_vms.size()-1) {
-            Category_VM temp = category_vms.get(i + 1);
+            SubCategory_VM temp = category_vms.get(i + 1);
             category_vms.set(i + 1, category_vms.get(i));
             category_vms.set(i, temp);
             i++;
@@ -59,11 +59,11 @@ public class MoneyBreakdownServlet extends HttpServlet {
         }
       }
     }
-    for (List<Category_VM> category_vms : breakdown) {
+    for (List<SubCategory_VM> category_vms : breakdown) {
       for (int i =0;i<category_vms.size();i++) {
         if (category_vms.get(i).getCategory_ID().equals("total out")){
           while (i<category_vms.size()-1) {
-            Category_VM temp = category_vms.get(i + 1);
+            SubCategory_VM temp = category_vms.get(i + 1);
             category_vms.set(i + 1, category_vms.get(i));
             category_vms.set(i, temp);
             i++;
@@ -74,7 +74,7 @@ public class MoneyBreakdownServlet extends HttpServlet {
 
     int year_span = breakdown.size();
     int category_count = 0;
-    for (List<Category_VM> year : breakdown) {
+    for (List<SubCategory_VM> year : breakdown) {
       if (year.size()>category_count){
         category_count = year.size();
       }

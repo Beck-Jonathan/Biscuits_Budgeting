@@ -152,8 +152,8 @@ public class TransactionDAO implements iTransactionDAO {
   }
 
   @Override
-  public List<List<Category_VM>> getMonthlyAnalysis(List<List<Category_VM>> months, String user_ID, int year) throws SQLException {
-    List<List<Category_VM>> result = new ArrayList<>();
+  public List<List<SubCategory_VM>> getMonthlyAnalysis(List<List<SubCategory_VM>> months, String user_ID, int year) throws SQLException {
+    List<List<SubCategory_VM>> result = new ArrayList<>();
     int startingMonth = 0;
     int loop = -1;
     try (Connection connection = getConnection()) {
@@ -179,7 +179,7 @@ public class TransactionDAO implements iTransactionDAO {
               startingMonth = Month;
               loop++;
             }
-            Category_VM category = new Category_VM(Category_ID, amount, count, Month);
+            SubCategory_VM category = new SubCategory_VM(Category_ID, amount, count, Month);
             result.get(loop).add(category);
           }
         } catch (Exception e) {
@@ -510,16 +510,16 @@ public class TransactionDAO implements iTransactionDAO {
       if (connection != null) {
         for (Transaction _transaction : _transactions) {
 
-          try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Transaction( ?,?, ?, ?, ?, ?, ?, ?, ?)}")) {
+          try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Transaction( ?,?, ?, ?, ?, ?, ?, ?)}")) {
             statement.setString(1, user_id);
-            statement.setString(2, "Uncategorized");
-            statement.setString(3, _transaction.getBank_Account_ID());
-            statement.setDate(4, (Date) _transaction.getPost_Date());
-            statement.setInt(5, _transaction.getCheck_No());
-            statement.setString(6, _transaction.getDescription());
-            statement.setDouble(7, _transaction.getAmount());
-            statement.setString(8, _transaction.getType());
-            statement.setString(9, _transaction.getStatus());
+            //statement.setString(2, "Uncategorized");
+            statement.setString(2, _transaction.getBank_Account_ID());
+            statement.setDate(3, (Date) _transaction.getPost_Date());
+            statement.setInt(4, _transaction.getCheck_No());
+            statement.setString(5, _transaction.getDescription());
+            statement.setDouble(6, _transaction.getAmount());
+            statement.setString(7, _transaction.getType());
+            statement.setString(8, _transaction.getStatus());
             int numRowsAffected = statement.executeUpdate();
             added += numRowsAffected;
 
@@ -620,8 +620,8 @@ public class TransactionDAO implements iTransactionDAO {
   }
   //getAnalysis
 
-  public List<List<Category_VM>> getAnalysis(List<List<Category_VM>> years, String user_ID) throws SQLException {
-    List<List<Category_VM>> result = new ArrayList<>();
+  public List<List<SubCategory_VM>> getAnalysis(List<List<SubCategory_VM>> years, String user_ID) throws SQLException {
+    List<List<SubCategory_VM>> result = new ArrayList<>();
     int startingYear = 0;
     int loop = -1;
     try (Connection connection = getConnection()) {
@@ -646,7 +646,7 @@ public class TransactionDAO implements iTransactionDAO {
               startingYear = Year;
               loop++;
             }
-            Category_VM category = new Category_VM(Category_ID, amount, count, Year);
+            SubCategory_VM category = new SubCategory_VM(Category_ID, amount, count, Year);
             result.get(loop).add(category);
           }
         } catch (Exception e) {

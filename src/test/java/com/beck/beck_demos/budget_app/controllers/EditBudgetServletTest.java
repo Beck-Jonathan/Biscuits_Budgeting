@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.*;
-import com.beck.beck_demos.budget_app.controllers.EditBudgetServlet;
+
 import com.beck.beck_demos.budget_app.data_fakes.BudgetDAO_Fake;
 import com.beck.beck_demos.budget_app.data_fakes.Budget_Line_ItemDAO_Fake;
 import com.beck.beck_demos.budget_app.data_fakes.CategoryDAO_Fake;
@@ -225,7 +225,7 @@ public class EditBudgetServletTest {
     servlet.doGet(request,response);
     servlet.doGet(request,response);
     Budget_VM Budget = (Budget_VM) session.getAttribute("Budget");
-    List<Category> categories = (List<Category>) request.getAttribute("categories");
+    List<SubCategory> categories = (List<SubCategory>) request.getAttribute("categories");
     List<String> types = (List<String>)request.getAttribute("budget_line_types");
     List<String> status = (List<String>)request.getAttribute("budget_line_status");
 
@@ -235,7 +235,7 @@ public class EditBudgetServletTest {
     assertNotNull(types);
     assertNotNull(status);
     assertEquals(10,Budget.getLines().size());
-    assertEquals(2,categories.size());
+    assertEquals(4,categories.size());
     assertEquals(5,types.size());
     assertEquals(5,status.size());
 

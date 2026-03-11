@@ -3,7 +3,7 @@ package com.beck.beck_demos.budget_app.controllers;
 
 import com.beck.beck_demos.budget_app.data.CategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
-import com.beck.beck_demos.budget_app.models.Category;
+import com.beck.beck_demos.budget_app.models.SubCategory;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -72,7 +72,7 @@ public class AddCategoryServlet extends HttpServlet{
     Map<String, String> results = new HashMap<>();
     results.put("Category_Name",_Category_Name);
     results.put("color_id",_color_id);
-    Category category = new Category();
+    SubCategory category = new SubCategory();
     int errors =0;
     try {
       category.setCategory_Name(_Category_Name);

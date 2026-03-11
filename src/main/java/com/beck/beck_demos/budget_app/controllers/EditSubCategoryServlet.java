@@ -3,7 +3,7 @@ package com.beck.beck_demos.budget_app.controllers;
 
 import com.beck.beck_demos.budget_app.data.CategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
-import com.beck.beck_demos.budget_app.models.Category;
+import com.beck.beck_demos.budget_app.models.SubCategory;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,16 +13,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+
 /******************
  Create the Servlet  For adding to The  Category table
  Created By Jonathan Beck 7/31/2024
  ***************/
 
 @WebServlet("/editCategory")
-public class EditCategoryServlet extends HttpServlet{
+public class EditSubCategoryServlet extends HttpServlet{
 
   private iCategoryDAO categoryDAO;
   @Override
@@ -50,11 +48,13 @@ public class EditCategoryServlet extends HttpServlet{
     }
 
 
-    Category _oldCategory = new Category();
-    Category _newCategory = new Category();
+    SubCategory _oldCategory = new SubCategory();
+    SubCategory _newCategory = new SubCategory();
     String _Category_ID = req.getParameter("category_ID");
     String _Category_Name = req.getParameter("inputcategoryCategory_Name");
     String _color_id = req.getParameter("inputcategoryColor_id");
+    String _parent_category_id = req.getParameter("inputsub_categoryparent_category_id");
+
     try {
       _oldCategory.setCategory_ID(_Category_ID);
     }
@@ -73,9 +73,15 @@ public class EditCategoryServlet extends HttpServlet{
       return;
     }
     try {
+      _newCategory.setParentCategoryId(_parent_category_id);
+    } catch(Exception e) {response = -4;
+      sendResponse(resp,response);
+      return;
+    }
+    try {
       _newCategory.setcolor_id(_color_id);
     } catch(Exception e) {
-      response = -4;
+      response = -5;
       sendResponse(resp,response);
       return;
     }
@@ -89,7 +95,7 @@ public class EditCategoryServlet extends HttpServlet{
           return;
 
       }catch(Exception ex){
-        response = -5;
+        response = -6;
         sendResponse(resp,response);
         return;
       }

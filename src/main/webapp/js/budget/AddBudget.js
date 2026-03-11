@@ -139,6 +139,7 @@ $(document).ready(function () {
     }
 
     window.addLineItem = function () {
+        var budgetId = document.getElementById("budgetID").innerText.trim();
         const name = $("#name").val();
         const details = $("#details").val();
         const amount = parseFloat($("#amount").val());
@@ -370,60 +371,83 @@ $(document).ready(function () {
         alert("Error (" + code + "): " + (errors[code] || "Request failed."));
     }
 
-    function addTableHeaders(){
-            const table = document.getElementById('lineItemTable');
-            const headers = table.querySelectorAll('thead th');
-            const tableBody = table.querySelector('#lineItemBody');
-            const inputRow = document.getElementById('inputRow'); // Keep the input row at the bottom
+function addTableHeaders() {
+    const table = document.getElementById('lineItemTable');
+    if (!table) return; // Guard clause
 
-            let sortDirection = true; // true = asc, false = desc
+    const headers = table.querySelectorAll('thead th');
+    const tableBody = table.querySelector('#lineItemBody');
+    const inputRow = document.getElementById('inputRow');
 
-            headers.forEach((header, index) => {
-                // Skip the "Action" column since it doesn't make sense to sort
-                if (header.innerText === 'Action') return;
+    let sortDirection = true; // true = asc, false = desc
 
-                header.style.cursor = 'pointer';
-                header.addEventListener('click', () => {
-                    sortDirection = !sortDirection;
-                    sortTable(index, sortDirection);
-                });
-            });
+    headers.forEach((header, index) => {
+        // Skip the "Action" column
+        if (header.innerText.trim() === 'Action') return;
 
-            function sortTable(columnIndex, ascending) {
-                let cellA = a.children[columnIndex].querySelector('select')
-                    ? a.children[columnIndex].querySelector('select').value
-                    : a.children[columnIndex].innerText.trim();
+        header.style.cursor = 'pointer';
+        // Optional: add a small indicator or title
+        header.title = "Click to sort";
 
-                let cellB = b.children[columnIndex].querySelector('select')
-                    ? b.children[columnIndex].querySelector('select').value
-                    : b.children[columnIndex].innerText.trim();
-                const rows = Array.from(tableBody.querySelectorAll('tr:not(#inputRow)'));
+        header.addEventListener('click', () => {
+            sortDirection = !sortDirection;
+            sortTable(index, sortDirection);
+        });
+    });
 
-                const sortedRows = rows.sort((a, b) => {
-                    let cellA = a.children[columnIndex].innerText.trim();
-                    let cellB = b.children[columnIndex].innerText.trim();
+    function sortTable(columnIndex, ascending) {
+        const rows = Array.from(tableBody.querySelectorAll('tr:not(#inputRow)'));
 
-                    // Special handling for the "Amount" column (numeric sort)
-                    if (columnIndex === 2) {
-                        return ascending
-                            ? parseFloat(cellA) - parseFloat(cellB)
-                            : parseFloat(cellB) - parseFloat(cellA);
-                    }
+        const sortedRows = rows.sort((a, b) => {
+            // Helper to get value whether cell is currently an input/select or just text
+            const getVal = (row, idx) => {
+                const cell = $(row.children[idx]);
+                const input = cell.find('input, select');
 
-                    // Default string sort for other columns
-                    return ascending
-                        ? cellA.localeCompare(cellB)
-                        : cellB.localeCompare(cellA);
-                });
+                if (input.length > 0) {
+                    return input.val().toLowerCase();
+                }
 
-                // Re-append rows to the body
-                sortedRows.forEach(row => tableBody.appendChild(row));
+                // For the "Category/Color" column, sort by the label text
+                if (cell.data('field') === 'color') {
+                    return cell.find('.color-label').text().trim().toLowerCase();
+                }
 
-                // Always ensure the inputRow stays at the very bottom
-                if (inputRow) tableBody.appendChild(inputRow);
+                return cell.text().trim().toLowerCase();
+            };
+
+            let valA = getVal(a, columnIndex);
+            let valB = getVal(b, columnIndex);
+
+            // Numerical sort for the "Amount" column (Index 2)
+            if (columnIndex === 2) {
+                let numA = parseFloat(valA.replace(/[^0-9.-]+/g, "")) || 0;
+                let numB = parseFloat(valB.replace(/[^0-9.-]+/g, "")) || 0;
+                return ascending ? numA - numB : numB - numA;
             }
 
+            // Date sort (Index 3)
+            if (columnIndex === 3) {
+                let dateA = new Date(valA);
+                let dateB = new Date(valB);
+                return ascending ? dateA - dateB : dateB - dateA;
+            }
+
+            // Default string sort
+            return ascending
+                ? valA.localeCompare(valB)
+                : valB.localeCompare(valA);
+        });
+
+        // Re-append rows in new order
+        sortedRows.forEach(row => tableBody.appendChild(row));
+
+        // Always push the inputRow to the bottom
+        if (inputRow) {
+            tableBody.appendChild(inputRow);
+        }
     }
+}
 
 window.saveTheRest = function() {
     // 1. Pull current numbers from Summary div

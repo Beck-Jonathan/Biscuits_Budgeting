@@ -146,7 +146,7 @@ class AddSaved_Search_Order_LineServletTest {
     request.setSession(session);
     request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID","1b076c01-2790-47f4-a5ed-a43f2c6772ca");
     request.setParameter("inputsaved_search_order_lineLine_No","406");
-    request.setParameter("inputsaved_search_order_lineCategory_ID","TestValue");
+    request.setParameter("inputsaved_search_order_lineCategory_ID","01b9701b-c114-4036-a78a-18b43a991994");
     request.setParameter("inputsaved_search_order_lineUser_ID","406");
     request.setParameter("inputsaved_search_order_lineSearch_Phrase","TestValue");
     request.setParameter("inputsaved_search_order_lineIs_Active","true");
@@ -170,7 +170,7 @@ class AddSaved_Search_Order_LineServletTest {
     request.setSession(session);
     request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID","1b076c01-2790-47f4-a5ed-a43f2c6772ca");
     request.setParameter("inputsaved_search_order_lineLine_No","406");
-    request.setParameter("inputsaved_search_order_lineCategory_ID","EXCEPTION");
+    request.setParameter("inputsaved_search_order_lineCategory_ID","EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
     request.setParameter("inputsaved_search_order_lineUser_ID","406");
     request.setParameter("inputsaved_search_order_lineSearch_Phrase","EXCEPTION");
     request.setParameter("inputsaved_search_order_lineIs_Active","true");
@@ -198,7 +198,7 @@ class AddSaved_Search_Order_LineServletTest {
     request.setSession(session);
     request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID","406");
     request.setParameter("inputsaved_search_order_lineLine_No","406");
-    request.setParameter("inputsaved_search_order_lineCategory_ID","DUPLICATE");
+    request.setParameter("inputsaved_search_order_lineCategory_ID","DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
     request.setParameter("inputsaved_search_order_lineUser_ID","406");
     request.setParameter("inputsaved_search_order_lineSearch_Phrase","DUPLICATE");
     request.setParameter("inputsaved_search_order_lineIs_Active","true");

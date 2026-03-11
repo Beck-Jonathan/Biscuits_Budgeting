@@ -14,18 +14,32 @@
 
     <thead>
     <row  id = "row7">
-      <form method="post" action="${appURL}/add_transaction" id = "budget" enctype="multipart/form-data" >
-      <label for="upload_transactions" class="form-label">Logo</label>
-      <div class="input-group input-group-lg">
-        <input type="file" size="50" accept=".txt" class="<c:if test="${not empty results.teamLogoerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Transactions" id="upload_transactions" name="upload_transactions" value="${fn:escapeXml(results.Logo)}">
-        <c:if test="${not empty results.teamLogoerror}">
-          <div class="invalid-feedback">${results.teamLogoerror}</div>
-        </c:if>
-      </div>
-        <div class="align-items-center mt-0">
-          <div class="d-grid"><button class="btn btn-orange mb-0" type="submit">Import Transactions</button></div>
-          <c:if test="${not empty results.dbStatus}"
-          ><p>${results.dbStatus}</p>
+      <form method="post" action="${appURL}/add_transaction" id="budget" enctype="multipart/form-data">
+        <label for="upload_transactions" class="form-label">Transaction Text File (.txt)</label>
+
+        <div class="input-group input-group-lg">
+          <input type="file"
+                 accept=".txt"
+                 class="form-control border-0 bg-light rounded-end ps-1 <c:if test='${not empty results.FileEmptyError}'>is-invalid</c:if>"
+                 id="upload_transactions"
+                 name="upload_transactions">
+
+          <c:if test="${not empty results.FileEmptyError}">
+            <div class="invalid-feedback">${results.FileEmptyError}</div>
+          </c:if>
+        </div>
+
+        <div class="align-items-center mt-3">
+          <div class="d-grid">
+            <button class="btn btn-orange mb-0" type="submit">Import Transactions</button>
+          </div>
+
+          <%-- Displays general database or system errors --%>
+          <c:if test="${not empty results.dbStatus}">
+            <p class="text-danger mt-2">${results.dbStatus}</p>
+          </c:if>
+          <c:if test="${not empty results.dbError}">
+            <p class="text-danger mt-2">${results.dbError}</p>
           </c:if>
         </div>
       </form>

@@ -3,7 +3,7 @@ package com.beck.beck_demos.budget_app.controllers;
 import com.beck.beck_demos.budget_app.data.TransactionDAO;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-import com.beck.beck_demos.budget_app.models.Category;
+import com.beck.beck_demos.budget_app.models.SubCategory;
 import com.beck.beck_demos.budget_app.models.Transaction;
 import com.beck.beck_demos.budget_app.models.Transaction_VM;
 import com.beck.beck_demos.budget_app.models.User;
@@ -47,7 +47,7 @@ public class SearchAndCategorizeServlet extends HttpServlet {
       resp.sendRedirect("budget_home");
       return;
     }
-    List<Category> allCategories = categoryDAO.getCategoryByUser(user.getUser_ID());
+    List<SubCategory> allCategories = categoryDAO.getsubCategoryByUser(user.getUser_ID());
     req.setAttribute("Categories", allCategories);
 
     session.setAttribute("currentPage",req.getRequestURL());

@@ -3,7 +3,7 @@ package com.beck.beck_demos.budget_app.data;
 import com.beck.beck_demos.budget_app.iData.iBudget_Line_ItemDAO;
 import com.beck.beck_demos.budget_app.models.Budget_Line_Item;
 import com.beck.beck_demos.budget_app.models.Budget_Line_ItemVM;
-import com.beck.beck_demos.budget_app.models.Category;
+import com.beck.beck_demos.budget_app.models.SubCategory;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -106,11 +106,13 @@ public class Budget_Line_ItemDAO implements iBudget_Line_ItemDAO {
                 transaction_id="";}
               LocalDate created_at = resultSet.getObject("budget_line_item_created_at", LocalDate.class);
               LocalDate updated_at = resultSet.getObject("budget_line_item_updated_at", LocalDate.class);
-              String category_category_id = resultSet.getString("category_category_id");
-              String category_category_name = resultSet.getString("category_category_name");
-              String category_user_id = resultSet.getString("category_user_id");
-              String category_color_id = resultSet.getString("category_color_id");
-              Category category = new Category(category_category_id,category_user_id,category_category_name,category_color_id);
+              String subcategory_category_id = resultSet.getString("subcategory_subcategory_id");
+              String subcategory_parent_category_id = resultSet.getString("subcategory_parent_category_id");
+
+              String subcategory_category_name = resultSet.getString("subcategory_category_name");
+              String subcategory_user_id = resultSet.getString("subcategory_user_id");
+              String subcategory_color_id = resultSet.getString("subcategory_color_id");
+              SubCategory category = new SubCategory(subcategory_category_id,subcategory_parent_category_id,subcategory_user_id,subcategory_category_name,subcategory_color_id);
               Budget_Line_Item budget_line_item =  new Budget_Line_Item( budget_line_item_id, budget_id, category_id, name, details, line_item_date, amount, budget_line_type_id, budget_line_status_id, transaction_id, created_at, updated_at);
               Budget_Line_ItemVM vm = new Budget_Line_ItemVM(budget_line_item);
               vm.setCategory(category);

@@ -2,7 +2,7 @@ package com.beck.beck_demos.budget_app.controllers;
 
 import com.beck.beck_demos.budget_app.data.TransactionDAO;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-import com.beck.beck_demos.budget_app.models.Category_VM;
+import com.beck.beck_demos.budget_app.models.SubCategory_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -48,7 +48,7 @@ public class PieChartMonthlyAJAX extends HttpServlet {
     String mode = req.getParameter("mode");
     int errors =0;
     Map<String,String> results = new HashMap<>();
-    List<List<Category_VM>> breakdown = new ArrayList<>();
+    List<List<SubCategory_VM>> breakdown = new ArrayList<>();
     List<String> allCategories = new ArrayList<>();
     if (mode==null){
       mode="monthly";
@@ -80,11 +80,11 @@ public class PieChartMonthlyAJAX extends HttpServlet {
     }
 
    try {
-      for (List<Category_VM> category_vms : breakdown) {
+      for (List<SubCategory_VM> category_vms : breakdown) {
         for (int i = 0; i < category_vms.size(); i++) {
           if (category_vms.get(i).getCategory_ID().equals("total in")) {
             while (i < category_vms.size() - 1) {
-              Category_VM temp = category_vms.get(i + 1);
+              SubCategory_VM temp = category_vms.get(i + 1);
               category_vms.set(i + 1, category_vms.get(i));
               category_vms.set(i, temp);
               i++;
@@ -92,11 +92,11 @@ public class PieChartMonthlyAJAX extends HttpServlet {
           }
         }
       }
-      for (List<Category_VM> category_vms : breakdown) {
+      for (List<SubCategory_VM> category_vms : breakdown) {
         for (int i = 0; i < category_vms.size(); i++) {
           if (category_vms.get(i).getCategory_ID().equals("total out")) {
             while (i < category_vms.size() - 1) {
-              Category_VM temp = category_vms.get(i + 1);
+              SubCategory_VM temp = category_vms.get(i + 1);
               category_vms.set(i + 1, category_vms.get(i));
               category_vms.set(i, temp);
               i++;
@@ -106,7 +106,7 @@ public class PieChartMonthlyAJAX extends HttpServlet {
       }
 
 
-      for (Category_VM category : breakdown.get(0)) {
+      for (SubCategory_VM category : breakdown.get(0)) {
         allCategories.add(category.getCategory_ID());
       }
     }

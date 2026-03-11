@@ -5,23 +5,25 @@ import org.jetbrains.annotations.NotNull;
 
 /// Since 12/5/2024
 /// Jonathan Beck
-public class Category implements Comparable<Category> {
+public class SubCategory implements Comparable<SubCategory> {
   private String Category_ID;
   private String Category_Name;
+  private String parentCategoryId;
   private String User_ID;
   private String color_id;
 
-  public Category(){}
+  public SubCategory(){}
 
-  public Category(String Category_ID,String User_ID,  String Name,String Color_ID) {
+  public SubCategory(String Category_ID, String parent_category_id, String User_ID, String Name, String Color_ID) {
 
     setCategory_ID(Category_ID);
+    setParentCategoryId(parent_category_id);
     setCategory_Name(Name);
     setUser_ID(User_ID);
     setcolor_id(Color_ID);
   }
 
-  public Category(String Category_ID,String Name) {
+  public SubCategory(String Category_ID, String Name) {
 
     setCategory_ID(Category_ID);
 
@@ -50,6 +52,31 @@ public class Category implements Comparable<Category> {
     }
     this.Category_ID = Category_ID;
   }
+
+  /**
+   * <p> Gets the parent_category_id of the associated sub_category object </p>
+   * @return the parent_category_id of this sub_category object.
+   */
+  public String getParentCategoryId() {
+    return parentCategoryId;
+  }
+
+  /**
+   * <p> Sets the parent_category_id of the associated sub_category object </p>
+   * @param parent_category_id the parent_category_id of the sub_category,
+   * throws IllegalArgumentException if parent_category_id under 3 characters or longer than 36 characters
+   */
+  public void setParentCategoryId(String parent_category_id) {
+
+    if(parent_category_id.length()<36){
+      throw new IllegalArgumentException("parent_category_id is too short.");
+    }
+    if(parent_category_id.length()>36){
+      throw new IllegalArgumentException("parent_category_id is too long.");
+    }
+    this.parentCategoryId = parent_category_id;
+  }
+
   /**
    * <p> Gets the User_ID of the associated Category object </p>
    * @return the User_ID of this Category object.
@@ -130,7 +157,7 @@ public class Category implements Comparable<Category> {
 
 
   @Override
-  public int compareTo(@NotNull Category o) {
+  public int compareTo(@NotNull SubCategory o) {
     if (this.Category_ID.compareTo(o.Category_ID)<0){
       return -1;
     }

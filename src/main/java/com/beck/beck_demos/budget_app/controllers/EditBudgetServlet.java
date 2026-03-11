@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -110,13 +109,13 @@ public class EditBudgetServlet extends HttpServlet{
       resp.sendRedirect("all-budgets");
       return;
     }
-    List<Category> allCategories = null;
+    List<SubCategory> allCategories = null;
     List<String> allbudget_line_types = null;
     List<String> allbudget_line_statuss = null;
     List<String> allcurrency_codes = null;
     try{
 
-      allCategories = categoryDAO.getCategoryByUser(user.getUser_ID());
+      allCategories = categoryDAO.getsubCategoryByUser(user.getUser_ID());
       allbudget_line_types = budgetLineItemDAO.getDistinctbudget_line_typeForDropdown();
       allbudget_line_statuss = budgetLineItemDAO.getDistinctbudget_line_statusForDropdown();
       allcurrency_codes = budgetDAO.getDistinctcurrency_codeForDropdown();

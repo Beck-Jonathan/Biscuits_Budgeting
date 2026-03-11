@@ -1,7 +1,7 @@
 package com.beck.beck_demos.budget_app.data_fakes;
 
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-import com.beck.beck_demos.budget_app.models.Category_VM;
+import com.beck.beck_demos.budget_app.models.SubCategory_VM;
 import com.beck.beck_demos.budget_app.models.Transaction;
 import com.beck.beck_demos.budget_app.models.Transaction_VM;
 //import software.amazon.awssdk.services.s3.endpoints.internal.Value;
@@ -272,8 +272,8 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   }
 
   @Override
-  public List<List<Category_VM>> getAnalysis(List<List<Category_VM>> years, String user_ID) throws SQLException {
-     ArrayList<List<Category_VM>> analysis = new ArrayList<List<Category_VM>>();
+  public List<List<SubCategory_VM>> getAnalysis(List<List<SubCategory_VM>> years, String user_ID) throws SQLException {
+     ArrayList<List<SubCategory_VM>> analysis = new ArrayList<List<SubCategory_VM>>();
      ArrayList<Transaction> transactions = new ArrayList<>();
     HashSet<String> categories = new HashSet<>();
     int minYear = 9999;
@@ -295,9 +295,9 @@ public class TransactionDAO_Fake implements iTransactionDAO {
        useryears.add(i);
      }
      for (int i = 0; i<useryears.size(); i++) {
-       List<Category_VM> category_vms = new ArrayList<>();
+       List<SubCategory_VM> category_vms = new ArrayList<>();
        for (String category : categories) {
-          Category_VM category_vm = new Category_VM();
+          SubCategory_VM category_vm = new SubCategory_VM();
           category_vm.setCategory_ID(category);
          category_vms.add(category_vm);
        }
@@ -409,7 +409,7 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   }
 
   @Override
-  public List<List<Category_VM>> getMonthlyAnalysis(List<List<Category_VM>> months, String user_ID, int year) throws SQLException {
+  public List<List<SubCategory_VM>> getMonthlyAnalysis(List<List<SubCategory_VM>> months, String user_ID, int year) throws SQLException {
     return List.of();
   }
 

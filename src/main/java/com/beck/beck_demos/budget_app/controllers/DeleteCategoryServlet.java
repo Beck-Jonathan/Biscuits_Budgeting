@@ -7,7 +7,7 @@ package com.beck.beck_demos.budget_app.controllers;
 
 import com.beck.beck_demos.budget_app.data.CategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
-import com.beck.beck_demos.budget_app.models.Category;
+import com.beck.beck_demos.budget_app.models.SubCategory;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -54,7 +54,7 @@ public class DeleteCategoryServlet extends HttpServlet {
 
     if (errors==0&&!CategoryID.equals("Uncategorized")) {
       try {
-        result = categoryDAO.deleteCategory(CategoryID, user.getUser_ID());
+        result = categoryDAO.deleteSubCategory(CategoryID, user.getUser_ID());
       } catch (Exception ex) {
         results.put("dbStatus", ex.getMessage());
         result=0;
@@ -68,8 +68,8 @@ public class DeleteCategoryServlet extends HttpServlet {
 
 
     req.setAttribute("result", result);
-    List<Category> categories = null;
-    categories = categoryDAO.getCategoryByUser(user.getUser_ID());
+    List<SubCategory> categories = null;
+    categories = categoryDAO.getsubCategoryByUser(user.getUser_ID());
     req.setAttribute("results",results);
     req.setAttribute("Categories", categories);
     req.setAttribute("pageTitle", "All Category");

@@ -7,7 +7,7 @@ import com.beck.beck_demos.budget_app.data.TransactionDAO;
 import com.beck.beck_demos.budget_app.data.CategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-import com.beck.beck_demos.budget_app.models.Category;
+import com.beck.beck_demos.budget_app.models.SubCategory;
 import com.beck.beck_demos.budget_app.models.Transaction_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.ServletException;
@@ -139,7 +139,7 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
     req.setAttribute("noOfPages", total_pages);
     //fix current page
     req.setAttribute("currentPage", page_number);
-    List <Category> allCategories = categoryDAO.getCategoryByUser(user.getUser_ID());
+    List <SubCategory> allCategories = categoryDAO.getsubCategoryByUser(user.getUser_ID());
     req.setAttribute("Categories", allCategories);
 
 

@@ -3,8 +3,7 @@ package com.beck.beck_demos.budget_app.controllers;
 import java.io.IOException;
 import java.util.*;
 import com.beck.beck_demos.budget_app.data_fakes.CategoryDAO_Fake;
-import com.beck.beck_demos.budget_app.models.Category;
-import com.beck.beck_demos.budget_app.models.Category_VM;
+import com.beck.beck_demos.budget_app.models.SubCategory_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -83,14 +82,14 @@ class AllCategoriesServletTest {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID("ec93ae39-255a-4252-ac50-cde8ecb05b0c");
+    user.setUser_ID("sqiidVcxEgAxPSmbAlPuyyPqlajALcCishjt");
     user.setRoles(roles);
     session.setAttribute("User_B",user);
     request.setSession(session);
     servlet.doGet(request,response);
-    List<Category_VM> categorys = (List<Category_VM>) request.getAttribute("Categories");
+    List<SubCategory_VM> categorys = (List<SubCategory_VM>) request.getAttribute("Categories");
     assertNotNull(categorys);
-    assertEquals(6,categorys.size());
+    assertEquals(4,categorys.size());
   }
 
   @Test

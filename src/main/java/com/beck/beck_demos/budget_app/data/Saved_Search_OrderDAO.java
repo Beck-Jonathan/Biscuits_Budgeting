@@ -188,7 +188,7 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
 
   /**
    * DAO Method to delete Saved_Search_Order objects
-   * @param Saved_Search_Order_ID the Saved_Search_Order to be deleted
+   * @param _order the Saved_Search_Order to be deleted
    * @return number of records deleted
    * @author Jonathan Beck
    */

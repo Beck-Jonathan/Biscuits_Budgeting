@@ -198,82 +198,92 @@ hr {
  vertical-align: bottom;
     margin-top: 28px;
 }
-.category-card-mini {
-    position: relative;
-    height: 42px;
-    border: 1px solid #d1d1d1 !important;
+
+/* 1. Pill Container Adjustments */
+.category-pill {
+    position: relative; /* Anchor for the picker */
+    height: 48px; /* Slightly taller for better touch targets */
+    border: 1px solid #dee2e6 !important;
     display: flex;
     flex-direction: row;
     align-items: center;
-    overflow: visible; /* Required for wheel to pop out */
-    border-radius: 6px;
+    background: #ffffff;
+    border-radius: 50rem; /* pill shape */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Wider Swatch */
+.category-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+}
+
+/* 2. Swatch & Trigger */
 .swatch-container {
     position: relative;
-    height: 100%;
-    width: 40px;
+    flex-shrink: 0;
 }
 
 .color-swatch-trigger {
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    border-right: 1px solid #d1d1d1;
-}
-
-/* The Wheel Container */
-.wheel-picker-container {
-    display: none;
-    position: absolute;
-    top: 45px;
-    left: 0;
-    z-index: 1000;
-    background: #fff;
-    border: 1px solid #ccc;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    padding: 15px;
-    border-radius: 8px;
-    text-align: center;
-}
-
-.wheel-picker-container.active { display: block; }
-
-.btn-save-color {
-    margin-top: 10px;
-    width: 100%;
-    border: none;
-    background: #007bff;
-    color: white;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    padding: 5px;
-}
-
-/* Text & Delete */
-.category-text {
-    font-weight: 900 !important; /* Extra Bolder */
-    font-size: 0.85rem;
-    padding-left: 10px;
-    outline: none;
-    flex-grow: 1;
-}
-
-/* Red Delete Button */
-.btn-delete-corner {
-    position: absolute;
-    top: -4px;
-    right: 5px;
-    color: #dc3545; /* Red Color */
-    font-size: 1.3rem;
-    font-weight: bold;
-    text-decoration: none;
-    z-index: 5;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px #dee2e6;
     transition: transform 0.1s ease;
 }
 
-.btn-delete-corner:hover {
-    color: #a71d2a;
-    transform: scale(1.2);
+.color-swatch-trigger:active {
+    transform: scale(0.9);
+}
+
+/* 3. The Wheel Container (The "Breakout") */
+.wheel-picker-container {
+    display: none; /* Controlled by JS .active class */
+    position: absolute;
+    top: 55px; /* Sits below the pill */
+    left: 10px;
+    z-index: 9999; /* Higher than other cards */
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    padding: 15px;
+    border-radius: 12px;
+    width: 220px;
+}
+
+/* Use a dedicated class for showing */
+.wheel-picker-container.active {
+    display: block !important;
+}
+
+/* 4. Text and Form Elements */
+.category-text {
+    font-size: 0.9rem;
+    color: #212529;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.form-select-sm {
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* 5. Delete Button */
+.btn-delete-pill {
+    color: #adb5bd;
+    transition: color 0.2s ease;
+}
+
+.btn-delete-pill:hover {
+    color: #dc3545 !important;
+}
+
+/* Ensure the pill with the open picker sits above all other pills */
+.col-xl-3:has(.wheel-picker-container.active) {
+    z-index: 9999;
+    position: relative;
+}
+
+/* Fallback for older browsers if :has isn't supported */
+.category-pill.active-pill {
+    z-index: 9999 !important;
 }
