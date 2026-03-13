@@ -8,7 +8,7 @@ Create the JSP  For Viewing All of The  Transaction table
         <div class="col-12" id="addr" addr="${appURL}">
 
             <h1>All ${User_B.email} Transactions</h1>
-            <p>There ${Transactions.size() eq 1 ? "is" : "are"}&nbsp;${Transactions.size()} Transaction${Transactions.size() ne 1 ? "s" : ""}</p>
+            <p>There ${transaction_count eq 1 ? "is" : "are"}&nbsp;${transaction_count} Transaction${transaction_count ne 1 ? "s" : ""}</p>
             Add Category   <a href="addTransactionCategory">Add</a> <br/>
             search transactions <a href="search_transaction">search</a> <br/>
             Reverse order <a href="${appURL}/all-Transactions?sort=${sort}&direction=${direction}&category=${category}&year=${year}&reverse=true">reverse</a><br/>

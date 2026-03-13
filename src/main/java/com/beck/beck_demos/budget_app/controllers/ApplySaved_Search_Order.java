@@ -61,14 +61,15 @@ public class ApplySaved_Search_Order extends HttpServlet {
       req.setAttribute("dbStatus",e.getMessage());
     }
     int result = 0;
-    for (Saved_Search_Order_Line line : saved_search_order.getSaved_Search_Order_Lines()) {
+    //for (Saved_Search_Order_Line line : saved_search_order.getSaved_Search_Order_Lines()) {
 
       try {
-        result += transactionDAO.bulkUpdateCategory(user.getUser_ID(), line.getCategory_ID(), line.getSearch_Phrase());
+        //result += transactionDAO.bulkUpdateCategory(user.getUser_ID(), line.getCategory_ID(), line.getSearch_Phrase());
+        result += transactionDAO.applyAllLines(user.getUser_ID(),saved_search_order.getSaved_Search_Order_Lines());
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
-    }
+    //}
     Saved_Search_Order new_Order = new Saved_Search_Order();
     new_Order.setDescription(saved_search_order.getDescription());
     new_Order.setNickname(saved_search_order.getNickname());

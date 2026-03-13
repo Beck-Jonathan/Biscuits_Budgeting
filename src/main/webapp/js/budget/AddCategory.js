@@ -31,12 +31,43 @@ $(document).ready(function() {
 
     })
     function setupColorPicker(){
-        // Essential: This script updates the hidden field that the Servlet reads
-        document.getElementById('colorSource').addEventListener('input', function(e) {
-            const newColor = e.target.value; // This will be #RRGGBB
-            document.getElementById('inputcategoryColor_id').value = newColor;
-            document.getElementById('hexDisplay').innerText = newColor;
+        const initialColor = $('#inputcategoryColor_id').val();
+
+        // 1. Initialize the single picker
+        const formPicker = new iro.ColorPicker("#formWheelCanvas", {
+            width: 180,
+            color: initialColor,
+            layout: [
+                { component: iro.ui.Wheel },
+                { component: iro.ui.Slider, options: { sliderType: 'hue' } }
+            ]
         });
+
+        // 2. Open/Toggle the picker
+        $('#formColorSwatch').on('click', function(e) {
+            e.stopPropagation();
+            $('#formColorPickerContainer').toggleClass('active');
+        });
+
+        // 3. Update the UI and Hidden Input when the color changes
+        formPicker.on('color:change', function(color) {
+            const hex = color.hexString.toUpperCase();
+            $('#formColorSwatch').css('background-color', hex);
+            $('#formHexDisplay').text(hex);
+            $('#inputcategoryColor_id').val(hex);
+        });
+
+        // 4. Close on "Done" button or clicking outside
+        $('#btnConfirmColor').on('click', function() {
+            $('#formColorPickerContainer').removeClass('active');
+        });
+
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.swatch-container').length) {
+                $('#formColorPickerContainer').removeClass('active');
+            }
+        });
+
     }
 
 

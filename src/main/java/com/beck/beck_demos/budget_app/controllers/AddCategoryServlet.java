@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 /******************
@@ -93,10 +94,13 @@ public class AddCategoryServlet extends HttpServlet{
         results.put("dbError","Database Error");
       }
       if (result>0){
-        results.put("dbStatus","Category Added");
-        resp.sendRedirect("all-Categories");
-        req.setAttribute("results", results);
+        PrintWriter writer = resp.getWriter();
+        writer.write("1");
         return;
+//        results.put("dbStatus","Category Added");
+//        resp.sendRedirect("all-Categories");
+//        req.setAttribute("results", results);
+//        return;
       } else {
         results.put("dbStatus","Category Not Added");
 

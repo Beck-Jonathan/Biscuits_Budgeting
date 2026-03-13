@@ -17,23 +17,29 @@ Create the JSP  For adding to The  Category table
             </div>
         </div>
         <!-- end Category_ Id -->
-        <!-- start color -->
-        <c:set var="activeColor" value="${empty results.Color_ID ? '#FF0000' : results.Color_ID}" />
+        <c:set var="activeColor" value="${empty results.Color_id ? '#3498db' : results.Color_id}" />
 
-        <div class="custom-color-picker">
-            <label for="colorSource">Pick a Category Color:</label>
-            <div class="picker-wrapper">
-                <input type="color" id="colorSource" value="${activeColor}" class="native-picker">
+        <div class="mb-4">
+            <label class="form-label d-block fw-bold">Category Color</label>
+            <div class="d-flex align-items-center gap-3">
+                <div class="swatch-container position-relative">
+                    <div id="formColorSwatch" class="rounded-circle border"
+                         style="background-color: ${activeColor}; width: 45px; height: 45px; cursor: pointer; border-width: 3px !important;">
+                    </div>
+
+                    <div id="formColorPickerContainer" class="wheel-picker-container shadow-lg border rounded p-3 bg-white" style="top: 55px; left: 0;">
+                        <div id="formWheelCanvas"></div>
+                        <button type="button" class="btn btn-sm btn-dark w-100 mt-2" id="btnConfirmColor">Done</button>
+                    </div>
+                </div>
 
                 <input type="hidden" name="inputcategoryColor_id" id="inputcategoryColor_id" value="${activeColor}">
 
-                <div class="status-text">
-                    Selected: <span id="hexDisplay">${activeColor}</span>
+                <div class="text-muted small">
+                    Current: <span id="formHexDisplay" class="fw-bold text-uppercase">${activeColor}</span>
                 </div>
             </div>
         </div>
-
-        <!-- end  color -->
         <!-- start button -->
         <div class="align-items-center mt-0">
             <div class="d-grid"><button id="submitButton" class="btn btn-orange mb-0" type="submit">Create Category  </button></div>

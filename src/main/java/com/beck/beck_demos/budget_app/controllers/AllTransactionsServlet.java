@@ -124,11 +124,12 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
 
     int offset=(page_number-1)*(page_size);
 
-
+    List <SubCategory> allCategories = null;
     try {
       transaction_count = transactionDAO.getTransactionCountByUser(user.getUser_ID(),category,year);
 
       transactions = transactionDAO.getTransactionByUser(user.getUser_ID(),category,year,page_size,offset,sort,direction);
+      allCategories = categoryDAO.getsubCategoryByUser(user.getUser_ID());
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -137,9 +138,10 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
     //https://stackoverflow.com/questions/31410007/how-to-do-pagination-in-jsp
 
     req.setAttribute("noOfPages", total_pages);
+    req.setAttribute("transaction_count",transaction_count);
     //fix current page
     req.setAttribute("currentPage", page_number);
-    List <SubCategory> allCategories = categoryDAO.getsubCategoryByUser(user.getUser_ID());
+
     req.setAttribute("Categories", allCategories);
 
 

@@ -1,59 +1,60 @@
 <%@include file="/WEB-INF/Budget_App/budget_top.jsp"%>
+<div id="budget-app-container" class="container-fluid py-4">
+    <div class="row mb-4 text-center">
+        <div class="col-12">
+            <h1 class="fw-bold" style="color: #2c3e50;">Biscuit's Budget Analysis</h1>
+            <div class="badge bg-primary text-wrap" style="width: 6rem;">V 2.0</div>
+        </div>
+    </div>
 
+    <div class="row g-4">
+        <div class="col-lg-3">
+            <div class="budget-panel mb-3 p-3">
+                <label class="small fw-bold text-uppercase text-muted mb-2 d-block">View Level</label>
+                <div class="btn-group w-100 mb-3">
+                    <button id="btnSub" class="btn btn-outline-primary active" data-val="0">Sub</button>
+                    <button id="btnSuper" class="btn btn-outline-primary" data-val="1">Super</button>
+                </div>
 
-
-<div class="jumbotron jumbotron-fluid">
-    <div class="container">
-        <h2 class="display-4 text-center">Welcome to Biscuit's Budgeting</h2>
-        <p class="lead text-center">Let's make some money</p>
-        <div class="row" id="tablespace">
-
-            <!--Start chart Container -->
-            <div id="barContainer" class="col col-md-8">
+                <label class="small fw-bold text-uppercase text-muted mb-2 d-block">Timeframe</label>
+                <div class="btn-group w-100">
+                    <button id="btnAnnual" class="btn btn-outline-primary active" data-val="0">Yearly</button>
+                    <button id="btnMonthly" class="btn btn-outline-primary" data-val="1">Monthly</button>
+                </div>
             </div>
-            <!--End chart Container -->
 
-            <!--Start Chart Year selector -->
-            <div class="col col-md-2">
-                <select  class="<c:if test="${not empty results.transactionCategory_IDerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Year" id="inputtransactionYear" name="inputtransactionYear" >
+            <div id="yearSelectorContainer" class="budget-panel mb-3 p-3" style="display:none;">
+                <label class="small fw-bold text-uppercase text-muted mb-2 d-block">Focus Year</label>
+                <select class="form-select border-0 bg-light" id="inputYear">
                     <c:forEach items="${yearRange}" var="year">
-                        <option value=${year} <c:if test="${year eq 2024}"> selected </c:if>>${year}   </option>
+                        <option value="${year}" ${year eq 2026 ? 'selected' : ''}>${year}</option>
                     </c:forEach>
                 </select>
-                <button id="byYear">by Year</button>
-                <button id="byMonth" > by Month</button>
-            </div>
-            <!--End  Chart Year selector -->
-
-            <!--Start Chart Category selector -->
-            <div class="col col-md-2">
-                <ul  class="<c:if test="${not empty results.transactionCategory_IDerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Year" id="inputCategoryID" name="inputCategoryID" >
-                    <c:forEach items="${Categories}" var="category">
-                        <li><input type="checkbox" name="category[]" value=${category.replace(" ","")}>${category}   </li>
-                    </c:forEach>
-                </ul>
             </div>
 
+            <div class="budget-panel shadow-sm">
+                <div class="panel-header">Filters</div>
+                <div class="panel-body p-0" style="max-height: 400px; overflow-y: auto;">
+                    <ul class="category-list p-0 m-0" id="categoryList"></ul>
+                </div>
+            </div>
+        </div>
 
-    </div>
-
-
-
+        <div class="col-lg-9">
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="budget-panel p-3">
+                        <div id="chartContainer" style="height: 400px; width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="budget-panel p-3">
+                        <div id="pieContainer" style="height: 350px; width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<p hidden id="FirstYear">${Breakdown[0][0].year}</p>
-<%-- <p hidden >
-    <table hidden>
-    <th></th>
-    <c:forEach items="${Breakdown}" var="year">
-        <tr>
-        <c:forEach items="${year}" var="category">
-            <td> <p id="${category.year}${category.category_ID.replace(" ","")}year"> ${category.year}</p>  <p id="${category.year}${category.category_ID.replace(" ","")}amount">${category.amount}</p>  <p id="${category.year}${category.category_ID.replace(" ","")}count">${category.count}</p>  <p id="${category.year}${category.category_ID.replace(" ","")}name">${category.category_ID}</p> </td>
-        </c:forEach>
-        </tr>
-    </c:forEach>
-</table> --%>
-</p>
-
-
+<script>window.initialData = ${jsonBreakdown != null ? jsonBreakdown : '[]'};</script>
 <%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>

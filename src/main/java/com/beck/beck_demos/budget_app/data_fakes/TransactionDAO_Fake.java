@@ -1,9 +1,7 @@
 package com.beck.beck_demos.budget_app.data_fakes;
 
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-import com.beck.beck_demos.budget_app.models.SubCategory_VM;
-import com.beck.beck_demos.budget_app.models.Transaction;
-import com.beck.beck_demos.budget_app.models.Transaction_VM;
+import com.beck.beck_demos.budget_app.models.*;
 //import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.io.File;
@@ -271,41 +269,7 @@ public class TransactionDAO_Fake implements iTransactionDAO {
     return results;
   }
 
-  @Override
-  public List<List<SubCategory_VM>> getAnalysis(List<List<SubCategory_VM>> years, String user_ID) throws SQLException {
-     ArrayList<List<SubCategory_VM>> analysis = new ArrayList<List<SubCategory_VM>>();
-     ArrayList<Transaction> transactions = new ArrayList<>();
-    HashSet<String> categories = new HashSet<>();
-    int minYear = 9999;
-    int maxYear = 0;
-     for (Transaction t : transactionVMs) {
-       if (t.getUser_ID().equals(user_ID)) {
-         transactions.add(t);
-         categories.add(t.getCategory_ID());
-       }
-       if (t.getPost_Date().getYear()<minYear){
-         minYear = t.getPost_Date().getYear();
-       }
-       if (t.getPost_Date().getYear()>maxYear){
-         maxYear = t.getPost_Date().getYear();
-       }
-     }
-     List<Integer> useryears = new ArrayList<>();
-     for (int i = minYear; i <= maxYear; i++) {
-       useryears.add(i);
-     }
-     for (int i = 0; i<useryears.size(); i++) {
-       List<SubCategory_VM> category_vms = new ArrayList<>();
-       for (String category : categories) {
-          SubCategory_VM category_vm = new SubCategory_VM();
-          category_vm.setCategory_ID(category);
-         category_vms.add(category_vm);
-       }
-       analysis.add(category_vms);
-     }
 
-     return analysis;
-  }
 
   @Override
   public int getTransactionCountByUser(String userID, String category, int year) throws SQLException {
@@ -408,10 +372,7 @@ public class TransactionDAO_Fake implements iTransactionDAO {
     return result;
   }
 
-  @Override
-  public List<List<SubCategory_VM>> getMonthlyAnalysis(List<List<SubCategory_VM>> months, String user_ID, int year) throws SQLException {
-    return List.of();
-  }
+
 
   @Override
   public List<Transaction> getDistinctTransactionForDropdown(String user_ID) throws SQLException {
@@ -422,6 +383,35 @@ public class TransactionDAO_Fake implements iTransactionDAO {
       }
     }
     return transactions;
+  }
+
+  @Override
+  public int applyAllLines(String userId, List<Saved_Search_Order_Line> savedSearchOrderLines) throws SQLException {
+    int result = 0;
+    for(Saved_Search_Order_Line order : savedSearchOrderLines){
+      result +=bulkUpdateCategory(userId,order.getCategory_ID(),order.getSearch_Phrase());
+    }
+    return result;
+  }
+
+  @Override
+  public List<List<SubCategory_VM>> getMonthlyAnalysis(String user_ID, int year) {
+    return List.of();
+  }
+
+  @Override
+  public List<List<SubCategory_VM>> getAnnualAnalysis(String user_ID) {
+    return List.of();
+  }
+
+  @Override
+  public List<List<SubCategory_VM>> getSuperAnnualAnalysis(String user_ID) {
+    return List.of();
+  }
+
+  @Override
+  public List<List<SubCategory_VM>> getSuperMonthlyAnalysis(String user_ID, int year) {
+    return List.of();
   }
 
   private boolean duplicateKey(Transaction _transaction){

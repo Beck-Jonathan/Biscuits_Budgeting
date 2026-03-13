@@ -4,18 +4,14 @@ import com.beck.beck_demos.budget_app.data.TransactionDAO;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
 import com.beck.beck_demos.budget_app.models.SubCategory_VM;
 import com.beck.beck_demos.budget_app.models.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @WebServlet("/PieChart")
 public class PieChartController extends HttpServlet {
@@ -25,83 +21,49 @@ public class PieChartController extends HttpServlet {
   public void init() throws ServletException {
     transactionDAO = new TransactionDAO();
   }
-  public void init(iTransactionDAO transactionDAO) {
-    this.transactionDAO = transactionDAO;
-  }
+
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
     HttpSession session = req.getSession();
+    User user = (User) session.getAttribute("User_B");
 
-    User user = (User)session.getAttribute("User_B");
-    if (user==null||!user.getRoles().contains("User")){
+    if (user == null || !user.getRoles().contains("User")) {
       resp.sendRedirect("budget_home");
       return;
     }
-    Map<String,String> results = new HashMap<>();
-    List<List<SubCategory_VM>> breakdown = new ArrayList<>();
-    List<Integer> allYears = new ArrayList<>();
-    List<String> allCategories = new ArrayList<>();
 
     try {
-      breakdown = transactionDAO.getAnalysis(breakdown, user.getUser_ID());
-    } catch (Exception e) {
-      results.put("dbError","database Error");
-    }try {
+      // Initial load: Default to Annual Sub-Category view
+      List<List<SubCategory_VM>> breakdown = transactionDAO.getAnnualAnalysis(user.getUser_ID());
+
       if (breakdown.isEmpty()) {
-        results.put("dbError", "No data found");
-        req.setAttribute("pageTitle", "Pie Chart");
-        req.getRequestDispatcher("WEB-INF/Budget_App/PieChart.jsp").forward(req, resp);
-        return;
-      }
-      for (List<SubCategory_VM> category_vms : breakdown) {
-        for (int i = 0; i < category_vms.size(); i++) {
-          if (category_vms.get(i).getCategory_ID().equals("total in")) {
-            while (i < category_vms.size() - 1) {
-              SubCategory_VM temp = category_vms.get(i + 1);
-              category_vms.set(i + 1, category_vms.get(i));
-              category_vms.set(i, temp);
-              i++;
-            }
-          }
+        req.setAttribute("dbError", "No financial data found.");
+      } else {
+        List<Integer> yearRange = new ArrayList<>();
+        List<String> categoryNames = new ArrayList<>();
+
+        // Extract Metadata for sidebar and dropdowns
+        for (List<SubCategory_VM> yearList : breakdown) {
+          yearRange.add(yearList.get(0).getYear());
         }
-      }
-      for (List<SubCategory_VM> category_vms : breakdown) {
-        for (int i = 0; i < category_vms.size(); i++) {
-          if (category_vms.get(i).getCategory_ID().equals("total out")) {
-            while (i < category_vms.size() - 1) {
-              SubCategory_VM temp = category_vms.get(i + 1);
-              category_vms.set(i + 1, category_vms.get(i));
-              category_vms.set(i, temp);
-              i++;
-            }
-          }
+        for (SubCategory_VM cat : breakdown.get(0)) {
+          categoryNames.add(cat.getCategory_Name());
         }
+
+        ObjectMapper mapper = new ObjectMapper();
+        req.setAttribute("jsonBreakdown", mapper.writeValueAsString(breakdown));
+        req.setAttribute("Breakdown", breakdown); // For JSP checkbox loop
+        session.setAttribute("yearRange", yearRange);
+        session.setAttribute("Categories", categoryNames);
       }
 
-      for (List<SubCategory_VM> categories : breakdown) {
-        allYears.add(categories.get(0).getYear());
-      }
+      req.setAttribute("pageTitle", "Financial Analysis");
+      session.setAttribute("currentPage", req.getRequestURL().toString());
+      req.getRequestDispatcher("WEB-INF/Budget_App/PieChart.jsp").forward(req, resp);
 
-
-      for (SubCategory_VM category : breakdown.get(0)) {
-        allCategories.add(category.getCategory_ID());
-      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      resp.sendRedirect("budget_home?error=analysis_init_fail");
     }
-    catch (Exception e){
-      resp.sendRedirect("budget_home");
-      return;
-    }
-
-   // session.setAttribute("Breakdown", breakdown);
-    session.setAttribute("Categories",allCategories);
-    session.setAttribute("yearRange",allYears);
-
-    session.setAttribute("currentPage",req.getRequestURL());
-    req.setAttribute("pageTitle", "Pie Chart");
-
-    req.getRequestDispatcher("WEB-INF/Budget_App/PieChart.jsp").forward(req, resp);
   }
-
-
 }

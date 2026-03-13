@@ -150,44 +150,60 @@ public class TransactionDAO implements iTransactionDAO {
 
     return result;
   }
-
   @Override
-  public List<List<SubCategory_VM>> getMonthlyAnalysis(List<List<SubCategory_VM>> months, String user_ID, int year) throws SQLException {
-    List<List<SubCategory_VM>> result = new ArrayList<>();
-    int startingMonth = 0;
-    int loop = -1;
-    try (Connection connection = getConnection()) {
-      try (CallableStatement statement = connection.prepareCall("{CALL sp_total_Category_by_time_monthly(?,?)}")) {
-        statement.setString(1, user_ID);
-        statement.setInt(2, year);
-        try (ResultSet resultSet = statement.executeQuery()) {
-          while (resultSet.next()) {
-            int Month = resultSet.getInt(1);
-            String Category_ID = resultSet.getString(2);
-            int count = resultSet.getInt(3);
+  public List<List<SubCategory_VM>> getAnnualAnalysis(String user_ID) {
+    return executeAnalysis("{CALL sp_total_Category_by_year(?)}", stmt -> {
+      stmt.setString(1, user_ID);
+    });
+  }
+  @Override
+  public List<List<SubCategory_VM>> getMonthlyAnalysis(String user_ID, int year) {
+    return executeAnalysis("{CALL sp_total_Category_by_month(?, ?)}", stmt -> {
+      stmt.setString(1, user_ID);
+      stmt.setInt(2, year);
+    });
+  }
 
-            if (resultSet.wasNull()) {
-              count = 0;
-            }
-            Double amount = resultSet.getDouble(4);
-            if (resultSet.wasNull()) {
-              count = 0;
-              amount = 0d;
-            }
-            if (Month != startingMonth) {
-              result.add(new ArrayList<>());
-              startingMonth = Month;
-              loop++;
-            }
-            SubCategory_VM category = new SubCategory_VM(Category_ID, amount, count, Month);
-            result.get(loop).add(category);
+  // Helper to handle the "List of Lists" grouping and mapping
+  private List<List<SubCategory_VM>> executeAnalysis(String sql, StatementBinder binder) {
+    List<List<SubCategory_VM>> result = new ArrayList<>();
+    int currentPeriod = -1;
+    List<SubCategory_VM> currentPeriodList = null;
+
+    try (Connection connection = getConnection();
+         CallableStatement stmt = connection.prepareCall(sql)) {
+
+      binder.bind(stmt);
+
+      try (ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          SubCategory_VM vm = new SubCategory_VM();
+          vm.setYear(rs.getInt("period_val")); // Holds Year or Month
+          vm.setCategory_ID(rs.getString("subcategory_id"));
+          vm.setParentCategoryId(rs.getString("parent_category_id"));
+          vm.setCategory_Name(rs.getString("category_name"));
+          vm.setcolor_id(rs.getString("color_id"));
+          vm.setAmount(rs.getDouble("amount"));
+          vm.setCount(rs.getInt("count"));
+
+          if (vm.getYear() != currentPeriod) {
+            currentPeriodList = new ArrayList<>();
+            result.add(currentPeriodList);
+            currentPeriod = vm.getYear();
           }
-        } catch (Exception e) {
-          throw new RuntimeException(e);
+          currentPeriodList.add(vm);
         }
       }
+    } catch (Exception e) {
+      throw new RuntimeException("Analysis query failed", e);
     }
     return result;
+  }
+
+  // Small functional interface for the helper
+  @FunctionalInterface
+  interface StatementBinder {
+    void bind(CallableStatement stmt) throws SQLException;
   }
 
   @Override
@@ -211,6 +227,35 @@ public class TransactionDAO implements iTransactionDAO {
     } catch (SQLException e) {
       throw new RuntimeException("Could not retrieve Transactions. Try again later");
     }
+    return result;
+  }
+
+  @Override
+  public int applyAllLines(String userId, List<Saved_Search_Order_Line> savedSearchOrderLines) throws SQLException {
+    int result = 0;
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_assign_categories(?,?,?)}")) {
+          for (Saved_Search_Order_Line line : savedSearchOrderLines) {
+            statement.setString(1, userId);
+            statement.setString(2, line.getCategory_ID());
+
+            statement.setString(3, line.getSearch_Phrase());
+            statement.addBatch();
+          }
+          int[] results = statement.executeBatch();
+          for (int res : results) {
+            // SUCCESS_NO_INFO (-2) or rows affected > 0
+            if (res > 0 || res == CallableStatement.SUCCESS_NO_INFO) {
+              result+=res;
+            }
+          }
+        } catch (SQLException e) {
+
+        }
+      }
+    }
+
     return result;
   }
 
@@ -270,210 +315,141 @@ public class TransactionDAO implements iTransactionDAO {
 
   public List<Transaction> getTransactionFromFile(File uploadedFile, String type) {
     List<Transaction> result = new ArrayList<>();
-    BufferedReader reader;
 
-    try {
-      reader = new BufferedReader(new FileReader(uploadedFile));
+    try (BufferedReader reader = new BufferedReader(new FileReader(uploadedFile))) {
       String line = reader.readLine();
-      ArrayList partsname = new ArrayList(List.of(line.split("\t")));
+      if (line == null) return result;
+
+      String[] headerParts = line.split("\t");
       String accountNumber = "";
-      if (partsname.get(0).equals("Account Type: Checking")) {
+
+      // Determine Type
+      if (headerParts[0].equals("Account Type: Checking")) {
         type = "Altra";
-      } else if (partsname.get(0).equals("Custom")) {
+      } else if (headerParts[0].equals("Custom")) {
         type = "custom";
-        accountNumber = (String) partsname.get(2);
-      }
-      else if (partsname.get(1).equals("Activity")){
-        type="HSA";
-      }
-      else {
+        accountNumber = headerParts.length > 2 ? headerParts[2] : "";
+      } else if (headerParts.length > 1 && headerParts[1].equals("Activity")) {
+        type = "HSA";
+      } else {
         type = "GreenState";
       }
-      //first line is just heading data
+
+      // Process Lines
       line = reader.readLine();
-      if (type.equals("GreenState")) {
-        while (line != null) {
-          Transaction _transaction = readGreenStateLine(line);
-          result.add(_transaction);
-          // read next line
+      while (line != null) {
+        // Skip empty lines to prevent unnecessary parsing errors
+        if (line.trim().isEmpty()) {
           line = reader.readLine();
+          continue;
         }
-      }
-      else if (type.equals("custom")) {
-        while (line != null) {
-          Transaction _transaction = readCustomLine(line,accountNumber);
-          result.add(_transaction);
-          // read next line
-          line = reader.readLine();
-        }
-      }
 
-      else if (type.equals("Altra")) {
-
-        ArrayList AcctNum = new ArrayList(List.of(line.split("\t")));
-        ArrayList AcctNum2 = new ArrayList(List.of(((String) AcctNum.get(0)).split(":")));
-        String Account_Num = (String) AcctNum2.get(1);
-        line = reader.readLine();
-        line = reader.readLine();
-        line = reader.readLine();
-        line = reader.readLine();
-
-        while (line != null) {
-
-          Transaction _transaction = readAltraLine(line,Account_Num);
-          result.add(_transaction);
-          // read next line
-          line = reader.readLine();
-        }
-      }
-      else if (type.equals("HSA")){
-        int count = 0;
-        while (line != null) {
-
-          if (count>139){
-            int y =0;
+        Transaction _transaction = null;
+        try {
+          if (type.equals("GreenState")) {
+            _transaction = readGreenStateLine(line);
+          } else if (type.equals("custom")) {
+            _transaction = readCustomLine(line, accountNumber);
+          } else if (type.equals("Altra")) {
+            if (line.contains("Account:")) {
+              accountNumber = line.split(":")[1].trim();
+              for (int i = 0; i < 4; i++) line = reader.readLine();
+            }
+            if (line != null) _transaction = readAltraLine(line, accountNumber);
+          } else if (type.equals("HSA")) {
+            _transaction = readHSALine(line);
           }
-          Transaction _transaction = readHSALine(line);
-          result.add(_transaction);
-          count ++;
-          // read next line
-          line = reader.readLine();
-
+        } catch (Exception e) {
+          // LOG THE ERROR: Use System.err or a logger so you know which line failed
+          System.err.println("Skipping malformed line in " + type + " export: " + line);
+          _transaction = null; // Ensure transaction is null so it's not added to result
         }
+
+        // Only add if parsing was successful
+        if (_transaction != null) {
+          result.add(_transaction);
+        }
+
+        line = reader.readLine();
       }
-
-      reader.close();
-
-    } catch (Exception e) {
-      throw new RuntimeException(e.getMessage() + "\n\nCould not add Transactions. Try again later");
+    } catch (IOException e) {
+      throw new RuntimeException("File access error: " + e.getMessage());
     }
     return result;
   }
 
   private Transaction readGreenStateLine(String line) throws ParseException {
-    ArrayList parts = new ArrayList(List.of(line.split("\t")));
-    String Transaction_ID = "";
-    String Account_Num = (String) parts.get(0);
-    String userID = "";
-    //Date Post_Date = new Date(2024, 5, 5);
-    //Date Post_Date = (Date) parts.get(2);
-    String Post_Date_String = ((String) parts.get(1));
-    java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(Post_Date_String);
+    String[] parts = line.split("\t");
+    String accountNumber = parts[0];
+    java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(parts[1]);
+    java.sql.Date postDate = new java.sql.Date(utilDate.getTime());
 
-    java.sql.Date Post_Date = new java.sql.Date(utilDate.getTime());
-    Integer Check_No = 0;
-    if (parts.get(2) != null && !parts.get(2).equals("")) {
-      Check_No = Integer.valueOf((String) parts.get(2));
-    }
+    Integer checkNo = (parts.length > 2 && !parts[2].isEmpty()) ? Integer.valueOf(parts[2]) : 0;
+    String description = parts[3];
 
-    String Description = (String) parts.get(3);
-    Double debitAmount = 0d;
-    Double creditAmount = 0d;
-    if (parts.get(5).equals("")) {
-      creditAmount = 0d;
-    } else {
-      creditAmount = Double.valueOf((String) parts.get(5));
-    }
-    if (parts.get(4).equals("")) {
-      debitAmount = 0d;
-    } else {
-      debitAmount = Double.valueOf((String) parts.get(4));
-    }
-    Double Amount = creditAmount - debitAmount;
-    String Type = Amount > 0 ? "Credit" : "Debit";
-    String Status = (String) parts.get(6);
-    Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", Account_Num, Post_Date, Check_No, Description, Amount, Type, Status, false);
-    return _transaction;
+    double debit = (parts.length > 4 && !parts[4].isEmpty()) ? Double.parseDouble(parts[4]) : 0;
+    double credit = (parts.length > 5 && !parts[5].isEmpty()) ? Double.parseDouble(parts[5]) : 0;
+
+    // Logic: If there is a debit, use that; otherwise credit. Store as positive.
+    double amount = Math.abs(credit != 0 ? credit : debit);
+    String type = (credit != 0) ? "Credit" : "Debit";
+
+    return new Transaction("", "", "undefined", accountNumber, postDate, checkNo, description, amount, type, "Posted", false);
   }
 
   private Transaction readCustomLine(String line, String accountNumber) throws ParseException {
-    ArrayList parts = new ArrayList(List.of(line.split("\t")));
-    String Transaction_ID = "";
+    String[] parts = line.split("\t");
+    java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(parts[1]);
+    java.sql.Date postDate = new java.sql.Date(utilDate.getTime());
 
-    String userID = "";
-
-    String Post_Date_String = ((String) parts.get(1));
-    java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(Post_Date_String);
-
-    java.sql.Date Post_Date = new java.sql.Date(utilDate.getTime());
-    Integer Check_No = 0;
-
-    String Description = (String) parts.get(2);
-    if (Description != null && Description.startsWith("Check ")) {
-      ArrayList descParts = new ArrayList(List.of(Description.split(" ")));
-      Check_No = Integer.valueOf((String) descParts.get(1));
+    String description = parts[2];
+    Integer checkNo = 0;
+    if (description.startsWith("Check ")) {
+      checkNo = Integer.valueOf(description.split(" ")[1]);
     }
-    Double debitAmount = 0d;
-    Double creditAmount = 0d;
-    if (parts.get(3).equals("")) {
-      creditAmount = 0d;
-    } else {
-      String creditString = (String) parts.get(3);
-      creditString = creditString.replace(",", "");
-      creditString = creditString.replace("\"", "");
-      creditAmount = Double.valueOf(creditString);
-    }
-    if (parts.get(4).equals("")) {
-      debitAmount = 0d;
-    } else {
-      String debitString = (String) parts.get(4);
-      debitString = debitString.replace(",", "");
-      debitString = debitString.replace("\"", "");
-      try {
-        debitAmount = Double.valueOf(debitString);
-      } catch (Exception e) {
-        int x = 0;
-      }
-    }
-    Double Amount = creditAmount + debitAmount;
-    String Type = Amount > 0 ? "Credit" : "Debit";
-    String Status = "Posted";
-    Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", accountNumber, Post_Date, Check_No, Description, Amount, Type, Status, false);
-    return _transaction;
+
+    String creditStr = parts[3].replaceAll("[,\"]", "");
+    String debitStr = parts[4].replaceAll("[,\"]", "");
+
+    double credit = creditStr.isEmpty() ? 0 : Double.parseDouble(creditStr);
+    double debit = debitStr.isEmpty() ? 0 : Double.parseDouble(debitStr);
+
+    double amount = Math.abs(credit + debit); // Ensure positive
+    String type = (credit != 0) ? "Credit" : "Debit";
+
+    return new Transaction("", "", "undefined", accountNumber, postDate, checkNo, description, amount, type, "Posted", false);
   }
-  private Transaction readAltraLine(String line, String Account_Num) throws ParseException {
-    ArrayList parts = new ArrayList(List.of(line.split("\t")));
-    String userID = "";
-    String Transaction_ID = "";
-    String Post_Date_String = ((String) parts.get(1));
-    java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(Post_Date_String);
-    java.sql.Date Post_Date = new java.sql.Date(utilDate.getTime());
-    Integer Check_No = 0;
-    if (parts.size() > 6 && parts.get(6) != null && !parts.get(6).equals("")) {
-      Check_No = Integer.valueOf((String) parts.get(6));
+
+  private Transaction readAltraLine(String line, String accountNumber) throws ParseException {
+    String[] parts = line.split("\t");
+    java.sql.Date postDate = null;
+    try {
+      java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(parts[1]);
+       postDate = new java.sql.Date(utilDate.getTime());
+    } catch(Exception e) {
+      return null;
     }
 
-    String Description = (String) parts.get(3);
 
-    Double Amount = Double.valueOf((String) parts.get(4));
-    String Type = Amount > 0 ? "Credit" : "Debit";
-    String Status = "Posted";
-    Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", Account_Num, Post_Date, Check_No, Description, Amount, Type, Status, false);
-    return _transaction;
+    Integer checkNo = (parts.length > 6 && !parts[6].isEmpty()) ? Integer.valueOf(parts[6]) : 0;
+    String description = parts[3];
+    double amount = Math.abs(Double.parseDouble(parts[4])); // Ensure positive
+
+    return new Transaction("", "", "undefined", accountNumber, postDate, checkNo, description, amount, "Unknown", "Posted", false);
   }
 
   private Transaction readHSALine(String line) throws ParseException {
-    ArrayList parts = new ArrayList(List.of(line.split("\t")));
-    String Transaction_ID = "";
-    String Account_Num = (String) parts.get(0);
-    String userID = "";
-    String Post_Date_String = ((String) parts.get(3));
-    java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(Post_Date_String);
-    java.sql.Date Post_Date = new java.sql.Date(utilDate.getTime());
-    Integer Check_No = 0;
-    String Description = (String) parts.get(1);
-    String _amount = (String)parts.get(4);
-    _amount= _amount.replace("$","");
-    //_amount= _amount.replace("","");
-    _amount= _amount.replace("(","-");
-    _amount= _amount.replace(")","");
-    _amount= _amount.replace(",","");
-    _amount= _amount.replace("\"","");
-    Double Amount = Double.valueOf(_amount);
-    String Type = Amount > 0 ? "Credit" : "Debit";
-    String Status = (String) parts.get(5);
-    Transaction _transaction = new Transaction(Transaction_ID, userID, "undefined", Account_Num, Post_Date, Check_No, Description, Amount, Type, Status, false);
-    return _transaction;
+    String[] parts = line.split("\t");
+    java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(parts[3]);
+    java.sql.Date postDate = new java.sql.Date(utilDate.getTime());
+
+    String description = parts[1];
+    String amountStr = parts[4].replaceAll("[\\$,\\\"\\)]", "").replace("(", "-").trim();
+
+    double amount = Math.abs(Double.parseDouble(amountStr)); // Force positive
+    String status = parts.length > 5 ? parts[5] : "Posted";
+
+    return new Transaction("", "", "undefined", parts[0], postDate, 0, description, amount, "HSA", status, false);
   }
   public int add(Transaction _transaction) {
     int numRowsAffected = 0;
@@ -504,33 +480,49 @@ public class TransactionDAO implements iTransactionDAO {
   public int addBatch(List<Transaction> _transactions, String user_id) {
     int added = 0;
 
-    boolean result = true;
-    int index = 0;
     try (Connection connection = getConnection()) {
-      if (connection != null) {
-        for (Transaction _transaction : _transactions) {
+      if (connection == null) return 0;
 
-          try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Transaction( ?,?, ?, ?, ?, ?, ?, ?)}")) {
-            statement.setString(1, user_id);
-            //statement.setString(2, "Uncategorized");
-            statement.setString(2, _transaction.getBank_Account_ID());
-            statement.setDate(3, (Date) _transaction.getPost_Date());
-            statement.setInt(4, _transaction.getCheck_No());
-            statement.setString(5, _transaction.getDescription());
-            statement.setDouble(6, _transaction.getAmount());
-            statement.setString(7, _transaction.getType());
-            statement.setString(8, _transaction.getStatus());
-            int numRowsAffected = statement.executeUpdate();
-            added += numRowsAffected;
+      // Keep AutoCommit TRUE so successful rows stay in the DB
+      // even if others fail.
 
-          } catch (SQLException e) {
-            continue;
-          }
-          index++;
+      try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_transaction(?,?,?,?,?,?,?,?)}")) {
+
+        for (Transaction t : _transactions) {
+          statement.setString(1, user_id);
+          statement.setString(2, t.getBank_Account_ID());
+          statement.setDate(3, new java.sql.Date(t.getPost_Date().getTime()));
+          statement.setInt(4, t.getCheck_No());
+          statement.setString(5, t.getDescription());
+          statement.setDouble(6, t.getAmount());
+          statement.setString(7, t.getType());
+          statement.setString(8, t.getStatus());
+
+          statement.addBatch();
         }
+
+        int[] results = statement.executeBatch();
+
+        for (int res : results) {
+          // SUCCESS_NO_INFO (-2) or rows affected > 0
+          if (res > 0 || res == CallableStatement.SUCCESS_NO_INFO) {
+            added++;
+          }
+        }
+
+      } catch (BatchUpdateException e) {
+        // This catches errors (like duplicates) while allowing
+        // the driver to attempt the rest of the batch.
+        int[] updateCounts = e.getUpdateCounts();
+        for (int res : updateCounts) {
+          if (res > 0 || res == CallableStatement.SUCCESS_NO_INFO) {
+            added++;
+          }
+        }
+        System.err.println("Some transactions were skipped due to errors: " + e.getMessage());
       }
     } catch (SQLException e) {
-      throw new RuntimeException("Could not add Transaction. Try again later");
+      throw new RuntimeException("Database connection error", e);
     }
     return added;
 
@@ -618,44 +610,9 @@ public class TransactionDAO implements iTransactionDAO {
     }
     return result;
   }
-  //getAnalysis
 
-  public List<List<SubCategory_VM>> getAnalysis(List<List<SubCategory_VM>> years, String user_ID) throws SQLException {
-    List<List<SubCategory_VM>> result = new ArrayList<>();
-    int startingYear = 0;
-    int loop = -1;
-    try (Connection connection = getConnection()) {
-      try (CallableStatement statement = connection.prepareCall("{CALL sp_total_Category_by_time(?)}")) {
-        statement.setString(1, user_ID);
-        try (ResultSet resultSet = statement.executeQuery()) {
-          while (resultSet.next()) {
-            int Year = resultSet.getInt(1);
-            String Category_ID = resultSet.getString(2);
-            int count = resultSet.getInt(3);
 
-            if (resultSet.wasNull()) {
-              count = 0;
-            }
-            Double amount = resultSet.getDouble(4);
-            if (resultSet.wasNull()) {
-              count = 0;
-              amount = 0d;
-            }
-            if (Year != startingYear) {
-              result.add(new ArrayList<>());
-              startingYear = Year;
-              loop++;
-            }
-            SubCategory_VM category = new SubCategory_VM(Category_ID, amount, count, Year);
-            result.get(loop).add(category);
-          }
-        } catch (Exception e) {
-          throw new RuntimeException(e);
-        }
-      }
-    }
-    return result;
-  }
+
 
   public int getTransactionCountByUser(String userID, String category, int year) throws SQLException {
     int result = 0;
@@ -813,6 +770,17 @@ public class TransactionDAO implements iTransactionDAO {
     }
 
     return result;
+  }
+
+  public List<List<SubCategory_VM>> getSuperAnnualAnalysis(String user_ID) {
+    return executeAnalysis("{CALL sp_total_SuperCategory_by_year(?)}", stmt -> stmt.setString(1, user_ID));
+  }
+
+  public List<List<SubCategory_VM>> getSuperMonthlyAnalysis(String user_ID, int year) {
+    return executeAnalysis("{CALL sp_total_SuperCategory_by_month(?, ?)}", stmt -> {
+      stmt.setString(1, user_ID);
+      stmt.setInt(2, year);
+    });
   }
 }
  

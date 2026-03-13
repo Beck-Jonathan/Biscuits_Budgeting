@@ -37,8 +37,8 @@
     <script type="module" src="js/budget/tvmCalculator.js"></script>
 </c:if>
 
-<c:if test="${pageTitle eq 'Pie Chart'}">
-    <script src="js/budget/pieChartMonth.js"></script>
+<c:if test="${pageTitle eq 'Financial Analysis'}">
+    <script src="js/budget/budget_analysis.js"></script>
 </c:if>
 
 <%-- <c:if test="${pageTitle eq 'Pie Chart Month'}">
@@ -60,10 +60,12 @@
 </c:if>
 
 <c:if test="${pageTitle eq 'Add Category' || pageTitle eq 'Edit a Category'}">
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
     <script src="js/budget/AddCategory.js"></script>
+
 </c:if>
 
-<c:if test="${pageTitle eq 'All Categories'}">
+<c:if test="${pageTitle eq 'All Categories' }">
     <script src="js/budget/AllCategories.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
 </c:if>

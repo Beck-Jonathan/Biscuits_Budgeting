@@ -44,6 +44,12 @@ public class SubCategory implements Comparable<SubCategory> {
    * throws IllegalArgumentException if Category_ID under 3 characters or longer than 100 characters
    */
   public void setCategory_ID(String Category_ID) {
+
+    if (Category_ID.toLowerCase().contains("total")||Category_ID.toLowerCase().contains("system_out") ||Category_ID.toLowerCase().contains("system_in")) {
+      this.Category_ID = Category_ID;
+      return;
+    }
+
     if(Category_ID.length()<36){
       throw new IllegalArgumentException("category_id is too short.");
     }
@@ -67,6 +73,11 @@ public class SubCategory implements Comparable<SubCategory> {
    * throws IllegalArgumentException if parent_category_id under 3 characters or longer than 36 characters
    */
   public void setParentCategoryId(String parent_category_id) {
+
+    if (parent_category_id.toLowerCase().contains("system")||parent_category_id.toLowerCase().contains("system_in")||parent_category_id.toLowerCase().contains("system_out")) {
+      this.parentCategoryId = parent_category_id;
+      return;
+    }
 
     if(parent_category_id.length()<36){
       throw new IllegalArgumentException("parent_category_id is too short.");
