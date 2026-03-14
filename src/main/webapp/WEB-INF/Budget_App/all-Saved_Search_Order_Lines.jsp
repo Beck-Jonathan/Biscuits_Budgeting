@@ -22,7 +22,7 @@ Create the JSP  For Viewing All of The  Saved_Search_Order_Line table
                         <th scope="col">Edit/Create</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="searchLineTable">
                     <c:forEach items="${saved_search_order.saved_Search_Order_Lines}" var="saved_search_order_line">
                         <tr>
                             <form method="post" action="${appURL}/editSaved_Search_Order_Line" id = "editSaved_Search_Order_Line${fn:escapeXml(saved_search_order_line.line_No)}"  >
@@ -107,6 +107,8 @@ Create the JSP  For Viewing All of The  Saved_Search_Order_Line table
 
                         <td>
                             <input type="hidden" name="inputsaved_search_order_lineSaved_Search_Order_ID" value="${fn:escapeXml(saved_search_order.saved_Search_Order_ID)}" />
+                            <input type="hidden" name="ajax" value="true" />
+
                             <div class="d-grid"><button class="btn btn-orange mb-0" type="submit">Create Saved_Search_Order_Line  </button></div>
                             <c:if test="${not empty results.dbStatus}"
                             ><p>${results.dbStatus}</p>

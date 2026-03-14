@@ -55,30 +55,37 @@
                 </c:forEach>
 
                 <div class="col mb-3" id="add-pill-wrapper">
-                    <div class="category-pill shadow-sm border border-primary border-dashed rounded-pill bg-light d-flex align-items-center p-1"
-                         style="border-style: dashed !important; border-width: 2px !important;">
+                    <div id="new-pill-container"
+                         class="category-pill shadow-sm border border-primary border-dashed rounded-pill bg-light d-flex align-items-center p-1"
+                         style="border-style: dashed !important; border-width: 2px !important; border-left: 5px solid #0d6efd !important; transition: all 0.2s ease;">
 
                         <div class="ms-1">
+                            <label for="new-category-color" id="new-color-preview"
+                                   class="rounded-circle border d-block"
+                                   style="background-color: #0d6efd; width: 28px; height: 28px; cursor: pointer; margin: 0;">
+                            </label>
                             <input type="color" id="new-category-color"
-                                   class="form-control-color border-0 bg-transparent"
+                                   class="d-none"
                                    value="#0d6efd"
-                                   style="width: 28px; height: 28px; cursor: pointer; padding:0;">
+                                   oninput="updateAddPillColor(this.value)">
                         </div>
 
                         <div class="flex-grow-1 px-2">
                             <input type="text" id="new-category-name"
                                    class="form-control form-control-sm border-0 bg-transparent fw-bold"
                                    placeholder="Add new..."
-                                   style="box-shadow: none; font-size: 0.9rem;"
+                                   style="box-shadow: none; font-size: 0.9rem; padding: 0;"
                                    onkeydown="if(event.key==='Enter') addNewCategory()">
                         </div>
 
                         <div class="pe-2">
-                            <button onclick="addNewCategory()" class="btn btn-primary btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 26px; height: 26px;">
-                                <span>+</span>
+                            <button onclick="addNewCategory()" class="btn btn-primary btn-sm rounded-circle d-flex align-items-center justify-content-center"
+                                    style="width: 26px; height: 26px; padding: 0; min-width: 26px;">
+                                <span style="line-height: 1; font-weight: bold;">+</span>
                             </button>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
         </div>

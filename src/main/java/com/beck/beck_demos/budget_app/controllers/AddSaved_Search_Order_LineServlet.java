@@ -83,6 +83,14 @@ public class AddSaved_Search_Order_LineServlet extends HttpServlet {
     if (_Is_Active!=null) {
       _Is_Active=_Is_Active.trim();
     }
+
+    Boolean ajax = false;
+    try {
+      ajax = Boolean.parseBoolean(req.getParameter("ajax"));
+    }
+    catch (Exception e) {
+      ajax=false;
+    }
     Map<String, String> results = new HashMap<>();
     results.put("Saved_Search_Order_ID",_Saved_Search_Order_ID);
     results.put("Line_No",_Line_No);
@@ -117,7 +125,7 @@ public class AddSaved_Search_Order_LineServlet extends HttpServlet {
     } catch(Exception e) {results.put("saved_search_order_lineSearch_Phraseerror", e.getMessage());
       errors++;
     }
-    int result=0;
+    Integer result=0;
     if (errors==0){
       try{
         result=saved_search_orderDAO.addLine(saved_search_order_line);
@@ -125,12 +133,22 @@ public class AddSaved_Search_Order_LineServlet extends HttpServlet {
         results.put("dbError","Database Error");
       }
       if (result>0){
+        if (ajax){
+          resp.getWriter().write(result.toString());
+          resp.getWriter().flush();
+          return;
+        }
         results.put("dbStatus","Saved_Search_Order_Line Added");
         req.setAttribute("results",results);
 
         resp.sendRedirect("editSaved_Search_Order?saved_search_orderid="+_Saved_Search_Order_ID+"&mode=view"); //need to fix this bit
         return;
       } else {
+        if (ajax){
+          resp.getWriter().write("-1");
+          resp.getWriter().flush();
+          return;
+        }
         results.put("dbStatus","Saved_Search_Order_Line Not Added");
         req.setAttribute("results", results);
         resp.sendRedirect(req.getContextPath()+"/editSaved_Search_Order?saved_search_orderid="+_Saved_Search_Order_ID+"&mode=view");

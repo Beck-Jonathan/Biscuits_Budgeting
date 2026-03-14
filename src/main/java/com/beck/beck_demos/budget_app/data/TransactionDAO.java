@@ -315,62 +315,41 @@ public class TransactionDAO implements iTransactionDAO {
 
   public List<Transaction> getTransactionFromFile(File uploadedFile, String type) {
     List<Transaction> result = new ArrayList<>();
+    String accountNumber = "";
 
     try (BufferedReader reader = new BufferedReader(new FileReader(uploadedFile))) {
-      String line = reader.readLine();
-      if (line == null) return result;
+      String line;
+      while ((line = reader.readLine()) != null) {
+        line = line.trim();
+        if (line.isEmpty()) continue;
 
-      String[] headerParts = line.split("\t");
-      String accountNumber = "";
-
-      // Determine Type
-      if (headerParts[0].equals("Account Type: Checking")) {
-        type = "Altra";
-      } else if (headerParts[0].equals("Custom")) {
-        type = "custom";
-        accountNumber = headerParts.length > 2 ? headerParts[2] : "";
-      } else if (headerParts.length > 1 && headerParts[1].equals("Activity")) {
-        type = "HSA";
-      } else {
-        type = "GreenState";
-      }
-
-      // Process Lines
-      line = reader.readLine();
-      while (line != null) {
-        // Skip empty lines to prevent unnecessary parsing errors
-        if (line.trim().isEmpty()) {
-          line = reader.readLine();
+        // --- 1. Detect Account Number & Type ---
+        if (line.startsWith("Account Type:")) {
+          type = "Altra";
+          continue; // Skip header lines
+        } else if (line.startsWith("Account Number:")) {
+          accountNumber = line.split(":")[1].trim();
           continue;
+        } else if (line.startsWith("Transaction Type") || line.startsWith("Date Range:")) {
+          continue; // Skip the column headers line
         }
 
+        // --- 2. Process Data Lines ---
         Transaction _transaction = null;
         try {
-          if (type.equals("GreenState")) {
+          if ("Altra".equals(type)) {
+            _transaction = readAltraLine(line, accountNumber);
+          } else if ("GreenState".equals(type)) {
             _transaction = readGreenStateLine(line);
-          } else if (type.equals("custom")) {
-            _transaction = readCustomLine(line, accountNumber);
-          } else if (type.equals("Altra")) {
-            if (line.contains("Account:")) {
-              accountNumber = line.split(":")[1].trim();
-              for (int i = 0; i < 4; i++) line = reader.readLine();
-            }
-            if (line != null) _transaction = readAltraLine(line, accountNumber);
-          } else if (type.equals("HSA")) {
-            _transaction = readHSALine(line);
           }
+          // ... add your other types here ...
         } catch (Exception e) {
-          // LOG THE ERROR: Use System.err or a logger so you know which line failed
-          System.err.println("Skipping malformed line in " + type + " export: " + line);
-          _transaction = null; // Ensure transaction is null so it's not added to result
+          System.err.println("Skipping line in " + type + ": " + line);
         }
 
-        // Only add if parsing was successful
         if (_transaction != null) {
           result.add(_transaction);
         }
-
-        line = reader.readLine();
       }
     } catch (IOException e) {
       throw new RuntimeException("File access error: " + e.getMessage());
@@ -420,22 +399,34 @@ public class TransactionDAO implements iTransactionDAO {
     return new Transaction("", "", "undefined", accountNumber, postDate, checkNo, description, amount, type, "Posted", false);
   }
 
-  private Transaction readAltraLine(String line, String accountNumber) throws ParseException {
+  private Transaction readAltraLine(String line, String accountNumber) {
+    // Split by tab, but handle multiple tabs as one if necessary
     String[] parts = line.split("\t");
-    java.sql.Date postDate = null;
+
+    // Safety check: Altra lines need at least Date, Description, and Amount
+    if (parts.length < 5) return null;
+
     try {
-      java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(parts[1]);
-       postDate = new java.sql.Date(utilDate.getTime());
-    } catch(Exception e) {
-      return null;
+      // Date is parts[1]
+      java.util.Date utilDate = new SimpleDateFormat("M/d/yyyy").parse(parts[1].trim());
+      java.sql.Date postDate = new java.sql.Date(utilDate.getTime());
+
+      // Description is parts[2] (Transaction Type is [0])
+      String description = parts[2].trim() + " " + parts[3].trim();
+
+      // Amount is parts[4]
+      double rawAmount = Double.parseDouble(parts[4].trim());
+      String transType = (rawAmount < 0) ? "Debit" : "Credit";
+      double amount = Math.abs(rawAmount);
+
+      // Check number is parts[6] if it exists
+      Integer checkNo = (parts.length > 6 && !parts[6].trim().isEmpty()) ?
+          Integer.valueOf(parts[6].trim()) : 0;
+
+      return new Transaction("", "", "undefined", accountNumber, postDate, checkNo, description, amount, transType, "Posted", false);
+    } catch (Exception e) {
+      return null; // Let the loop handle the skip
     }
-
-
-    Integer checkNo = (parts.length > 6 && !parts[6].isEmpty()) ? Integer.valueOf(parts[6]) : 0;
-    String description = parts[3];
-    double amount = Math.abs(Double.parseDouble(parts[4])); // Ensure positive
-
-    return new Transaction("", "", "undefined", accountNumber, postDate, checkNo, description, amount, "Unknown", "Posted", false);
   }
 
   private Transaction readHSALine(String line) throws ParseException {

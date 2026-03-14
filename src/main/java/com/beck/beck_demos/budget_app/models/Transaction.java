@@ -185,7 +185,7 @@ public class Transaction implements Comparable<Transaction> {
    * throws IllegalArgumentException if Description under 3 characters or longer than 255 characters
    */
   public void setDescription(String Description) {
-    Description = Description.replaceAll("[^A-Za-z0-9 - ]","");
+
     if(Description.length()<4){
       throw new IllegalArgumentException("Description is too short.");
     }

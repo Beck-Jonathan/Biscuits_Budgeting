@@ -12,6 +12,23 @@ Create the JSP  For Viewing All of The  Transaction table
             Add Category   <a href="addTransactionCategory">Add</a> <br/>
             search transactions <a href="search_transaction">search</a> <br/>
             Reverse order <a href="${appURL}/all-Transactions?sort=${sort}&direction=${direction}&category=${category}&year=${year}&reverse=true">reverse</a><br/>
+
+            <div id="searchFilter">
+                <form method="get" action="${appURL}/all-Transactions" id = "all-Transactions" >
+                <select   name="category">
+                    <option value="" >
+                        All
+                    </option>
+                    <c:forEach items="${Categories}" var="category" >
+                        <option value="${category.category_ID}" ${fn:toLowerCase(category.category_Name) == 'uncategorized' ? 'selected' : ''}>
+                                ${category.category_Name}
+                        </option>
+                    </c:forEach>
+                </select>
+                    <button>submit</button>
+                </form>
+            </div>
+
             <c:if test="${Transactions.size() > 0}">
 
                 <div >

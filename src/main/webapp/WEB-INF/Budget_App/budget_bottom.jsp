@@ -27,8 +27,9 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
-<script type="text/javascript" src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
-
+ <script type="text/javascript" src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
+<script src="https://unpkg.com/highcharts@11/highcharts.js"></script>
+<script src="https://unpkg.com/highcharts@11/modules/accessibility.js"></script>
 <script src="js/budget/site.js"></script>
 
 
@@ -98,6 +99,10 @@
 
 <c:if test="${pageTitle eq 'All Budgets'}">
     <script src="js/budget/allBudgets.js"></script>
+</c:if>
+
+<c:if test="${pageTitle eq 'Edit Saved_Search_Order'}">
+    <script src="js/budget/EditSSO.js"></script>
 </c:if>
 
 

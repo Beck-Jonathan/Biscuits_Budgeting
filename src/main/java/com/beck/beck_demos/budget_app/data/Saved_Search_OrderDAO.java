@@ -214,7 +214,8 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
 
   @Override
   public int addLine(Saved_Search_Order_Line _saved_search_order_line) throws SQLException {
-    int numRowsAffected=0;try (Connection connection = getConnection()) {
+    int newLineNo=0
+        ;try (Connection connection = getConnection()) {
       if (connection != null) {
         try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Saved_Search_Order_Line( ?, ?, ?, ?, ?)}")){
           statement.setString(1,_saved_search_order_line.getSaved_Search_Order_ID());
@@ -222,16 +223,17 @@ public class Saved_Search_OrderDAO implements iSaved_Search_OrderDAO {
           statement.setString(3,_saved_search_order_line.getCategory_ID());
           statement.setString(4,_saved_search_order_line.getUser_ID());
           statement.setString(5,_saved_search_order_line.getSearch_Phrase());
-          numRowsAffected = statement.executeUpdate();
-          if (numRowsAffected == 0) {
-            throw new RuntimeException("Could not add Saved_Search_Order_Line. Try again later");
+          try (ResultSet rs = statement.executeQuery()) {
+            if (rs.next()) {
+              newLineNo = rs.getInt(1); // Grabs the first column of the result
+            }
           }
         }
       }
     } catch (SQLException e) {
       throw new RuntimeException("Could not add Saved_Search_Order_Line. Try again later");
     }
-    return numRowsAffected;
+    return newLineNo;
   }
 
   @Override

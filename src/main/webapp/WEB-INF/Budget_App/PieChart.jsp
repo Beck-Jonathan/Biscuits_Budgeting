@@ -32,10 +32,18 @@
                 </select>
             </div>
 
-            <div class="budget-panel shadow-sm">
-                <div class="panel-header">Filters</div>
-                <div class="panel-body p-0" style="max-height: 400px; overflow-y: auto;">
-                    <ul class="category-list p-0 m-0" id="categoryList"></ul>
+            <div class="budget-panel shadow-sm d-flex flex-column" style="max-height: 500px;">
+                <div class="panel-header d-flex justify-content-between align-items-center bg-primary text-white p-2">
+                    <span class="small fw-bold text-uppercase">Filters</span>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-xxs btn-outline-light py-0 px-2" id="selectAll" style="font-size: 0.65rem;">ALL</button>
+                        <button type="button" class="btn btn-xxs btn-outline-light py-0 px-2" id="deselectAll" style="font-size: 0.65rem;">NONE</button>
+                    </div>
+                </div>
+
+                <div class="panel-body p-0" style="overflow-y: auto; overflow-x: hidden; flex-grow: 1;">
+                    <ul class="category-list p-0 m-0 list-unstyled" id="categoryList">
+                    </ul>
                 </div>
             </div>
         </div>
