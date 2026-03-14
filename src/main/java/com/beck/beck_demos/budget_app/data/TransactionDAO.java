@@ -185,6 +185,8 @@ public class TransactionDAO implements iTransactionDAO {
           vm.setcolor_id(rs.getString("color_id"));
           vm.setAmount(rs.getDouble("amount"));
           vm.setCount(rs.getInt("count"));
+          vm.setTransactionType(rs.getString("transaction_type"));
+
 
           if (vm.getYear() != currentPeriod) {
             currentPeriodList = new ArrayList<>();

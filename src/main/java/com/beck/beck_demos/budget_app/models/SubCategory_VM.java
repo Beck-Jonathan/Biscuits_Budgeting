@@ -19,6 +19,16 @@ public class SubCategory_VM extends SubCategory {
 
   private int year;
 
+  private String transactionType; // <--- NEW FIELD
+
+  public String getTransactionType() {
+    return transactionType;
+  }
+
+  public void setTransactionType(String transactionType) {
+    this.transactionType = transactionType;
+  }
+
   public SubCategory_VM() {
 
   }

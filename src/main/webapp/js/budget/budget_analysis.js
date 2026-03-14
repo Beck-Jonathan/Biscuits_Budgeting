@@ -3,19 +3,19 @@ $(document).ready(function() {
     let mode = "0";  // 0=Annual, 1=Monthly
     let level = "0"; // 0=Sub, 1=Super
 
-    // --- New Select/Deselect Listeners ---
+    // --- 1. Select/Deselect All Listeners ---
 
-// Select All
     $(document).on('click', '#selectAll', function() {
         $('.cat-check').prop('checked', true);
-        renderCharts(); // Update charts immediately
+        renderCharts();
     });
 
-// Deselect All
     $(document).on('click', '#deselectAll', function() {
         $('.cat-check').prop('checked', false);
-        renderCharts(); // Update charts immediately
+        renderCharts();
     });
+
+    // --- 2. Sidebar Population ---
 
     const updateSidebar = () => {
         const list = $('#categoryList').empty();
@@ -35,6 +35,8 @@ $(document).ready(function() {
         });
     };
 
+    // --- 3. Chart Rendering Logic ---
+
     const renderCharts = () => {
         if (!currentData || currentData.length === 0) return;
 
@@ -45,28 +47,33 @@ $(document).ready(function() {
         let trendSeries = [];
         let pieDataPoints = [];
 
-        // 1. Define X-Axis Labels (Years or Months)
-        const categories = currentData.map(period => {
+        // Define X-Axis Labels (Years or Months)
+        const xAxisLabels = currentData.map(period => {
             const firstEntry = period[0];
-            return mode === "0" ? firstEntry.year : getMonthName(firstEntry.year);
+            return mode === "0" ? firstEntry.year : getMonthName(firstEntry.month);
         });
 
-        // 2. Loop through selected categories to build series
+        // Loop through selected categories to build series
         selectedCats.forEach(name => {
             let color = "";
-            const lowerName = name.toLowerCase();
-
-            // LOGIC: Three Stack Sorting
-            let stackGroup = 'Expense';
-            if (lowerName.includes("income") || lowerName.includes("wages") || lowerName.includes("deposit")) {
-                stackGroup = 'Income';
-            } else if (lowerName.includes("invest") || lowerName.includes("401k") || lowerName.includes("ira") || lowerName.includes("roth") || lowerName.includes("brokerage")) {
-                stackGroup = 'Investment';
-            }
+            let stackGroup = 'Expense'; // Default fallback
 
             const dataValues = currentData.map(period => {
                 const match = period.find(c => c.category_Name === name);
-                if (match) color = match.color_id;
+                if (match) {
+                    color = match.color_id;
+
+                    // --- ENUM LOGIC: Assign stack based on DB transaction_type ---
+                    const type = (match.transactionType || 'expense').toLowerCase();
+                    console.log(match);
+                    if (type === 'income') {
+                        stackGroup = 'Income';
+                    } else if (type === 'investment') {
+                        stackGroup = 'Investment';
+                    } else {
+                        stackGroup = 'Expense';
+                    }
+                }
                 return match ? Math.abs(match.amount) : 0;
             });
 
@@ -79,7 +86,7 @@ $(document).ready(function() {
                     color: color
                 });
 
-                // Add to Pie Chart (Latest period data)
+                // Add to Pie Chart (using the most recent period in currentData)
                 const latestPeriod = currentData[currentData.length - 1];
                 const latestMatch = latestPeriod.find(c => c.category_Name === name);
                 if (latestMatch) {
@@ -92,11 +99,11 @@ $(document).ready(function() {
             }
         });
 
-        // 3. Render Main Three-Stack Chart
+        // Render Stacked Column Chart
         Highcharts.chart('chartContainer', {
             chart: { type: 'column' },
             title: { text: "Budget Analysis Stacks", style: { fontWeight: 'bold' } },
-            xAxis: { categories: categories },
+            xAxis: { categories: xAxisLabels },
             yAxis: {
                 title: { text: 'Total Amount ($)' },
                 labels: { format: '${value}' }
@@ -115,35 +122,24 @@ $(document).ready(function() {
                 backgroundColor: 'rgba(255, 255, 255, 0.98)',
                 borderWidth: 0,
                 shadow: true,
-                hideDelay: 0,
                 padding: 0,
-                // Positions the tooltip 20px away from the hovered point
                 positioner: function(labelWidth, labelHeight, point) {
                     let x;
                     const chartWidth = this.chart.plotWidth;
-                    const padding = 20;
-
-                    // Check if we are on the right half of the chart
+                    const padding = 60;
                     if (point.plotX > chartWidth / 2) {
-                        // Position to the LEFT of the cursor
-                        x = point.plotX + this.chart.plotLeft - labelWidth - padding;
+                        const pdding = 20
+                        x = point.plotX + this.chart.plotLeft - labelWidth - pdding;
                     } else {
-                        // Position to the RIGHT of the cursor
                         x = point.plotX + this.chart.plotLeft + padding;
                     }
-
                     let y = point.plotY + this.chart.plotTop - (labelHeight / 2);
-
-                    // Final safety checks for chart boundaries
-                    return {
-                        x: Math.max(10, Math.min(x, this.chart.chartWidth - labelWidth - 10)),
-                        y: Math.max(10, y)
-                    };
+                    return { x: Math.max(10, Math.min(x, this.chart.chartWidth - labelWidth - 10)), y: Math.max(10, y) };
                 },
                 formatter: function() {
-                    let s = `<div style="padding: 15px; min-width: 480px; box-sizing: border-box;">`;
-                    s += `<div style="font-size: 13px; font-weight: bold; margin-bottom: 8px; border-bottom: 2px solid #3498db; color: #2c3e50;">${this.x}</div>`;
-                    s += '<div style="display: flex; flex-wrap: wrap; width: 100%;">';
+                    let s = `<div style="padding: 15px; min-width: 400px;">`;
+                    s += `<div style="font-size: 13px; font-weight: bold; margin-bottom: 8px; border-bottom: 2px solid #3498db;">${this.x}</div>`;
+                    s += '<div style="display: flex; flex-wrap: wrap;">';
 
                     let inTotal = 0, outTotal = 0, investTotal = 0;
 
@@ -156,38 +152,35 @@ $(document).ready(function() {
 
                         s += `
                             <div style="width: 50%; padding: 2px 0; display: flex; align-items: center; font-size: 11px;">
-                                <span style="color:${point.color}; margin-right: 6px; font-size: 14px;">\u25CF</span>
-                                <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; color: #555;">${point.series.name}:</span>
-                                <b style="margin-left: auto; padding-right: 12px; color: #222;">$${val.toLocaleString()}</b>
+                                <span style="color:${point.color}; margin-right: 6px;">\u25CF</span>
+                                <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 120px;">${point.series.name}:</span>
+                                <b style="margin-left: auto; padding-right: 10px;">$${val.toLocaleString()}</b>
                             </div>`;
                     });
 
                     s += '</div>';
-
                     const net = inTotal - outTotal - investTotal;
                     s += `<div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed #ccc; font-size: 11px;">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-                                <span>Total Income: <b style="color: #2c3e50;">$${inTotal.toLocaleString()}</b></span>
-                                <span>Total Expenses: <b style="color: #2c3e50;">$${outTotal.toLocaleString()}</b></span>
+                                <span>Income: <b>$${inTotal.toLocaleString()}</b></span>
+                                <span>Expenses: <b>$${outTotal.toLocaleString()}</b></span>
                             </div>
                             <div style="display: flex; justify-content: space-between;">
-                                <span>Total Invested: <b style="color: #2c3e50;">$${investTotal.toLocaleString()}</b></span>
-                                <span>Net Savings: <b style="color:${net >= 0 ? '#27ae60' : '#e74c3c'}">$${net.toLocaleString()}</b></span>
+                                <span>Invested: <b>$${investTotal.toLocaleString()}</b></span>
+                                <span>Net: <b style="color:${net >= 0 ? '#27ae60' : '#e74c3c'}">$${net.toLocaleString()}</b></span>
                             </div>
-                          </div>`;
-
-                    s += '</div>';
+                          </div></div>`;
                     return s;
                 }
             },
             series: trendSeries
         });
 
-        // 4. Render Pie Chart
+        // Render Pie Chart
         Highcharts.chart('pieContainer', {
             chart: { type: 'pie' },
             title: { text: 'Current Period Share' },
-            tooltip: { pointFormat: '<b>${point.y:,.2f}</b> ({point.percentage:.1f}%)' },
+            tooltip: { pointFormat: '<b>\${point.y:,.2f}</b> ({point.percentage:.1f}%)' },
             plotOptions: {
                 pie: {
                     allowPointSelect: true,
@@ -196,12 +189,11 @@ $(document).ready(function() {
                     showInLegend: true
                 }
             },
-            series: [{
-                name: 'Amount',
-                data: pieDataPoints
-            }]
+            series: [{ name: 'Amount', data: pieDataPoints }]
         });
     };
+
+    // --- 4. Data Fetching & UI Events ---
 
     const fetchAnalysisData = () => {
         const selectedYear = $('#inputYear').val();
@@ -212,7 +204,6 @@ $(document).ready(function() {
         });
     };
 
-    // UI BUTTONS
     $('#btnAnnual, #btnMonthly').off().click(function() {
         mode = $(this).data('val').toString();
         $(this).addClass('active btn-primary').removeClass('btn-outline-primary');
@@ -237,7 +228,7 @@ $(document).ready(function() {
 
     $(document).on('change', '.cat-check', renderCharts);
 
-    // Initial Load
+    // Initial Load Logic
     if (window.initialData && window.initialData.length > 0) {
         updateSidebar();
         renderCharts();
