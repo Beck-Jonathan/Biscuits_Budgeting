@@ -57,18 +57,23 @@ public class CategoryDAO_Fake implements iCategoryDAO {
     Collections.sort(subCategories);
 
     parent_categories = new ArrayList<>();
-    ParentCategory ParentCategory0 = new ParentCategory("xMqjscKWAtfvrSWZDjTPrqRAXQTjcyWniqoL", "PpsWnCrH", "GmRRcyFJBBXIjIGftCXLvWRXwGmmbTYWfqnC", "YVblFgK");
-    ParentCategory ParentCategory1 = new ParentCategory("MZxHQfoGynJGKiYENZKJiSqUQrvAiDAOWutZ", "ZqDEIRXf", "GmRRcyFJBBXIjIGftCXLvWRXwGmmbTYWfqnC", "ftmAmsG");
-    ParentCategory ParentCategory2 = new ParentCategory("wjSfNiOweomBVxyHWOygfwwnWIqrdTsjRwcs", "wfoVxFeN", "GmRRcyFJBBXIjIGftCXLvWRXwGmmbTYWfqnC", "EUhZRFW");
-    ParentCategory ParentCategory3 = new ParentCategory("RSqFgrSCwhLEUImMNbtZeYbCvFhpGQvrOWWV", "sOIhbqny", "GmRRcyFJBBXIjIGftCXLvWRXwGmmbTYWfqnC", "XduoUXq");
-    ParentCategory ParentCategory4 = new ParentCategory("xIgsHloveCVlyiIWSnNinZVuNGhpHSninyRA", "mjXMmIak", "WXjAKIkOHWNPEptlaYtjpDVhodaTGQVhYmRi", "pwDMNZL");
-    ParentCategory ParentCategory5 = new ParentCategory("ixikEAIlGXsFPWiKvgKxSwMGjvyVsrRQnQGp", "FEARRynC", "WXjAKIkOHWNPEptlaYtjpDVhodaTGQVhYmRi", "XWiyjqA");
-    ParentCategory ParentCategory6 = new ParentCategory("wHFXeZblIZTmvlOvYJVTRfSDficeOaLvdxtH", "wUWfGjxH", "WXjAKIkOHWNPEptlaYtjpDVhodaTGQVhYmRi", "mJnDoFM");
-    ParentCategory ParentCategory7 = new ParentCategory("WIEecFbsBmHXThLLjdjtnbatxIiOTMYWZqhM", "XPfmRESv", "WXjAKIkOHWNPEptlaYtjpDVhodaTGQVhYmRi", "vCregiB");
-    ParentCategory ParentCategory8 = new ParentCategory("XOjMpFhTDZoiYIRrsgnjuKkNWNnmLoenrHjd", "LGySVfMC", "nOoefyobHuFUdauNcBGlURcGhPVZpCMhopyP", "gSciZhg");
-    ParentCategory ParentCategory9 = new ParentCategory("flgUPxhhoyxtqhKoLJcWehxOEGVcaIFeSClt", "OehKITvS", "nOoefyobHuFUdauNcBGlURcGhPVZpCMhopyP", "AZJWhct");
-    ParentCategory ParentCategory10 = new ParentCategory("iItwWdRLXcIFmwpfRRkrvEPjbLPnkbGUMNrJ", "TWIxxFot", "nOoefyobHuFUdauNcBGlURcGhPVZpCMhopyP", "QxrNfCF");
-    ParentCategory ParentCategory11 = new ParentCategory("wIJlsqcpcXDaQBVuPyvhTCCUMupkWDOjwuLW", "GOlpYhrC", "nOoefyobHuFUdauNcBGlURcGhPVZpCMhopyP", "oGidheE");
+    // Group A: Expense
+    ParentCategory ParentCategory0 = new ParentCategory("xMqjscKWAtfvrSWZDjTPrqRAXQTjcyWniqoL", "PpsWnCrH", "GmRRcyFJBBXIjIGftCXLvWRXwGmmbTYWfqnC", "YVblFgK", "expense");
+    ParentCategory ParentCategory1 = new ParentCategory("MZxHQfoGynJGKiYENZKJiSqUQrvAiDAOWutZ", "ZqDEIRXf", "GmRRcyFJBBXIjIGftCXLvWRXwGmmbTYWfqnC", "ftmAmsG", "expense");
+    ParentCategory ParentCategory2 = new ParentCategory("wjSfNiOweomBVxyHWOygfwwnWIqrdTsjRwcs", "wfoVxFeN", "GmRRcyFJBBXIjIGftCXLvWRXwGmmbTYWfqnC", "EUhZRFW", "expense");
+    ParentCategory ParentCategory3 = new ParentCategory("RSqFgrSCwhLEUImMNbtZeYbCvFhpGQvrOWWV", "sOIhbqny", "GmRRcyFJBBXIjIGftCXLvWRXwGmmbTYWfqnC", "XduoUXq", "expense");
+
+// Group B: Income
+    ParentCategory ParentCategory4 = new ParentCategory("xIgsHloveCVlyiIWSnNinZVuNGhpHSninyRA", "mjXMmIak", "WXjAKIkOHWNPEptlaYtjpDVhodaTGQVhYmRi", "pwDMNZL", "income");
+    ParentCategory ParentCategory5 = new ParentCategory("ixikEAIlGXsFPWiKvgKxSwMGjvyVsrRQnQGp", "FEARRynC", "WXjAKIkOHWNPEptlaYtjpDVhodaTGQVhYmRi", "XWiyjqA", "income");
+    ParentCategory ParentCategory6 = new ParentCategory("wHFXeZblIZTmvlOvYJVTRfSDficeOaLvdxtH", "wUWfGjxH", "WXjAKIkOHWNPEptlaYtjpDVhodaTGQVhYmRi", "mJnDoFM", "income");
+    ParentCategory ParentCategory7 = new ParentCategory("WIEecFbsBmHXThLLjdjtnbatxIiOTMYWZqhM", "XPfmRESv", "WXjAKIkOHWNPEptlaYtjpDVhodaTGQVhYmRi", "vCregiB", "income");
+
+// Group C: Investment
+    ParentCategory ParentCategory8 = new ParentCategory("XOjMpFhTDZoiYIRrsgnjuKkNWNnmLoenrHjd", "LGySVfMC", "nOoefyobHuFUdauNcBGlURcGhPVZpCMhopyP", "gSciZhg", "investment");
+    ParentCategory ParentCategory9 = new ParentCategory("flgUPxhhoyxtqhKoLJcWehxOEGVcaIFeSClt", "OehKITvS", "nOoefyobHuFUdauNcBGlURcGhPVZpCMhopyP", "AZJWhct", "investment");
+    ParentCategory ParentCategory10 = new ParentCategory("iItwWdRLXcIFmwpfRRkrvEPjbLPnkbGUMNrJ", "TWIxxFot", "nOoefyobHuFUdauNcBGlURcGhPVZpCMhopyP", "QxrNfCF", "investment");
+    ParentCategory ParentCategory11 = new ParentCategory("wIJlsqcpcXDaQBVuPyvhTCCUMupkWDOjwuLW", "GOlpYhrC", "nOoefyobHuFUdauNcBGlURcGhPVZpCMhopyP", "oGidheE", "investment");
 
 
     parent_categories.add(ParentCategory0);

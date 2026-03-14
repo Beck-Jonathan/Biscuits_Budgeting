@@ -72,11 +72,11 @@ public class Saved_Search_Order_Line implements Comparable<Saved_Search_Order_Li
     return Search_Phrase;
   }
   public void setSearch_Phrase(String Search_Phrase) {
-    if (Search_Phrase == null || Search_Phrase.isEmpty()) {
-      throw new IllegalArgumentException("Search phrase cannot be null.");
-    }
-
-    Search_Phrase = Search_Phrase.replaceAll("[^A-Za-z0-9 .\\-_#&]", "").trim();
+//    if (Search_Phrase == null || Search_Phrase.isEmpty()) {
+//      throw new IllegalArgumentException("Search phrase cannot be null.");
+//    }
+//
+//    Search_Phrase = Search_Phrase.replaceAll("[^A-Za-z0-9 .\\-_#&]", "").trim();
     if(Search_Phrase.length()<4){
       throw new IllegalArgumentException("Search_Phrase is too short.");
     }

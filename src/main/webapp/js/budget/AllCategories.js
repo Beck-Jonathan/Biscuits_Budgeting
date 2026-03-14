@@ -1,126 +1,117 @@
 $(document).ready(function() {
     const pickers = {};
 
-
-
-    // Helper to initialize a color picker for a specific pill
     function initPickerForPill($pill) {
         const id = $pill.data('id');
         const trigger = $pill.find('.wheel-canvas')[0];
-        if (!trigger || pickers[id]) return; // Skip if no canvas or already exists
-
+        if (!trigger || pickers[id]) return;
         const initialColor = $pill.find('.color-swatch-trigger').css('background-color');
-
         pickers[id] = new iro.ColorPicker(trigger, {
-            width: 150,
-            color: initialColor,
-            layout: [
-                { component: iro.ui.Wheel },
-                { component: iro.ui.Slider, options: { sliderType: 'hue' } }
-            ]
+            width: 150, color: initialColor,
+            layout: [{ component: iro.ui.Wheel }, { component: iro.ui.Slider, options: { sliderType: 'hue' } }]
         });
     }
 
-    // Initialize existing pills
-    $('.category-pill[data-id]').each(function() {
-        initPickerForPill($(this));
-    });
+    $('.category-pill[data-id]').each(function() { initPickerForPill($(this)); });
 
-    // 2. Toggle the picker (Delegated)
-    $(document).on('click', '.color-swatch-trigger', function(e) {
-        e.stopPropagation();
-        const $pill = $(this).closest('.category-pill');
-        const $menu = $(this).siblings('.wheel-picker-container');
+    // --- RESTORED FUNCTIONS START ---
 
-        $('.wheel-picker-container').not($menu).removeClass('active');
-        $('.category-pill').not($pill).removeClass('active-pill');
+    window.updateParentCategory = function(id, parentId) {
+        const $pill = $(`.category-pill[data-id="${id}"]`);
 
-        $menu.toggleClass('active');
-        $pill.toggleClass('active-pill');
-    });
+        // 1. Update Glow UI
+        const $selectedOption = $pill.find('select option:selected');
+        const type = $selectedOption.data('type') || '';
 
-    // 5. Save on Color Apply (Delegated)
-    $(document).on('click', '.btn-save-color', function() {
-        const $pill = $(this).closest('.category-pill');
-        const id = $pill.data('id');
-        const hex = pickers[id].color.hexString;
+        $pill.removeClass('glow-income glow-investment glow-expense');
+        if (type === 'income') $pill.addClass('glow-income');
+        else if (type === 'investment') $pill.addClass('glow-investment');
+        else if (type === 'expense') $pill.addClass('glow-expense');
 
-        $pill.find('.color-swatch-trigger').css('background-color', hex);
-        $pill.css('border-left', '5px solid ' + hex);
-        $pill.find('.wheel-picker-container').removeClass('active');
+        // 2. Get the Hex Color
+        let hexColor;
+        if (pickers[id]) {
+            hexColor = pickers[id].color.hexString; // iro.js hex format: #FFFFFF
+        } else {
+            // Fallback: Convert rgb() to hex if picker isn't ready
+            const rgb = $pill.find('.color-swatch-trigger').css('background-color');
+            hexColor = rgbToHex(rgb);
+        }
 
-        sendUpdate($pill, hex);
-    });
-
-    // 6. Save on Text Blur (Delegated)
-    $(document).on('blur', '.category-text', function() {
-        const $pill = $(this).closest('.category-pill');
-        const id = $pill.data('id');
-        const hexColor = pickers[id] ? pickers[id].color.hexString : $pill.find('.color-swatch-trigger').css('background-color');
         sendUpdate($pill, hexColor);
-    });
+    };
 
-    // ... (Your existing sendUpdate and updateParentCategory functions) ...
+    async function sendUpdate($pill, hexColor) {
+        const id = $pill.data('id');
+        const name = $pill.find('.category-text').text().trim();
+        const parentId = $pill.find('select').val();
 
-    // Updated addNewCategory to include picker logic
+        // Safety check: ensure hexColor always starts with #
+        if (!hexColor.startsWith('#')) {
+            hexColor = '#' + hexColor;
+        }
+
+        try {
+            await fetch('editCategory', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    category_ID: id,
+                    inputcategoryCategory_Name: name,
+                    inputcategoryColor_id: hexColor, // Now guaranteed to be #XXXXXX
+                    inputsub_categoryparent_category_id: parentId
+                })
+            });
+        } catch (err) {
+            console.error("Update failed:", err);
+        }
+    }
+
+// Helper to convert rgb(r, g, b) to #rrggbb
+    function rgbToHex(rgb) {
+        if (!rgb || !rgb.startsWith('rgb')) return '#0d6efd'; // Default blue fallback
+        const vals = rgb.match(/\d+/g);
+        return "#" + vals.map(x => {
+            const hex = parseInt(x).toString(16);
+            return hex.length === 1 ? "0" + hex : hex;
+        }).join("");
+    }
+
+    // --- RESTORED FUNCTIONS END ---
+
+    window.updateAddPillIndicator = function(selectElement) {
+        const type = selectElement.options[selectElement.selectedIndex].getAttribute('data-type');
+        const $container = $('#new-pill-container');
+
+        $container.removeClass('glow-income glow-investment glow-expense');
+        if (type === 'income') $container.addClass('glow-income');
+        else if (type === 'investment') $container.addClass('glow-investment');
+        else if (type === 'expense') $container.addClass('glow-expense');
+    };
+
     window.addNewCategory = async function() {
-        const nameInput = document.getElementById('new-category-name');
-        const colorInput = document.getElementById('new-category-color');
-        const addWrapper = document.getElementById('add-pill-wrapper');
-        const name = nameInput.value.trim();
-        const color = colorInput.value;
-
+        const name = $('#new-category-name').val().trim();
+        const color = $('#new-category-color').val();
+        const parentId = $('#new-category-parent').val();
         if (!name) return;
 
         try {
             const response = await fetch('addTransactionCategory', {
                 method: 'POST',
-                body: new URLSearchParams({ inputcategoryCategory_Name: name, inputcategoryColor_id: color })
+                body: new URLSearchParams({
+                    inputcategoryCategory_Name: name,
+                    inputcategoryColor_id: color,
+                    inputcategoryParent_id: parentId
+                })
             });
-
-            if (response.ok) {
-                const newId = await response.text();
-                const optionsHtml = parentCategories.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-
-                // Full HTML matching your existing structure
-                const newPillHtml = `
-                <div class="col mb-3 new-pill-animation">
-                    <div class="category-pill shadow-sm border rounded-pill bg-white d-flex align-items-center p-1"
-                         data-id="${newId}"
-                         style="border-left: 5px solid ${color} !important;">
-                        <div class="swatch-container ms-1">
-                            <div class="color-swatch-trigger rounded-circle border-0"
-                                 style="background-color: ${color}; width: 28px; height: 28px; cursor: pointer;">
-                            </div>
-                            <div class="wheel-picker-container shadow-lg border rounded p-3 bg-white">
-                                <div class="wheel-canvas"></div>
-                                <button class="btn btn-sm btn-dark btn-save-color w-100 mt-2">Save Color</button>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 px-2 overflow-hidden">
-                            <div class="category-text fw-bold text-truncate" contenteditable="true" style="outline: none; font-size: 0.9rem;">
-                                ${name}
-                            </div>
-                        </div>
-                        <div class="pe-2">
-                            <select class="form-select form-select-sm border-0 bg-light rounded-pill px-2 text-muted"
-                                    style="font-size: 0.7rem; width: auto; max-width: 100px;"
-                                    onchange="updateParentCategory('${newId}', this.value)">
-                                ${optionsHtml}
-                            </select>
-                        </div>
-                    </div>
-                </div>`;
-
-                addWrapper.insertAdjacentHTML('beforebegin', newPillHtml);
-
-                // CRITICAL: Initialize iro.js for the newly created element
-                const $newPill = $(`.category-pill[data-id="${newId}"]`);
-                initPickerForPill($newPill);
-
-                nameInput.value = '';
-                nameInput.focus();
-            }
+            if (response.ok) location.reload();
         } catch (err) { console.error(err); }
     };
+
+    const $parentSelect = $('#new-category-parent');
+    if($parentSelect.length) window.updateAddPillIndicator($parentSelect[0]);
 });
+
+function updateAddPillColor(val) {
+    $('#new-color-preview').css('background-color', val);
+    $('#new-pill-container').css('border-left-color', val);
+}

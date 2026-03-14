@@ -27,6 +27,7 @@ class ParentCategoryTest {
     Assertions.assertNull(_parent_category.getsuper_category_name());
     Assertions.assertNull(_parent_category.getuser_id());
     Assertions.assertNull(_parent_category.getcolor_id());
+    Assertions.assertNull(_parent_category.gettransaction_type());
   }
 
   /**
@@ -38,12 +39,14 @@ class ParentCategoryTest {
         "OKFvTPQjiZiibBgBTjUbgCVUqySGejjTEQ",
         "pQIyiRUEVYAIhMdfanbHjaPxcEixVjqDafPSxAvqqesEGDlPihoifikhQUWDXpkCGuOJjeeYSjycucNBJfUtoubCccrTYnIbDv",
         "qkZFDBQXxQlZPWgFHIRAvMaGmQybXxlafR",
-        "sclpH"
+        "sclpH",
+        "income"
     );
     Assertions.assertEquals("OKFvTPQjiZiibBgBTjUbgCVUqySGejjTEQ",_parent_category.getparent_category_id());
     Assertions.assertEquals("pQIyiRUEVYAIhMdfanbHjaPxcEixVjqDafPSxAvqqesEGDlPihoifikhQUWDXpkCGuOJjeeYSjycucNBJfUtoubCccrTYnIbDv",_parent_category.getsuper_category_name());
     Assertions.assertEquals("qkZFDBQXxQlZPWgFHIRAvMaGmQybXxlafR",_parent_category.getuser_id());
     Assertions.assertEquals("sclpH",_parent_category.getcolor_id());
+    Assertions.assertEquals("income",_parent_category.gettransaction_type());
   }
 
   /**
@@ -58,6 +61,7 @@ class ParentCategoryTest {
     Assertions.assertNull(_parent_category.getsuper_category_name());
     Assertions.assertNull(_parent_category.getuser_id());
     Assertions.assertNull(_parent_category.getcolor_id());
+    Assertions.assertNull(_parent_category.gettransaction_type());
   }
 
   /**
@@ -171,6 +175,51 @@ class ParentCategoryTest {
     _parent_category.setcolor_id(color_id);
     Assertions.assertEquals(color_id,_parent_category.getcolor_id());
   }
+  /**
+  <p> Tests That the Setters for the parent_category.transaction_type field can throw exceptions with invalid inputs </p>
+      */
+  @Test
+  public void  testparent_categoryThrowsIllegalArgumentExceptionIftransaction_typeTooShort(){
+    String transaction_type = "Hh";
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {_parent_category.setTransaction_type(transaction_type);});
+  }
+
+  /**
+   <p> Tests That the Setters for the parent_category.transaction_type field can throw exceptions with invalid inputs </p>
+   */
+  @Test
+  public void  testparent_categoryThrowsIllegalArgumentExceptionIftransaction_typeTooLong(){
+    String transaction_type = "hcUiFIuTbEhgCRIpZjorGH";
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {_parent_category.setTransaction_type(transaction_type);});
+  }
+
+  /**
+   <p> Tests That the Setters for the parent_category.transaction_type field work </p>
+   */
+  @Test
+  public void testSettransaction_typeSetstransaction_type_income(){
+    String transaction_type = "income";
+    _parent_category.setTransaction_type(transaction_type);
+    Assertions.assertEquals(transaction_type,_parent_category.gettransaction_type());
+  }
+  /**
+   <p> Tests That the Setters for the parent_category.transaction_type field work </p>
+   */
+  @Test
+  public void testSettransaction_typeSetstransaction_type_expense(){
+    String transaction_type = "expense";
+    _parent_category.setTransaction_type(transaction_type);
+    Assertions.assertEquals(transaction_type,_parent_category.gettransaction_type());
+  }
+  /**
+   <p> Tests That the Setters for the parent_category.transaction_type field work </p>
+   */
+  @Test
+  public void testSettransaction_typeSetstransaction_type_investment(){
+    String transaction_type = "investment";
+    _parent_category.setTransaction_type(transaction_type);
+    Assertions.assertEquals(transaction_type,_parent_category.gettransaction_type());
+  }
 
 
   /**
@@ -208,6 +257,13 @@ class ParentCategoryTest {
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the color_id as equal.
     smaller.setcolor_id("#DDDDDD");
+//to compare a smaller and larger transaction_type
+    smaller.setTransaction_type("expense");
+    bigger.setTransaction_type("income");
+    Assertions.assertTrue(smaller.compareTo(bigger)<0);
+    Assertions.assertTrue(bigger.compareTo(smaller)>0);
+//to set the color_id as equal.
+    smaller.setTransaction_type("#income");
     Assertions.assertTrue(bigger.compareTo(smaller)==0);
   }
 

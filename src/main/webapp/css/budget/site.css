@@ -386,3 +386,66 @@ body { background-color: #f4f7f6; font-family: 'Segoe UI', Roboto, sans-serif; }
 .highcharts-tooltip span {
     white-space: normal !important;
 }
+
+.category-pill {
+    transition: border-left 0.3s ease, border-bottom 0.3s ease;
+}
+
+.wheel-picker-container {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    top: 40px;
+    left: 0;
+}
+
+.wheel-picker-container.active {
+    display: block;
+}
+
+
+
+/* Base Pill Tweaks */
+.category-pill {
+    transition: all 0.3s ease-in-out;
+    border: 1px solid #dee2e6;
+}
+.category-pill:hover {
+    transform: translateY(-2px);
+}
+
+/* Deep Glow Classes */
+.glow-income {
+    box-shadow: 4px -4px 15px rgba(25, 135, 84, 0.4),
+    6px 0px 20px rgba(25, 135, 84, 0.3),
+    4px 4px 15px rgba(25, 135, 84, 0.4) !important;
+}
+
+.glow-investment {
+    box-shadow: 4px -4px 15px rgba(13, 110, 253, 0.4),
+    6px 0px 20px rgba(13, 110, 253, 0.3),
+    4px 4px 15px rgba(13, 110, 253, 0.4) !important;
+}
+
+.glow-expense {
+    box-shadow: 4px -4px 15px rgba(253, 126, 20, 0.4),
+    6px 0px 20px rgba(253, 126, 20, 0.3),
+    4px 4px 15px rgba(253, 126, 20, 0.4) !important;
+}
+
+/* Base Pill Styles */
+.category-pill {
+    transition: all 0.3s ease-in-out;
+    border: 1px solid #eee;
+    margin-bottom: 5px;
+}
+
+.category-pill:hover {
+    transform: scale(1.02);
+}
+
+.border-dashed {
+    border-style: dashed !important;
+    border-width: 2px !important;
+}
+.border-dashed { border-style: dashed !important; border-width: 2px !important; }

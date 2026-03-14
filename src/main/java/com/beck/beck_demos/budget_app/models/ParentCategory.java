@@ -12,16 +12,19 @@ public class ParentCategory implements Comparable<ParentCategory> {
   private String super_category_name;
   private String user_id;
   private String color_id;
+  private String transaction_type;
 
   public ParentCategory(){}
 
-  public ParentCategory(String parent_category_id, String super_category_name, String user_id, String color_id) {
+  public ParentCategory(String parent_category_id, String super_category_name, String user_id, String color_id, String transaction_type) {
 
     this.parent_category_id = parent_category_id;
     this.super_category_name = super_category_name;
     this.user_id = user_id;
     this.color_id = color_id;
+    this.transaction_type = transaction_type;
   }
+
 
   public ParentCategory(String parent_category_id) {
 
@@ -125,6 +128,38 @@ public class ParentCategory implements Comparable<ParentCategory> {
     // 4. Store consistently (usually uppercase for DB consistency)
     this.color_id = color_id.toUpperCase();
   }
+
+  /**
+   * <p> Gets the transaction_type of the associated parent_category object </p>
+   * @return the transaction_type of this parent_category object.
+   */
+  public String gettransaction_type() {
+    return transaction_type;
+  }
+
+  /**
+   * <p> Sets the transaction_type of the associated parent_category object </p>
+   * @param transaction_type the transaction_type of the parent_category,
+   * throws IllegalArgumentException if transaction_type under 3 characters or longer than 20 characters
+   */
+  public void setTransaction_type(String transaction_type) {
+    if (transaction_type == null) {
+      throw new IllegalArgumentException("Transaction type cannot be null.");
+    }
+
+    // 1. Normalize the input (remove whitespace and make lowercase)
+    String cleanType = transaction_type.trim().toLowerCase();
+
+    // 2. Validate against your specific keywords
+    if (cleanType.equals("income") ||
+        cleanType.equals("expense") ||
+        cleanType.equals("investment")) {
+
+      this.transaction_type = cleanType;
+    } else {
+      throw new IllegalArgumentException("Invalid transaction type. Must be 'income', 'expense', or 'investment'.");
+    }
+  }
   @Override
   public int compareTo(@NotNull ParentCategory o) {
     if (this.parent_category_id.compareTo(o.parent_category_id)<0){
@@ -149,6 +184,12 @@ public class ParentCategory implements Comparable<ParentCategory> {
       return -1;
     }
     else if(this.color_id.compareTo(o.color_id) > 0){
+      return 1;
+    }
+    if (this.parent_category_id.compareTo(o.color_id)<0){
+      return -1;
+    }
+    else if(this.parent_category_id.compareTo(o.color_id) > 0){
       return 1;
     }
     return 0;

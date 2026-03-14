@@ -145,7 +145,8 @@ public class CategoryDAO implements iCategoryDAO {
               String super_category_name = resultSet.getString("parent_category_super_category_name");
               String user_id = resultSet.getString("parent_category_user_id");
               String color_id = resultSet.getString("parent_category_color_id");
-              ParentCategory _parent_category = new ParentCategory( parent_category_id, super_category_name, user_id, color_id);
+              String transaction_type = resultSet.getString("parent_category_transaction_type");
+              ParentCategory _parent_category = new ParentCategory( parent_category_id, super_category_name, user_id, color_id,transaction_type);
               result.add(_parent_category);
             }
           }
