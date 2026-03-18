@@ -325,15 +325,29 @@ public class TransactionDAO implements iTransactionDAO {
         line = line.trim();
         if (line.isEmpty()) continue;
 
-        // --- 1. Detect Account Number & Type ---
+        // --- 1. Detect File Type & Account Info ---
+
+        // GreenState Detection: Look for the specific header row
+        if (line.startsWith("Account Number") && line.contains("Post Date")) {
+          type = "GreenState";
+          continue;
+        }
+
+        // Altra Detection: Look for "Account Type:"
         if (line.startsWith("Account Type:")) {
           type = "Altra";
-          continue; // Skip header lines
-        } else if (line.startsWith("Account Number:")) {
+          continue;
+        }
+
+        // Altra Account Number Extraction
+        if (line.startsWith("Account Number") && line.contains(":")) {
           accountNumber = line.split(":")[1].trim();
           continue;
-        } else if (line.startsWith("Transaction Type") || line.startsWith("Date Range:")) {
-          continue; // Skip the column headers line
+        }
+
+        // Skip common noise lines
+        if (line.startsWith("Transaction Type") || line.startsWith("Date Range:")) {
+          continue;
         }
 
         // --- 2. Process Data Lines ---
@@ -344,9 +358,9 @@ public class TransactionDAO implements iTransactionDAO {
           } else if ("GreenState".equals(type)) {
             _transaction = readGreenStateLine(line);
           }
-          // ... add your other types here ...
         } catch (Exception e) {
-          System.err.println("Skipping line in " + type + ": " + line);
+          // Log the error but keep processing the rest of the file
+          System.err.println("Skipping line. Type: " + type + " | Error: " + e.getMessage());
         }
 
         if (_transaction != null) {
@@ -360,22 +374,52 @@ public class TransactionDAO implements iTransactionDAO {
   }
 
   private Transaction readGreenStateLine(String line) throws ParseException {
-    String[] parts = line.split("\t");
-    String accountNumber = parts[0];
-    java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(parts[1]);
-    java.sql.Date postDate = new java.sql.Date(utilDate.getTime());
+    Transaction t = new Transaction();
 
-    Integer checkNo = (parts.length > 2 && !parts[2].isEmpty()) ? Integer.valueOf(parts[2]) : 0;
-    String description = parts[3];
+    String[] parts  = null;
+    try {
+      // Split on 2 or more spaces. This keeps "WESTSIDE TIRE CO" together
+      // but separates the columns: [Account, Date, Description, Code, Amount, Status, Balance]
+       parts = line.split("\t");
+      // GreenState lines repeat the account number at index 0
+      String accountNumber = parts[0];
 
-    double debit = (parts.length > 4 && !parts[4].isEmpty()) ? Double.parseDouble(parts[4]) : 0;
-    double credit = (parts.length > 5 && !parts[5].isEmpty()) ? Double.parseDouble(parts[5]) : 0;
+      java.util.Date utilDate = new SimpleDateFormat("MM/dd/yyyy").parse(parts[1]);
+      java.sql.Date postDate = new java.sql.Date(utilDate.getTime());
 
-    // Logic: If there is a debit, use that; otherwise credit. Store as positive.
-    double amount = Math.abs(credit != 0 ? credit : debit);
-    String type = (credit != 0) ? "Credit" : "Debit";
+      // Based on your data:
+      // parts[2] = Description (e.g., TROPICAL SMOOTHI...)
+      // parts[3] = A numeric code (e.g., 15)
+      // parts[4] = The Amount (e.g., 9.08)
+      String description = parts[3];
+      //subparts = parts[2].split("\t");
+      String part4 = parts[4];
+      String part5 = parts[5];
+      String transType = "Debit";
+      double amount=0d;
+      try {
+        if (!part4.isEmpty()) {
+          amount = Double.parseDouble(parts[4]);
+        } else if (!part5.isEmpty()) {
+          amount = Double.parseDouble(parts[5]);
+          transType = "Credit";
+        }
+      } catch (Exception e) {
+        throw  new Exception("unable to parse value");
+      }
 
-    return new Transaction("", "", "undefined", accountNumber, postDate, checkNo, description, amount, type, "Posted", false);
+      //subparts = parts[3].split("\t");
+      String status = parts[6]; // "Pending"
+
+      // Defaulting to Debit as per the sample, but you can add logic if
+      // GreenState provides a specific Credit column index.
+
+      return new Transaction("", "", "undefined", accountNumber, postDate, 0, description, amount, transType, status, false);
+
+    } catch (Exception e) {
+      return null;
+    }
+
   }
 
   private Transaction readCustomLine(String line, String accountNumber) throws ParseException {

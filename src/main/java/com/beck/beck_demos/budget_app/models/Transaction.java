@@ -183,13 +183,26 @@ public class Transaction implements Comparable<Transaction> {
    */
   public void setDescription(String Description) {
 
-    if(Description.length()<4){
-      throw new IllegalArgumentException("Description is too short.");
+    if (Description == null) {
+      throw new IllegalArgumentException("Description cannot be null.");
     }
-    if(Description.length()>255){
-      throw new IllegalArgumentException("Description is too long.");
+
+    // 2. Clean: Handle non-breaking spaces, tabs, and newlines
+    // \u00A0 is the specific Unicode for the hidden non-breaking space
+    String cleaned = Description.replace('\u00A0', ' ')
+        .replaceAll("\\s+", " ")
+        .trim();
+
+    // 3. Length Validation on the CLEANED string
+    if (cleaned.length() < 4) {
+      throw new IllegalArgumentException("Description is too short (min 4 characters after cleanup).");
     }
-    this.Description = Description;
+    if (cleaned.length() > 255) {
+      throw new IllegalArgumentException("Description is too long (max 255 characters).");
+    }
+
+    // 4. Assign the sanitized version
+    this.Description = cleaned;
   }
   /**
    * <p> Gets the Amount of the associated Transaction object </p>
