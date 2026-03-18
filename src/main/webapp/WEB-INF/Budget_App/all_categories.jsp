@@ -8,19 +8,21 @@
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4" id="category-grid">
             <c:forEach items="${Categories}" var="category">
-                <c:set var="glowClass" value="" />
+                <c:set var="typeClass" value="" />
                 <c:forEach items="${ParentCategories}" var="p">
                     <c:if test="${p.parent_category_id == category.parentCategoryId}">
                         <c:choose>
-                            <c:when test="${fn:toLowerCase(p.transaction_type) == 'income'}"><c:set var="glowClass" value="glow-income" /></c:when>
-                            <c:when test="${fn:toLowerCase(p.transaction_type) == 'investment'}"><c:set var="glowClass" value="glow-investment" /></c:when>
-                            <c:when test="${fn:toLowerCase(p.transaction_type) == 'expense'}"><c:set var="glowClass" value="glow-expense" /></c:when>
+                            <c:when test="${fn:toLowerCase(p.transaction_type) == 'income'}"><c:set var="typeClass" value="glow-income" /></c:when>
+                            <c:when test="${fn:toLowerCase(p.transaction_type) == 'investment'}"><c:set var="typeClass" value="glow-investment" /></c:when>
+                            <c:when test="${fn:toLowerCase(p.transaction_type) == 'expense'}"><c:set var="typeClass" value="glow-expense" /></c:when>
+                            <c:when test="${fn:toLowerCase(p.transaction_type) == 'transfer'}"><c:set var="typeClass" value="glow-transfer" /></c:when>
+
                         </c:choose>
                     </c:if>
                 </c:forEach>
 
                 <div class="col">
-                    <div class="category-pill rounded-pill bg-white d-flex align-items-center p-1 ${glowClass}"
+                    <div class="category-pill rounded-pill d-flex align-items-center p-1 ${typeClass}"
                          data-id="${category.category_ID}"
                          style="border-left: 6px solid ${category.color_id} !important;">
 
@@ -29,19 +31,18 @@
                                  style="background-color: ${category.color_id}; width: 28px; height: 28px; cursor: pointer;">
                             </div>
                         </div>
-
                         <div class="flex-grow-1 px-2 overflow-hidden">
-                            <div class="category-text fw-bold text-truncate" contenteditable="true" spellcheck="false"
-                                 style="outline: none; font-size: 0.9rem;">
+                            <div class="category-text fw-bold text-truncate" contenteditable="true" style="outline: none; font-size: 0.9rem;">
                                     ${fn:escapeXml(category.category_Name)}
                             </div>
                         </div>
-
                         <div class="pe-2">
                             <select class="form-select form-select-sm border-0 bg-light rounded-pill px-2 text-muted"
-                                    style="font-size: 0.7rem; width: auto;" onchange="updateParentCategory('${category.category_ID}', this.value)">
+                                    style="font-size: 0.7rem; width: auto;"
+                                    onchange="updateParentCategory('${category.category_ID}', this.value)">
                                 <c:forEach items="${ParentCategories}" var="parent">
                                     <option value="${parent.parent_category_id}"
+                                            data-type="${fn:toLowerCase(parent.transaction_type)}"
                                             <c:if test="${parent.parent_category_id == category.parentCategoryId}">selected</c:if>>
                                             ${fn:escapeXml(parent.super_category_name)}
                                     </option>

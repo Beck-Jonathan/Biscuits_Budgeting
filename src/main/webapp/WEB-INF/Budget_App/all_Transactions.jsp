@@ -15,18 +15,30 @@ Create the JSP  For Viewing All of The  Transaction table
 
             <div id="searchFilter">
                 <form method="get" action="${appURL}/all-Transactions" id = "all-Transactions" >
-                <select   name="category">
-                    <option value="" >
-                        All
-                    </option>
-                    <c:forEach items="${Categories}" var="category" >
-                        <option value="${category.category_ID}" ${fn:toLowerCase(category.category_Name) == 'uncategorized' ? 'selected' : ''}>
-                                ${category.category_Name}
-                        </option>
-                    </c:forEach>
+                    <div class="d-flex align-items-center">
+                        <label class="me-2 small fw-bold text-muted">Category:</label>
+                        <select name="category" class="form-select form-select-sm rounded-pill" style="width: auto;">
+                            <option value="">All</option>
+                            <c:forEach items="${Categories}" var="category">
+                                <option value="${category.category_ID}"
+                                    ${fn:toLowerCase(category.category_Name) == 'uncategorized' ? 'selected' : ''}>
+                                        ${category.category_Name}
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </div>
+
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" name="showErrors" id="showErrors" value="true"
+                        ${param.showErrors == 'true' ? 'checked' : ''}>
+                        <label class="form-check-label small fw-bold text-danger" for="showErrors">
+                            <i class="bi bi-exclamation-triangle-fill"></i> Potential Errors
+                        </label>
+                    </div>
                 </select>
-                    <button>submit</button>
-                </form>
+
+
+                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3">Filter</button>                </form>
             </div>
 
             <c:if test="${Transactions.size() > 0}">

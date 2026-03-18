@@ -565,22 +565,13 @@ public class TransactionDAO implements iTransactionDAO {
 
   }
 
-  public List<Transaction_VM> getTransactionByUser(String User_ID) throws SQLException {
-    return getTransactionByUser(User_ID, "", 0, 10, 0, "", 0);
-  }
 
-  public List<Transaction_VM> getTransactionByUser(String User_ID, int pagesize) throws SQLException {
-    return getTransactionByUser(User_ID, "", 0, pagesize, 0, "", 0);
-  }
 
-  public List<Transaction_VM> getTransactionByUser(String User_ID, int pagesize, int offset) throws SQLException {
-    return getTransactionByUser(User_ID, "", 0, pagesize, offset, "", 0);
-  }
-
-  public List<Transaction_VM> getTransactionByUser(String userID, String category, int year, int pagesize, int offset, String sortBy, int order) throws SQLException {
+  @Override
+  public List<Transaction_VM> getTransactionByUser(String userID, String category, int year, int pagesize, int offset, String sortBy, int order,boolean findErrors) throws SQLException {
     List<Transaction_VM> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
-      try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User(?,?,?,?,?,?,?)}")) {
+      try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User(?,?,?,?,?,?,?,?)}")) {
         statement.setString(1, userID);
         statement.setString(2, category);
         statement.setInt(3, year);
@@ -588,6 +579,7 @@ public class TransactionDAO implements iTransactionDAO {
         statement.setInt(5, offset);
         statement.setString(6, sortBy);
         statement.setInt(7, order);
+        statement.setBoolean(8, findErrors);
 
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
@@ -651,13 +643,14 @@ public class TransactionDAO implements iTransactionDAO {
 
 
 
-  public int getTransactionCountByUser(String userID, String category, int year) throws SQLException {
+  public int getTransactionCountByUser(String userID, String category, int year, boolean findErrors) throws SQLException {
     int result = 0;
     try (Connection connection = getConnection()) {
-      try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User_count(?,?,?)}")) {
+      try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User_count(?,?,?,?)}")) {
         statement.setString(1, userID);
         statement.setString(2, category);
         statement.setInt(3, year);
+        statement.setBoolean(4, findErrors);
 
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {

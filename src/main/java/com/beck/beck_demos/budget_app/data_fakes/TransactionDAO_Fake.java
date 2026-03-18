@@ -215,35 +215,10 @@ public class TransactionDAO_Fake implements iTransactionDAO {
     return result;
   }
 
-  @Override
-  public List<Transaction_VM> getTransactionByUser(String User_ID) throws SQLException {
-    return getTransactionByUser(User_ID,100);
-  }
+
 
   @Override
-  public List<Transaction_VM> getTransactionByUser(String User_ID, int pagesize) throws SQLException {
-    List<Transaction_VM> results = new ArrayList<>();
-    for (Transaction_VM t : transactionVMs) {
-      if (t.getUser_ID().equals(User_ID)) {
-        results.add(t);
-      }
-    }
-    return results;
-  }
-
-  @Override
-  public List<Transaction_VM> getTransactionByUser(String User_ID, int pagesize, int offset) throws SQLException {
-    List<Transaction_VM> results = new ArrayList<>();
-    for (Transaction_VM t : transactionVMs) {
-      if (t.getUser_ID().equals(User_ID)) {
-        results.add(t);
-      }
-    }
-    return results;
-  }
-
-  @Override
-  public List<Transaction_VM> getTransactionByUser(String userID, String category, int year, int pagesize, int offset, String sortBy, int order) throws SQLException {
+  public List<Transaction_VM> getTransactionByUser(String userID, String category, int year, int pagesize, int offset, String sortBy, int order, boolean isError) throws SQLException {
     List<Transaction_VM> results = new ArrayList<>();
     for (Transaction_VM t : transactionVMs) {
 
@@ -272,7 +247,7 @@ public class TransactionDAO_Fake implements iTransactionDAO {
 
 
   @Override
-  public int getTransactionCountByUser(String userID, String category, int year) throws SQLException {
+  public int getTransactionCountByUser(String userID, String category, int year, boolean findErrors) throws SQLException {
     int count = 0;
     for (Transaction t : transactionVMs) {
       if (t.getUser_ID().equals(userID)&&(year==0 || t.getPost_Date().getYear()==year)) {
@@ -282,15 +257,7 @@ public class TransactionDAO_Fake implements iTransactionDAO {
     return count;
   }
 
-  @Override
-  public double getTransactionCategoryTotal(int userID, String category_id, String direction) throws SQLException {
-    return 0;
-  }
 
-  @Override
-  public List<Transaction> getTransactionByUserYearCategpry(int userID, Date date, String category, int limit, int offset) throws SQLException {
-    return List.of();
-  }
 
   @Override
   public Transaction_VM getTransactionByPrimaryKey(Transaction _transaction) throws SQLException {

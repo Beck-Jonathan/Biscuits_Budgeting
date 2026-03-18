@@ -7,6 +7,11 @@ $(document).ready(function() {
             let id = this.getAttribute("id");
             var address = document.getElementById("addr").getAttribute("addr");
             let y = takevalues(id, address);
+            let thisLockBox = document.getElementById(id+"_lock")
+            if (thisLockBox && !thisLockBox.checked) {
+                console.log(thisLockBox)
+                thisLockBox.click();
+            }
         });
 }
     for (var i = 0; i < allLocks.length; i++) {

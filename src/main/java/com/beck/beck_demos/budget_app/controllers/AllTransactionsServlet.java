@@ -62,12 +62,22 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
     session.setAttribute("year",year);
     Integer direction = 0;
     boolean reverse=false;
+    boolean findErrors = false;
     if (req.getParameter("reverse")!=null) {
       try {
         reverse = Boolean.parseBoolean(req.getParameter("reverse"));
       }
       catch (Exception e ){
         reverse=false;
+      }
+    }
+    String showErrors = req.getParameter("showErrors");
+    if (req.getParameter("showErrors")!=null) {
+      try {
+        findErrors = Boolean.parseBoolean(req.getParameter("showErrors"));
+      }
+      catch (Exception e ){
+        findErrors=false;
       }
     }
 
@@ -126,9 +136,9 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
 
     List <SubCategory> allCategories = null;
     try {
-      transaction_count = transactionDAO.getTransactionCountByUser(user.getUser_ID(),category,year);
+      transaction_count = transactionDAO.getTransactionCountByUser(user.getUser_ID(),category,year,findErrors);
 
-      transactions = transactionDAO.getTransactionByUser(user.getUser_ID(),category,year,page_size,offset,sort,direction);
+      transactions = transactionDAO.getTransactionByUser(user.getUser_ID(),category,year,page_size,offset,sort,direction,findErrors);
       allCategories = categoryDAO.getsubCategoryByUser(user.getUser_ID());
     } catch (SQLException e) {
       throw new RuntimeException(e);

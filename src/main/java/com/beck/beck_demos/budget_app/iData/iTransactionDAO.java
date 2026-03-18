@@ -24,23 +24,17 @@ public interface iTransactionDAO {
 
     int addBatch(List<Transaction> _transactions, String user_id) throws SQLException;
 
-  List<Transaction_VM> getTransactionByUser(String User_ID) throws SQLException;
 
-    List<Transaction_VM> getTransactionByUser(String User_ID, int pagesize) throws SQLException;
 
-    List<Transaction_VM> getTransactionByUser(String User_ID, int pagesize, int offset) throws SQLException;
-
-    List<Transaction_VM> getTransactionByUser(String userID, String category, int year, int pagesize, int offset, String sortBy, int order) throws SQLException;
+   List<Transaction_VM> getTransactionByUser(String userID, String category, int year, int pagesize, int offset, String sortBy, int order,boolean findErrors) throws SQLException ;
 
 
     List<Transaction_VM> searchTransactionByUser(String userID, String query) throws SQLException;
 
 
-   int getTransactionCountByUser(String userID, String category, int year) throws SQLException;
+   int getTransactionCountByUser(String userID, String category, int year, boolean findErrors) throws SQLException;
 
-   double getTransactionCategoryTotal(int userID, String category_id, String direction) throws SQLException;
 
-   List<Transaction> getTransactionByUserYearCategpry(int userID, Date date, String category, int limit, int offset) throws SQLException ;
   Transaction_VM getTransactionByPrimaryKey(Transaction _transaction) throws SQLException;
 /**
   * DAO Method to update Transaction objects
