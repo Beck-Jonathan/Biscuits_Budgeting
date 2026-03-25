@@ -62,7 +62,7 @@ Create the JSP  For Viewing All of The  budget table
                                     <c:forEach items="${b.lines}" var="line">
                                         <c:set var="itemPercentage" value="${(line.amount / b.limit_amount) * 100}" />
 
-                                        <c:if test="${itemPercentage > 0}">
+                                        <c:if test="${itemPercentage > 0 && line.budget_line_status_id!='Inactive'}">
                                             <div class="progress-bar progress-bar-item"
                                                  role="progressbar"
                                                  style="width: ${itemPercentage}%; background-color: ${line.category.color_id};"

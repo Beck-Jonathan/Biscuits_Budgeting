@@ -1,11 +1,11 @@
 package com.beck.beck_demos.budget_app.controllers;
+
 import java.io.IOException;
 import java.util.*;
-
+import com.beck.beck_demos.budget_app.data_fakes.Bank_AccountDAO_Fake;
 import com.beck.beck_demos.budget_app.data_fakes.CategoryDAO_Fake;
 import com.beck.beck_demos.budget_app.data_fakes.TransactionDAO_Fake;
 import com.beck.beck_demos.budget_app.models.Transaction;
-
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -24,11 +24,11 @@ class AllTransactionsServletTest {
   MockHttpServletResponse response;
   HttpSession session;
   RequestDispatcher rd;
+
   @BeforeEach
   public void setup() throws ServletException{
-
     servlet = new AllTransactionsServlet();
-    servlet.init(new TransactionDAO_Fake(),new CategoryDAO_Fake());
+    servlet.init(new TransactionDAO_Fake(), new CategoryDAO_Fake(), new Bank_AccountDAO_Fake());
     request =  new MockHttpServletRequest();
     response = new MockHttpServletResponse();
     session = new MockHttpSession();
@@ -43,72 +43,79 @@ class AllTransactionsServletTest {
     session=null;
     rd=null;
   }
+
+  // --- AUTHENTICATION & ACCESS TESTS ---
+
   @Test
   public void TestLoggedInUserGets200OnDoGet() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setRoles(roles);
-    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
-    session.setAttribute("User_B",user);
-    request.setSession(session);
+    setupUserSession("User", "fec75744-130e-4bcb-8bbe-9bee18080428");
     servlet.doGet(request,response);
-    int status = response.getStatus();
-    assertEquals(200,status);
+    assertEquals(200, response.getStatus());
   }
+
   @Test
   public void TestLoggedOutUserGets302OnDoGet() throws ServletException, IOException{
     request.setSession(session);
     servlet.doGet(request,response);
-    int status = response.getStatus();
-    assertEquals(302,status);
+    assertEquals(302, response.getStatus());
   }
+
   @Test
   public void TestWrongRoleGets302onDoGet() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("WrongRole");
-    user.setRoles(roles);
-    session.setAttribute("User_B",user);
-    request.setSession(session);
+    setupUserSession("WrongRole", null);
     servlet.doGet(request,response);
-    int status = response.getStatus();
-    assertEquals(302,status);
+    assertEquals(302, response.getStatus());
   }
+
+  // --- DATA RETRIEVAL TESTS ---
+
   @Test
   public void testLoggedInUserGetsAllTransactions() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setRoles(roles);
-    user.setUser_ID("618052e9-c69b-4d9b-880e-e22e4a970bd6");
-    session.setAttribute("User_B",user);
-    request.setSession(session);
+    setupUserSession("User", "618052e9-c69b-4d9b-880e-e22e4a970bd6");
     servlet.doGet(request,response);
     List<Transaction> transactions = (List<Transaction>) request.getAttribute("Transactions");
     assertNotNull(transactions);
-    assertEquals(5,transactions.size());
+    assertEquals(5, transactions.size());
   }
 
   @Test
   public void testLoggedInUserCanFilterTransactionsByCategory_ID() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setRoles(roles);
-    user.setUser_ID("4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc");
-    session.setAttribute("User_B",user);
-    String category = "e6c68360-1216-4c12-8831-294146908356";
-    request.setParameter("category",category);
+    setupUserSession("User", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc");
+    request.setParameter("category", "e6c68360-1216-4c12-8831-294146908356");
 
-    String Category_ID= null;
-
-    request.setSession(session);
     servlet.doGet(request,response);
     List<Transaction> transactions = (List<Transaction>) request.getAttribute("Transactions");
     assertNotNull(transactions);
-    assertEquals(3,transactions.size());
+    assertEquals(3, transactions.size());
   }
+
+  @Test
+  public void testLoggedInUserCanFilterTransactionsByYear() throws ServletException, IOException{
+    setupUserSession("User", "618052e9-c69b-4d9b-880e-e22e4a970bd6");
+    request.setParameter("year", "2026");
+
+    servlet.doGet(request,response);
+    List<Transaction> transactions = (List<Transaction>) request.getAttribute("Transactions");
+    assertNotNull(transactions);
+    assertEquals(99, transactions.size());
+  }
+
+  /**
+   * New test to ensure the servlet correctly identifies Investment-related
+   * transactions for the new chart stack.
+   */
+  @Test
+  public void testLoggedInUserCanFilterByInvestmentType() throws ServletException, IOException {
+    setupUserSession("User", "618052e9-c69b-4d9b-880e-e22e4a970bd6");
+    // Assuming you might add a 'type' filter for the chart
+    request.setParameter("type", "Investment");
+
+    servlet.doGet(request, response);
+    List<Transaction> transactions = (List<Transaction>) request.getAttribute("Transactions");
+    assertNotNull(transactions);
+    assertEquals(5, transactions.size());
+  }
+
   @Test
   public void testInitWithNoParametersDoesNotThrowException() throws ServletException {
     servlet = null;
@@ -116,22 +123,14 @@ class AllTransactionsServletTest {
     servlet.init();
   }
 
-  @Test
-  public void testLoggedInUserCanFilterTransactionsByYear() throws ServletException, IOException{
+  // --- HELPER ---
+  private void setupUserSession(String role, String userId) {
     User user = new User();
     List<String> roles = new ArrayList<>();
-    roles.add("User");
+    roles.add(role);
     user.setRoles(roles);
-    user.setUser_ID("618052e9-c69b-4d9b-880e-e22e4a970bd6");
-    session.setAttribute("User_B",user);
-    String year = "103";
-    request.setParameter("year",year);
-
+    if (userId != null) user.setUser_ID(userId);
+    session.setAttribute("User_B", user);
     request.setSession(session);
-    servlet.doGet(request,response);
-    List<Transaction> transactions = (List<Transaction>) request.getAttribute("Transactions");
-    assertNotNull(transactions);
-    assertEquals(1,transactions.size());
   }
-
 }

@@ -38,6 +38,10 @@ public class AnalysisAJAXController extends HttpServlet {
     String mode = req.getParameter("mode");
     String level = req.getParameter("level");
     String yearStr = req.getParameter("year");
+    String BankAccountID= req.getParameter("bankAccountSelect");
+    if (BankAccountID == null ) {
+      BankAccountID = "";
+    }
 
     int year = (yearStr != null && !yearStr.isEmpty()) ? Integer.parseInt(yearStr) : 2026;
 
@@ -47,13 +51,13 @@ public class AnalysisAJAXController extends HttpServlet {
       if ("1".equals(level)) {
         // SUPER CATEGORY LEVEL
         breakdown = "1".equals(mode)
-            ? transactionDAO.getSuperMonthlyAnalysis(user.getUser_ID(), year)
-            : transactionDAO.getSuperAnnualAnalysis(user.getUser_ID());
+            ? transactionDAO.getSuperMonthlyAnalysis(user.getUser_ID(),BankAccountID ,year)
+            : transactionDAO.getSuperAnnualAnalysis(user.getUser_ID(),BankAccountID);
       } else {
         // SUB CATEGORY LEVEL (Default)
         breakdown = "1".equals(mode)
-            ? transactionDAO.getMonthlyAnalysis(user.getUser_ID(), year)
-            : transactionDAO.getAnnualAnalysis(user.getUser_ID());
+            ? transactionDAO.getMonthlyAnalysis(user.getUser_ID() ,BankAccountID, year)
+            : transactionDAO.getAnnualAnalysis(user.getUser_ID() ,BankAccountID);
       }
 
       resp.setContentType("application/json");

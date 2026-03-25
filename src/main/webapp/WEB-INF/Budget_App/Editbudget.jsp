@@ -78,7 +78,8 @@
                 </thead>
                 <tbody id="lineItemBody">
                 <c:forEach items="${Budget.lines}" var="item">
-                    <tr data-id="${item.budget_Line_Item_id}">
+                    <tr data-id="${item.budget_Line_Item_id}"
+                        class="${item.budget_line_status_id eq 'inactive' ? 'row-inactive' : ''}">
                         <td class="editable" data-field="name">${fn:escapeXml(item.name)}</td>
                         <td class="editable" data-field="details">${fn:escapeXml(item.details)}</td>
                         <td class="editable" data-field="amount">${item.amount}</td>

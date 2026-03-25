@@ -10,6 +10,14 @@
     <div class="row g-4">
         <div class="col-lg-3">
             <div class="budget-panel mb-3 p-3">
+                <label class="small fw-bold text-uppercase text-muted mb-2 d-block">Account</label>
+                <select class="form-select border-0 bg-light mb-3" id="bankAccountSelect" name="bankAccountSelect">
+                    <option value="">All Accounts</option>
+                    <c:forEach items="${BankAccounts}" var="bank">
+                        <option value="${bank.bank_Account_ID}">${bank.account_Nickname}</option>
+                    </c:forEach>
+                </select>
+
                 <label class="small fw-bold text-uppercase text-muted mb-2 d-block">View Level</label>
                 <div class="btn-group w-100 mb-3">
                     <button id="btnSub" class="btn btn-outline-primary active" data-val="0">Sub</button>
@@ -64,5 +72,9 @@
         </div>
     </div>
 </div>
-<script>window.initialData = ${jsonBreakdown != null ? jsonBreakdown : '[]'};</script>
+
+<script>
+    // Pass the initial breakdown from the controller to the JS file
+    window.initialData = ${jsonBreakdown != null ? jsonBreakdown : '[]'};
+</script>
 <%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>

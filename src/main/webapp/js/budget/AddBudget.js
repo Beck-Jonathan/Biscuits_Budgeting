@@ -81,19 +81,29 @@ $(document).ready(function () {
         } catch (e) { console.warn("Chart.js not loaded or element missing"); }
     }
 
-    function updateChart(currentTotal) {
-        if (chart) {
-            const limit = parseFloat($("#budgetLimit").text()) || 0;
-            const labels = [];
-            const data = [];
-            const colors = [];
+function updateChart(currentTotal) {
+    if (chart) {
+        const limit = parseFloat($("#budgetLimit").text().replace(/,/g, '')) || 0;
+        const labels = [];
+        const data = [];
+        const colors = [];
 
-            $("#lineItemBody tr").each(function () {
-                if (this.id !== "inputRow") {
-                    let name = $(this).find('[data-field="name"]').text().trim();
-                    let amt = parseFloat($(this).find('[data-field="amount"]').text());
-                    let hex = $(this).find('[data-field="color"]').attr("data-hex");
+        $("#lineItemBody tr").each(function () {
+            // 1. Skip the input row
+            if (this.id !== "inputRow") {
+                const $row = $(this);
 
+                // 2. Determine current status (checks both static text and active <select> dropdowns)
+                let status = $row.find('[data-field="status"] select').val() ||
+                    $row.find('[data-field="status"]').text().trim();
+
+                // 3. FILTER: Only process if status is NOT inactive
+                if (status.toLowerCase() !== 'inactive') {
+                    let name = $row.find('[data-field="name"]').text().trim();
+                    let amt = parseFloat($row.find('[data-field="amount"]').text());
+                    let hex = $row.find('[data-field="color"]').attr("data-hex");
+
+                    // Ensure hex has the hash prefix for Chart.js
                     if (hex && !hex.startsWith('#')) hex = '#' + hex;
 
                     if (!isNaN(amt) && amt > 0) {
@@ -102,41 +112,56 @@ $(document).ready(function () {
                         colors.push(hex || "#4E79A7");
                     }
                 }
-            });
-
-            if (limit > currentTotal) {
-                labels.push("Available");
-                data.push(limit - currentTotal);
-                colors.push("#e0e0e0");
             }
+        });
 
-            chart.data.labels = labels;
-            chart.data.datasets[0].data = data;
-            chart.data.datasets[0].backgroundColor = colors;
-            chart.update();
+        // 4. Calculate "Available" slice based on filtered currentTotal
+        if (limit > currentTotal) {
+            labels.push("Available");
+            data.push(limit - currentTotal);
+            colors.push("#e0e0e0");
         }
+
+        // 5. Push updates to the Chart.js instance
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = data;
+        chart.data.datasets[0].backgroundColor = colors;
+        chart.update();
     }
+}
 
-    function recalcTotal() {
-        let currentTotal = 0;
-        let itemCount = 0;
-        const limit = parseFloat($("#budgetLimit").text().replace(/,/g, '')) || 0;
+function recalcTotal() {
+    let currentTotal = 0;
+    let itemCount = 0;
+    const limit = parseFloat($("#budgetLimit").text().replace(/,/g, '')) || 0;
 
-        $("#lineItemBody tr").each(function () {
-            if (this.id !== "inputRow") {
-                let amount = parseFloat($(this).find('[data-field="amount"]').text());
+    $("#lineItemBody tr").each(function () {
+        if (this.id !== "inputRow") {
+            const $row = $(this);
+            // Get current status
+            let status = $row.find('[data-field="status"] select').val() ||
+                $row.find('[data-field="status"]').text().trim();
+
+            if (status.toLowerCase() !== 'inactive') {
+                // ACTIVE ROW
+                $row.removeClass("row-inactive"); // Ensure fade is removed
+                let amount = parseFloat($row.find('[data-field="amount"]').text());
                 if (!isNaN(amount)) {
                     currentTotal += amount;
                     itemCount++;
                 }
+            } else {
+                // INACTIVE ROW
+                $row.addClass("row-inactive"); // Apply the fade
             }
-        });
+        }
+    });
 
-        $("#totalUsed").text(currentTotal.toFixed(2));
-        $("#totalRemaining").text((limit - currentTotal).toFixed(2));
-        $("#totalCount").text(itemCount);
-        updateChart(currentTotal);
-    }
+    $("#totalUsed").text(currentTotal.toFixed(2));
+    $("#totalRemaining").text((limit - currentTotal).toFixed(2));
+    $("#totalCount").text(itemCount);
+    updateChart(currentTotal);
+}
 
     window.addLineItem = function () {
         var budgetId = document.getElementById("budgetID").innerText.trim();

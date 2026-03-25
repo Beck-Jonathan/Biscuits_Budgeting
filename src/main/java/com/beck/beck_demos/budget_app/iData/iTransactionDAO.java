@@ -26,13 +26,13 @@ public interface iTransactionDAO {
 
 
 
-   List<Transaction_VM> getTransactionByUser(String userID, String category, int year, int pagesize, int offset, String sortBy, int order,boolean findErrors) throws SQLException ;
+   List<Transaction_VM> getTransactionByUser(String userID, String category, String Bank_Account_ID, int year, int pagesize, int offset, String sortBy, int order,boolean findErrors) throws SQLException ;
 
 
     List<Transaction_VM> searchTransactionByUser(String userID, String query) throws SQLException;
 
 
-   int getTransactionCountByUser(String userID, String category, int year, boolean findErrors) throws SQLException;
+   int getTransactionCountByUser(String userID, String category, String Bank_Account_ID, int year, boolean findErrors) throws SQLException;
 
 
   Transaction_VM getTransactionByPrimaryKey(Transaction _transaction) throws SQLException;
@@ -56,8 +56,8 @@ public interface iTransactionDAO {
   List<Transaction> getDistinctTransactionForDropdown(String user_ID) throws SQLException;
 
   int applyAllLines(String userId, List<Saved_Search_Order_Line> savedSearchOrderLines) throws SQLException;
-   List<List<SubCategory_VM>> getMonthlyAnalysis(String user_ID, int year) ;
-  List<List<SubCategory_VM>> getAnnualAnalysis(String user_ID);
-  List<List<SubCategory_VM>> getSuperAnnualAnalysis(String user_ID);
-  List<List<SubCategory_VM>> getSuperMonthlyAnalysis(String user_ID, int year) ;
+   List<List<SubCategory_VM>> getMonthlyAnalysis(String user_ID , String BankAccountID, int year) ;
+  List<List<SubCategory_VM>> getAnnualAnalysis(String user_ID, String BankAccountID);
+  List<List<SubCategory_VM>> getSuperAnnualAnalysis(String user_ID, String BankAccountID);
+  List<List<SubCategory_VM>> getSuperMonthlyAnalysis(String user_ID, String BankAccountID, int year) ;
 }

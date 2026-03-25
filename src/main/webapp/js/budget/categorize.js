@@ -9,7 +9,7 @@ $(document).ready(function() {
             let y = takevalues(id, address);
             let thisLockBox = document.getElementById(id+"_lock")
             if (thisLockBox && !thisLockBox.checked) {
-                console.log(thisLockBox)
+               // console.log(thisLockBox)
                 thisLockBox.click();
             }
         });

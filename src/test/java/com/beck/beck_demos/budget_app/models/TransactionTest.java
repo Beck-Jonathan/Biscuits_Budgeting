@@ -131,7 +131,7 @@ class TransactionTest {
   }
   @Test
   public void testSetCategory_IDSetsCategory_ID(){
-    String Category_ID = "kQZPMJWFDtNrZZjLVepvoWYhvtHFJXMkqWtpaFqLBtRTyMwLeOvtBaQPPyshfibDTQDjwLWneHsMrTbuaVTQoxhTOclvsgyHtm";
+    String Category_ID = "d59f0d8b-b23f-4da7-838f-df701c48743a";
     _transaction.setCategory_ID(Category_ID);
     Assertions.assertEquals(Category_ID,_transaction.getCategory_ID());
   }
@@ -279,12 +279,12 @@ class TransactionTest {
 //to set the User_ID as equal.
     smaller.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");;
 //to compare a smaller and larger Category_ID
-    smaller.setCategory_ID("aaaa");
-    bigger.setCategory_ID("bbbb");
+    smaller.setCategory_ID("c59f0d8b-b23f-4da7-838f-df701c48743a");
+    bigger.setCategory_ID("d59f0d8b-b23f-4da7-838f-df701c48743a");
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the Category_ID as equal.
-    smaller.setCategory_ID("bbbb");
+    smaller.setCategory_ID("d59f0d8b-b23f-4da7-838f-df701c48743a");
 //to compare a smaller and larger Bank_Account_ID
     smaller.setBank_Account_ID("aaaa");
     bigger.setBank_Account_ID("bbbb");

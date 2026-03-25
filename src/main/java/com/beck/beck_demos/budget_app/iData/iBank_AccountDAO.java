@@ -34,6 +34,12 @@ public interface iBank_AccountDAO {
    */
   int add (Bank_Account _bank_account) throws SQLException;
 
+  /**
+   * DAO Method to select distinct bank_account for dropdowns
+   * @return list of string
+   * @author Jonathan Beck
+   */
+  List<Bank_Account> getDistinctBank_AccountForDropdown(String User_ID) throws SQLException;
 
 
 }

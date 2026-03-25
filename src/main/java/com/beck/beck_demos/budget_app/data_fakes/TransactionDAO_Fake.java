@@ -218,11 +218,15 @@ public class TransactionDAO_Fake implements iTransactionDAO {
 
 
   @Override
-  public List<Transaction_VM> getTransactionByUser(String userID, String category, int year, int pagesize, int offset, String sortBy, int order, boolean isError) throws SQLException {
+  public List<Transaction_VM> getTransactionByUser(String userID, String category, String Bank_Account_ID,int year, int pagesize, int offset, String sortBy, int order, boolean isError) throws SQLException {
     List<Transaction_VM> results = new ArrayList<>();
     for (Transaction_VM t : transactionVMs) {
 
-      if (t.getUser_ID().equals(userID)&&(category.equals("")||t.getCategory_ID().equals(category))&&(year==0||t.getPost_Date().getYear()==year)) {
+      if (t.getUser_ID().equals(userID)
+          &&(category.equals("")||t.getCategory_ID().equals(category))
+          &&(year==0||t.getPost_Date().getYear()==year)
+          &&(Bank_Account_ID.equals("")||t.getBank_Account_ID().equals(Bank_Account_ID))
+      ) {
         results.add(t);
       }
     }
@@ -247,10 +251,13 @@ public class TransactionDAO_Fake implements iTransactionDAO {
 
 
   @Override
-  public int getTransactionCountByUser(String userID, String category, int year, boolean findErrors) throws SQLException {
+  public int getTransactionCountByUser(String userID, String category, String Bank_Account_ID,int year, boolean findErrors) throws SQLException {
     int count = 0;
     for (Transaction t : transactionVMs) {
-      if (t.getUser_ID().equals(userID)&&(year==0 || t.getPost_Date().getYear()==year)) {
+      if (t.getUser_ID().equals(userID)
+          &&(year==0 || t.getPost_Date().getYear()==year)
+          &&(Bank_Account_ID.equals("")||t.getBank_Account_ID().equals(Bank_Account_ID))
+      ) {
         count++;
       }
     }
@@ -362,22 +369,22 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   }
 
   @Override
-  public List<List<SubCategory_VM>> getMonthlyAnalysis(String user_ID, int year) {
+  public List<List<SubCategory_VM>> getMonthlyAnalysis(String user_ID, String BankAccountID, int year) {
     return List.of();
   }
 
   @Override
-  public List<List<SubCategory_VM>> getAnnualAnalysis(String user_ID) {
+  public List<List<SubCategory_VM>> getAnnualAnalysis(String user_ID, String BankAccountID) {
     return List.of();
   }
 
   @Override
-  public List<List<SubCategory_VM>> getSuperAnnualAnalysis(String user_ID) {
+  public List<List<SubCategory_VM>> getSuperAnnualAnalysis(String user_ID, String BankAccountID) {
     return List.of();
   }
 
   @Override
-  public List<List<SubCategory_VM>> getSuperMonthlyAnalysis(String user_ID, int year) {
+  public List<List<SubCategory_VM>> getSuperMonthlyAnalysis(String user_ID, String BankAccountID, int year) {
     return List.of();
   }
 

@@ -108,6 +108,18 @@ public class Bank_AccountDAO_Fake implements iBank_AccountDAO {
     return newsize-size;
   }
 
+  @Override
+  public List<Bank_Account> getDistinctBank_AccountForDropdown(String User_ID) throws SQLException {
+    List<Bank_Account> results = new ArrayList<>();
+    for (Bank_Account bank_account : bank_accountVMs){
+      if ((User_ID==null||bank_account.getUser_ID().equals(User_ID))
+      ){
+        results.add(bank_account);
+      }
+    }
+    return results;
+  }
+
   private boolean duplicateKey(Bank_Account _bank_account){
     return _bank_account.getBank_Account_ID().equals("xxxxxCATE");
   }

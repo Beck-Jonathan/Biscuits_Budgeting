@@ -3,10 +3,13 @@ package com.beck.beck_demos.budget_app.controllers; /******************
  Created By Jonathan Beck 7/22/2024
  ***************/
 
+import com.beck.beck_demos.budget_app.data.Bank_AccountDAO;
 import com.beck.beck_demos.budget_app.data.TransactionDAO;
 import com.beck.beck_demos.budget_app.data.CategoryDAO;
+import com.beck.beck_demos.budget_app.iData.iBank_AccountDAO;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
+import com.beck.beck_demos.budget_app.models.Bank_Account;
 import com.beck.beck_demos.budget_app.models.SubCategory;
 import com.beck.beck_demos.budget_app.models.Transaction_VM;
 import com.beck.beck_demos.budget_app.models.User;
@@ -25,139 +28,85 @@ import java.util.List;
 public class AllTransactionsServlet extends HttpServlet {
   private iCategoryDAO categoryDAO;
   private iTransactionDAO transactionDAO;
+  private iBank_AccountDAO bankAccountDAO;
 
   @Override
   public void init() throws ServletException {
     transactionDAO = new TransactionDAO();
     categoryDAO = new CategoryDAO();
+    bankAccountDAO = new Bank_AccountDAO();
   }
-  public void init (iTransactionDAO transactionDAO, iCategoryDAO categoryDAO) {
+  public void init (iTransactionDAO transactionDAO, iCategoryDAO categoryDAO,iBank_AccountDAO bankAccountDAO) {
     this.transactionDAO = transactionDAO;
     this.categoryDAO = categoryDAO;
+    this.bankAccountDAO = bankAccountDAO;
   }
 
   @Override
-protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-
-
-//To restrict this page based on privilege level
-
-
-  int PRIVILEGE_NEEDED = 0;
-  HttpSession session = req.getSession();
-    User user = (User)session.getAttribute("User_B");
-    if (user==null||!user.getRoles().contains("User")){
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    HttpSession session = req.getSession();
+    User user = (User) session.getAttribute("User_B");
+    if (user == null || !user.getRoles().contains("User")) {
       resp.sendRedirect("budget_home");
       return;
     }
-   HashMap<String,String> parameters = new HashMap<>();
-    Integer year = 0;
+
+    // 1. Get Filters
+    String category = req.getParameter("category") == null ? "" : req.getParameter("category");
+    String bankAccountID = req.getParameter("bankAccountID") == null ? "" : req.getParameter("bankAccountID");
+    boolean findErrors = "true".equals(req.getParameter("showErrors"));
+
+    int year = 0;
     try {
-      year= Integer.parseInt(req.getParameter("year"));
-    } catch (Exception e){
-      year=0;
-    }
-    parameters.put("year",year.toString());
-    session.setAttribute("year",year);
-    Integer direction = 0;
-    boolean reverse=false;
-    boolean findErrors = false;
-    if (req.getParameter("reverse")!=null) {
-      try {
-        reverse = Boolean.parseBoolean(req.getParameter("reverse"));
-      }
-      catch (Exception e ){
-        reverse=false;
-      }
-    }
-    String showErrors = req.getParameter("showErrors");
-    if (req.getParameter("showErrors")!=null) {
-      try {
-        findErrors = Boolean.parseBoolean(req.getParameter("showErrors"));
-      }
-      catch (Exception e ){
-        findErrors=false;
-      }
+      year = Integer.parseInt(req.getParameter("year"));
+    } catch (Exception e) { year = 0; }
+
+    // 2. Get Sort & Direction
+    String sort = req.getParameter("sort");
+    if (sort == null || sort.isEmpty()) sort = "Date";
+
+    int direction = 0;
+    try {
+      direction = Integer.parseInt(req.getParameter("direction"));
+    } catch (Exception e) { direction = 0; }
+
+    // Handle the "Reverse" toggle specifically
+    if ("true".equals(req.getParameter("reverse"))) {
+      direction = (direction == 0) ? 1 : 0;
     }
 
-      if (reverse) {
-         direction = 1 ;}
-
-         else {
-          direction = 0;
-        }
-
-
-    session.setAttribute("reverse",reverse);
-
-
-    String category = "";
-    try  {
-      category= (req.getParameter("category"));
-    } catch (Exception e){
-      category="";
-    }
-    if (category==null){category="";}
-    parameters.put("category",category);
-    session.setAttribute("category",category);
-    String sort = "";
-    try  {
-      sort= (req.getParameter("sort"));
-    } catch (Exception e){
-      sort="";
-    }
-    parameters.put("sort",sort);
-    session.setAttribute("sort",sort);
-
-
-
-  session.setAttribute("currentPage",req.getRequestURL());
-  List<Transaction_VM> transactions = null;
-  int transaction_count=0;
-
-  int page_size=20;
-
+    // 3. Pagination
+    int page_size = 20;
     int page_number = 1;
-    int recordsPerPage = 5;
-
     try {
-       page_number = Integer.parseInt(req.getParameter("page"));
-       } catch (Exception e){
-        page_number=1;
-    }
-    
+      page_number = Integer.parseInt(req.getParameter("page"));
+    } catch (Exception e) { page_number = 1; }
 
-    session.setAttribute("page_number",page_number);
+    int offset = (page_number - 1) * page_size;
 
-    // page_size = req.get
-
-    int offset=(page_number-1)*(page_size);
-
-    List <SubCategory> allCategories = null;
+    // 4. Data Fetching
     try {
-      transaction_count = transactionDAO.getTransactionCountByUser(user.getUser_ID(),category,year,findErrors);
+      int transaction_count = transactionDAO.getTransactionCountByUser(user.getUser_ID(), category, bankAccountID, year, findErrors);
+      List<Transaction_VM> transactions = transactionDAO.getTransactionByUser(user.getUser_ID(), category, bankAccountID, year, page_size, offset, sort, direction, findErrors);
 
-      transactions = transactionDAO.getTransactionByUser(user.getUser_ID(),category,year,page_size,offset,sort,direction,findErrors);
-      allCategories = categoryDAO.getsubCategoryByUser(user.getUser_ID());
+      req.setAttribute("Transactions", transactions);
+      req.setAttribute("Categories", categoryDAO.getsubCategoryByUser(user.getUser_ID()));
+      req.setAttribute("BankAccounts", bankAccountDAO.getDistinctBank_AccountForDropdown(user.getUser_ID()));
+      req.setAttribute("transaction_count", transaction_count);
+      req.setAttribute("noOfPages", (int) Math.ceil((double) transaction_count / page_size));
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-    int total_pages = 1+(transaction_count/page_size);
 
-    //https://stackoverflow.com/questions/31410007/how-to-do-pagination-in-jsp
-
-    req.setAttribute("noOfPages", total_pages);
-    req.setAttribute("transaction_count",transaction_count);
-    //fix current page
+    // 5. Attributes for JSP
     req.setAttribute("currentPage", page_number);
+    req.setAttribute("category", category);
+    req.setAttribute("bankAccountID", bankAccountID);
+    req.setAttribute("showErrors", findErrors);
+    req.setAttribute("sort", sort);
+    req.setAttribute("direction", direction);
+    req.setAttribute("year", year);
 
-    req.setAttribute("Categories", allCategories);
-
-
-    req.setAttribute("Transactions", transactions);
-  req.setAttribute("pageTitle", "All Transactions");
-  req.getRequestDispatcher("WEB-INF/Budget_App/all_Transactions.jsp").forward(req,resp);
-
-}
+    req.getRequestDispatcher("WEB-INF/Budget_App/all_Transactions.jsp").forward(req, resp);
+  }
 }

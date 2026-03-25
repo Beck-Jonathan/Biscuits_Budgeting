@@ -1,156 +1,182 @@
-<%--************
-Create the JSP  For Viewing All of The  Transaction table
- Created By Jonathan Beck 7/22/2024
-**********--%>
 <%@include file="/WEB-INF/Budget_App/budget_top.jsp"%>
-<div class = "container">
+
+<div class="container-fluid mt-3 px-4">
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-1">All Transactions</h1>
+                <span class="badge bg-dark">${transaction_count} Total Records</span>
+            </div>
+            <div class="btn-group">
+                <a href="addTransactionCategory" class="btn btn-sm btn-outline-primary">+ Category</a>
+                <a href="?sort=${sort}&direction=${direction}&category=${category}&bankAccountID=${bankAccountID}&showErrors=${showErrors}&year=${year}&reverse=true"
+                   class="btn btn-sm btn-outline-warning">⇅ Reverse Sort</a>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
-        <div class="col-12" id="addr" addr="${appURL}">
+        <div class="col-12">
+            <div class="filter-toolbar">
+                <form method="get" action="all-Transactions">
+                    <input type="hidden" name="sort" value="${sort}">
+                    <input type="hidden" name="direction" value="${direction}">
+                    <input type="hidden" name="year" value="${year}">
 
-            <h1>All ${User_B.email} Transactions</h1>
-            <p>There ${transaction_count eq 1 ? "is" : "are"}&nbsp;${transaction_count} Transaction${transaction_count ne 1 ? "s" : ""}</p>
-            Add Category   <a href="addTransactionCategory">Add</a> <br/>
-            search transactions <a href="search_transaction">search</a> <br/>
-            Reverse order <a href="${appURL}/all-Transactions?sort=${sort}&direction=${direction}&category=${category}&year=${year}&reverse=true">reverse</a><br/>
+                    <div class="filter-group">
+                        <div class="filter-item">
+                            <label class="small fw-bold text-muted">CATEGORY</label>
+                            <select name="category" class="form-select rounded-pill shadow-sm">
+                                <option value="">All Categories</option>
+                                <c:forEach items="${Categories}" var="cat">
+                                    <option value="${cat.category_ID}" ${cat.category_ID == category ? 'selected' : ''}>
+                                            ${cat.category_Name}
+                                    </option>
+                                </c:forEach>
+                            </select>
+                        </div>
 
-            <div id="searchFilter">
-                <form method="get" action="${appURL}/all-Transactions" id = "all-Transactions" >
-                    <div class="d-flex align-items-center">
-                        <label class="me-2 small fw-bold text-muted">Category:</label>
-                        <select name="category" class="form-select form-select-sm rounded-pill" style="width: auto;">
-                            <option value="">All</option>
-                            <c:forEach items="${Categories}" var="category">
-                                <option value="${category.category_ID}"
-                                    ${fn:toLowerCase(category.category_Name) == 'uncategorized' ? 'selected' : ''}>
-                                        ${category.category_Name}
-                                </option>
-                            </c:forEach>
-                        </select>
+                        <div class="filter-item">
+                            <label class="small fw-bold text-muted">BANK ACCOUNT</label>
+                            <select name="bankAccountID" class="form-select rounded-pill shadow-sm">
+                                <option value="">Any Account</option>
+                                <c:forEach items="${BankAccounts}" var="ba">
+                                    <option value="${ba.bank_Account_ID}" ${ba.bank_Account_ID == bankAccountID ? 'selected' : ''}>
+                                            ${ba.account_Nickname}
+                                    </option>
+                                </c:forEach>
+                            </select>
+                        </div>
+
+                        <div class="filter-switch d-flex justify-content-center">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="showErrors" id="showErrors" value="true" ${showErrors ? 'checked' : ''}>
+                                <label class="form-check-label small fw-bold text-danger" for="showErrors">Potential Errors</label>
+                            </div>
+                        </div>
+
+                        <div class="filter-action">
+                            <button type="submit" class="btn btn-primary w-100 rounded-pill shadow-sm">Filter Results</button>
+                        </div>
                     </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-                    <div class="form-check form-switch mb-0">
-                        <input class="form-check-input" type="checkbox" name="showErrors" id="showErrors" value="true"
-                        ${param.showErrors == 'true' ? 'checked' : ''}>
-                        <label class="form-check-label small fw-bold text-danger" for="showErrors">
-                            <i class="bi bi-exclamation-triangle-fill"></i> Potential Errors
-                        </label>
-                    </div>
+    <c:if test="${not empty Transactions}">
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive shadow-sm bg-white rounded border">
+                    <table class="table table-hover align-middle mb-0 table-fixed">
+                        <thead class="table-dark">
+                            <%-- Reusable URL params to keep search/filter state while sorting --%>
+                        <c:set var="urlBase" value="category=${category}&bankAccountID=${bankAccountID}&showErrors=${showErrors}&year=${year}&page=${currentPage}" />
+
+                        <tr>
+
+                            <th class="col-date text-white">Account</th>
+                            <th class="col-date">
+                                <a class="text-white text-decoration-none d-block" href="?sort=Date&direction=${direction == 0 ? 1 : 0}&${urlBase}">
+                                    Date <i class="bi bi-arrow-down-up small ms-1"></i>
+                                </a>
+                            </th>
+                            <th class="text-white">Check #</th>
+                            <th class="text-white">Description</th>
+                            <th class="col-amount">
+                                <a class="text-white text-decoration-none d-block" href="?sort=Amount&direction=${direction == 0 ? 1 : 0}&${urlBase}">
+                                    Amount <i class="bi bi-arrow-down-up small ms-1"></i>
+                                </a>
+                            </th>
+                            <th class="col-category text-white">Category</th>
+                            <th class="col-status text-white">Status</th>
+                            <th class="text-white text-center">Locked</th>
+                            <th class="col-action text-white">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach items="${Transactions}" var="t">
+                            <tr>
+                                
+
+                                <td><span class="badge bg-light text-dark border">${t.bank_Account_ID}</span></td>
+
+                                <td>${t.post_Date}</td>
+
+                                <td>${empty t.check_No ? '--' : t.check_No}</td>
+
+                                <td>
+                                    <div class="text-truncate-custom" title="${fn:escapeXml(t.description)}">
+                                            ${fn:escapeXml(t.description)}
+                                    </div>
+                                </td>
+
+                                <td class="text-end fw-bold ${fn:containsIgnoreCase(t.type, 'credit') ? 'amt-credit' : 'amt-debit'}">
+                                        ${fn:containsIgnoreCase(t.type, 'credit') ? '+' : ''}${t.amount}
+                                </td>
+
+                                <td>
+                                    <select class="form-select form-select-sm shadow-sm" style="min-width: 150px;">
+                                        <c:forEach items="${Categories}" var="cat">
+                                            <option value="${cat.category_ID}" ${cat.category_ID == t.category_ID ? 'selected' : ''}>
+                                                    ${cat.category_Name}
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+
+                                <td>
+                                    <small class="text-uppercase text-muted fw-bold">${t.status}</small>
+                                </td>
+
+                                <td class="text-center">
+                                    <input type="checkbox" class="form-check-input" ${t.is_Locked ? 'checked' : ''}>
+                                </td>
+
+                                <td>
+                                    <a href="editTransaction?transactionid=${t.transaction_ID}&mode=edit" class="btn btn-sm btn-outline-secondary py-0">
+                                        Edit
+                                    </a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </c:if>
+
+    <div class="row mt-4 mb-5">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <span class="text-muted small">Page ${currentPage} of ${noOfPages}</span>
+            <form action="all-Transactions" method="get" class="d-flex align-items-center">
+                <input type="hidden" name="sort" value="${sort}">
+                <input type="hidden" name="direction" value="${direction}">
+                <input type="hidden" name="category" value="${category}">
+                <input type="hidden" name="bankAccountID" value="${bankAccountID}">
+                <input type="hidden" name="showErrors" value="${showErrors}">
+
+                <ul class="pagination pagination-sm mb-0 me-3">
+                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                        <a class="page-link" href="?page=${currentPage - 1}&sort=${sort}&direction=${direction}&category=${category}&bankAccountID=${bankAccountID}&showErrors=${showErrors}">Prev</a>
+                    </li>
+                </ul>
+
+                <select name="page" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
+                    <c:forEach var="i" begin="1" end="${noOfPages}">
+                        <option value="${i}" ${currentPage == i ? 'selected' : ''}>Go to Page ${i}</option>
+                    </c:forEach>
                 </select>
 
-
-                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3">Filter</button>                </form>
-            </div>
-
-            <c:if test="${Transactions.size() > 0}">
-
-                <div >
-                    <table class="table table-hover ">
-                        <thead class="thead-dark">
-                    <tr>
-                        <th scope="col"><a href="${appURL}/all-Transactions?sort=ID&direction=${direction}&category=${category}&year=${year}">Transaction_ID</a></th>
-                        <th scope="col">Account_Num</th>
-                        <th scope="col"><a href="${appURL}/all-Transactions?sort=Date&direction=${direction}&category=${category}&year=${year}">Post_Date</a></th>
-                        <th scope="col"><a href="${appURL}/all-Transactions?sort=Check&direction=${direction}&category=${category}&year=${year}">Check_No</a></th>
-                        <th scope="col">Description</th>
-                        <th scope="col"><a href="${appURL}/all-Transactions?sort=Amount&direction=${direction}&category=${category}&year=${year}">Amount</a></th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Is_Locked</th>
-                        <th scope="col"><a href="${appURL}/all-Transactions?sort=Comments&direction=${direction}&category=${category}&year=${year}">Comment Count</a></th>
-                        <th scope="col"></th>
-
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach items="${Transactions}" var="transaction">
-                        <tr >
-                            <td><a href = "editTransaction?transactionid=${transaction.transaction_ID}&mode=view">${fn:escapeXml(transaction.transaction_ID)}</a></td>
-                            <td>${fn:escapeXml(transaction.bank_Account_ID)}</td>
-                            <td>${fn:escapeXml(transaction.post_Date)}</td>
-                            <td>${fn:escapeXml(transaction.check_No)}</td>
-                            <td>${fn:escapeXml(transaction.description)}</td>
-                            <td>${fn:escapeXml(transaction.amount)}</td>
-                            <td>${fn:escapeXml(transaction.type)}</td>
-                            <td>${fn:escapeXml(transaction.status)}</td>
-                                <td id ="change+${transaction.transaction_ID}" >
-                                <input type="hidden" name="t_id" value =${transaction.transaction_ID}>
-                                <select  class="category" name="category" onchange="" id="${transaction.transaction_ID}">
-                                    <c:forEach items="${Categories}" var="category" >
-                                        <option  value="${category.category_ID}"  ${category.category_ID == transaction.category_ID ? 'selected' : ''}>${category.category_Name}</option>
-                                    </c:forEach>
-                                </select>
-                            <td style="width:50px">
-                                <div id="${transaction.transaction_ID}_status"  style="border:none; display:none;"  > xx </div>
-                            </td>
-                                </td>
-                            <td>
-                                <input type="checkbox" class="lock" id="${transaction.transaction_ID}_lock" <c:if test="${transaction.is_Locked}">checked</c:if>>
-                            <td style="width:50px">
-                                <div id="${transaction.transaction_ID}_lock_lock"  style="border:none; display:none;"  > xx </div>
-                            </td>
-                            </td>
-                            <td>
-                                    ${fn:escapeXml(transaction.comment_count)}
-                            </td>
-
-                            <td><a href = "editTransaction?transactionid=${transaction.transaction_ID}&mode=edit" > Edit </a></td>
-
-                        </tr>
-
-                  </c:forEach>
-                  </tbody>
-              </table>
-                </div>
-
-
-          </c:if>
-      </div>
-  </div>
+                <ul class="pagination pagination-sm mb-0 ms-3">
+                    <li class="page-item ${currentPage == noOfPages ? 'disabled' : ''}">
+                        <a class="page-link" href="?page=${currentPage + 1}&sort=${sort}&direction=${direction}&category=${category}&bankAccountID=${bankAccountID}&showErrors=${showErrors}">Next</a>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
 </div>
-<%--For displaying Previous link except for the 1st page --%>
-<c:if test="${currentPage != 1}">
-    <form action="all-Transactions" method="get">
-        <input type="hidden" name="sort" value="${sort}">
-        <input type="hidden" name="category" value="${category}">
-        <input type="hidden" name="year" value="${year}">
-        <input type="hidden" name="reverse" value="${reverse}">
-        <input type="hidden" name="page" value="${currentPage-1}">
-        <br/><br/>
-        <input type="submit" value="Previous Page" />
-    </form>
-</c:if>
 
-<%--For displaying Page numbers.
-The when condition does not display a link for the current page--%>
-<form action="all-Transactions" method="get" >
-    <input type="hidden" name="sort" value="${sort}">
-    <input type="hidden" name="category" value="${category}">
-    <input type="hidden" name="year" value="${year}">
-    <input type="hidden" name="reverse" value="${reverse}">
-    Select a page :
-    <select name="page" onchange="this.form.submit()">
-        <c:forEach var="i" begin="1" end="${noOfPages}">
-            <option value=${i}  ${currentPage == i ? ' selected' : ''} >${i}</option>
-        </c:forEach>
-
-    </select>
-    <br/><br/>
-    <input type="submit" value="Submit" />
-</form>
-
-<%--For displaying Next link --%>
-<c:if test="${currentPage lt noOfPages}">
-    <form action="all-Transactions" method="get">
-        <input type="hidden" name="sort" value="${sort}">
-        <input type="hidden" name="category" value="${category}">
-        <input type="hidden" name="year" value="${year}">
-        <input type="hidden" name="reverse" value="${reverse}">
-        <input type="hidden" name="page" value="${currentPage+1}">
-        <br/><br/>
-        <input type="submit" value="Next Page" />
-    </form>
-</c:if>
-</main>
 <%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>
-

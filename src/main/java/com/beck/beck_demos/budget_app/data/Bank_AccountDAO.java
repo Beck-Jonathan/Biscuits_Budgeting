@@ -138,6 +138,28 @@ public class Bank_AccountDAO implements iBank_AccountDAO {
     return numRowsAffected;
   }
 
-
+  @Override
+  public List<Bank_Account> getDistinctBank_AccountForDropdown(String User_ID) throws SQLException {
+    List<Bank_Account> result = new ArrayList<>();
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try(CallableStatement statement = connection.prepareCall("{CALL sp_select_distinct_and_active_bank_account_for_dropdown(?)}")) {
+          statement.setString(1,User_ID);
+          try(ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+              String bank_account_id = resultSet.getString("bank_account_bank_account_id");
+              String AccountNickname = resultSet.getString("bank_account_account_nickname");
+              Bank_Account _bank_account = new Bank_Account( bank_account_id);
+              _bank_account.setAccount_Nickname(AccountNickname);
+              result.add(_bank_account);
+            }
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not retrieve bank_accounts. Try again later");
+    }
+    return result;
+  }
 
 }

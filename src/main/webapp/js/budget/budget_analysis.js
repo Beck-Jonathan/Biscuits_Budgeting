@@ -3,7 +3,7 @@ $(document).ready(function() {
     let mode = "0";  // 0=Annual, 1=Monthly
     let level = "0"; // 0=Sub, 1=Super
 
-    // --- 1. Select/Deselect All Listeners ---
+    // --- 1. Listeners ---
 
     $(document).on('click', '#selectAll', function() {
         $('.cat-check').prop('checked', true);
@@ -15,16 +15,20 @@ $(document).ready(function() {
         renderCharts();
     });
 
+    // Bank Account Listener
+    $('#bankAccountSelect').on('change', function() {
+        fetchAnalysisData();
+    });
+
     // --- 2. Sidebar Population ---
 
     const updateSidebar = () => {
         const list = $('#categoryList').empty();
         if (!currentData || currentData.length === 0) return;
 
-        // Use the first period to populate the sidebar
         currentData[0].forEach(cat => {
             list.append(`
-                <li class="category-item">
+                <li class="category-item p-2 border-bottom">
                     <div class="form-check d-flex align-items-center">
                         <input class="form-check-input cat-check me-2" type="checkbox" 
                                value="${cat.category_Name}" id="c_${cat.category_ID}" checked>
@@ -40,39 +44,29 @@ $(document).ready(function() {
     const renderCharts = () => {
         if (!currentData || currentData.length === 0) return;
 
-        // Filter out 'Total In' to prevent double-counting in the stacks
         const selectedCats = $('.cat-check:checked').map(function() { return this.value; }).get()
             .filter(name => name.toLowerCase() !== "total in");
 
         let trendSeries = [];
         let pieDataPoints = [];
 
-        // Define X-Axis Labels (Years or Months)
         const xAxisLabels = currentData.map(period => {
             const firstEntry = period[0];
             return mode === "0" ? firstEntry.year : getMonthName(firstEntry.month);
         });
 
-        // Loop through selected categories to build series
         selectedCats.forEach(name => {
             let color = "";
-            let stackGroup = 'Expense'; // Default fallback
+            let stackGroup = 'Expense';
 
             const dataValues = currentData.map(period => {
                 const match = period.find(c => c.category_Name === name);
                 if (match) {
                     color = match.color_id;
-
-                    // --- ENUM LOGIC: Assign stack based on DB transaction_type ---
                     const type = (match.transactionType || 'expense').toLowerCase();
-                    console.log(match);
-                    if (type === 'income') {
-                        stackGroup = 'Income';
-                    } else if (type === 'investment') {
-                        stackGroup = 'Investment';
-                    } else {
-                        stackGroup = 'Expense';
-                    }
+                    if (type === 'income') stackGroup = 'Income';
+                    else if (type === 'investment') stackGroup = 'Investment';
+                    else stackGroup = 'Expense';
                 }
                 return match ? Math.abs(match.amount) : 0;
             });
@@ -86,7 +80,6 @@ $(document).ready(function() {
                     color: color
                 });
 
-                // Add to Pie Chart (using the most recent period in currentData)
                 const latestPeriod = currentData[currentData.length - 1];
                 const latestMatch = latestPeriod.find(c => c.category_Name === name);
                 if (latestMatch) {
@@ -99,7 +92,7 @@ $(document).ready(function() {
             }
         });
 
-        // Render Stacked Column Chart
+        // --- Stacked Column Chart ---
         Highcharts.chart('chartContainer', {
             chart: { type: 'column' },
             title: { text: "Budget Analysis Stacks", style: { fontWeight: 'bold' } },
@@ -110,10 +103,7 @@ $(document).ready(function() {
             },
             legend: { enabled: true },
             plotOptions: {
-                column: {
-                    stacking: 'normal',
-                    borderWidth: 0
-                }
+                column: { stacking: 'normal', borderWidth: 0 }
             },
             tooltip: {
                 shared: true,
@@ -128,7 +118,7 @@ $(document).ready(function() {
                     const chartWidth = this.chart.plotWidth;
                     const padding = 60;
                     if (point.plotX > chartWidth / 2) {
-                        const pdding = 20
+                        const pdding = 20;
                         x = point.plotX + this.chart.plotLeft - labelWidth - pdding;
                     } else {
                         x = point.plotX + this.chart.plotLeft + padding;
@@ -137,46 +127,88 @@ $(document).ready(function() {
                     return { x: Math.max(10, Math.min(x, this.chart.chartWidth - labelWidth - 10)), y: Math.max(10, y) };
                 },
                 formatter: function() {
-                    let s = `<div style="padding: 15px; min-width: 400px;">`;
-                    s += `<div style="font-size: 13px; font-weight: bold; margin-bottom: 8px; border-bottom: 2px solid #3498db;">${this.x}</div>`;
-                    s += '<div style="display: flex; flex-wrap: wrap;">';
+                    // 1. Separate the data by stack type
+                    const incomePoints = this.points.filter(p => (p.series.options.stack || '').toLowerCase() === 'income').sort((a, b) => b.y - a.y);
+                    const investPoints = this.points.filter(p => (p.series.options.stack || '').toLowerCase() === 'investment').sort((a, b) => b.y - a.y);
+                    const expensePoints = this.points.filter(p => (p.series.options.stack || '').toLowerCase() === 'expense').sort((a, b) => b.y - a.y);
 
+                    // Totals for the footer
                     let inTotal = 0, outTotal = 0, investTotal = 0;
-
-                    this.points.forEach(point => {
-                        const val = point.y;
-                        const stack = point.series.options.stack;
-                        if (stack === 'Income') inTotal += val;
-                        else if (stack === 'Investment') investTotal += val;
-                        else outTotal += val;
-
-                        s += `
-                            <div style="width: 50%; padding: 2px 0; display: flex; align-items: center; font-size: 11px;">
-                                <span style="color:${point.color}; margin-right: 6px;">\u25CF</span>
-                                <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 120px;">${point.series.name}:</span>
-                                <b style="margin-left: auto; padding-right: 10px;">$${val.toLocaleString()}</b>
-                            </div>`;
+                    this.points.forEach(p => {
+                        const stack = p.series.options.stack;
+                        if (stack === 'Income') inTotal += p.y;
+                        else if (stack === 'Investment') investTotal += p.y;
+                        else outTotal += p.y;
                     });
 
+                    let s = `<div style="padding: 15px; min-width: 500px;">`;
+                    s += `<div style="font-size: 13px; font-weight: bold; margin-bottom: 8px; border-bottom: 2px solid #3498db;">${this.x}</div>`;
+
+                    s += '<div style="display: flex; align-items: flex-start;">';
+
+                    // LEFT COLUMN: Income & Investment
+                    s += '<div style="width: 50%; border-right: 1px solid #eee; padding-right: 15px;">';
+
+                    // Income Section
+                    s += '<div style="font-size: 10px; font-weight: bold; text-decoration: underline; color: #27ae60; margin-bottom: 4px;">INCOME</div>';
+                    if (incomePoints.length > 0) {
+                        incomePoints.forEach(p => {
+                            s += `<div style="display: flex; align-items: center; font-size: 11px; margin-bottom: 2px;">
+                        <span style="color:${p.color}; margin-right: 6px;">\u25CF</span>
+                        <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 110px;">${p.series.name}</span>
+                        <b style="margin-left: auto;">$${p.y.toLocaleString()}</b>
+                      </div>`;
+                        });
+                    } else { s += '<div style="font-size: 10px; color: #ccc; margin-bottom: 5px;">None</div>'; }
+
+                    // Investment Section
+                    s += '<div style="font-size: 10px; font-weight: bold; text-decoration: underline; color: #2980b9; margin: 8px 0 4px 0;">INVESTMENTS</div>';
+                    if (investPoints.length > 0) {
+                        investPoints.forEach(p => {
+                            s += `<div style="display: flex; align-items: center; font-size: 11px; margin-bottom: 2px;">
+                        <span style="color:${p.color}; margin-right: 6px;">\u25CF</span>
+                        <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 110px;">${p.series.name}</span>
+                        <b style="margin-left: auto;">$${p.y.toLocaleString()}</b>
+                      </div>`;
+                        });
+                    } else { s += '<div style="font-size: 10px; color: #ccc;">None</div>'; }
                     s += '</div>';
+
+                    // RIGHT COLUMN: Expenses
+                    s += '<div style="width: 50%; padding-left: 15px;">';
+                    s += '<div style="font-size: 10px; font-weight: bold; text-decoration: underline; color: #e74c3c; margin-bottom: 4px;">EXPENSES</div>';
+                    if (expensePoints.length > 0) {
+                        expensePoints.forEach(p => {
+                            s += `<div style="display: flex; align-items: center; font-size: 11px; margin-bottom: 2px;">
+                        <span style="color:${p.color}; margin-right: 6px;">\u25CF</span>
+                        <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 110px;">${p.series.name}</span>
+                        <b style="margin-left: auto;">$${p.y.toLocaleString()}</b>
+                      </div>`;
+                        });
+                    } else { s += '<div style="font-size: 10px; color: #ccc;">None</div>'; }
+                    s += '</div>';
+
+                    s += '</div>'; // End Flex
+
+                    // Footer Summary
                     const net = inTotal - outTotal - investTotal;
                     s += `<div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed #ccc; font-size: 11px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-                                <span>Income: <b>$${inTotal.toLocaleString()}</b></span>
-                                <span>Expenses: <b>$${outTotal.toLocaleString()}</b></span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between;">
-                                <span>Invested: <b>$${investTotal.toLocaleString()}</b></span>
-                                <span>Net: <b style="color:${net >= 0 ? '#27ae60' : '#e74c3c'}">$${net.toLocaleString()}</b></span>
-                            </div>
-                          </div></div>`;
+                <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                    <span>In: <b style="color:#27ae60">$${inTotal.toLocaleString()}</b></span>
+                    <span>Out: <b style="color:#e74c3c">$${outTotal.toLocaleString()}</b></span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Invested: <b style="color:#2980b9">$${investTotal.toLocaleString()}</b></span>
+                    <span>Net: <b style="color:${net >= 0 ? '#27ae60' : '#e74c3c'}">$${net.toLocaleString()}</b></span>
+                </div>
+              </div></div>`;
                     return s;
                 }
             },
             series: trendSeries
         });
 
-        // Render Pie Chart
+        // --- Pie Chart ---
         Highcharts.chart('pieContainer', {
             chart: { type: 'pie' },
             title: { text: 'Current Period Share' },
@@ -193,11 +225,18 @@ $(document).ready(function() {
         });
     };
 
-    // --- 4. Data Fetching & UI Events ---
+    // --- 4. Data Fetching ---
 
     const fetchAnalysisData = () => {
         const selectedYear = $('#inputYear').val();
-        $.get("AnalysisAJAX", { mode, level, year: selectedYear }, (res) => {
+        const selectedBank = $('#bankAccountSelect').val();
+
+        $.get("AnalysisAJAX", {
+            mode: mode,
+            level: level,
+            year: selectedYear,
+            bankAccountSelect: selectedBank
+        }, (res) => {
             currentData = res;
             updateSidebar();
             renderCharts();
@@ -206,19 +245,14 @@ $(document).ready(function() {
 
     $('#btnAnnual, #btnMonthly').off().click(function() {
         mode = $(this).data('val').toString();
-        $(this).addClass('active btn-primary').removeClass('btn-outline-primary');
-        $(this).siblings().removeClass('active btn-primary').addClass('btn-outline-primary');
-
-        if (mode === "1") $('#yearSelectorContainer').show();
-        else $('#yearSelectorContainer').hide();
-
+        $(this).addClass('active btn-primary').removeClass('btn-outline-primary').siblings().removeClass('active btn-primary').addClass('btn-outline-primary');
+        mode === "1" ? $('#yearSelectorContainer').show() : $('#yearSelectorContainer').hide();
         fetchAnalysisData();
     });
 
     $('#btnSub, #btnSuper').off().click(function() {
         level = $(this).data('val').toString();
-        $(this).addClass('active btn-primary').removeClass('btn-outline-primary');
-        $(this).siblings().removeClass('active btn-primary').addClass('btn-outline-primary');
+        $(this).addClass('active btn-primary').removeClass('btn-outline-primary').siblings().removeClass('active btn-primary').addClass('btn-outline-primary');
         fetchAnalysisData();
     });
 
@@ -228,7 +262,6 @@ $(document).ready(function() {
 
     $(document).on('change', '.cat-check', renderCharts);
 
-    // Initial Load Logic
     if (window.initialData && window.initialData.length > 0) {
         updateSidebar();
         renderCharts();

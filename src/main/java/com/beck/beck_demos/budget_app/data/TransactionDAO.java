@@ -147,20 +147,23 @@ public class TransactionDAO implements iTransactionDAO {
       }
     }
 
-
     return result;
   }
+
   @Override
-  public List<List<SubCategory_VM>> getAnnualAnalysis(String user_ID) {
-    return executeAnalysis("{CALL sp_total_Category_by_year(?)}", stmt -> {
+  public List<List<SubCategory_VM>> getAnnualAnalysis(String user_ID, String BankAccountID) {
+    return executeAnalysis("{CALL sp_total_Category_by_year(?,?)}", stmt -> {
       stmt.setString(1, user_ID);
+      stmt.setString(2, BankAccountID);
     });
   }
+
   @Override
-  public List<List<SubCategory_VM>> getMonthlyAnalysis(String user_ID, int year) {
-    return executeAnalysis("{CALL sp_total_Category_by_month(?, ?)}", stmt -> {
+  public List<List<SubCategory_VM>> getMonthlyAnalysis(String user_ID, String BankAccountID, int year) {
+    return executeAnalysis("{CALL sp_total_Category_by_month(?, ?,?)}", stmt -> {
       stmt.setString(1, user_ID);
-      stmt.setInt(2, year);
+      stmt.setString(2,BankAccountID);
+      stmt.setInt(3, year);
     });
   }
 
@@ -178,7 +181,8 @@ public class TransactionDAO implements iTransactionDAO {
       try (ResultSet rs = stmt.executeQuery()) {
         while (rs.next()) {
           SubCategory_VM vm = new SubCategory_VM();
-          vm.setYear(rs.getInt("period_val")); // Holds Year or Month
+          // Use the standardized name from our SQL updates
+          vm.setYear(rs.getInt("period_val"));
           vm.setCategory_ID(rs.getString("subcategory_id"));
           vm.setParentCategoryId(rs.getString("parent_category_id"));
           vm.setCategory_Name(rs.getString("category_name"));
@@ -187,13 +191,16 @@ public class TransactionDAO implements iTransactionDAO {
           vm.setCount(rs.getInt("count"));
           vm.setTransactionType(rs.getString("transaction_type"));
 
-
+          // Logic to start a new list when the period (Year or Month) changes
           if (vm.getYear() != currentPeriod) {
             currentPeriodList = new ArrayList<>();
             result.add(currentPeriodList);
             currentPeriod = vm.getYear();
           }
-          currentPeriodList.add(vm);
+
+          if (currentPeriodList != null) {
+            currentPeriodList.add(vm);
+          }
         }
       }
     } catch (Exception e) {
@@ -213,13 +220,13 @@ public class TransactionDAO implements iTransactionDAO {
     List<Transaction> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       if (connection != null) {
-        try(CallableStatement statement = connection.prepareCall("{CALL sp_select_distinct_and_active_Transaction_for_dropdown(?)}")) {
-          statement.setString(1,user_ID);
-          try(ResultSet resultSet = statement.executeQuery()) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_select_distinct_and_active_Transaction_for_dropdown(?)}")) {
+          statement.setString(1, user_ID);
+          try (ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
               String Transaction_ID = resultSet.getString("Transaction_Transaction_ID");
               String Description = resultSet.getString("Transaction_Description");
-              Transaction _transaction = new Transaction( Transaction_ID);
+              Transaction _transaction = new Transaction(Transaction_ID);
               _transaction.setDescription(Description);
               result.add(_transaction);
             }
@@ -249,7 +256,7 @@ public class TransactionDAO implements iTransactionDAO {
           for (int res : results) {
             // SUCCESS_NO_INFO (-2) or rows affected > 0
             if (res > 0 || res == CallableStatement.SUCCESS_NO_INFO) {
-              result+=res;
+              result += res;
             }
           }
         } catch (SQLException e) {
@@ -333,8 +340,16 @@ public class TransactionDAO implements iTransactionDAO {
           continue;
         }
 
+        //Custom Detection, look for "Custom"
+        else if (line.startsWith("Custom")) {
+          type = "Custom";
+          String[] parts = line.split("\t");
+          accountNumber = parts[2];
+          continue;
+        }
+
         // Altra Detection: Look for "Account Type:"
-        if (line.startsWith("Account Type:")) {
+        else if (line.startsWith("Account Type:")) {
           type = "Altra";
           continue;
         }
@@ -357,6 +372,8 @@ public class TransactionDAO implements iTransactionDAO {
             _transaction = readAltraLine(line, accountNumber);
           } else if ("GreenState".equals(type)) {
             _transaction = readGreenStateLine(line);
+          } else if ("Custom".equals(type)) {
+            _transaction = readCustomLine(line, accountNumber);
           }
         } catch (Exception e) {
           // Log the error but keep processing the rest of the file
@@ -376,11 +393,11 @@ public class TransactionDAO implements iTransactionDAO {
   private Transaction readGreenStateLine(String line) throws ParseException {
     Transaction t = new Transaction();
 
-    String[] parts  = null;
+    String[] parts = null;
     try {
       // Split on 2 or more spaces. This keeps "WESTSIDE TIRE CO" together
       // but separates the columns: [Account, Date, Description, Code, Amount, Status, Balance]
-       parts = line.split("\t");
+      parts = line.split("\t");
       // GreenState lines repeat the account number at index 0
       String accountNumber = parts[0];
 
@@ -396,7 +413,7 @@ public class TransactionDAO implements iTransactionDAO {
       String part4 = parts[4];
       String part5 = parts[5];
       String transType = "Debit";
-      double amount=0d;
+      double amount = 0d;
       try {
         if (!part4.isEmpty()) {
           amount = Double.parseDouble(parts[4]);
@@ -405,7 +422,7 @@ public class TransactionDAO implements iTransactionDAO {
           transType = "Credit";
         }
       } catch (Exception e) {
-        throw  new Exception("unable to parse value");
+        throw new Exception("unable to parse value");
       }
 
       //subparts = parts[3].split("\t");
@@ -432,15 +449,20 @@ public class TransactionDAO implements iTransactionDAO {
     if (description.startsWith("Check ")) {
       checkNo = Integer.valueOf(description.split(" ")[1]);
     }
-
+    String type = "";
     String creditStr = parts[3].replaceAll("[,\"]", "");
     String debitStr = parts[4].replaceAll("[,\"]", "");
 
-    double credit = creditStr.isEmpty() ? 0 : Double.parseDouble(creditStr);
-    double debit = debitStr.isEmpty() ? 0 : Double.parseDouble(debitStr);
+    double credit = creditStr.isEmpty() ? 0d : Math.abs(Double.parseDouble(creditStr));
+    double debit = debitStr.isEmpty() ? 0d : Math.abs(Double.parseDouble(debitStr));
+    if (credit-0d<.01){
+      type = "debit";
+    }
+    if (debit-0d<.01){
+      type = "credit";
+    }
+    double amount =credit + debit; // Ensure positive
 
-    double amount = Math.abs(credit + debit); // Ensure positive
-    String type = (credit != 0) ? "Credit" : "Debit";
 
     return new Transaction("", "", "undefined", accountNumber, postDate, checkNo, description, amount, type, "Posted", false);
   }
@@ -450,9 +472,12 @@ public class TransactionDAO implements iTransactionDAO {
     String[] parts = line.split("\t");
 
     // Safety check: Altra lines need at least Date, Description, and Amount
-    if (parts.length < 5) return null;
-
+    if (parts.length < 5) {
+      return null;
+    }
+    boolean error = false;
     try {
+
       // Date is parts[1]
       java.util.Date utilDate = new SimpleDateFormat("M/d/yyyy").parse(parts[1].trim());
       java.sql.Date postDate = new java.sql.Date(utilDate.getTime());
@@ -471,8 +496,54 @@ public class TransactionDAO implements iTransactionDAO {
 
       return new Transaction("", "", "undefined", accountNumber, postDate, checkNo, description, amount, transType, "Posted", false);
     } catch (Exception e) {
-      return null; // Let the loop handle the skip
+      error = true;
     }
+    if (error) {
+      try {
+        accountNumber = parts[0].trim();
+        // Date is parts[1]
+        java.util.Date utilDate = new SimpleDateFormat("M/d/yyyy").parse(parts[2].trim());
+        java.sql.Date postDate = new java.sql.Date(utilDate.getTime());
+
+        // Description is parts[2] (Transaction Type is [0])
+        String description = parts[2].trim() + " " + parts[3].trim();
+
+        // Amount is parts[4]
+        String rawInput = parts[7].trim();
+        double rawAmount;
+
+// 1. Check if it is a negative (accounting format)
+        boolean isNegative = rawInput.contains("(") || rawInput.contains("-");
+
+// 2. Remove $, commas, and parentheses using Regex
+// [^0-9.] means "keep everything that IS NOT a number or a decimal point"
+        String cleanNumeric = rawInput.replaceAll("[^0-9.]", "");
+
+// 3. Parse and apply the negative sign if needed
+        try {
+          rawAmount = Double.parseDouble(cleanNumeric);
+          if (isNegative) {
+            rawAmount *= -1;
+          }
+        } catch (NumberFormatException e) {
+          rawAmount = 0.0; // Fallback for empty or corrupted strings
+        }
+
+// Result for your logic:
+        String transType = (rawAmount < 0) ? "Debit" : "Credit";
+        double amount = Math.abs(rawAmount);
+
+        // Check number is parts[6] if it exists
+        Integer checkNo = (parts.length > 6 && !parts[6].trim().isEmpty()) ?
+            Integer.valueOf(parts[4].trim()) : 0;
+
+        return new Transaction("", "", "undefined", accountNumber, postDate, checkNo, description, amount, transType, "Posted", false);
+
+      } catch (Exception e) {
+        return null;
+      }
+    }
+    return null;
   }
 
   private Transaction readHSALine(String line) throws ParseException {
@@ -488,6 +559,7 @@ public class TransactionDAO implements iTransactionDAO {
 
     return new Transaction("", "", "undefined", parts[0], postDate, 0, description, amount, "HSA", status, false);
   }
+
   public int add(Transaction _transaction) {
     int numRowsAffected = 0;
     try (Connection connection = getConnection()) {
@@ -565,21 +637,20 @@ public class TransactionDAO implements iTransactionDAO {
 
   }
 
-
-
   @Override
-  public List<Transaction_VM> getTransactionByUser(String userID, String category, int year, int pagesize, int offset, String sortBy, int order,boolean findErrors) throws SQLException {
+  public List<Transaction_VM> getTransactionByUser(String userID, String category, String Bank_Account_ID, int year, int pagesize, int offset, String sortBy, int order, boolean findErrors) throws SQLException {
     List<Transaction_VM> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
-      try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User(?,?,?,?,?,?,?,?)}")) {
+      try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User(?,?,?,?,?,?,?,?,?)}")) {
         statement.setString(1, userID);
         statement.setString(2, category);
-        statement.setInt(3, year);
-        statement.setInt(4, pagesize);
-        statement.setInt(5, offset);
-        statement.setString(6, sortBy);
-        statement.setInt(7, order);
-        statement.setBoolean(8, findErrors);
+        statement.setString(3, Bank_Account_ID);
+        statement.setInt(4, year);
+        statement.setInt(5, pagesize);
+        statement.setInt(6, offset);
+        statement.setString(7, sortBy);
+        statement.setInt(8, order);
+        statement.setBoolean(9, findErrors);
 
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
@@ -640,17 +711,16 @@ public class TransactionDAO implements iTransactionDAO {
     return result;
   }
 
-
-
-
-  public int getTransactionCountByUser(String userID, String category, int year, boolean findErrors) throws SQLException {
+  @Override
+  public int getTransactionCountByUser(String userID, String category, String Bank_Account_ID, int year, boolean findErrors) throws SQLException {
     int result = 0;
     try (Connection connection = getConnection()) {
-      try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User_count(?,?,?,?)}")) {
+      try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User_count(?,?,?,?,?)}")) {
         statement.setString(1, userID);
         statement.setString(2, category);
-        statement.setInt(3, year);
-        statement.setBoolean(4, findErrors);
+        statement.setString(3, Bank_Account_ID);
+        statement.setInt(4, year);
+        statement.setBoolean(5, findErrors);
 
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
@@ -778,7 +848,7 @@ public class TransactionDAO implements iTransactionDAO {
       List<Receipt> receipts = new ArrayList<>();
       result.setReceipts(receipts);
       try (CallableStatement statement = connection.prepareCall("{CALL sp_retrieve_Receipt_by_Transaction(?,?,?)}")) {
-        statement.setInt(1, 100) ;
+        statement.setInt(1, 100);
         statement.setInt(2, 0);
         statement.setString(3, _transaction.getTransaction_ID());
         try (ResultSet resultSet = statement.executeQuery()) {
@@ -802,16 +872,25 @@ public class TransactionDAO implements iTransactionDAO {
     return result;
   }
 
-  public List<List<SubCategory_VM>> getSuperAnnualAnalysis(String user_ID) {
-    return executeAnalysis("{CALL sp_total_SuperCategory_by_year(?)}", stmt -> stmt.setString(1, user_ID));
-  }
-
-  public List<List<SubCategory_VM>> getSuperMonthlyAnalysis(String user_ID, int year) {
-    return executeAnalysis("{CALL sp_total_SuperCategory_by_month(?, ?)}", stmt -> {
+  @Override
+  public List<List<SubCategory_VM>> getSuperAnnualAnalysis(String user_ID, String BankAccountID) {
+    // Note: Added a second '?' to the CALL string to match the two parameters
+    return executeAnalysis("{CALL sp_total_SuperCategory_by_year(?, ?)}", stmt -> {
       stmt.setString(1, user_ID);
-      stmt.setInt(2, year);
+      stmt.setString(2, BankAccountID);
     });
   }
+
+  @Override
+  public List<List<SubCategory_VM>> getSuperMonthlyAnalysis(String user_ID, String BankAccountID, int year) {
+    // Note: Added a third '?' to the CALL string to match the three parameters
+    return executeAnalysis("{CALL sp_total_SuperCategory_by_month(?, ?, ?)}", stmt -> {
+      stmt.setString(1, user_ID);
+      stmt.setString(2, BankAccountID);
+      stmt.setInt(3, year);
+    });
+  }
+
 }
  
 
