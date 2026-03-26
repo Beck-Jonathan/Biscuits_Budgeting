@@ -1,31 +1,38 @@
 $(document).ready(function() {
+    // --- 0. State Variables ---
     let currentData = window.initialData;
-    let mode = "0";  // 0=Annual, 1=Monthly
+    let mode = "0";  // 0=Annual, 1=Monthly, 2=Forecast
     let level = "0"; // 0=Sub, 1=Super
+    let forecastViewMode = "monthly"; // 'monthly' or 'annual'
 
-    // --- 1. Listeners ---
+    // --- 1. Helper Functions ---
 
-    $(document).on('click', '#selectAll', function() {
-        $('.cat-check').prop('checked', true);
-        renderCharts();
-    });
+    const getMonthName = (m) => {
+        return ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][m - 1] || "N/A";
+    };
 
-    $(document).on('click', '#deselectAll', function() {
-        $('.cat-check').prop('checked', false);
-        renderCharts();
-    });
+    const crunchForecastByYear = (monthlyData) => {
+        const flatData = monthlyData.flat();
+        const grouped = flatData.reduce((acc, item) => {
+            const year = item.sign.split('-')[0];
+            if (!acc[year]) acc[year] = {};
+            if (!acc[year][item.category_Name]) {
+                acc[year][item.category_Name] = {
+                    ...item,
+                    amount: 0,
+                    sign: year
+                };
+            }
+            acc[year][item.category_Name].amount += parseFloat(item.amount);
+            return acc;
+        }, {});
 
-    // Bank Account Listener
-    $('#bankAccountSelect').on('change', function() {
-        fetchAnalysisData();
-    });
-
-    // --- 2. Sidebar Population ---
+        return Object.keys(grouped).map(year => Object.values(grouped[year]));
+    };
 
     const updateSidebar = () => {
         const list = $('#categoryList').empty();
         if (!currentData || currentData.length === 0) return;
-
         currentData[0].forEach(cat => {
             list.append(`
                 <li class="category-item p-2 border-bottom">
@@ -36,6 +43,32 @@ $(document).ready(function() {
                         <label class="form-check-label small" for="c_${cat.category_ID}">${cat.category_Name}</label>
                     </div>
                 </li>`);
+        });
+    };
+
+    // --- 2. Data Fetching ---
+
+    const fetchAnalysisData = () => {
+        const selectedYear = $('#inputYear').val();
+        const selectedBank = $('#bankAccountSelect').val();
+        const monthsBack = $('#monthsBack').val() || 24;
+        const monthsForward = $('#monthsForward').val() || 12;
+
+        $.get("AnalysisAJAX", {
+            mode: mode,
+            level: level,
+            year: selectedYear,
+            bankAccountSelect: selectedBank,
+            monthsBack: monthsBack,
+            monthsForward: monthsForward
+        }, (res) => {
+            if (mode === "2" && forecastViewMode === "annual") {
+                currentData = crunchForecastByYear(res);
+            } else {
+                currentData = res;
+            }
+            updateSidebar();
+            renderCharts();
         });
     };
 
@@ -52,6 +85,13 @@ $(document).ready(function() {
 
         const xAxisLabels = currentData.map(period => {
             const firstEntry = period[0];
+            if (mode === "2" && forecastViewMode === "monthly") {
+                const parts = firstEntry.sign.split('-');
+                return `${getMonthName(parseInt(parts[1]))} ${parts[0].substring(2)}`;
+            }
+            if (mode === "2" && forecastViewMode === "annual") {
+                return firstEntry.sign; // Just the year
+            }
             return mode === "0" ? firstEntry.year : getMonthName(firstEntry.month);
         });
 
@@ -72,196 +112,112 @@ $(document).ready(function() {
             });
 
             if (dataValues.some(v => v > 0)) {
-                trendSeries.push({
-                    name: name,
-                    data: dataValues,
-                    type: 'column',
-                    stack: stackGroup,
-                    color: color
-                });
-
+                trendSeries.push({name: name, data: dataValues, type: 'column', stack: stackGroup, color: color});
                 const latestPeriod = currentData[currentData.length - 1];
                 const latestMatch = latestPeriod.find(c => c.category_Name === name);
                 if (latestMatch) {
-                    pieDataPoints.push({
-                        name: name,
-                        y: Math.abs(latestMatch.amount),
-                        color: color
-                    });
+                    pieDataPoints.push({name: name, y: Math.abs(latestMatch.amount), color: color});
                 }
             }
         });
 
-        // --- Stacked Column Chart ---
         Highcharts.chart('chartContainer', {
-            chart: { type: 'column' },
+            chart: {type: 'column', panning: {enabled: true, type: 'x'}, panKey: 'shift'},
             title: { text: "Budget Analysis Stacks", style: { fontWeight: 'bold' } },
-            xAxis: { categories: xAxisLabels },
-            yAxis: {
-                title: { text: 'Total Amount ($)' },
-                labels: { format: '${value}' }
-            },
-            legend: { enabled: true },
-            plotOptions: {
-                column: { stacking: 'normal', borderWidth: 0 }
-            },
+            xAxis: {categories: xAxisLabels, min: 0, max: 11, scrollbar: {enabled: true}},
+            yAxis: {title: {text: 'Total Amount ($)'}, labels: {format: '${value}'}},
+            plotOptions: {column: {stacking: 'normal', borderWidth: 0}},
             tooltip: {
-                shared: true,
-                useHTML: true,
-                outside: true,
-                backgroundColor: 'rgba(255, 255, 255, 0.98)',
-                borderWidth: 0,
-                shadow: true,
-                padding: 0,
+                shared: true, useHTML: true, outside: true,
                 positioner: function(labelWidth, labelHeight, point) {
-                    let x;
-                    const chartWidth = this.chart.plotWidth;
-                    const padding = 60;
-                    if (point.plotX > chartWidth / 2) {
-                        const pdding = 20;
-                        x = point.plotX + this.chart.plotLeft - labelWidth - pdding;
-                    } else {
-                        x = point.plotX + this.chart.plotLeft + padding;
-                    }
-                    let y = point.plotY + this.chart.plotTop - (labelHeight / 2);
-                    return { x: Math.max(10, Math.min(x, this.chart.chartWidth - labelWidth - 10)), y: Math.max(10, y) };
+                    let x = (point.plotX > this.chart.plotWidth / 2) ?
+                        point.plotX + this.chart.plotLeft - labelWidth - 20 :
+                        point.plotX + this.chart.plotLeft + 60;
+                    return {x: Math.max(10, Math.min(x, this.chart.chartWidth - labelWidth - 10)), y: 40};
                 },
                 formatter: function() {
-                    // 1. Separate the data by stack type
                     const incomePoints = this.points.filter(p => (p.series.options.stack || '').toLowerCase() === 'income').sort((a, b) => b.y - a.y);
                     const investPoints = this.points.filter(p => (p.series.options.stack || '').toLowerCase() === 'investment').sort((a, b) => b.y - a.y);
                     const expensePoints = this.points.filter(p => (p.series.options.stack || '').toLowerCase() === 'expense').sort((a, b) => b.y - a.y);
 
-                    // Totals for the footer
                     let inTotal = 0, outTotal = 0, investTotal = 0;
                     this.points.forEach(p => {
-                        const stack = p.series.options.stack;
-                        if (stack === 'Income') inTotal += p.y;
-                        else if (stack === 'Investment') investTotal += p.y;
+                        if (p.series.options.stack === 'Income') inTotal += p.y;
+                        else if (p.series.options.stack === 'Investment') investTotal += p.y;
                         else outTotal += p.y;
                     });
 
-                    let s = `<div style="padding: 15px; min-width: 500px;">`;
-                    s += `<div style="font-size: 13px; font-weight: bold; margin-bottom: 8px; border-bottom: 2px solid #3498db;">${this.x}</div>`;
+                    let s = `<div style="padding: 15px; min-width: 450px;"><div style="font-weight:bold; border-bottom:2px solid #3498db; margin-bottom:8px;">${this.x}</div><div style="display:flex;">`;
 
-                    s += '<div style="display: flex; align-items: flex-start;">';
+                    // Column logic for tooltip
+                    const buildSection = (title, points, color) => {
+                        let res = `<div style="font-size:10px; font-weight:bold; color:${color}; text-decoration:underline;">${title}</div>`;
+                        if (points.length > 0) {
+                            points.forEach(p => {
+                                res += `<div style="display:flex; font-size:11px;"><span>\u25CF</span> ${p.series.name} <b style="margin-left:auto;">$${p.y.toLocaleString()}</b></div>`;
+                            });
+                        } else {
+                            res += '<div style="color:#ccc;">None</div>';
+                        }
+                        return res;
+                    };
 
-                    // LEFT COLUMN: Income & Investment
-                    s += '<div style="width: 50%; border-right: 1px solid #eee; padding-right: 15px;">';
+                    s += `<div style="width:50%; border-right:1px solid #eee; padding-right:10px;">${buildSection('INCOME', incomePoints, '#27ae60')}${buildSection('INVESTMENTS', investPoints, '#2980b9')}</div>`;
+                    s += `<div style="width:50%; padding-left:10px;">${buildSection('EXPENSES', expensePoints, '#e74c3c')}</div></div>`;
 
-                    // Income Section
-                    s += '<div style="font-size: 10px; font-weight: bold; text-decoration: underline; color: #27ae60; margin-bottom: 4px;">INCOME</div>';
-                    if (incomePoints.length > 0) {
-                        incomePoints.forEach(p => {
-                            s += `<div style="display: flex; align-items: center; font-size: 11px; margin-bottom: 2px;">
-                        <span style="color:${p.color}; margin-right: 6px;">\u25CF</span>
-                        <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 110px;">${p.series.name}</span>
-                        <b style="margin-left: auto;">$${p.y.toLocaleString()}</b>
-                      </div>`;
-                        });
-                    } else { s += '<div style="font-size: 10px; color: #ccc; margin-bottom: 5px;">None</div>'; }
-
-                    // Investment Section
-                    s += '<div style="font-size: 10px; font-weight: bold; text-decoration: underline; color: #2980b9; margin: 8px 0 4px 0;">INVESTMENTS</div>';
-                    if (investPoints.length > 0) {
-                        investPoints.forEach(p => {
-                            s += `<div style="display: flex; align-items: center; font-size: 11px; margin-bottom: 2px;">
-                        <span style="color:${p.color}; margin-right: 6px;">\u25CF</span>
-                        <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 110px;">${p.series.name}</span>
-                        <b style="margin-left: auto;">$${p.y.toLocaleString()}</b>
-                      </div>`;
-                        });
-                    } else { s += '<div style="font-size: 10px; color: #ccc;">None</div>'; }
-                    s += '</div>';
-
-                    // RIGHT COLUMN: Expenses
-                    s += '<div style="width: 50%; padding-left: 15px;">';
-                    s += '<div style="font-size: 10px; font-weight: bold; text-decoration: underline; color: #e74c3c; margin-bottom: 4px;">EXPENSES</div>';
-                    if (expensePoints.length > 0) {
-                        expensePoints.forEach(p => {
-                            s += `<div style="display: flex; align-items: center; font-size: 11px; margin-bottom: 2px;">
-                        <span style="color:${p.color}; margin-right: 6px;">\u25CF</span>
-                        <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 110px;">${p.series.name}</span>
-                        <b style="margin-left: auto;">$${p.y.toLocaleString()}</b>
-                      </div>`;
-                        });
-                    } else { s += '<div style="font-size: 10px; color: #ccc;">None</div>'; }
-                    s += '</div>';
-
-                    s += '</div>'; // End Flex
-
-                    // Footer Summary
                     const net = inTotal - outTotal - investTotal;
-                    s += `<div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed #ccc; font-size: 11px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-                    <span>In: <b style="color:#27ae60">$${inTotal.toLocaleString()}</b></span>
-                    <span>Out: <b style="color:#e74c3c">$${outTotal.toLocaleString()}</b></span>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span>Invested: <b style="color:#2980b9">$${investTotal.toLocaleString()}</b></span>
-                    <span>Net: <b style="color:${net >= 0 ? '#27ae60' : '#e74c3c'}">$${net.toLocaleString()}</b></span>
-                </div>
-              </div></div>`;
+                    s += `<div style="margin-top:10px; border-top:1px dashed #ccc; font-size:11px; padding-top:5px;">
+                            In: <b>$${inTotal.toLocaleString()}</b> | Out: <b>$${outTotal.toLocaleString()}</b> | Net: <b style="color:${net >= 0 ? '#27ae60' : '#e74c3c'}">$${net.toLocaleString()}</b>
+                          </div></div>`;
                     return s;
                 }
             },
             series: trendSeries
         });
 
-        // --- Pie Chart ---
         Highcharts.chart('pieContainer', {
             chart: { type: 'pie' },
             title: { text: 'Current Period Share' },
-            tooltip: { pointFormat: '<b>\${point.y:,.2f}</b> ({point.percentage:.1f}%)' },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: { enabled: true, format: '{point.name}: {point.percentage:.1f}%' },
-                    showInLegend: true
-                }
-            },
             series: [{ name: 'Amount', data: pieDataPoints }]
         });
     };
 
-    // --- 4. Data Fetching ---
+    // --- 4. Listeners ---
 
-    const fetchAnalysisData = () => {
-        const selectedYear = $('#inputYear').val();
-        const selectedBank = $('#bankAccountSelect').val();
-
-        $.get("AnalysisAJAX", {
-            mode: mode,
-            level: level,
-            year: selectedYear,
-            bankAccountSelect: selectedBank
-        }, (res) => {
-            currentData = res;
-            updateSidebar();
-            renderCharts();
-        });
-    };
-
-    $('#btnAnnual, #btnMonthly').off().click(function() {
+    $('#btnAnnual, #btnMonthly, #btnForecast').off().click(function () {
         mode = $(this).data('val').toString();
         $(this).addClass('active btn-primary').removeClass('btn-outline-primary').siblings().removeClass('active btn-primary').addClass('btn-outline-primary');
-        mode === "1" ? $('#yearSelectorContainer').show() : $('#yearSelectorContainer').hide();
+
+        $('#yearSelectorContainer').toggle(mode === "1");
+        $('#forecastControlsContainer').toggle(mode === "2");
+
         fetchAnalysisData();
     });
 
-    $('#btnSub, #btnSuper').off().click(function() {
+    $(document).on('click', '.f-view', function () {
+        forecastViewMode = $(this).data('v');
+        $(this).addClass('active').siblings().removeClass('active');
+        fetchAnalysisData();
+    });
+
+    $('#selectAll').click(() => {
+        $('.cat-check').prop('checked', true);
+        renderCharts();
+    });
+    $('#deselectAll').click(() => {
+        $('.cat-check').prop('checked', false);
+        renderCharts();
+    });
+    $('#bankAccountSelect, #monthsBack, #monthsForward, #inputYear').on('change', fetchAnalysisData);
+    $('#btnSub, #btnSuper').click(function () {
         level = $(this).data('val').toString();
         $(this).addClass('active btn-primary').removeClass('btn-outline-primary').siblings().removeClass('active btn-primary').addClass('btn-outline-primary');
         fetchAnalysisData();
     });
 
-    $('#inputYear').on('change', function() {
-        if (mode === "1") fetchAnalysisData();
-    });
-
     $(document).on('change', '.cat-check', renderCharts);
 
+    // Initial Load
     if (window.initialData && window.initialData.length > 0) {
         updateSidebar();
         renderCharts();
@@ -269,7 +225,3 @@ $(document).ready(function() {
         fetchAnalysisData();
     }
 });
-
-function getMonthName(m) {
-    return ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][m - 1] || "N/A";
-}

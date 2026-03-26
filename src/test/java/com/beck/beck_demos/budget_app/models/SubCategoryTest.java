@@ -24,6 +24,10 @@ class SubCategoryTest {
     SubCategory _category= new SubCategory();
     Assertions.assertNull(_category.getCategory_ID());
     Assertions.assertNull(_category.getUser_ID());
+    Assertions.assertNull(_category.getCategory_Name());
+    Assertions.assertNull(_category.getprojection_strategy_ID());
+    Assertions.assertNull(_category.getParentCategoryId());
+    Assertions.assertNull(_category.getcolor_id());
   }
 
   /**
@@ -34,12 +38,15 @@ class SubCategoryTest {
     SubCategory _category= new SubCategory(
         "bf735dfc-22a9-4214-a8e5-fb8de2305700",
         "01b9701b-c114-4036-a78a-18b43a991994",
+        "REGRESSION",
         "af735dfc-22a9-4214-a8e5-fb8de2305700",
         "Testing",
         "#ffffff"
     );
     Assertions.assertEquals("bf735dfc-22a9-4214-a8e5-fb8de2305700",_category.getCategory_ID());
     Assertions.assertEquals("01b9701b-c114-4036-a78a-18b43a991994",_category.getParentCategoryId());
+    Assertions.assertEquals("REGRESSION", _category.getprojection_strategy_ID());
+
     Assertions.assertEquals("af735dfc-22a9-4214-a8e5-fb8de2305700",_category.getUser_ID());
     Assertions.assertEquals("Testing",_category.getCategory_Name());
     Assertions.assertEquals("#FFFFFF",_category.getcolor_id());
@@ -104,6 +111,26 @@ class SubCategoryTest {
     String parent_category_id = "sqiidVcxEgAxPSmbAlPuyyPqlajALcCishjt";
     _subCategory.setParentCategoryId(parent_category_id);
     Assertions.assertEquals(parent_category_id,_subCategory.getParentCategoryId());
+  }
+
+  /**
+   * <p> Tests That the Setters for the sub_category.projection_strategy_ID field can throw exceptions with invalid inputs </p>
+   */
+  @Test
+  public void testsub_categoryFallsBackToDefault() {
+    String projection_strategy_ID = "qm";
+    _subCategory.setprojection_strategy_ID(projection_strategy_ID);
+    Assertions.assertEquals("AVG_STRICT", _subCategory.getprojection_strategy_ID());
+  }
+
+  /**
+   * <p> Tests That the Setters for the sub_category.projection_strategy_ID field work </p>
+   */
+  @Test
+  public void testSetprojection_strategy_IDSetsprojection_strategy_ID() {
+    String projection_strategy_ID = "REGRESSION";
+    _subCategory.setprojection_strategy_ID(projection_strategy_ID);
+    Assertions.assertEquals(projection_strategy_ID, _subCategory.getprojection_strategy_ID());
   }
 
   /**
@@ -236,7 +263,15 @@ class SubCategoryTest {
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the User_ID as equal.
-    smaller.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");;
+    smaller.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");
+    ;
+    //to compare a smaller and larger projection_strategy_ID
+    smaller.setprojection_strategy_ID("ALPHA_SPIKE");
+    bigger.setprojection_strategy_ID("REGRESSION");
+    Assertions.assertTrue(smaller.compareTo(bigger) < 0);
+    Assertions.assertTrue(bigger.compareTo(smaller) > 0);
+//to set the projection_strategy_ID as equal.
+    smaller.setprojection_strategy_ID("REGRESSION");;
     //to compare a smaller and larger Name
     smaller.setCategory_Name("aaaa");
     bigger.setCategory_Name("bbbb");

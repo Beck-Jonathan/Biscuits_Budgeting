@@ -20,16 +20,25 @@
 </footer>
 
 
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
-<script src="js/jquery.validate.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
- <script type="text/javascript" src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    if ($.widget && $.widget.bridge) {
+        $.widget.bridge('bootstrapBtn', $.fn.button);
+    }
+</script>
+
+<script src="js/jquery.validate.js"></script>
+
+
+<script type="text/javascript" src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
 <script src="https://unpkg.com/highcharts@11/highcharts.js"></script>
 <script src="https://unpkg.com/highcharts@11/modules/accessibility.js"></script>
+
 <script src="js/budget/site.js"></script>
 
 

@@ -186,10 +186,14 @@ public class ParentCategory implements Comparable<ParentCategory> {
     else if(this.color_id.compareTo(o.color_id) > 0){
       return 1;
     }
-    if (this.parent_category_id.compareTo(o.color_id)<0){
+    if (this.parent_category_id.compareTo(o.parent_category_id) < 0) {
       return -1;
+    } else if (this.parent_category_id.compareTo(o.parent_category_id) > 0) {
+      return 1;
     }
-    else if(this.parent_category_id.compareTo(o.color_id) > 0){
+    if (this.transaction_type.compareTo(o.transaction_type) < 0) {
+      return -1;
+    } else if (this.transaction_type.compareTo(o.transaction_type) > 0) {
       return 1;
     }
     return 0;

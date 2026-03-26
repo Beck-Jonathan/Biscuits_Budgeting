@@ -1,6 +1,8 @@
 package com.beck.beck_demos.budget_app.models;
 
 import java.util.Date;
+
+import com.azure.core.annotation.Post;
 import org.jetbrains.annotations.NotNull;
 
 import static java.lang.Character.isAlphabetic;
@@ -140,6 +142,7 @@ public class Transaction implements Comparable<Transaction> {
    * @return the Post_Date of this Transaction object.
    */
   public Date getPost_Date() {
+
     return Post_Date;
   }
   /**

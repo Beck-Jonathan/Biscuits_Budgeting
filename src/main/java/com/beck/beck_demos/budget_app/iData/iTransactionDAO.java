@@ -8,6 +8,7 @@ import com.beck.beck_demos.budget_app.models.Transaction_VM;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface iTransactionDAO {
@@ -60,4 +61,6 @@ public interface iTransactionDAO {
   List<List<SubCategory_VM>> getAnnualAnalysis(String user_ID, String BankAccountID);
   List<List<SubCategory_VM>> getSuperAnnualAnalysis(String user_ID, String BankAccountID);
   List<List<SubCategory_VM>> getSuperMonthlyAnalysis(String user_ID, String BankAccountID, int year) ;
+
+  List<List<SubCategory_VM>> getForecastAnalysis(String user_ID, LocalDate startDate, int monthsBack, int monthsForward);
 }

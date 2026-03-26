@@ -10,7 +10,10 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TransactionDAO_Fake implements iTransactionDAO {
   private  List<Transaction_VM> transactionVMs;
@@ -49,9 +52,9 @@ public class TransactionDAO_Fake implements iTransactionDAO {
     Transaction transaction30 = new Transaction("ksNNnAZwXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "16637841-4c15-4674-8d48-31298c9287c9", "oVCqqbNw", new Date(104,4,4), 37, "xFGaBHtP", 35.88, "IKMruqpM", "hKKsnEyP",false);
     Transaction transaction31 = new Transaction("tcbQFVKXXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "490f8983-4a15-4e76-80d5-316270929729", "flwLGtKf", new Date(104,4,4), 47, "IKuAlAlm", 26.51, "FQCalMRw", "yTmAoDPF",false);
     Transaction transaction32 = new Transaction("UGjhbEcXXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "a34360e2-886d-473d-9051-409170248559", "sBbQihPX", new Date(104,4,4), 20, "rcTGftry", 21.19, "aXAeMecU", "OKcgUtVa",false);
-    Transaction transaction33 = new Transaction("hhKFllcCXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "e6c68360-1216-4c12-8831-294146908356", "sBbQihPX", new Date(104,4,4), 19, "oVyJkvhy", 50.41, "kkVXnVvu", "GZrsahnI",false);
-    Transaction transaction34 = new Transaction("lhFEQTlSXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "e6c68360-1216-4c12-8831-294146908356", "sBbQihPX", new Date(104,4,4), 18, "QhuGKUZx", 52.52, "vXvmuRag", "LNBeJFUL",false);
-    Transaction transaction35 = new Transaction("kPhlBQapXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "e6c68360-1216-4c12-8831-294146908356", "sBbQihPX", new Date(104,4,4), 43, "mVuKEsOC", 55.51, "BoJhhBJH", "tXSEjfwF",false);
+    Transaction transaction33 = new Transaction("hhKFllcCXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "e6c68360-1216-4c12-8831-294146908356", "sBbQihPX", new Date(126, 4, 4), 19, "oVyJkvhy", 50.41, "kkVXnVvu", "GZrsahnI", false);
+    Transaction transaction34 = new Transaction("lhFEQTlSXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "e6c68360-1216-4c12-8831-294146908356", "sBbQihPX", new Date(126, 4, 4), 18, "QhuGKUZx", 52.52, "vXvmuRag", "LNBeJFUL", false);
+    Transaction transaction35 = new Transaction("kPhlBQapXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "e6c68360-1216-4c12-8831-294146908356", "sBbQihPX", new Date(126, 4, 4), 43, "mVuKEsOC", 55.51, "BoJhhBJH", "tXSEjfwF", false);
     Transaction_VM transaction_VM0= new Transaction_VM(transaction0);
     Transaction_VM transaction_VM1= new Transaction_VM(transaction1);
     Transaction_VM transaction_VM2= new Transaction_VM(transaction2);
@@ -224,7 +227,7 @@ public class TransactionDAO_Fake implements iTransactionDAO {
 
       if (t.getUser_ID().equals(userID)
           &&(category.equals("")||t.getCategory_ID().equals(category))
-          &&(year==0||t.getPost_Date().getYear()==year)
+          && (year == 0 || (t.getPost_Date().getYear() + 1900) == year)
           &&(Bank_Account_ID.equals("")||t.getBank_Account_ID().equals(Bank_Account_ID))
       ) {
         results.add(t);
@@ -385,6 +388,62 @@ public class TransactionDAO_Fake implements iTransactionDAO {
 
   @Override
   public List<List<SubCategory_VM>> getSuperMonthlyAnalysis(String user_ID, String BankAccountID, int year) {
+    return List.of();
+  }
+
+  public List<List<SubCategory_VM>> getForecastAnalysis(String user_ID, LocalDate startDate, int monthsBack, int monthsForward) {
+//    // 1. Group transactionVMs by Category to calculate historical averages
+//    Map<String, List<Transaction_VM>> categoryMap = transactionVMs.stream()
+//        .filter(t -> t.getUser_ID().equals(user_ID))
+//        .collect(Collectors.groupingBy(SubCategory::getCategory_ID));
+//
+//    List<List<SubCategory_VM>> forecastTable = new ArrayList<>();
+//
+//    // 2. Loop through each future month (p_months_forward) to create our columns
+//    for (int i = 1; i <= monthsForward; i++) {
+//      List<SubCategory_VM> monthlyColumn = new ArrayList<>();
+//      LocalDate targetDate = startDate.plusMonths(i);
+//      String periodLabel = targetDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+//
+//      for (Map.Entry<String, List<Transaction_VM>> entry : categoryMap.entrySet()) {
+//        String categoryID = entry.getKey();
+//        List<Transaction_VM> history = entry.getValue();
+//        String categoryName = history.get(0).getCategory_ID();
+//
+//        // Calculate historical average as base
+//        double avgAmount = history.stream().mapToDouble(Transaction_VM::getAmount).average().orElse(0.0);
+//        double forecastedAmount = avgAmount;
+//
+//        // 3. Apply the Hard-Coded logic from our SQL SP
+//        // Regression Logic
+//        if (List.of("E wages", "J Wages", "entertainment", "hobbies", "fitness", "Video Game", "gifts", "Dividends")
+//            .contains(categoryName)) {
+//          // For fakes, we'll simulate a slight upward trend (slope of 0.5% per month)
+//          forecastedAmount = avgAmount + (avgAmount * (0.005 * (monthsBack + i)));
+//        }
+//        // Inflation Logic (approx 0.25% per month)
+//        else if (List.of("groceries", "Fast Food", "utilities", "personal_care", "pet_care", "garden", "Local Bakery")
+//            .contains(categoryName)) {
+//          forecastedAmount = avgAmount * Math.pow(1 + 0.0025, i);
+//        }
+//        // Skip Logic
+//        else if (List.of("Dental", "Medical", "clothes", "Rental Car", "Misc Income")
+//            .contains(categoryName)) {
+//          forecastedAmount = 0.0;
+//        }
+//
+//        // Create the VM for this specific category-month cell
+//        SubCategory_VM vm = new SubCategory_VM(categoryID, Math.round(forecastedAmount * 100.0) / 100.0);
+//        vm.setCategory_Name(categoryName);
+//        vm.setSign(periodLabel); // Using 'sign' for the date label per our mapping
+//        vm.setYear(i);           // Using 'year' for the month offset
+//
+//        monthlyColumn.add(vm);
+//      }
+//      forecastTable.add(monthlyColumn);
+//    }
+//
+//    return forecastTable;
     return List.of();
   }
 

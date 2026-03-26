@@ -92,7 +92,7 @@ class EditTransactionServletTest {
 
 //create a new albums parameters
 
-    request.setParameter("category","TestValue");
+    request.setParameter("category", "TestValueTestValueTestValueTestValue");
     request.setParameter("t_id","XxtdYmVMXxtdYmVMXxtdYmVMXxtdYmVMXxtd");
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
@@ -121,7 +121,7 @@ class EditTransactionServletTest {
     String response2 = response.getContentAsString();
 
     assertEquals(200,responseStatus);
-    assertEquals(response2,"success");
+    assertEquals(response2, "error");
   }
   @Test
   public void testInitWithNoParametersDoesNotThrowException() throws ServletException {

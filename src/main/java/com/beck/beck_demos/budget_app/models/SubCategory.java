@@ -2,22 +2,28 @@ package com.beck.beck_demos.budget_app.models;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Set;
 
 /// Since 12/5/2024
 /// Jonathan Beck
 public class SubCategory implements Comparable<SubCategory> {
+  private static final Set<String> ALLOWED_STRATEGIES = Set.of(
+      "ALPHA_SPIKE", "REGRESSION", "LVCF", "AVG_STRICT", "INFLATION_ONLY", "ZERO_SUM"
+  );
   private String Category_ID;
   private String Category_Name;
   private String parentCategoryId;
+  private String projection_strategy_ID;
   private String User_ID;
   private String color_id;
 
   public SubCategory(){}
 
-  public SubCategory(String Category_ID, String parent_category_id, String User_ID, String Name, String Color_ID) {
+  public SubCategory(String Category_ID, String parent_category_id, String projection_strategy_ID, String User_ID, String Name, String Color_ID) {
 
     setCategory_ID(Category_ID);
     setParentCategoryId(parent_category_id);
+    setprojection_strategy_ID(projection_strategy_ID);
     setCategory_Name(Name);
     setUser_ID(User_ID);
     setcolor_id(Color_ID);
@@ -86,6 +92,30 @@ public class SubCategory implements Comparable<SubCategory> {
       throw new IllegalArgumentException("parent_category_id is too long.");
     }
     this.parentCategoryId = parent_category_id;
+  }
+
+  public String getprojection_strategy_ID() {
+    return projection_strategy_ID;
+  }
+
+  /**
+   * <p> Sets the projection_strategy_ID of the associated sub_category object </p>
+   *
+   * @param projection_strategy_ID the projection_strategy_id of the sub_category,
+   *                               throws IllegalArgumentException if projection_strategy_ID under 3 characters or longer than 20 characters
+   */
+  public void setprojection_strategy_ID(String projection_strategy_ID) {
+    // 1. Sanitize the input
+    String sanitized = projection_strategy_ID.replaceAll("[^A-Z_]", "").trim();
+
+    // 2. Block and Default
+    if (ALLOWED_STRATEGIES.contains(sanitized)) {
+      this.projection_strategy_ID = sanitized;
+    } else {
+      // Log a warning and fallback to a safe default
+      //System.out.println("Warning: Invalid strategy blocked: " + projection_strategy_ID);
+      this.projection_strategy_ID = "AVG_STRICT";
+    }
   }
 
   /**
@@ -178,7 +208,12 @@ public class SubCategory implements Comparable<SubCategory> {
     if (this.User_ID.compareTo(o.User_ID)<0){
       return -1;
     }
-    else if(this.User_ID.compareTo(o.User_ID) > 0){
+    else if(this.User_ID.compareTo(o.User_ID) > 0) {
+      return 1;
+    }
+    if (this.projection_strategy_ID.compareTo(o.projection_strategy_ID) < 0) {
+      return -1;
+    } else if (this.projection_strategy_ID.compareTo(o.projection_strategy_ID) > 0){
       return 1;
     }
     if (this.getCategory_Name().compareTo(o.getCategory_Name())<0){

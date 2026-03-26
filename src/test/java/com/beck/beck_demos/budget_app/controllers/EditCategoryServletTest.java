@@ -96,6 +96,8 @@ class EditCategoryServletTest {
     request.setParameter("inputsub_categoryparent_category_id","lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
     request.setParameter("inputcategoryCategory_Name","46fcffea-d21c-4254-814d-926d0086d77c");
     request.setParameter("inputcategoryColor_id","#FFFFFF");
+    request.setParameter("inputsub_categoryprojection_strategy_ID", "INFLATION_ONLY");
+
 
     servlet.doPost(request,response);
     assertEquals("1", response.getContentAsString().trim());
@@ -124,7 +126,7 @@ class EditCategoryServletTest {
     assertEquals("-3", response.getContentAsString().trim());
   }
   @Test
-  public void TestInvalidColorRespondsNeg4() throws ServletException, IOException{
+  public void TestInvalidProjectionRespondsNeg4() throws ServletException, IOException {
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
@@ -135,6 +137,42 @@ class EditCategoryServletTest {
     request.setSession(session);
     servlet.doPost(request,response);
     assertEquals("-4", response.getContentAsString().trim());
+  }
+
+  @Test
+  public void TestInvalidProjectionRespondsNeg5() throws ServletException, IOException {
+    User user = new User();
+    List<String> roles = new ArrayList<>();
+    roles.add("User");
+    user.setRoles(roles);
+    session.setAttribute("User_B", user);
+    request.setParameter("category_ID", "lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
+    request.setParameter("inputcategoryCategory_Name", "46fcffea-d21c-4254-814d-926d0086d77c");
+    request.setParameter("inputsub_categoryparent_category_id", "lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
+
+    //request.setParameter("inputsub_categoryprojection_strategy_ID","INFLATION_ONLY");
+
+    request.setSession(session);
+    servlet.doPost(request, response);
+    assertEquals("-5", response.getContentAsString().trim());
+  }
+
+  @Test
+  public void TestInvalidColorRespondsNeg6() throws ServletException, IOException {
+    User user = new User();
+    List<String> roles = new ArrayList<>();
+    roles.add("User");
+    user.setRoles(roles);
+    session.setAttribute("User_B", user);
+    request.setParameter("category_ID", "lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
+    request.setParameter("inputcategoryCategory_Name", "46fcffea-d21c-4254-814d-926d0086d77c");
+    request.setParameter("inputsub_categoryparent_category_id", "lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
+
+    request.setParameter("inputsub_categoryprojection_strategy_ID", "INFLATION_ONLY");
+
+    request.setSession(session);
+    servlet.doPost(request, response);
+    assertEquals("-6", response.getContentAsString().trim());
   }
   @Test
   public void testInitWithNoParametersDoesNotThrowException() throws ServletException {
@@ -154,6 +192,8 @@ class EditCategoryServletTest {
     request.setParameter("inputsub_categoryparent_category_id","lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
 
     request.setParameter("inputcategoryCategory_Name","DUPLICATE");
+    request.setParameter("inputsub_categoryprojection_strategy_ID", "INFLATION_ONLY");
+
     request.setParameter("inputcategoryColor_id","#FFFFFF");
     servlet.doPost(request,response);
     assertEquals("0", response.getContentAsString().trim());
@@ -173,9 +213,11 @@ class EditCategoryServletTest {
     request.setParameter("inputsub_categoryparent_category_id","lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc");
 
     request.setParameter("inputcategoryCategory_Name","EXCEPTION");
+    request.setParameter("inputsub_categoryprojection_strategy_ID", "INFLATION_ONLY");
+
     request.setParameter("inputcategoryColor_id","#FFFFFF");
     servlet.doPost(request,response);
-    assertEquals("-6", response.getContentAsString().trim());
+    assertEquals("-7", response.getContentAsString().trim());
   }
 
 }

@@ -53,12 +53,14 @@ public class CategoryDAO implements iCategoryDAO {
           while (resultSet.next()) {
             String Category_ID = resultSet.getString("subcategory_category_id");
             String ParentCategory_ID = resultSet.getString("subcategory_parent_category_id");
+            String projectionStrategy = resultSet.getString("sub_category_projection_strategy_ID");
+
 
             String Name = resultSet.getString("subcategory_category_name");
             String User_ID = resultSet.getString("User_subCategory_User_ID");
 
             String Color_ID = resultSet.getString("subCategory_Color_ID");
-            SubCategory _category = new SubCategory( Category_ID,ParentCategory_ID,User_ID,Name, Color_ID);
+            SubCategory _category = new SubCategory(Category_ID, ParentCategory_ID, projectionStrategy, User_ID, Name, Color_ID);
             result.add(_category);
           }
         }
@@ -91,12 +93,13 @@ public class CategoryDAO implements iCategoryDAO {
     int result = 0;
     try (Connection connection = getConnection()) {
       if (connection !=null){
-        try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Category(? ,?,?,?)}"))
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_update_subcategory(? ,?,?,?,?)}"))
         {
           statement.setString(1,oldCategory.getCategory_ID());
           statement.setString(2,newCategory.getParentCategoryId());
-          statement.setString(3,newCategory.getCategory_Name());
-          statement.setString(4,newCategory.getcolor_id());
+          statement.setString(3, newCategory.getprojection_strategy_ID());
+          statement.setString(4, newCategory.getCategory_Name());
+          statement.setString(5, newCategory.getcolor_id());
 
           result=statement.executeUpdate();
         } catch (SQLException e) {
@@ -120,9 +123,12 @@ public class CategoryDAO implements iCategoryDAO {
             String subcategory_id = resultSet.getString("sub_category_sub_category_id");
             String parentCategory_ID = resultSet.getString("sub_category_parent_category_id");
             String category_name = resultSet.getString("sub_category_category_name");
+            String projectionStrategyId = resultSet.getString("sub_category_projection_strategy_ID");
+
             String user_id = resultSet.getString("sub_category_user_id");
             String color_id = resultSet.getString("sub_category_color_id");
-            result = new SubCategory( subcategory_id,parentCategory_ID, user_id,category_name ,color_id);}
+            result = new SubCategory(subcategory_id, parentCategory_ID, projectionStrategyId, user_id, category_name, color_id);
+          }
         }
       }
     } catch (SQLException e) {

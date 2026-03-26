@@ -245,7 +245,7 @@ class SearchAndCategorizeServletTest {
 //to set the old Transaction
 
 //create a new albums parameters
-    request.setParameter("category","Gasoline");
+    request.setParameter("category", "TestValueTestValueTestValueTestValue");
 
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
@@ -308,7 +308,7 @@ class SearchAndCategorizeServletTest {
 //to set the old Transaction
 
 //create a new albums parameters
-    request.setParameter("category","Gasoline");
+    request.setParameter("category", "TestValueTestValueTestValueTestValue");
 
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();
@@ -316,6 +316,32 @@ class SearchAndCategorizeServletTest {
     int Transaction_Updated = Integer.parseInt(results.get("updateCount"));
     assertEquals(0,Transaction_Updated);
     assertEquals(302,responseStatus);
+  }
+
+  /**
+   * <p> Test that a duplicate primary key will get caught when trying to update Transaction objects. </p>
+   */
+  @Test
+  public void testUpdateCanReturnZeroWithInvalidCategory() throws ServletException, IOException {
+    User user = new User();
+    List<String> roles = new ArrayList<>();
+    roles.add("User");
+    user.setRoles(roles);
+    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
+    session.setAttribute("User_B", user);
+    session.setAttribute("search", "Kwik");
+    request.setSession(session);
+//to set the old Transaction
+
+//create a new albums parameters
+    request.setParameter("category", "TooShort");
+
+    servlet.doPost(request, response);
+    int responseStatus = response.getStatus();
+    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
+    String Transaction_Updated = results.get("categoryError");
+    assertEquals("Invalid category", Transaction_Updated);
+
   }
 
   /**
@@ -334,7 +360,7 @@ class SearchAndCategorizeServletTest {
 //to set the old Transaction
 
 //create a new albums parameters
-    request.setParameter("category","EXCEPTION");
+    request.setParameter("category", "EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
 
     servlet.doPost(request,response);
     int responseStatus = response.getStatus();

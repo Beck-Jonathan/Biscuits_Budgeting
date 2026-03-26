@@ -91,13 +91,13 @@ class AllTransactionsServletTest {
 
   @Test
   public void testLoggedInUserCanFilterTransactionsByYear() throws ServletException, IOException{
-    setupUserSession("User", "618052e9-c69b-4d9b-880e-e22e4a970bd6");
-    request.setParameter("year", "2026");
+    setupUserSession("User", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc");
+    request.setParameter("year", "2004");
 
     servlet.doGet(request,response);
     List<Transaction> transactions = (List<Transaction>) request.getAttribute("Transactions");
     assertNotNull(transactions);
-    assertEquals(99, transactions.size());
+    assertEquals(7, transactions.size());
   }
 
   /**

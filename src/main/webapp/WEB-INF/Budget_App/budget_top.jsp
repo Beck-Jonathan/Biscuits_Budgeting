@@ -7,13 +7,16 @@
 
 
     <title>${pageTitle}</title>
-    <link href="css/budget/jquery-ui.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link href="${appURL}/css/budget/site.css" rel="stylesheet">
+
     <link href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css" rel="stylesheet"/>
     <link rel="stylesheet" href="${appURL}/css/loading.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="${appURL}/css/budget/site.css" rel="stylesheet">
     <c:if test="${pageTitle eq 'Edit Budget'}">
     <link rel="stylesheet" href="${appURL}/css/budget/EditBudget.css">
     </c:if>
@@ -22,6 +25,13 @@
     </c:if>
     <c:if test="${pageTitle eq 'Add Category' || pageTitle eq 'Edit a Category'}">
     <link rel="stylesheet" href="${appURL}/css/budget/AddCategory.css">
+    </c:if>
+    <c:if test="${pageTitle eq 'Edit Transaction'}">
+    <link rel="stylesheet" href="${appURL}/css/budget/EditTransaction.css">
+    </c:if>
+
+    <c:if test="${pageTitle eq 'All Categories'}">
+    <link rel="stylesheet" href="${appURL}/css/budget/AllCategory.css">
     </c:if>
 
 

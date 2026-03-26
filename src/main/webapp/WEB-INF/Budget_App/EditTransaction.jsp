@@ -1,246 +1,144 @@
 <%--************
-Create the JSP For Viuw/Edit from the Transaction table
- Created By Jonathan Beck 1/16/2025
+Updated JSP for View/Edit Transaction
+Custom Styled & Vertically Stacked
 **********--%>
 <%@include file="/WEB-INF/Budget_App/budget_top.jsp"%>
-<div class = "container">
-    <form method="post" action="${appURL}/editTransaction" id = "editTransaction" >
-        <!-- Transaction_ID -->
-        <div class ="row" id = "row0">
-            <h2>Transaction_ID  :
-                ${fn:escapeXml(transaction.transaction_ID)}</h2>
+
+<style>
+
+</style>
+
+<div class="ba-main-container">
+
+    <section class="ba-section-card">
+        <div class="ba-section-header">
+            <h5 class="mb-0">Transaction Information</h5>
+            <span class="badge ${transaction.amount < 0 ? 'bg-danger' : 'bg-success'}">
+                <fmt:formatNumber value="${transaction.amount}" type="currency"/>
+            </span>
         </div>
-
-        <!-- Category_ID -->
-        <div class ="row" id = "row2">
-            <label for="inputtransactionCategory_ID" class="form-label">Category_ID</label>
-            <div class="input-group input-group-lg">
-                <select  class="<c:if test="${not empty results.transactionCategory_IDerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1"  <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputtransactionCategory_ID" name="inputtransactionCategory_ID" value="${fn:escapeXml(transaction.category_ID)}">
-                    <c:forEach items="${Categorys}" var="Category">
-                        <option value="${Category.category_ID}"<c:if test="${transaction.category_ID eq Category.category_ID}"> selected </c:if>>${Category.category_ID}   </option>
-                    </c:forEach>
-                </select>
-                <c:if test="${not empty results.transactionCategory_IDerror}">
-                    <div class="invalid-feedback">${results.transactionCategory_IDerror}</div>
-                </c:if>
-            </div>
-        </div>
-        <!-- Account_Num -->
-        <div class ="row" id = "row3">
-            <label for="inputtransactionAccount_Num" class="form-label">Account_Num</label>
-            <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.transactionAccount_Numerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Account_Num" <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputtransactionAccount_Num" name="inputtransactionAccount_Num" value="${fn:escapeXml(transaction.bank_Account_ID)}">
-                <c:if test="${not empty results.transactionAccount_Numerror}">
-                    <div class="invalid-feedback">${results.transactionAccount_Numerror}</div>
-                </c:if>
-            </div>
-        </div>
-        <!-- Post_Date -->
-        <div class ="row" id = "row4">
-            <label for="inputtransactionPost_Date" class="form-label">Post_Date</label>
-            <div class="input-group input-group-lg">
-                <input type="date" class="<c:if test="${not empty results.transactionPost_Dateerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Post_Date" <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputtransactionPost_Date" name="inputtransactionPost_Date" value="${fn:escapeXml(transaction.post_Date)}">
-                <c:if test="${not empty results.transactionPost_Dateerror}">
-                    <div class="invalid-feedback">${results.transactionPost_Dateerror}</div>
-                </c:if>
-            </div>
-        </div>
-        <!-- Check_No -->
-        <div class ="row" id = "row5">
-            <label for="inputtransactionCheck_No" class="form-label">Check_No</label>
-            <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.transactionCheck_Noerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Check_No" <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputtransactionCheck_No" name="inputtransactionCheck_No" value="${fn:escapeXml(transaction.check_No)}">
-                <c:if test="${not empty results.transactionCheck_Noerror}">
-                    <div class="invalid-feedback">${results.transactionCheck_Noerror}</div>
-                </c:if>
-            </div>
-        </div>
-        <!-- Description -->
-        <div class ="row" id = "row6">
-            <label for="inputtransactionDescription" class="form-label">Description</label>
-            <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.transactionDescriptionerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Description" <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputtransactionDescription" name="inputtransactionDescription" value="${fn:escapeXml(transaction.description)}">
-                <c:if test="${not empty results.transactionDescriptionerror}">
-                    <div class="invalid-feedback">${results.transactionDescriptionerror}</div>
-                </c:if>
-            </div>
-        </div>
-        <!-- Amount -->
-        <div class ="row" id = "row7">
-            <label for="inputtransactionAmount" class="form-label">Amount</label>
-            <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.transactionAmounterror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Amount" <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputtransactionAmount" name="inputtransactionAmount" value="${fn:escapeXml(transaction.amount)}">
-                <c:if test="${not empty results.transactionAmounterror}">
-                    <div class="invalid-feedback">${results.transactionAmounterror}</div>
-                </c:if>
-            </div>
-        </div>
-        <!-- Type -->
-        <div class ="row" id = "row8">
-            <label for="inputtransactionType" class="form-label">Type</label>
-            <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.transactionTypeerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Type" <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputtransactionType" name="inputtransactionType" value="${fn:escapeXml(transaction.type)}">
-                <c:if test="${not empty results.transactionTypeerror}">
-                    <div class="invalid-feedback">${results.transactionTypeerror}</div>
-                </c:if>
-            </div>
-        </div>
-        <!-- Status -->
-        <div class ="row" id = "row9">
-            <label for="inputtransactionStatus" class="form-label">Status</label>
-            <div class="input-group input-group-lg">
-                <input type="text" class="<c:if test="${not empty results.transactionStatuserror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Status" <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputtransactionStatus" name="inputtransactionStatus" value="${fn:escapeXml(transaction.status)}">
-                <c:if test="${not empty results.transactionStatuserror}">
-                    <div class="invalid-feedback">${results.transactionStatuserror}</div>
-                </c:if>
-            </div>
-        </div>
-        <!-- Is_Locked -->
-        <div class ="row" id = "row10">
-            <label for="inputtransactionIs_Locked" class="form-label">Locked</label>
-            <div class="input-group">
-                <select  class="<c:if test="${not empty results.transactionIs_Lockederror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1"  <c:if test="${mode eq 'view'}"> disabled </c:if>  id="inputtransactionIs_Locked" name="inputtransactionIs_Locked" >
-                    <option value="unLocked" <c:if test="${!Transaction.is_Lcoked}"> selected</c:if>>UnLocked</option>
-                    <option value="Locked" <c:if test="${Transaction.is_Lcoked}"> selected  </c:if>>Locked</option>
-
-
-                </select>
-            </div>
-        </div>
-        <div class="align-items-center mt-0">
-            <div class="d-grid"><button class="btn btn-orange mb-0" type="submit">Edit Transaction </button></div>
-            <c:if test="${not empty results.dbStatus}"
-            ><p>${results.dbStatus}</p>
-            </c:if>
-        </div>
-    </form>
-</div>
-<div class = "container">
-    <div class="row">
-        <div class="col-12">
-            <h1>All Transaction Comments</h1>
-            <p>There ${transaction.transaction_Comments.size() eq 1 ? "is" : "are"}&nbsp;${transaction.transaction_Comments.size()} Transaction Comment${transaction.transaction_Comments.size() ne 1 ? "s" : ""}</p>
-            Add Transaction_Comment   <a href="addTransaction_Comment">Add</a>
-
-                <tr class="table-responsive"><table class="table table-bordered">
-                    <thead>
-                    <tr>
-
-                        <th scope="col">Content</th>
-                        <th scope="col">Post_Date</th>
-                        <th scope="col">Edit</th>
-                        <th scope="col">Delete</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach items="${transaction.transaction_Comments}" var="transaction_comment">
-                        <tr>
-
-                            <form method="post" action="${appURL}/deletetransaction_comment">
-
-                                <input type="hidden" name="transaction_commentid" value="${transaction_comment.transaction_Comment_ID}">
-                                <input type="hidden" name="transaction_id" value="${transaction.transaction_ID}">
-                                    
-                            <td>${fn:escapeXml(transaction_comment.content)}</td>
-                            <td>${fn:escapeXml(transaction_comment.post_Date)}</td>
-                            <td><a href = "edittransaction_comment?transaction_commentid=${transaction_comment.transaction_Comment_ID}&mode=edit" > Edit </a></td>
-                            <td><button class="btn btn-orange mb-0" type="submit">Delete  </button> </td>
-                            </form>
-
-                        </tr>
-                    </c:forEach>
-
-                    <tr>
-                        <form method="post" action="${appURL}/addTransaction_Comment" id = "addTransaction_Comment" >
-
-
-                            <!-- Transaction_Comment_ID -->
-
-
-                                <input type="hidden" name="inputtransaction_commentTransaction_ID" value="${transaction.transaction_ID}">
-                                <input type="hidden" name="inputtransaction_commentTransaction_Comment_ID" value="${commentID}">
-
-
-                            <!-- Content -->
-                            <td>
-                                <div class="input-group input-group-lg">
-                                    <input type="text" class="<c:if test="${not empty results.transaction_commentContenterror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Content" id="inputtransaction_commentContent" name="inputtransaction_commentContent" value="${fn:escapeXml(results.Content)}">
-                                    <c:if test="${not empty results.transaction_commentContenterror}">
-                                        <div class="invalid-feedback">${results.transaction_commentContenterror}</div>
-                                    </c:if>
-                                </div>
-                            </td>
-                            <!-- Post_Date -->
-                            <td>
-
-                                <div class="input-group input-group-lg">
-                                    <input type="date" value="<fmt:formatDate value="<%= new java.util.Date()%>" pattern="yyyy-MM-dd" />" disabled class="<c:if test="${not empty results.transaction_commentPost_Dateerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Post_Date" id="inputtransaction_commentPost_Date" name="inputtransaction_commentPost_Date" value="${fn:escapeXml(results.Post_Date)}">
-                                    <c:if test="${not empty results.transaction_commentPost_Dateerror}">
-                                        <div class="invalid-feedback">${results.transaction_commentPost_Dateerror}</div>
-                                    </c:if>
-                                </div>
-                            </td>
-                            <td colspan="2" class="align-items-center mt-0">
-                                <div class="d-grid"><button class="btn btn-orange mb-0" type="submit">Create Transaction Comment  </button></div>
-                                <c:if test="${not empty results.dbStatus}"
-                                ><p>${results.dbStatus}</p>
-                                </c:if>
-                            </td>
-                        </form>
-                    </tr>
-                    </tbody>
-                </table>
+        <div class="ba-section-body">
+            <div class="ba-data-grid mb-4">
+                <div><span class="ba-label">ID</span><span
+                        class="ba-value">${fn:escapeXml(transaction.transaction_ID)}</span></div>
+                <div><span class="ba-label">Post Date</span><span
+                        class="ba-value">${fn:escapeXml(transaction.post_Date)}</span></div>
+                <div><span class="ba-label">Account</span><span
+                        class="ba-value">${fn:escapeXml(transaction.bank_Account_ID)}</span></div>
+                <div><span class="ba-label">Type/Status</span><span
+                        class="ba-value">${fn:escapeXml(transaction.type)} / ${fn:escapeXml(transaction.status)}</span>
                 </div>
-
-        </div>
-    </div>
-<h1>All budget_app Receipts</h1>
-<p>There ${transaction.receipts.size() eq 1 ? "is" : "are"}&nbsp;${transaction.receipts.size()} Receipt${transaction.receipts.size() ne 1 ? "s" : ""}</p>
-<c:if test="${transaction.receipts.size() > 0}">
-<div class="container">
-
-
-    <c:forEach items="${transaction.receipts}" var="receipt">
-    <span id="${receipt.receipt_ID}_card" class="card receiptCard">
-     <a href="${receipt.image_Link}" >
-         <img <c:if test="${fn:contains(receipt.image_Link, 'drive')}">crossorigin="anonymous" </c:if>
-             <%--<c:if test="${!fn:contains(direction.image_Link, 'drive')}">  referrerPolicy="no-referrer" </c:if> --%>
-             <%--  crossorigin="anonymous" --%>
-              referrerPolicy="no-referrer"
-              src="${receipt.image_Link}" alt="Avatar"> </a>
-
-    <p>${fn:escapeXml(receipt.name)}</p>
-        <div class="row">
-            <div class="col-2">
-
-                    <a  class="delButton" href="${receipt.receipt_ID}">❌</a>
-
+                <div style="grid-column: span 2;"><span class="ba-label">Description</span><span
+                        class="ba-value">${fn:escapeXml(transaction.description)}</span></div>
             </div>
 
-            <div class="col-5"></div>
-            <div class="col-2 ">
-
-                    <a href = "editReceipt?receiptid=${receipt.receipt_ID}&mode=edit"> ⚙️ </a>
-
-            </div>
-            <div class="col-2"><a href = "editReceipt?receiptid=${receipt.receipt_ID}&mode=view"> 🔎 </a></div>
-            <div class="col-1"></div>
+            <form method="post" action="${appURL}/editTransaction">
+                <input type="hidden" name="transaction_ID" value="${transaction.transaction_ID}">
+                <div class="row align-items-end g-3">
+                    <div class="col-md-7">
+                        <label class="ba-label fw-bold mb-1">Budget Category</label>
+                        <select class="form-select ${not empty results.transactionCategory_IDerror ? 'is-invalid' : ''}"
+                                name="inputtransactionCategory_ID" <c:if test="${mode eq 'view'}">disabled</c:if>>
+                            <c:forEach items="${Categorys}" var="cat">
+                                <option value="${cat.category_ID}"
+                                        <c:if test="${transaction.category_ID eq cat.category_ID}">selected</c:if>>${cat.category_Name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="col-md-5 d-flex align-items-center justify-content-between">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="lockCheck"
+                                   name="inputtransactionIs_Locked" value="true"
+                                   <c:if test="${transaction.is_Locked}">checked</c:if>
+                                   <c:if test="${mode eq 'view'}">disabled</c:if>>
+                            <label class="form-check-label fw-bold" for="lockCheck">Locked</label>
+                        </div>
+                        <c:if test="${mode eq 'edit'}">
+                            <button type="submit" class="btn btn-primary btn-sm px-4">Save Changes</button>
+                        </c:if>
+                    </div>
+                </div>
+            </form>
         </div>
-    </span>
+    </section>
 
-    </c:forEach>
-    </div>
+    <section class="ba-section-card">
+        <div class="ba-section-header">
+            <h5 class="mb-0">Receipts (${transaction.receipts.size()})</h5>
+            <a href="addReceipt?transactionID=${transaction.transaction_ID}" class="btn btn-sm btn-outline-primary">+
+                Add New</a>
+        </div>
+        <div class="ba-section-body">
+            <div class="ba-receipt-grid">
+                <c:forEach items="${transaction.receipts}" var="receipt">
+                    <div class="ba-receipt-thumb">
+                        <a href="${receipt.image_Link}" target="_blank">
+                            <img src="${receipt.image_Link}" class="ba-receipt-img" alt="Receipt"
+                                 referrerPolicy="no-referrer">
+                        </a>
+                        <div class="p-2 border-top bg-light d-flex justify-content-around">
+                            <a href="editReceipt?receiptid=${receipt.receipt_ID}&mode=edit" title="Edit">⚙️</a>
+                            <a href="editReceipt?receiptid=${receipt.receipt_ID}&mode=view" title="View">🔎</a>
+                            <a href="#" class="text-danger" onclick="confirmDelete('${receipt.receipt_ID}')"
+                               title="Delete">❌</a>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </div>
+    </section>
 
-</c:if>
-                <span class="card receiptCard">
-                    <a href="addReceipt?transactionID=${transaction.transaction_ID}"> <h1>+</h1> </a>
-                    <p>Add New</p>
-                </span>
-<div id="dialog" title="Confirmation Required">
-    Are you sure about this?
+    <section class="ba-section-card">
+        <div class="ba-section-header">
+            <h5 class="mb-0">Comments (${transaction.transaction_Comments.size()})</h5>
+        </div>
+        <div class="ba-section-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th class="ps-4">Comment</th>
+                    <th>Date</th>
+                    <th class="text-end pe-4">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${transaction.transaction_Comments}" var="comm">
+                    <tr>
+                        <td class="ps-4">${fn:escapeXml(comm.content)}</td>
+                        <td class="small text-muted">${fn:escapeXml(comm.post_Date)}</td>
+                        <td class="text-end pe-4">
+                            <a href="edittransaction_comment?transaction_commentid=${comm.transaction_Comment_ID}&mode=edit"
+                               class="btn btn-link btn-sm p-0 me-2 text-decoration-none">Edit</a>
+                            <form method="post" action="${appURL}/deletetransaction_comment" class="d-inline">
+                                <input type="hidden" name="transaction_commentid"
+                                       value="${comm.transaction_Comment_ID}">
+                                <input type="hidden" name="transaction_id" value="${transaction.transaction_ID}">
+                                <button class="btn btn-link btn-sm p-0 text-danger text-decoration-none" type="submit"
+                                        onclick="return confirm('Delete comment?')">Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </c:forEach>
+                <tr class="table-primary border-top">
+                    <form method="post" action="${appURL}/addTransaction_Comment">
+                        <input type="hidden" name="inputtransaction_commentTransaction_ID"
+                               value="${transaction.transaction_ID}">
+                        <td class="ps-4">
+                            <input type="text" class="form-control form-control-sm" placeholder="Type a new comment..."
+                                   name="inputtransaction_commentContent" required>
+                        </td>
+                        <td><span class="small text-muted">New</span></td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-success btn-sm px-3" type="submit">Post</button>
+                        </td>
+                    </form>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
 </div>
-
-
 
 <%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>
-

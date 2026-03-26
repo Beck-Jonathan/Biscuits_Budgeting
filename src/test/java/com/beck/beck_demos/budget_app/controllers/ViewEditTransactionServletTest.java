@@ -165,7 +165,7 @@ class ViewEditTransactionServletTest {
     Transaction_VM transaction = new Transaction_VM();
     transaction.setTransaction_ID("XxtdYmVMXxtdYmVMXxtdYmVMXxtdYmVMXxtd");
     transaction.setUser_ID("618052e9-c69b-4d9b-880e-e22e4a970bd6");
-    transaction.setCategory_ID("testTransaction");
+    transaction.setCategory_ID("618052e9-c69b-4d9b-880e-e22e4a970bd7");
     transaction.setBank_Account_ID("testTransaction");
     transaction.setCheck_No(43);
     transaction.setDescription("testTransaction");
@@ -174,7 +174,7 @@ class ViewEditTransactionServletTest {
     session.setAttribute("transaction",transaction);
 //create a new albums parameters
     request.setParameter("inputtransactionUser_ID","618052e9-c69b-4d9b-880e-e22e4a970bd6");
-    request.setParameter("inputtransactionCategory_ID","TestValue");
+    request.setParameter("inputtransactionCategory_ID", "TestValueTestValueTestValueTestValue");
     request.setParameter("inputtransactionAccount_Num","TestValue");
     request.setParameter("inputtransactionCheck_No","406");
     request.setParameter("inputtransactionDescription","TestValue");
@@ -250,7 +250,7 @@ class ViewEditTransactionServletTest {
     Transaction_VM transaction = new Transaction_VM();
     transaction.setTransaction_ID("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
     transaction.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
-    transaction.setCategory_ID("DUPLICATE");
+    transaction.setCategory_ID("DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
     transaction.setBank_Account_ID("DUPLICATE");
     transaction.setCheck_No(43);
     transaction.setDescription("DUPLICATE");
@@ -259,7 +259,7 @@ class ViewEditTransactionServletTest {
     session.setAttribute("transaction",transaction);
 //create a new albums parameters
     request.setParameter("inputtransactionUser_ID","406");
-    request.setParameter("inputtransactionCategory_ID","DUPLICATE");
+    request.setParameter("inputtransactionCategory_ID", "DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
     request.setParameter("inputtransactionAccount_Num","DUPLICATE");
     request.setParameter("inputtransactionCheck_No","406");
     request.setParameter("inputtransactionDescription","DUPLICATE");
@@ -289,8 +289,8 @@ class ViewEditTransactionServletTest {
     Transaction_VM transaction = new Transaction_VM();
     transaction.setTransaction_ID("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
     transaction.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
-    transaction.setCategory_ID("EXCEPTION");
-    transaction.setBank_Account_ID("EXCEPTION");
+    transaction.setCategory_ID("EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
+    transaction.setBank_Account_ID("EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
     transaction.setCheck_No(43);
     transaction.setDescription("EXCEPTION");
     transaction.setType("EXCEPTION");
@@ -301,7 +301,7 @@ class ViewEditTransactionServletTest {
     session.setAttribute("transaction",transaction);
 //create a new albums parameters
     request.setParameter("inputtransactionUser_ID","406");
-    request.setParameter("inputtransactionCategory_ID","EXCEPTION");
+    request.setParameter("inputtransactionCategory_ID", "EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
     request.setParameter("inputtransactionAccount_Num","EXCEPTION");
     request.setParameter("inputtransactionCheck_No","406");
     request.setParameter("inputtransactionDescription","EXCEPTION");

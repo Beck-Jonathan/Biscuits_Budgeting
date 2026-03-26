@@ -1,55 +1,162 @@
 $(document).ready(function() {
+    // 1. Scope definition at the very top
     const pickers = {};
+    // Variable to store the ID while the modal is open
+    let categoryIdToDelete = null;
 
-    function initPickerForPill($pill) {
-        const id = $pill.data('id');
-        const trigger = $pill.find('.wheel-canvas')[0];
-        if (!trigger || pickers[id]) return;
-        const initialColor = $pill.find('.color-swatch-trigger').css('background-color');
-        pickers[id] = new iro.ColorPicker(trigger, {
-            width: 150, color: initialColor,
-            layout: [{ component: iro.ui.Wheel }, { component: iro.ui.Slider, options: { sliderType: 'hue' } }]
-        });
-    }
+    // --- COLOR PICKER & SELECTOR LOGIC ---
+    $(document).on('click', '.color-swatch-trigger', function (e) {
+        e.stopPropagation();
 
-    $('.category-pill[data-id]').each(function() { initPickerForPill($(this)); });
+        const $card = $(this).closest('.modern-cat-card');
+        const id = $card.data('id');
 
-    // --- RESTORED FUNCTIONS START ---
+        // Ignore "Add New" card which uses a standard <input type="color">
+        if (!id) return;
 
-    window.updateParentCategory = function(id, parentId) {
-        const $pill = $(`.category-pill[data-id="${id}"]`);
+        const $popover = $(this).siblings('.picker-popover');
 
-        // 1. Update Glow UI
-        const $selectedOption = $pill.find('select option:selected');
-        const type = $selectedOption.data('type') || '';
-
-        $pill.removeClass('glow-income glow-investment glow-expense');
-        if (type === 'income') $pill.addClass('glow-income');
-        else if (type === 'investment') $pill.addClass('glow-investment');
-        else if (type === 'expense') $pill.addClass('glow-expense');
-
-        // 2. Get the Hex Color
-        let hexColor;
-        if (pickers[id]) {
-            hexColor = pickers[id].color.hexString; // iro.js hex format: #FFFFFF
+        // Toggle Z-Index stacking to prevent neighboring cards from covering the picker
+        if ($popover.hasClass('d-none')) {
+            $('.modern-cat-card').removeClass('card-on-top');
+            $card.addClass('card-on-top');
         } else {
-            // Fallback: Convert rgb() to hex if picker isn't ready
-            const rgb = $pill.find('.color-swatch-trigger').css('background-color');
-            hexColor = rgbToHex(rgb);
+            $card.removeClass('card-on-top');
         }
 
-        sendUpdate($pill, hexColor);
+        // Close all other pickers before opening this one
+        $('.picker-popover').not($popover).addClass('d-none');
+        $popover.toggleClass('d-none');
+
+        // Initialize iro.js if it hasn't been created for this ID yet
+        if (!pickers[id]) {
+            const canvas = $popover.find('.wheel-canvas')[0];
+            const initialColor = $(this).css('background-color');
+
+            pickers[id] = new iro.ColorPicker(canvas, {
+                width: 150,
+                color: initialColor,
+                layout: [
+                    {component: iro.ui.Wheel},
+                    {component: iro.ui.Slider, options: {sliderType: 'hue'}}
+                ]
+            });
+
+            pickers[id].on('color:change', function (color) {
+                // Real-time visual feedback
+                $card.find('.color-swatch-trigger').css('background-color', color.hexString);
+                $card.find('.card-accent').css('background-color', color.hexString);
+            });
+
+            pickers[id].on('input:end', function (color) {
+                sendUpdate($card, color.hexString);
+            });
+        }
+    });
+
+    //delete stuff
+    window.confirmDeleteCategory = function (id, name) {
+        categoryIdToDelete = id;
+        $('#deleteTargetName').text(name);
+
+        const modalEl = document.getElementById('deleteCategoryModal');
+
+        // Check if we are in Bootstrap 5
+        if (window.bootstrap && window.bootstrap.Modal) {
+            const deleteModal = new bootstrap.Modal(modalEl);
+            deleteModal.show();
+        } else {
+            // Fallback for Bootstrap 4 / jQuery
+            $(modalEl).modal('show');
+        }
     };
 
-    async function sendUpdate($pill, hexColor) {
-        const id = $pill.data('id');
-        const name = $pill.find('.category-text').text().trim();
-        const parentId = $pill.find('select').val();
+    $(document).on('click', '#confirmDeleteBtn', async function () {
+        if (!categoryIdToDelete) return;
 
-        // Safety check: ensure hexColor always starts with #
-        if (!hexColor.startsWith('#')) {
-            hexColor = '#' + hexColor;
+        // Visual feedback on the button
+        const $btn = $(this);
+        const originalText = $btn.text();
+        $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Deleting...');
+
+        try {
+            const response = await fetch('deleteBudgetCategory', {
+                method: 'POST',
+                body: new URLSearchParams({categoryid: categoryIdToDelete})
+            });
+
+            if (response.ok) {
+                location.reload(); // Refresh to show updated list
+            } else {
+                alert("Error deleting category. Please try again.");
+                $btn.prop('disabled', false).text(originalText);
+            }
+        } catch (err) {
+            console.error(err);
+            $btn.prop('disabled', false).text(originalText);
         }
+    });
+
+    // Close popovers and reset stacking when clicking elsewhere
+    $(document).on('click', function () {
+        $('.picker-popover').addClass('d-none');
+        $('.modern-cat-card').removeClass('card-on-top');
+    });
+
+    // Prevent clicks inside the popover from closing itself
+    $(document).on('click', '.picker-popover', function (e) {
+        e.stopPropagation();
+    });
+
+    // --- STRATEGY ICON CLICK ---
+    $(document).on('click', '.strategy-icon', function (e) {
+        e.stopPropagation();
+        const $card = $(this).closest('.modern-cat-card');
+        const newVal = $(this).data('val');
+
+        $card.attr('data-strategy', newVal);
+
+        const hex = pickers[$card.data('id')]
+            ? pickers[$card.data('id')].color.hexString
+            : rgbToHex($card.find('.card-accent').css('background-color'));
+
+        sendUpdate($card, hex);
+    });
+
+    // --- NAME UPDATE (ContentEditable) ---
+    $(document).on('blur', '.category-text', function () {
+        const $card = $(this).closest('.modern-cat-card');
+        const hex = pickers[$card.data('id')]
+            ? pickers[$card.data('id')].color.hexString
+            : rgbToHex($card.find('.card-accent').css('background-color'));
+
+        sendUpdate($card, hex);
+    });
+
+    // --- PARENT SELECTOR UPDATE ---
+    window.updateParentCategory = function (id, parentId) {
+        const $card = $(`.modern-cat-card[data-id="${id}"]`);
+        const type = $card.find('select option:selected').data('type') || '';
+
+        // Update the bottom indicator border
+        $card.removeClass('border-income border-investment border-expense border-transfer');
+        if (type) $card.addClass('border-' + type);
+
+        const hex = pickers[id]
+            ? pickers[id].color.hexString
+            : rgbToHex($card.find('.card-accent').css('background-color'));
+
+        sendUpdate($card, hex);
+    };
+
+    // --- AJAX PERSISTENCE ---
+    async function sendUpdate($card, hexColor) {
+        const id = $card.data('id');
+        const name = $card.find('.category-text').text().trim();
+        const parentId = $card.find('select').val();
+        const strategyId = $card.attr('data-strategy') || 'AVG_STRICT';
+
+        if (!hexColor.startsWith('#')) hexColor = '#' + hexColor;
 
         try {
             await fetch('editCategory', {
@@ -57,8 +164,9 @@ $(document).ready(function() {
                 body: new URLSearchParams({
                     category_ID: id,
                     inputcategoryCategory_Name: name,
-                    inputcategoryColor_id: hexColor, // Now guaranteed to be #XXXXXX
-                    inputsub_categoryparent_category_id: parentId
+                    inputcategoryColor_id: hexColor,
+                    inputsub_categoryparent_category_id: parentId,
+                    inputsub_categoryprojection_strategy_ID: strategyId
                 })
             });
         } catch (err) {
@@ -66,26 +174,18 @@ $(document).ready(function() {
         }
     }
 
-// Helper to convert rgb(r, g, b) to #rrggbb
-    function rgbToHex(rgb) {
-        if (!rgb || !rgb.startsWith('rgb')) return '#0d6efd'; // Default blue fallback
-        const vals = rgb.match(/\d+/g);
-        return "#" + vals.map(x => {
-            const hex = parseInt(x).toString(16);
-            return hex.length === 1 ? "0" + hex : hex;
-        }).join("");
-    }
 
-    // --- RESTORED FUNCTIONS END ---
+    // --- ADD NEW CATEGORY LOGIC ---
+    window.updateAddPillColor = function (val) {
+        $('#new-color-preview').css('background-color', val);
+        $('#new-card-accent').css('background-color', val);
+    };
 
     window.updateAddPillIndicator = function(selectElement) {
-        const type = selectElement.options[selectElement.selectedIndex].getAttribute('data-type');
+        const type = $(selectElement).find('option:selected').data('type');
         const $container = $('#new-pill-container');
-
-        $container.removeClass('glow-income glow-investment glow-expense');
-        if (type === 'income') $container.addClass('glow-income');
-        else if (type === 'investment') $container.addClass('glow-investment');
-        else if (type === 'expense') $container.addClass('glow-expense');
+        $container.removeClass('border-income border-expense border-investment border-transfer');
+        if (type) $container.addClass('border-' + type);
     };
 
     window.addNewCategory = async function() {
@@ -100,18 +200,18 @@ $(document).ready(function() {
                 body: new URLSearchParams({
                     inputcategoryCategory_Name: name,
                     inputcategoryColor_id: color,
-                    inputcategoryParent_id: parentId
+                    inputcategoryParent_id: parentId,
+                    inputsub_categoryprojection_strategy_ID: 'AVG_STRICT'
                 })
             });
             if (response.ok) location.reload();
         } catch (err) { console.error(err); }
     };
 
-    const $parentSelect = $('#new-category-parent');
-    if($parentSelect.length) window.updateAddPillIndicator($parentSelect[0]);
+    // Helper to convert computed RGB styles to hex for the database
+    function rgbToHex(rgb) {
+        if (!rgb || !rgb.startsWith('rgb')) return '#0d6efd';
+        const vals = rgb.match(/\d+/g);
+        return "#" + vals.map(x => parseInt(x).toString(16).padStart(2, '0')).join("");
+    }
 });
-
-function updateAddPillColor(val) {
-    $('#new-color-preview').css('background-color', val);
-    $('#new-pill-container').css('border-left-color', val);
-}

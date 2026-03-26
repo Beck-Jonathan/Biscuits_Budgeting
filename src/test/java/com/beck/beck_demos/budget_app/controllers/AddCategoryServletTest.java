@@ -166,13 +166,9 @@ class AddCategoryServletTest {
     request.setParameter("inputcategoryColor_id","#AABBCC");
     //request.setParameter("inputcategoryUser_ID","406");
     servlet.doPost(request,response);
-    int responseStatus = response.getStatus();
-    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Category_Added = results.get("dbStatus");
-    assertEquals(302,responseStatus);
-    assertNotNull(Category_Added);
-    assertEquals("Category Added",Category_Added);
-    assertNotEquals("",Category_Added);
+    String value = response.getContentAsString();
+    assertEquals(value, "1");
+
   }/**
    <p> Tests SQL exceptions are gracefully handled. </p>
    */

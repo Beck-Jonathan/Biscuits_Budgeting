@@ -1,0 +1,219 @@
+/* --- Core Modern Card Layout --- */
+.modern-cat-card {
+    background: #ffffff;
+    border-radius: 12px;
+    display: flex;
+    /* overflow: hidden is REMOVED to allow color picker to pop out */
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all 0.25s ease;
+    border-bottom: 4px solid transparent;
+    min-height: 100px;
+}
+
+.modern-cat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.border-dashed {
+    border-style: dashed !important;
+    border: 2px dashed #dee2e6 !important;
+}
+
+/* --- Type Indicators (Bottom Border) --- */
+.border-income {
+    border-bottom-color: #198754 !important;
+}
+
+.border-expense {
+    border-bottom-color: #dc3545 !important;
+}
+
+.border-investment {
+    border-bottom-color: #0d6efd !important;
+}
+
+.border-transfer {
+    border-bottom-color: #6f42c1 !important;
+}
+
+/* --- Left Accent & Color Swatch --- */
+.card-accent {
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.9;
+    /* Rounded corners added here since parent overflow is gone */
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.color-swatch-trigger {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+}
+
+/* --- THE POPOVER (Fixed) --- */
+.picker-popover {
+    position: absolute;
+    z-index: 9999; /* Forced to the very top */
+    top: 40px;
+    left: 10px;
+    background: white;
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Body Content --- */
+.card-body-content {
+    flex-grow: 1;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.category-name-row {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+
+.category-text {
+    outline: none;
+    display: inline-block;
+    width: 100%;
+}
+
+/* --- Strategy Icons --- */
+.strategy-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.strategy-icon {
+    font-size: 0.85rem;
+    cursor: pointer;
+    color: #ced4da;
+    transition: all 0.2s;
+}
+
+.strategy-icon:hover {
+    transform: scale(1.2);
+}
+
+/* Strategy Active Colors */
+.modern-cat-card[data-strategy="REGRESSION"] .bi-graph-up-arrow {
+    color: #0d6efd;
+}
+
+.modern-cat-card[data-strategy="ALPHA_SPIKE"] .bi-lightning-fill {
+    color: #fd7e14;
+}
+
+.modern-cat-card[data-strategy="LVCF"] .bi-pause-fill {
+    color: #6f42c1;
+}
+
+.modern-cat-card[data-strategy="AVG_STRICT"] .bi-list-stars {
+    color: #198754;
+}
+
+.modern-cat-card[data-strategy="INFLATION_ONLY"] .bi-percent {
+    color: #0dcaf0;
+}
+
+.modern-cat-card[data-strategy="ZERO_SUM"] .bi-x-circle {
+    color: #dc3545;
+}
+
+/* --- Controls --- */
+.modern-select {
+    border: none;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    color: #7f8c8d;
+    width: 100%;
+    cursor: pointer;
+}
+
+.delete-icon-modern {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    font-size: 1.1rem;
+    color: #ced4da;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.delete-icon-modern:hover {
+    color: #dc3545;
+}
+
+/* --- Legend/Tutorial --- */
+.budget-logic-legend {
+    background: rgba(248, 249, 250, 0.8);
+    border: 1px solid #dee2e6;
+    border-radius: 1.25rem;
+    backdrop-filter: blur(5px);
+}
+
+.logic-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.logic-label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #344767;
+}
+
+.logic-desc {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #6c757d;
+    line-height: 1.4;
+}
+
+/* This ensures the card containing the open picker is always on top of its neighbors */
+.card-on-top {
+    z-index: 9999 !important;
+}
+
+/* Force the modal above the backdrop and fix visibility */
+.modal {
+    z-index: 10001 !important; /* Must be higher than your card-on-top (9999) */
+}
+
+.modal-backdrop {
+    z-index: 10000 !important;
+}
+
+/* Ensure Bootstrap's "fade" doesn't get stuck at 0 opacity */
+.modal.show {
+    display: block !important;
+    opacity: 1 !important;
+}
+
+/* Ensure the modern Bootstrap modal is always on top of our cards */
+.modal {
+    z-index: 10050 !important;
+}
+
+.modal-backdrop {
+    z-index: 10040 !important;
+}

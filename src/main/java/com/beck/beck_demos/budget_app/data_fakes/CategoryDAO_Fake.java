@@ -18,27 +18,27 @@ public class CategoryDAO_Fake implements iCategoryDAO {
     subCategories = new ArrayList<>();
     // User 1: ec93ae39-255a-4252-ac50-cde8ecb05b0c
     // User 1: ec93ae39-255a-4252-ac50-cde8ecb05b0c
-    SubCategory category0 = new SubCategory("lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc", "ec93ae39-255a-4252-ac50-cde8ecb05b0c", "sqiidVcxEgAxPSmbAlPuyyPqlajALcCishjt", "Electricity", "#FFFFFF");
-    SubCategory category1 = new SubCategory("CptdvYCqiIfQbZZYnDSelOjeuWoIaPIoSyqN", "ec93ae39-255a-4252-ac50-cde8ecb05b0c", "sqiidVcxEgAxPSmbAlPuyyPqlajALcCishjt", "Water/Sewer", "#FFFFFF");
-    SubCategory category2 = new SubCategory("tqwOoIpqAWlTCXgHIWbRoWGDeWkRLuUjMrUK", "ec93ae39-255a-4252-ac50-cde8ecb05b0c", "sqiidVcxEgAxPSmbAlPuyyPqlajALcCishjt", "Internet", "#FFFFFF");
-    SubCategory category3 = new SubCategory("VbNXjdaXScgqBlggjkqLldrnWVJfkrCAoHXH", "ec93ae39-255a-4252-ac50-cde8ecb05b0c", "sqiidVcxEgAxPSmbAlPuyyPqlajALcCishjt", "Trash Pickup", "#FFFFFF");
+    SubCategory category0 = new SubCategory("lZoleuasarwCfcmdPWeDgyapFwTISoPKgqXc", "ec93ae39-255a-4252-ac50-cde8ecb05b0c", "ALPHA_SPIKE", "sqiidVcxEgAxPSmbAlPuyyPqlajALcCishjt", "Electricity", "#FFFFFF");
+    SubCategory category1 = new SubCategory("CptdvYCqiIfQbZZYnDSelOjeuWoIaPIoSyqN", "ec93ae39-255a-4252-ac50-cde8ecb05b0c", "ALPHA_SPIKE", "sqiidVcxEgAxPSmbAlPuyyPqlajALcCishjt", "Water/Sewer", "#FFFFFF");
+    SubCategory category2 = new SubCategory("tqwOoIpqAWlTCXgHIWbRoWGDeWkRLuUjMrUK", "ec93ae39-255a-4252-ac50-cde8ecb05b0c", "ALPHA_SPIKE", "sqiidVcxEgAxPSmbAlPuyyPqlajALcCishjt", "Internet", "#FFFFFF");
+    SubCategory category3 = new SubCategory("VbNXjdaXScgqBlggjkqLldrnWVJfkrCAoHXH", "ec93ae39-255a-4252-ac50-cde8ecb05b0c", "ALPHA_SPIKE", "sqiidVcxEgAxPSmbAlPuyyPqlajALcCishjt", "Trash Pickup", "#FFFFFF");
 
 // User 2: 333d977a-a025-428c-83ca-76a1741d6e0c
-    SubCategory category4 = new SubCategory("vdoqmRiVgdUosYCZMDkucIbBqIHNMhyUoGbS", "333d977a-a025-428c-83ca-76a1741d6e0c", "hCraEvQYiLHHoPurvcIVYtHtPbwnprHMRKEN", "Groceries", "#FFFFFF");
-    SubCategory category5 = new SubCategory("ucYKgZgvfLUTdJVbOhDchrUawsfqUPTPkdNG", "333d977a-a025-428c-83ca-76a1741d6e0c", "hCraEvQYiLHHoPurvcIVYtHtPbwnprHMRKEN", "Dining Out", "#FFFFFF");
-    SubCategory category6 = new SubCategory("bNQxZYSVjLmJDvJLVyOYNLdJGFKIWpjLhEsF", "333d977a-a025-428c-83ca-76a1741d6e0c", "hCraEvQYiLHHoPurvcIVYtHtPbwnprHMRKEN", "Coffee Shops", "#FFFFFF");
+    SubCategory category4 = new SubCategory("vdoqmRiVgdUosYCZMDkucIbBqIHNMhyUoGbS", "333d977a-a025-428c-83ca-76a1741d6e0c", "ALPHA_SPIKE", "hCraEvQYiLHHoPurvcIVYtHtPbwnprHMRKEN", "Groceries", "#FFFFFF");
+    SubCategory category5 = new SubCategory("ucYKgZgvfLUTdJVbOhDchrUawsfqUPTPkdNG", "333d977a-a025-428c-83ca-76a1741d6e0c", "ALPHA_SPIKE", "hCraEvQYiLHHoPurvcIVYtHtPbwnprHMRKEN", "Dining Out", "#FFFFFF");
+    SubCategory category6 = new SubCategory("bNQxZYSVjLmJDvJLVyOYNLdJGFKIWpjLhEsF", "333d977a-a025-428c-83ca-76a1741d6e0c", "ALPHA_SPIKE", "hCraEvQYiLHHoPurvcIVYtHtPbwnprHMRKEN", "Coffee Shops", "#FFFFFF");
 
 // User 3: 91c9e669-6696-4902-8446-d4eebdc8acea
-    SubCategory category7 = new SubCategory("uEmuNJVOsGTRrqaxFojdSgRvKTJurHbjCDEZ", "91c9e669-6696-4902-8446-d4eebdc8acea", "XOaLTGEQbNNrHcYrPPpEOTlLxhePgsupNJgh", "Gasoline", "#FFFFFF");
-    SubCategory category8 = new SubCategory("tlbsafOfuDUGULgwOiEkiYHEiGDAYdOipASn", "91c9e669-6696-4902-8446-d4eebdc8acea", "XOaLTGEQbNNrHcYrPPpEOTlLxhePgsupNJgh", "Car Insurance", "#FFFFFF");
-    SubCategory category9 = new SubCategory("kLRYjKtYnicVOWdVfsswWiDgaxdIjFoaxvxg", "91c9e669-6696-4902-8446-d4eebdc8acea", "XOaLTGEQbNNrHcYrPPpEOTlLxhePgsupNJgh", "Maintenance", "#FFFFFF");
-    SubCategory category10 = new SubCategory("XTCGeIIYvATsbcwLadRCtYlKcQHsDKndeJJC", "91c9e669-6696-4902-8446-d4eebdc8acea", "XOaLTGEQbNNrHcYrPPpEOTlLxhePgsupNJgh", "Registration", "#FFFFFF");
+    SubCategory category7 = new SubCategory("uEmuNJVOsGTRrqaxFojdSgRvKTJurHbjCDEZ", "91c9e669-6696-4902-8446-d4eebdc8acea", "REGRESSION", "XOaLTGEQbNNrHcYrPPpEOTlLxhePgsupNJgh", "Gasoline", "#FFFFFF");
+    SubCategory category8 = new SubCategory("tlbsafOfuDUGULgwOiEkiYHEiGDAYdOipASn", "91c9e669-6696-4902-8446-d4eebdc8acea", "REGRESSION", "XOaLTGEQbNNrHcYrPPpEOTlLxhePgsupNJgh", "Car Insurance", "#FFFFFF");
+    SubCategory category9 = new SubCategory("kLRYjKtYnicVOWdVfsswWiDgaxdIjFoaxvxg", "91c9e669-6696-4902-8446-d4eebdc8acea", "REGRESSION", "XOaLTGEQbNNrHcYrPPpEOTlLxhePgsupNJgh", "Maintenance", "#FFFFFF");
+    SubCategory category10 = new SubCategory("XTCGeIIYvATsbcwLadRCtYlKcQHsDKndeJJC", "91c9e669-6696-4902-8446-d4eebdc8acea", "REGRESSION", "XOaLTGEQbNNrHcYrPPpEOTlLxhePgsupNJgh", "Registration", "#FFFFFF");
 
 // User 4: 7b2f8a11-1234-5678-abcd-ef9012bc34de
-    SubCategory category11 = new SubCategory("BsdJLFpQtWEFWvYKBMsLtGiKiKGHXwUOlikP", "7b2f8a11-1234-5678-abcd-ef9012bc34de", "WaqPhqiekuhbwKdHIuYvMoNGAnAPfBlwTWKG", "Movie Tickets", "#FFFFFF");
-    SubCategory category12 = new SubCategory("cqHALvMmMJwUecFCNpXLZicMHuywqThfjQfn", "7b2f8a11-1234-5678-abcd-ef9012bc34de", "WaqPhqiekuhbwKdHIuYvMoNGAnAPfBlwTWKG", "Streaming Services", "#FFFFFF");
-    SubCategory category13 = new SubCategory("yXfCtVnlIoyTsOFhxiMudRQvqubgvRCCGLsJ", "7b2f8a11-1234-5678-abcd-ef9012bc34de", "WaqPhqiekuhbwKdHIuYvMoNGAnAPfBlwTWKG", "Video Games", "#FFFFFF");
-    SubCategory category14 = new SubCategory("MowPYhMmEqfgtCEmbZMyrXMnsrBXtKlRuMJu", "7b2f8a11-1234-5678-abcd-ef9012bc34de", "WaqPhqiekuhbwKdHIuYvMoNGAnAPfBlwTWKG", "Concert Tickets", "#FFFFFF");
+    SubCategory category11 = new SubCategory("BsdJLFpQtWEFWvYKBMsLtGiKiKGHXwUOlikP", "7b2f8a11-1234-5678-abcd-ef9012bc34de", "LVCF", "WaqPhqiekuhbwKdHIuYvMoNGAnAPfBlwTWKG", "Movie Tickets", "#FFFFFF");
+    SubCategory category12 = new SubCategory("cqHALvMmMJwUecFCNpXLZicMHuywqThfjQfn", "7b2f8a11-1234-5678-abcd-ef9012bc34de", "LVCF", "WaqPhqiekuhbwKdHIuYvMoNGAnAPfBlwTWKG", "Streaming Services", "#FFFFFF");
+    SubCategory category13 = new SubCategory("yXfCtVnlIoyTsOFhxiMudRQvqubgvRCCGLsJ", "7b2f8a11-1234-5678-abcd-ef9012bc34de", "LVCF", "WaqPhqiekuhbwKdHIuYvMoNGAnAPfBlwTWKG", "Video Games", "#FFFFFF");
+    SubCategory category14 = new SubCategory("MowPYhMmEqfgtCEmbZMyrXMnsrBXtKlRuMJu", "7b2f8a11-1234-5678-abcd-ef9012bc34de", "LVCF", "WaqPhqiekuhbwKdHIuYvMoNGAnAPfBlwTWKG", "Concert Tickets", "#FFFFFF");
     subCategories.add(category0);
     subCategories.add(category1);
     subCategories.add(category2);

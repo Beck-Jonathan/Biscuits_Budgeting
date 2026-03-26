@@ -54,6 +54,7 @@ public class EditSubCategoryServlet extends HttpServlet{
     String _Category_Name = req.getParameter("inputcategoryCategory_Name");
     String _color_id = req.getParameter("inputcategoryColor_id");
     String _parent_category_id = req.getParameter("inputsub_categoryparent_category_id");
+    String _projection_strategy_ID = req.getParameter("inputsub_categoryprojection_strategy_ID");
 
     try {
       _oldCategory.setCategory_ID(_Category_ID);
@@ -79,9 +80,16 @@ public class EditSubCategoryServlet extends HttpServlet{
       return;
     }
     try {
+      _newCategory.setprojection_strategy_ID(_projection_strategy_ID);
+    } catch (Exception e) {
+      response = -5;
+      sendResponse(resp, response);
+      return;
+    }
+    try {
       _newCategory.setcolor_id(_color_id);
     } catch(Exception e) {
-      response = -5;
+      response = -6;
       sendResponse(resp,response);
       return;
     }
@@ -95,7 +103,7 @@ public class EditSubCategoryServlet extends HttpServlet{
           return;
 
       }catch(Exception ex){
-        response = -6;
+        response = -7;
         sendResponse(resp,response);
         return;
       }

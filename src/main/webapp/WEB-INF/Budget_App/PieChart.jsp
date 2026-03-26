@@ -28,6 +28,7 @@
                 <div class="btn-group w-100">
                     <button id="btnAnnual" class="btn btn-outline-primary active" data-val="0">Yearly</button>
                     <button id="btnMonthly" class="btn btn-outline-primary" data-val="1">Monthly</button>
+                    <button id="btnForecast" class="btn btn-outline-primary" data-val="2">Forecast</button>
                 </div>
             </div>
 
@@ -38,6 +39,29 @@
                         <option value="${year}" ${year eq 2026 ? 'selected' : ''}>${year}</option>
                     </c:forEach>
                 </select>
+            </div>
+            <div id="forecastControlsContainer" class="budget-panel mb-3 p-3"
+                 style="display:none; border-left: 4px solid #f39c12;">
+                <label class="small fw-bold text-uppercase text-muted mb-2 d-block">Forecast Settings</label>
+
+                <div class="mb-3">
+                    <label class="small text-muted">History (Months Back)</label>
+                    <input type="number" id="monthsBack" class="form-control form-control-sm border-0 bg-light"
+                           value="24" min="6" max="60">
+                    <div class="form-text" style="font-size: 0.6rem;">Min 6m for regression</div>
+                </div>
+
+                <div>
+                    <label class="small text-muted">Projection (Months Forward)</label>
+                    <input type="number" id="monthsForward" class="form-control form-control-sm border-0 bg-light"
+                           value="12" min="1" max="36">
+                </div>
+                <label class="small fw-bold text-uppercase text-muted mt-3 mb-2 d-block">Group By</label>
+                <div class="btn-group w-100">
+                    <button class="btn btn-sm btn-outline-secondary active f-view" data-v="monthly">Month</button>
+                    <button class="btn btn-sm btn-outline-secondary f-view" data-v="annual">Year</button>
+                </div>
+
             </div>
 
             <div class="budget-panel shadow-sm d-flex flex-column" style="max-height: 500px;">

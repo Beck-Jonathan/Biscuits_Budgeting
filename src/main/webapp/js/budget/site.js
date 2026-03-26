@@ -1,95 +1,46 @@
-$(document).ready(async function () {
+$(document).ready(function () {
+	// Peace treaty between libraries
+	if ($.widget && $.widget.bridge) {
+		$.widget.bridge('uibutton', $.ui.button);
+	}
+
+	// Map of ID to Label and a Bootstrap Icon class
+	const navConfig = {
+		"#Add": {label: "Upload", icon: "bi-cloud-arrow-up"},
+		"#search": {label: "Search", icon: "bi-search"},
+		"#View": {label: "Activity", icon: "bi-list-ul"},
+		"#Accounts": {label: "Accounts", icon: "bi-bank"},
+		"#Category": {label: "Categories", icon: "bi-tags"},
+		"#PieChart": {label: "Stats", icon: "bi-pie-chart"},
+		"#budgets": {label: "Budgets", icon: "bi-wallet2"},
+		"#suggestions": {label: "Feedback", icon: "bi-chat-dots"},
+		"#Export": {label: "Export", icon: "bi-download"}
+	};
+
+	$.each(navConfig, function (id, data) {
+
+		const $btn = $(id);
+		//$btn.removeClass("ui-state-default ui-widget-content");
+		if ($btn.length) {
+			// Initialize jQuery UI Button
+			$btn.button({label: data.label});
+
+			// Prepend a nice Bootstrap Icon since they look better than UI icons
+			$btn.prepend(`<i class="bi ${data.icon} me-2"></i>`);
+		}
+		$btn.css({
+			'background': '#ffffff',
+			'box-shadow': '0 4px 12px rgba(0,0,0,0.15)',
+			'border-radius': '12px',
+			'border': '1px solid #dee2e6',
+			'padding': '10px 20px',
+			'display': 'inline-flex'
+		});
+	});
+});
 
 
 
-
-////console.log("ready on new version")
-	$("#Home").button();
-	$("#Home").button("option", "icon", "ui-icon-check");
-	$("#Home").button("option", "showIcon", "true");
-	$("#Home").button("option", "label", "Home");
-
-	$("#SignUp").button();
-	$("#SignUp").button("option", "icon", "ui-icon-check");
-	$("#SignUp").button("option", "showIcon", "true");
-	$("#SignUp").button("option", "label", "SignUp");
-
-	$("#SignIn").button();
-	$("#SignIn").button("option", "icon", "ui-icon-check");
-	$("#SignIn").button("option", "showIcon", "true");
-	$("#SignIn").button("option", "label", "SignIn");
-
-	$("#user-dash").button();
-	$("#user-dash").button("option", "icon", "ui-icon-check");
-	$("#user-dash").button("option", "showIcon", "true");
-	$("#user-dash").button("option", "label", "User Dash");
-
-
-	$("#Add").button();
-	$("#Add").button("option", "icon", "ui-icon-check");
-	$("#Add").button("option", "showIcon", "true");
-	$("#Add").button("option", "label", "upload");
-
-	$("#search").button();
-	$("#search").button("option", "icon", "ui-icon-check");
-	$("#search").button("option", "showIcon", "true");
-	$("#search").button("option", "label", "Search And Categorize");
-
-	$("#Accounts").button();
-	$("#Accounts").button("option", "icon", "ui-icon-check");
-	$("#Accounts").button("option", "showIcon", "true");
-	$("#Accounts").button("option", "label", "View Accounts");
-
-	$("#View").button();
-	$("#View").button("option", "icon", "ui-icon-check");
-	$("#View").button("option", "showIcon", "true");
-	$("#View").button("option", "label", "View Transactions");
-
-
-	$("#Category").button();
-	$("#Category").button("option", "icon", "ui-icon-check");
-	$("#Category").button("option", "showIcon", "true");
-	$("#Category").button("option", "label", "Categories");
-
-
-	$("#MoneyBreakdown").button();
-	$("#MoneyBreakdown").button("option", "icon", "ui-icon-check");
-	$("#MoneyBreakdown").button("option", "showIcon", "true");
-	$("#MoneyBreakdown").button("option", "label", "Yearly Summary");
-
-	$("#Export").button();
-	$("#Export").button("option", "icon", "ui-icon-check");
-	$("#Export").button("option", "showIcon", "true");
-	$("#Export").button("option", "label", "Export");
-
-	$("#Mortgage").button();
-	$("#Mortgage").button("option", "icon", "ui-icon-check");
-	$("#Mortgage").button("option", "showIcon", "true");
-	$("#Mortgage").button("option", "label", "Mortgage");
-
-	$("#PieChart").button();
-	$("#PieChart").button("option", "icon", "ui-icon-check");
-	$("#PieChart").button("option", "showIcon", "true");
-	$("#PieChart").button("option", "label", "Bar Chart");
-
-	$("#suggestions").button();
-	$("#suggestions").button("option", "icon", "ui-icon-check");
-	$("#suggestions").button("option", "showIcon", "true");
-	$("#suggestions").button("option", "label", "Suggestion Box");
-
-
-	$("#receipts").button();
-	$("#receipts").button("option", "icon", "ui-icon-check");
-	$("#receipts").button("option", "showIcon", "true");
-	$("#receipts").button("option", "label", "Receipts");
-
-	$("#budgets").button();
-	$("#budgets").button("option", "icon", "ui-icon-check");
-	$("#budgets").button("option", "showIcon", "true");
-	$("#budgets").button("option", "label", "Budgets");
-
-
-})
 
 function hiderow(row){
 	//console.log(row);

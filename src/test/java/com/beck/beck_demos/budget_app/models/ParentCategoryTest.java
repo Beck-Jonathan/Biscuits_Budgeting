@@ -263,7 +263,7 @@ class ParentCategoryTest {
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the color_id as equal.
-    smaller.setTransaction_type("#income");
+    smaller.setTransaction_type("income");
     Assertions.assertTrue(bigger.compareTo(smaller)==0);
   }
 

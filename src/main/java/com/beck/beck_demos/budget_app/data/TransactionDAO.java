@@ -26,8 +26,11 @@ import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.beck.beck_demos.budget_app.data.Database.getConnection;
 public class TransactionDAO implements iTransactionDAO {
@@ -64,28 +67,14 @@ public class TransactionDAO implements iTransactionDAO {
     int result = 0;
     try (Connection connection = getConnection()) {
       if (connection != null) {
-        try (CallableStatement statement = connection.prepareCall("{CALL sp_update_Transaction(? ,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}")) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_update_Transaction(?,?,?,?,?)}")) {
           statement.setString(1, oldTransaction.getTransaction_ID());
           statement.setString(2, oldTransaction.getUser_ID());
-          statement.setString(3, newTransaction.getUser_ID());
-          statement.setString(4, oldTransaction.getCategory_ID());
-          statement.setString(5, newTransaction.getCategory_ID());
-          statement.setString(6, oldTransaction.getBank_Account_ID());
-          statement.setString(7, newTransaction.getBank_Account_ID());
-          statement.setDate(8, (Date) oldTransaction.getPost_Date());
-          statement.setDate(9, (Date) newTransaction.getPost_Date());
-          statement.setInt(10, oldTransaction.getCheck_No());
-          statement.setInt(11, newTransaction.getCheck_No());
-          statement.setString(12, oldTransaction.getDescription());
-          statement.setString(13, newTransaction.getDescription());
-          statement.setDouble(14, oldTransaction.getAmount());
-          statement.setDouble(15, newTransaction.getAmount());
-          statement.setString(16, oldTransaction.getType());
-          statement.setString(17, newTransaction.getType());
-          statement.setString(18, oldTransaction.getStatus());
-          statement.setString(19, newTransaction.getStatus());
-          statement.setBoolean(20, oldTransaction.getIs_Locked());
-          statement.setBoolean(21, newTransaction.getIs_Locked());
+
+          statement.setString(3, oldTransaction.getCategory_ID());
+          statement.setString(4, newTransaction.getCategory_ID());
+
+          statement.setBoolean(5, newTransaction.getIs_Locked());
           result = statement.executeUpdate();
         } catch (SQLException e) {
           throw new RuntimeException("Could not update Transaction . Try again later");
@@ -813,12 +802,12 @@ public class TransactionDAO implements iTransactionDAO {
             String Type = resultSet.getString("Transaction_Type");
             String Status = resultSet.getString("Transaction_Status");
             boolean Is_Locked = resultSet.getBoolean("Transaction_Is_Locked");
-            Integer User_User_ID = resultSet.getInt("User_User_ID");
+            String User_User_ID = resultSet.getString("User_User_ID");
             String User_User_Name = resultSet.getString("User_User_Name");
             String User_User_PW = resultSet.getString("User_User_PW");
             String User_Email = resultSet.getString("User_Email");
             String Category_Category_ID = resultSet.getString("Category_Category_ID");
-            Integer Category_User_ID = resultSet.getInt("Category_User_ID");
+            String Category_User_ID = resultSet.getString("Category_User_ID");
             Transaction _result = new Transaction(Transaction_ID, User_ID, Category_ID, Account_Num, Post_Date, Check_No, Description, Amount, Type, Status, Is_Locked);
             result = new Transaction_VM(_result);
           }
@@ -842,7 +831,7 @@ public class TransactionDAO implements iTransactionDAO {
           }
 
         }
-      } catch (SQLException e) {
+      } catch (Exception e) {
         throw new RuntimeException("Could not retrieve Transaction_Comments. Try again later");
       }
       List<Receipt> receipts = new ArrayList<>();
@@ -889,6 +878,54 @@ public class TransactionDAO implements iTransactionDAO {
       stmt.setString(2, BankAccountID);
       stmt.setInt(3, year);
     });
+  }
+
+  @Override
+  public List<List<SubCategory_VM>> getForecastAnalysis(String user_ID, LocalDate startDate, int monthsBack, int monthsForward) {
+    List<List<SubCategory_VM>> result = new ArrayList<>();
+    // Map to group categories by their target_period (the 'columns' in your list of lists)
+    Map<String, List<SubCategory_VM>> monthlyMap = new LinkedHashMap<>();
+
+    try (Connection connection = getConnection()) {
+      try (CallableStatement statement = connection.prepareCall("{CALL get_category_forecast(?,?,?,?)}")) {
+        statement.setString(1, user_ID);
+        statement.setInt(2, monthsBack);
+        statement.setInt(3, monthsForward);
+        statement.setDate(4, java.sql.Date.valueOf(startDate));
+
+        try (ResultSet resultSet = statement.executeQuery()) {
+          while (resultSet.next()) {
+            // Extract variables matching your specific SP column naming
+            int Month_Offset = resultSet.getInt("month_offset");
+            String Target_Period = resultSet.getString("target_period");
+            String Category_Name = resultSet.getString("category_Name");
+            String Category_ID = resultSet.getString("category_id");
+            Double Forecasted_Amount = resultSet.getDouble("forecasted_amount");
+            String category_type = resultSet.getString("category_type");
+
+            // Initialize VM object
+            SubCategory_VM _vm = new SubCategory_VM(Category_ID, Forecasted_Amount);
+            _vm.setCategory_Name(Category_Name);
+            _vm.setSign(Target_Period); // Storing the period string ("2026-04")
+            _vm.setYear(Month_Offset);  // Storing the step offset (1, 2, 3...)
+            _vm.setTransactionType(category_type);
+
+            // Grouping logic to build the List of Lists
+            if (!monthlyMap.containsKey(Target_Period)) {
+              monthlyMap.put(Target_Period, new ArrayList<>());
+            }
+            monthlyMap.get(Target_Period).add(_vm);
+
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+
+    // Convert map values to the List<List<>> format required by the interface
+    result.addAll(monthlyMap.values());
+    return result;
   }
 
 }

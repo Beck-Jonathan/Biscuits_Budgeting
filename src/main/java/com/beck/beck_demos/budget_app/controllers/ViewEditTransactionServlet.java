@@ -124,43 +124,15 @@ public class ViewEditTransactionServlet extends HttpServlet{
     if (_Category_ID!=null){
       _Category_ID=_Category_ID.trim();
     }
-    String _Account_Num = req.getParameter("inputtransactionAccount_Num");
-    if (_Account_Num!=null){
-      _Account_Num=_Account_Num.trim();
-    }
-    String _Post_Date = req.getParameter("inputtransactionPost_Date");
-    if (_Post_Date!=null){
-      _Post_Date=_Post_Date.trim();
-    }
-    String _Check_No = req.getParameter("inputtransactionCheck_No");
-    if (_Check_No!=null){
-      _Check_No=_Check_No.trim();
-    }
-    String _Description = req.getParameter("inputtransactionDescription");
-    if (_Description!=null){
-      _Description=_Description.trim();
-    }
-    String _Amount = req.getParameter("inputtransactionAmount");
-    if (_Amount!=null){
-      _Amount=_Amount.trim();
-    }
-    String _Type = req.getParameter("inputtransactionType");
-    if (_Type!=null){
-      _Type=_Type.trim();
-    }
-    String _Status = req.getParameter("inputtransactionStatus");
-    if (_Status!=null){
-      _Status=_Status.trim();
+    String isLocked = req.getParameter(("inputtransactionIs_Locked"));
+    if (isLocked == null || isLocked.isEmpty()) {
+      isLocked = "false";
     }
 
+
     results.put("Category_ID",_Category_ID);
-    results.put("Account_Num",_Account_Num);
-    results.put("Post_Date",_Post_Date);
-    results.put("Check_No",_Check_No);
-    results.put("Description",_Description);
-    results.put("Amount",_Amount);
-    results.put("Type",_Type);
-    results.put("Status",_Status);
+    results.put("Locked", isLocked);
+
     Transaction _newTransaction = new Transaction();
     int errors =0;
     try {
@@ -174,42 +146,12 @@ public class ViewEditTransactionServlet extends HttpServlet{
       errors++;
     }
     try {
-      _newTransaction.setBank_Account_ID(_Account_Num);
-    } catch(Exception e) {results.put("transactionAccount_Numerror", e.getMessage());
+      _newTransaction.setIs_Locked(Boolean.parseBoolean(isLocked));
+    } catch (Exception e) {
+      results.put("transactionCategory_IDerror", e.getMessage());
       errors++;
     }
-    try {
-      _newTransaction.setPost_Date(Date.valueOf(_Post_Date));
-    } catch(Exception e) {
-      results.put("transactionPost_Dateerror", e.toString());
-      errors++;
-    }
-    try {
-      _newTransaction.setCheck_No(Integer.valueOf(_Check_No));
-    } catch(Exception e) {
-      results.put("transactionCheck_Noerror", e.getMessage());
-      errors++;
-    }
-    try {
-      _newTransaction.setDescription(_Description);
-    } catch(Exception e) {results.put("transactionDescriptionerror", e.getMessage());
-      errors++;
-    }
-    try {
-      _newTransaction.setAmount(Double.valueOf(_Amount));
-    } catch(Exception e) {results.put("transactionAmounterror", e.getMessage());
-      errors++;
-    }
-    try {
-      _newTransaction.setType(_Type);
-    } catch(Exception e) {results.put("transactionTypeerror", e.getMessage());
-      errors++;
-    }
-    try {
-      _newTransaction.setStatus(_Status);
-    } catch(Exception e) {results.put("transactionStatuserror", e.getMessage());
-      errors++;
-    }
+
 //to update the database
     int result=0;
     if (errors==0){
@@ -237,7 +179,7 @@ public class ViewEditTransactionServlet extends HttpServlet{
     req.setAttribute("Categorys", allCategories);
 //standard
     req.setAttribute("results", results);
-    req.setAttribute("pageTitle", "Edit a Transaction ");
+    req.setAttribute("pageTitle", "Edit Transaction");
     req.getRequestDispatcher("WEB-INF/Budget_App/EditTransaction.jsp").forward(req, resp);
   }
 }

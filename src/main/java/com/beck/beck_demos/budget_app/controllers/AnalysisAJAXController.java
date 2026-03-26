@@ -10,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @WebServlet("/AnalysisAJAX")
@@ -42,13 +43,36 @@ public class AnalysisAJAXController extends HttpServlet {
     if (BankAccountID == null ) {
       BankAccountID = "";
     }
+    String monthsBackStr = req.getParameter("monthsBack");
+    String monthsForwardStr = req.getParameter("monthsForward");
+    int monthsBack = 24;
+    int monthsForward = 12;
+
+    try {
+      if (monthsBackStr != null) {
+        monthsBack = Integer.parseInt(monthsBackStr);
+        // Clamp between 6 months (min for regression) and 60 months (5 years max)
+        monthsBack = Math.max(6, Math.min(60, monthsBack));
+      }
+      if (monthsForwardStr != null) {
+        monthsForward = Integer.parseInt(monthsForwardStr);
+        // Clamp between 1 month and 36 months (3 years max)
+        monthsForward = Math.max(1, Math.min(36, monthsForward));
+      }
+    } catch (NumberFormatException e) {
+      // Log error and keep defaults
+    }
+    LocalDate start = LocalDate.now();
 
     int year = (yearStr != null && !yearStr.isEmpty()) ? Integer.parseInt(yearStr) : 2026;
 
     List<List<SubCategory_VM>> breakdown;
 
     try {
-      if ("1".equals(level)) {
+      if ("2".equals(mode)) {
+        // FORECAST MODE
+        breakdown = transactionDAO.getForecastAnalysis(user.getUser_ID(), start, monthsBack, monthsForward);
+      } else if ("1".equals(level)) {
         // SUPER CATEGORY LEVEL
         breakdown = "1".equals(mode)
             ? transactionDAO.getSuperMonthlyAnalysis(user.getUser_ID(),BankAccountID ,year)
