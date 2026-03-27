@@ -40,6 +40,10 @@
                     </c:forEach>
                 </select>
             </div>
+            <div class="mb-3">
+                <label for="openingBalance" class="form-label small">Starting Cash ($)</label>
+                <input type="number" class="form-control form-control-sm" id="openingBalance" value="30000">
+            </div>
             <div id="forecastControlsContainer" class="budget-panel mb-3 p-3"
                  style="display:none; border-left: 4px solid #f39c12;">
                 <label class="small fw-bold text-uppercase text-muted mb-2 d-block">Forecast Settings</label>
@@ -89,7 +93,54 @@
                 </div>
                 <div class="col-12">
                     <div class="budget-panel p-3">
-                        <div id="pieContainer" style="height: 350px; width: 100%;"></div>
+                        <div class="col-12">
+                            <div class="budget-panel p-3">
+                                <ul class="nav nav-tabs mb-3" id="analysisTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="pie-tab" data-bs-toggle="tab"
+                                                data-bs-target="#pieTabPane" type="button" role="tab">Distribution
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="stats-tab" data-bs-toggle="tab"
+                                                data-bs-target="#statsTabPane" type="button" role="tab">Statistics
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="goals-tab" data-bs-toggle="tab"
+                                                data-bs-target="#goalsTabPane" type="button" role="tab">Goals
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="history-tab" data-bs-toggle="tab"
+                                                data-bs-target="#historyTabPane" type="button" role="tab">History
+                                        </button>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content" id="analysisTabsContent">
+                                    <div class="tab-pane fade show active" id="pieTabPane" role="tabpanel">
+                                        <div id="pieContainer" style="height: 350px; width: 100%;"></div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="statsTabPane" role="tabpanel">
+                                        <div class="text-center p-5 text-muted">
+                                            Click a column in the main chart to see detailed stats.
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade p-4" id="goalsTabPane" role="tabpanel">
+                                        <h5 class="text-muted">Budget Goals</h5>
+                                        <p>Track your "Biscuits Budgeting" goals and progress bars here.</p>
+                                    </div>
+
+                                    <div class="tab-pane fade p-4" id="historyTabPane" role="tabpanel">
+                                        <h5 class="text-muted">Transaction History</h5>
+                                        <p>A quick-view list of the latest raw transactions for the selected period.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
