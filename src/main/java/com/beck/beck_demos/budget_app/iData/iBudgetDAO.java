@@ -59,4 +59,6 @@ public interface iBudgetDAO {
    * @author Jonathan Beck
    */
   int activateBudget(Budget budget) throws SQLException;
+
+  List<Budget_VM> getAllActiveBudgetsWithLines(String userId);
 }

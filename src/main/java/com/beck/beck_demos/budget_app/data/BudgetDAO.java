@@ -318,4 +318,90 @@ public class BudgetDAO implements iBudgetDAO {
     }
     return rowsAffected;
   }
+
+  @Override
+  public List<Budget_VM> getAllActiveBudgetsWithLines(String user_id) {
+    List<Budget_VM> result = new ArrayList<>();
+
+    try (Connection connection = getConnection()) {
+      // STEP 1: Fetch Active Budgets for this user
+      // We'll use a specific stored procedure for active ones,
+      // or you can reuse sp_retrieve_by_all_budget with specific flags if it supports it.
+      String sql = "{CALL sp_retrieve_active_budgets_active(?)}";
+      try (CallableStatement statement = connection.prepareCall(sql)) {
+        statement.setString(1, user_id);
+
+        try (ResultSet resultSet = statement.executeQuery()) {
+          while (resultSet.next()) {
+            Budget _budget = new Budget();
+            _budget.setbudget_id(resultSet.getString("budget_budget_id"));
+            _budget.setuser_id(resultSet.getString("budget_user_id"));
+            _budget.setname(resultSet.getString("budget_name"));
+            _budget.setdetails(resultSet.getString("budget_details"));
+            _budget.setstart_date(resultSet.getObject("budget_start_date", LocalDate.class));
+            _budget.setlimit_amount(resultSet.getDouble("budget_limit_amount"));
+            _budget.setis_active(resultSet.getBoolean("budget_is_active"));
+
+            Budget_VM vm = new Budget_VM(_budget);
+            vm.setLines(new ArrayList<>()); // Crucial for your getTotalSpent() logic
+            result.add(vm);
+          }
+        }
+      }
+
+      // STEP 2: Batch Load Line Items for all active Budgets
+      if (!result.isEmpty()) {
+        // Map for quick lookup by ID
+        Map<String, Budget_VM> vmMap = result.stream()
+            .collect(Collectors.toMap(Budget::getbudget_id, vm -> vm));
+
+        // Create comma-separated string for the batch SP
+        String commaSeparatedIds = result.stream()
+            .map(Budget::getbudget_id)
+            .collect(Collectors.joining(","));
+
+        try (CallableStatement lineStmt = connection.prepareCall("{CALL sp_retrieve_line_items_batch_active(?)}")) {
+          lineStmt.setString(1, commaSeparatedIds);
+
+          try (ResultSet rsLines = lineStmt.executeQuery()) {
+            while (rsLines.next()) {
+              String bId = rsLines.getString("budget_id");
+
+              // Create the Line Item VM
+              Budget_Line_ItemVM item = new Budget_Line_ItemVM();
+              item.setBudget_Line_Item_id(rsLines.getString("budget_line_item_budget_line_item_id"));
+              item.setamount(rsLines.getDouble("budget_line_item_amount"));
+              item.setname(rsLines.getString("budget_line_item_name"));
+              item.setline_item_date(rsLines.getObject("budget_line_item_line_item_date", LocalDate.class));
+              item.setbudget_line_status_id(rsLines.getString("budget_line_item_budget_line_status_id"));
+
+              // SubCategory for the progress bar color
+              // Inside the rsLines.next() loop
+              String catId = rsLines.getString("category_category_id");
+              if (catId != null) {
+                SubCategory category = new SubCategory();
+                category.setCategory_ID(catId);
+                category.setCategory_Name(rsLines.getString("category_category_name"));
+                category.setcolor_id(rsLines.getString("category_color_id"));
+                item.setCategory(category);
+                item.setCategory_id(catId); // Synchronize the ID string in the parent class
+              } else {
+
+                item.setCategory_id("00000000-0000-0000-0000-000000000000"); // Or a default UUID
+              }
+
+              // Attach to the parent VM
+              if (vmMap.containsKey(bId)) {
+                vmMap.get(bId).getLines().add(item);
+              }
+            }
+          }
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException("Error calculating project affordability: " + e.getMessage());
+    }
+    return result;
+  }
 }

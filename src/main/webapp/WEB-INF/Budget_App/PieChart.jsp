@@ -40,10 +40,14 @@
                     </c:forEach>
                 </select>
             </div>
-            <div class="mb-3">
-                <label for="openingBalance" class="form-label small">Starting Cash ($)</label>
-                <input type="number" class="form-control form-control-sm" id="openingBalance" value="30000">
+
+            <div class="budget-panel mb-3 p-3">
+                <label for="openingBalance" class="small fw-bold text-uppercase text-muted mb-2 d-block">Starting Cash
+                    ($)</label>
+                <input type="number" class="form-control form-control-sm border-0 bg-light" id="openingBalance"
+                       value="30000">
             </div>
+
             <div id="forecastControlsContainer" class="budget-panel mb-3 p-3"
                  style="display:none; border-left: 4px solid #f39c12;">
                 <label class="small fw-bold text-uppercase text-muted mb-2 d-block">Forecast Settings</label>
@@ -52,7 +56,6 @@
                     <label class="small text-muted">History (Months Back)</label>
                     <input type="number" id="monthsBack" class="form-control form-control-sm border-0 bg-light"
                            value="24" min="6" max="60">
-                    <div class="form-text" style="font-size: 0.6rem;">Min 6m for regression</div>
                 </div>
 
                 <div>
@@ -60,12 +63,6 @@
                     <input type="number" id="monthsForward" class="form-control form-control-sm border-0 bg-light"
                            value="12" min="1" max="36">
                 </div>
-                <label class="small fw-bold text-uppercase text-muted mt-3 mb-2 d-block">Group By</label>
-                <div class="btn-group w-100">
-                    <button class="btn btn-sm btn-outline-secondary active f-view" data-v="monthly">Month</button>
-                    <button class="btn btn-sm btn-outline-secondary f-view" data-v="annual">Year</button>
-                </div>
-
             </div>
 
             <div class="budget-panel shadow-sm d-flex flex-column" style="max-height: 500px;">
@@ -76,7 +73,6 @@
                         <button type="button" class="btn btn-xxs btn-outline-light py-0 px-2" id="deselectAll" style="font-size: 0.65rem;">NONE</button>
                     </div>
                 </div>
-
                 <div class="panel-body p-0" style="overflow-y: auto; overflow-x: hidden; flex-grow: 1;">
                     <ul class="category-list p-0 m-0 list-unstyled" id="categoryList">
                     </ul>
@@ -93,51 +89,122 @@
                 </div>
                 <div class="col-12">
                     <div class="budget-panel p-3">
-                        <div class="col-12">
-                            <div class="budget-panel p-3">
-                                <ul class="nav nav-tabs mb-3" id="analysisTabs" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="pie-tab" data-bs-toggle="tab"
-                                                data-bs-target="#pieTabPane" type="button" role="tab">Distribution
-                                        </button>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="stats-tab" data-bs-toggle="tab"
-                                                data-bs-target="#statsTabPane" type="button" role="tab">Statistics
-                                        </button>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="goals-tab" data-bs-toggle="tab"
-                                                data-bs-target="#goalsTabPane" type="button" role="tab">Goals
-                                        </button>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="history-tab" data-bs-toggle="tab"
-                                                data-bs-target="#historyTabPane" type="button" role="tab">History
-                                        </button>
-                                    </li>
-                                </ul>
+                        <ul class="nav nav-tabs mb-3" id="analysisTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="pie-tab" data-bs-toggle="tab"
+                                        data-bs-target="#pieTabPane" type="button" role="tab">Distribution
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="stats-tab" data-bs-toggle="tab"
+                                        data-bs-target="#statsTabPane" type="button" role="tab">Statistics
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="goals-tab" data-bs-toggle="tab"
+                                        data-bs-target="#goalsTabPane" type="button" role="tab">Goals
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="affordability-tab" data-bs-toggle="tab"
+                                        data-bs-target="#affordabilityTabPane" type="button" role="tab">Affordability
+                                </button>
+                            </li>
+                        </ul>
 
-                                <div class="tab-content" id="analysisTabsContent">
-                                    <div class="tab-pane fade show active" id="pieTabPane" role="tabpanel">
-                                        <div id="pieContainer" style="height: 350px; width: 100%;"></div>
+                        <div class="tab-content" id="analysisTabsContent">
+                            <div class="tab-pane fade show active" id="pieTabPane" role="tabpanel">
+                                <div id="pieContainer" style="height: 350px; width: 100%;"></div>
+                            </div>
+
+                            <div class="tab-pane fade" id="statsTabPane" role="tabpanel">
+                                <div class="text-center p-5 text-muted">
+                                    Click a column in the main chart to see detailed stats.
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade p-4" id="goalsTabPane" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h5 class="fw-bold mb-3" style="color: #2c3e50;">Surplus Allocation</h5>
+                                        <div class="row g-3 mb-4">
+                                            <div class="col-md-4">
+                                                <label class="small fw-bold text-primary">Savings: <span
+                                                        class="savingsDisp">50%</span></label>
+                                                <input type="range" class="form-range goal-input savingsPct" value="50"
+                                                       min="0" max="100">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="small fw-bold text-info">Slush: <span class="slushDisp">30%</span></label>
+                                                <input type="range" class="form-range goal-input slushPct" value="30"
+                                                       min="0" max="100">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="small fw-bold text-dark">Projects: <span class="bigDisp">20%</span></label>
+                                                <input type="range" class="form-range goal-input bigPct" value="20"
+                                                       min="0" max="100">
+                                            </div>
+                                        </div>
+
+                                        <div class="table-responsive mt-4">
+                                            <table class="table table-hover table-sm align-middle"
+                                                   style="font-size: 0.85rem;">
+                                                <thead class="table-light">
+                                                <tr>
+                                                    <th>Month</th>
+                                                    <th class="text-end">Proj. Balance</th>
+                                                    <th class="text-end text-success">Total Gain</th>
+                                                    <th class="text-end text-primary">Savings</th>
+                                                    <th class="text-end text-info">Slush</th>
+                                                    <th class="text-end text-dark">Projects</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="forecastAllocationBody">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <button type="button" id="saveGoalsBtn"
+                                                class="btn btn-sm btn-primary px-4 rounded-pill mt-3">
+                                            Save Goal Percentages
+                                        </button>
                                     </div>
+                                </div>
+                            </div>
 
-                                    <div class="tab-pane fade" id="statsTabPane" role="tabpanel">
-                                        <div class="text-center p-5 text-muted">
-                                            Click a column in the main chart to see detailed stats.
+                            <div class="tab-pane fade p-4" id="affordabilityTabPane" role="tabpanel">
+                                <div class="bg-light p-3 rounded mb-4 border">
+                                    <h6 class="small fw-bold text-uppercase text-muted mb-3">Adjust Allocation
+                                        Priorities</h6>
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label class="small fw-bold text-primary">Savings: <span
+                                                    class="savingsDisp">50%</span></label>
+                                            <input type="range" class="form-range goal-input savingsPct" value="50"
+                                                   min="0" max="100">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="small fw-bold text-info">Slush: <span
+                                                    class="slushDisp">30%</span></label>
+                                            <input type="range" class="form-range goal-input slushPct" value="30"
+                                                   min="0" max="100">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="small fw-bold text-dark">Projects: <span
+                                                    class="bigDisp">20%</span></label>
+                                            <input type="range" class="form-range goal-input bigPct" value="20" min="0"
+                                                   max="100">
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="tab-pane fade p-4" id="goalsTabPane" role="tabpanel">
-                                        <h5 class="text-muted">Budget Goals</h5>
-                                        <p>Track your "Biscuits Budgeting" goals and progress bars here.</p>
+                                <div class="alert alert-info border-0 shadow-sm d-flex align-items-center mb-4">
+                                    <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+                                    <div id="affordabilityHeader" class="w-100">
                                     </div>
+                                </div>
 
-                                    <div class="tab-pane fade p-4" id="historyTabPane" role="tabpanel">
-                                        <h5 class="text-muted">Transaction History</h5>
-                                        <p>A quick-view list of the latest raw transactions for the selected period.</p>
-                                    </div>
+                                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4"
+                                     id="budgetAffordabilityContainer">
                                 </div>
                             </div>
                         </div>
@@ -149,7 +216,6 @@
 </div>
 
 <script>
-    // Pass the initial breakdown from the controller to the JS file
     window.initialData = ${jsonBreakdown != null ? jsonBreakdown : '[]'};
 </script>
 <%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>

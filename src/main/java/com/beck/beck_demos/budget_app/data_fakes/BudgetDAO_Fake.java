@@ -268,6 +268,20 @@ return results;
     return 1;
   }
 
+  @Override
+  public List<Budget_VM> getAllActiveBudgetsWithLines(String userId) {
+
+    List<Budget_VM> results = new ArrayList<>();
+    for (Budget_VM budget : budgetVMs) {
+      if (!userId.isEmpty() && !budget.getuser_id().equals(userId)) {
+        continue;
+      }
+
+      results.add(budget);
+    }
+    return results;
+  }
+
   private boolean duplicateKey(Budget  _budget ){
     return _budget.getname().contains("DUPLICATE");
   }
