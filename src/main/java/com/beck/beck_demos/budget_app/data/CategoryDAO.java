@@ -168,19 +168,26 @@ public class CategoryDAO implements iCategoryDAO {
   @Override
   public int SmartAssignProjectionModel(User user) throws SQLException {
     int rowsAffected = 0;
+    // Use a string for the SQL call
+    String query = "{CALL auto_assign_projection_strategies(?)}";
+
     try (Connection connection = getConnection()) {
       if (connection != null) {
-        try (CallableStatement statement = connection.prepareCall("{CALL auto_assign_projection_strategies( ?)}")) {
+        try (CallableStatement statement = connection.prepareCall(query)) {
           statement.setString(1, user.getUser_ID());
 
-          rowsAffected = statement.executeUpdate();
-          if (rowsAffected == 0) {
-            throw new RuntimeException("Could not Assign Projections. Try again later");
+          // Since the SP ends with a SELECT, we use executeQuery()
+          try (ResultSet rs = statement.executeQuery()) {
+            if (rs.next()) {
+              // Match the alias "categories_updated" from your SQL SELECT
+              rowsAffected = rs.getInt("categories_updated");
+            }
           }
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException("Could not Assign Projections. Try again later");
+      // Log the actual error internally before throwing the user-friendly one
+      throw new SQLException("Can not Updated Projections");
     }
     return rowsAffected;
   }

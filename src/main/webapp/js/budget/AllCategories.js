@@ -229,19 +229,27 @@ function handleAutoAssignExecution() {
         url: 'autoAssignProjections',
         type: 'POST',
         beforeSend: function () {
-            // Disable everything so they can't cancel mid-process
+            // Disable interactions to prevent double-submits
             $btn.prop("disabled", true);
             $modal.find('.btn-close, .btn-light').addClass('d-none');
-            $btn.html('<span class="spinner-border spinner-border-sm me-2"></span> Analyzing History...');
+            $btn.html('<span class="spinner-border spinner-border-sm me-2"></span> Running Optimization...');
         },
         success: function (response) {
-            if (response == "1" || response == 1) {
-                $btn.removeClass('btn-primary').addClass('btn-success').html('<i class="bi bi-check-lg me-2"></i> Success!');
+            // parse as int just in case it comes back as a string
+            const result = parseInt(response);
+
+            if (result >= 0) {
+                // Success State
+                $btn.removeClass('btn-primary').addClass('btn-success')
+                    .html('<i class="bi bi-check-lg me-2"></i> Finished, ' + result + ' updates!');
+
+                // Short delay so the user sees the "Success" state before the flash
                 setTimeout(() => {
                     location.reload();
-                }, 800);
+                }, 1000);
             } else {
-                alert("Analysis finished with code: " + response);
+                // Negative response = Error Code
+                alert("The engine returned an error code: " + result);
                 resetAutoModal($btn, originalHtml);
             }
         },
