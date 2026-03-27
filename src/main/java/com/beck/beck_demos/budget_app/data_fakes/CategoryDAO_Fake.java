@@ -3,6 +3,7 @@ package com.beck.beck_demos.budget_app.data_fakes;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
 import com.beck.beck_demos.budget_app.models.ParentCategory;
 import com.beck.beck_demos.budget_app.models.SubCategory;
+import com.beck.beck_demos.budget_app.models.User;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,8 +13,8 @@ import java.util.List;
 //since 1/27/2025
 //Jonathan Beck
 public class CategoryDAO_Fake implements iCategoryDAO {
-  private  List<SubCategory> subCategories;
-  private  List<ParentCategory> parent_categories;
+  private final List<SubCategory> subCategories;
+  private final List<ParentCategory> parent_categories;
   public CategoryDAO_Fake(){
     subCategories = new ArrayList<>();
     // User 1: ec93ae39-255a-4252-ac50-cde8ecb05b0c
@@ -188,10 +189,36 @@ public class CategoryDAO_Fake implements iCategoryDAO {
     return results;
   }
 
+  @Override
+  public int SmartAssignProjectionModel(User user) throws SQLException {
+    int result = 0;
+    if (exceptionKey(user)) {
+      throw new SQLException("error");
+    }
+    for (SubCategory subCategory : subCategories) {
+      if (subCategory.getUser_ID().equals(user.getUser_ID())) {
+        result++;
+        if (subCategory.getprojection_strategy_ID().equals("ALPHA_SPIKE")) {
+          subCategory.setprojection_strategy_ID("REGRESSION");
+
+        } else if (subCategory.getprojection_strategy_ID().equals("REGRESSION")) {
+          subCategory.setprojection_strategy_ID("LVCF");
+        } else if (subCategory.getprojection_strategy_ID().equals("LVCF")) {
+          subCategory.setprojection_strategy_ID("ALPHA_SPIKE");
+        }
+      }
+    }
+    return result;
+  }
+
   private boolean duplicateKey(SubCategory _category){
     return (_category==null ||_category.getCategory_Name().contains("DUPLICATE"));
   }
   private boolean exceptionKey(SubCategory _category){
     return (_category==null ||_category.getCategory_Name().contains("EXCEPTION"));
+  }
+
+  private boolean exceptionKey(User _user) {
+    return _user.getUser_ID().contains("EXCEPTION");
   }
 }

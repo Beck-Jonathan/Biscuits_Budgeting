@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,7 @@ public class DeleteCategoryServlet extends HttpServlet {
     this.categoryDAO = categoryDAO;
   }
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
     Map<String, String> results = new HashMap<>();
 

@@ -3,16 +3,16 @@ package com.beck.beck_demos.budget_app.data_fakes;
 import com.beck.beck_demos.budget_app.iData.iBudgetDAO;
 import com.beck.beck_demos.budget_app.models.Budget;
 import com.beck.beck_demos.budget_app.models.Budget_VM;
-import java.time.LocalDate;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class BudgetDAO_Fake  implements  iBudgetDAO{
-  private List<Budget_VM> budgetVMs;
-  private  List<String> currency_codes;
+  private final List<Budget_VM> budgetVMs;
+  private final List<String> currency_codes;
   public BudgetDAO_Fake(){
     budgetVMs = new ArrayList<>();
     Budget budget0 = new Budget("DLpfWxZUBCbqtdngpApNUBMxKxgaVkEondmy", "WaqPhqiekuhbwKdHIuYvMoNGAnAPfBlwTWKG", "UabcRNVs", "idNQpnFK",  LocalDate.now(), 38.44, "fDC", false, LocalDate.now(), LocalDate.now());
@@ -223,6 +223,50 @@ return results;
       return size-newsize;
     }
 
+  @Override
+  public int deactivateBudget(Budget budget) throws SQLException {
+
+    int location = -1;
+    for (int i = 0; i < budgetVMs.size(); i++) {
+      if (budgetVMs.get(i).getbudget_id().equals(budget.getbudget_id())
+          && budgetVMs.get(i).getuser_id().equals(budget.getuser_id())) {
+        location = i;
+        break;
+      }
+    }
+    if (location == -1) {
+      throw new SQLException("Unable To Find budget.");
+    }
+    Budget_VM toDeactivate = budgetVMs.get(location);
+    if (toDeactivate.getis_active()) {
+      toDeactivate.setis_active(false);
+    } else {
+      return 0;
+    }
+    return 1;
+  }
+
+  @Override
+  public int activateBudget(Budget budget) throws SQLException {
+    int location = -1;
+    for (int i = 0; i < budgetVMs.size(); i++) {
+      if (budgetVMs.get(i).getbudget_id().equals(budget.getbudget_id())
+          && budgetVMs.get(i).getuser_id().equals(budget.getuser_id())) {
+        location = i;
+        break;
+      }
+    }
+    if (location == -1) {
+      throw new SQLException("Unable To Find budget.");
+    }
+    Budget_VM toDeactivate = budgetVMs.get(location);
+    if (!toDeactivate.getis_active()) {
+      toDeactivate.setis_active(true);
+    } else {
+      return 0;
+    }
+    return 1;
+  }
 
   private boolean duplicateKey(Budget  _budget ){
     return _budget.getname().contains("DUPLICATE");

@@ -3,12 +3,14 @@ package com.beck.beck_demos.budget_app.data;
 import com.beck.beck_demos.budget_app.iData.iBudgetDAO;
 import com.beck.beck_demos.budget_app.models.*;
 
-import java.sql.*;
-import java.text.ParseException;
-import java.util.List;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -220,7 +222,7 @@ public class BudgetDAO implements iBudgetDAO {
     Budget_VM vm = null;
     try(Connection connection = getConnection()) {
       try(CallableStatement statement = connection.prepareCall("{CALL sp_retrieve_by_pk_budget(?)}")) {
-        statement.setString(1, budget.getbudget_id().toString());
+        statement.setString(1, budget.getbudget_id());
 
         try (ResultSet resultSet = statement.executeQuery()){
           if(resultSet.next()){
@@ -273,6 +275,46 @@ public class BudgetDAO implements iBudgetDAO {
       }
     } catch (SQLException e) {
       throw new RuntimeException("Could not Delete budget. Try again later");
+    }
+    return rowsAffected;
+  }
+
+  @Override
+  public int deactivateBudget(Budget budget) throws SQLException {
+    int rowsAffected = 0;
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_deactivate_budget( ?,?)}")) {
+          statement.setString(1, budget.getbudget_id());
+          statement.setString(2, budget.getuser_id());
+          rowsAffected = statement.executeUpdate();
+          if (rowsAffected == 0) {
+            throw new RuntimeException("Could not Deactivate budget. Try again later");
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not Deactivate budget. Try again later");
+    }
+    return rowsAffected;
+  }
+
+  @Override
+  public int activateBudget(Budget budget) throws SQLException {
+    int rowsAffected = 0;
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_activate_budget( ?,?)}")) {
+          statement.setString(1, budget.getbudget_id());
+          statement.setString(2, budget.getuser_id());
+          rowsAffected = statement.executeUpdate();
+          if (rowsAffected == 0) {
+            throw new RuntimeException("Could not Activate budget. Try again later");
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not Activate budget. Try again later");
     }
     return rowsAffected;
   }

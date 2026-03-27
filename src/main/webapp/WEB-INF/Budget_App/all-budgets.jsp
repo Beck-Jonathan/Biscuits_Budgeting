@@ -45,7 +45,10 @@ Create the JSP  For Viewing All of The  budget table
                         <div class="budget_card card h-100 shadow-sm border-0 position-relative">
                             <div class="card-header bg-white d-flex justify-content-between align-items-center border-0 pt-3">
                                 <h5 class="card-title mb-0 fw-bold text-primary">${fn:escapeXml(b.name)}</h5>
-                                <span class="badge ${b.is_active ? 'bg-success' : 'bg-secondary'}">
+                                <span class="badge status-badge ${b.is_active ? 'bg-success' : 'bg-secondary'}"
+                                      data-id="${b.budget_id}"
+                                      data-active="${b.is_active}"
+                                      style="cursor: pointer; z-index: 5; position: relative; min-width: 65px;">
                                         ${b.is_active ? 'Active' : 'Inactive'}
                                 </span>
                             </div>

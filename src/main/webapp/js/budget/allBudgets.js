@@ -2,6 +2,54 @@ $(document).ready(function() {
     // 1. Initial UI Setup
     normalizeHeight();
     tooltips();
+    // 4. Toggle Active/Inactive Status
+    $(".status-badge").on("click", function () {
+        var $badge = $(this);
+        var budgetId = $badge.data("id");
+        var isCurrentlyActive = $badge.data("active");
+        var targetMode = isCurrentlyActive ? 0 : 1;
+
+        // Store the original text to restore it if there's an error
+        var originalText = $badge.text().trim();
+
+        $.ajax({
+            url: 'activateBudget',
+            type: 'POST',
+            data: {
+                budgetid: budgetId,
+                mode: targetMode
+            },
+            beforeSend: function () {
+                // Disable clicks and show spinner
+                $badge.css("pointer-events", "none");
+                $badge.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+            },
+            success: function (response) {
+                if (response == "1" || response == 1) {
+                    // Update state based on targetMode
+                    if (targetMode === 1) {
+                        $badge.removeClass("bg-secondary").addClass("bg-success").text("Active");
+                        $badge.data("active", true);
+                    } else {
+                        $badge.removeClass("bg-success").addClass("bg-secondary").text("Inactive");
+                        $badge.data("active", false);
+                    }
+                } else {
+                    // Restore original state on logical error
+                    $badge.text(originalText);
+                    alert("Server Error: " + response);
+                }
+            },
+            error: function () {
+                $badge.text(originalText);
+                alert("Connection failed.");
+            },
+            complete: function () {
+                // Re-enable clicks
+                $badge.css("pointer-events", "auto");
+            }
+        });
+    });
 
     // 2. Pre-initialize the dialog container (hidden by default)
     $("#dialog").dialog({

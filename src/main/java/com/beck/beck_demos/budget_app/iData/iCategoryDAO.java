@@ -2,6 +2,7 @@ package com.beck.beck_demos.budget_app.iData;
 
 import com.beck.beck_demos.budget_app.models.ParentCategory;
 import com.beck.beck_demos.budget_app.models.SubCategory;
+import com.beck.beck_demos.budget_app.models.User;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -23,6 +24,8 @@ public interface iCategoryDAO {
   SubCategory getCategoryByPrimaryKey(SubCategory category) throws SQLException;
 
    List<ParentCategory> getParentCategoryByUser(String userID) throws SQLException;
+
+  int SmartAssignProjectionModel(User user) throws SQLException;
 
 }
 

@@ -12,7 +12,11 @@
                 <div class="budget-logic-legend p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="fw-bold m-0"><i class="bi bi-cpu me-2"></i>Projection Engine Logic</h5>
+
                         <span class="badge rounded-pill bg-dark-subtle text-dark px-3">Active Models</span>
+                        <button id="btnAutoAssign" class="btn btn-primary btn-sm shadow-sm d-flex align-items-center">
+                            <i class="bi bi-magic me-2"></i> Smart Assign Models
+                        </button>
                     </div>
 
                     <div class="row g-4">
@@ -77,6 +81,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -220,6 +225,38 @@
                 <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" id="confirmDeleteBtn" class="btn btn-danger rounded-pill px-4 shadow-sm">Delete
                     Category
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="autoAssignModal" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white border-0">
+                <h5 class="modal-title fw-bold"><i class="bi bi-cpu-fill me-2"></i>Projection Engine</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <div class="mb-3">
+                    <i class="bi bi-magic text-primary" style="font-size: 3rem;"></i>
+                </div>
+                <h4 class="fw-bold">Optimize Projection Models?</h4>
+                <p class="text-muted">
+                    This will analyze your transaction history for every category.
+                    The engine will automatically select the best mathematical model
+                    (Regression, Averaging, or Alpha Spikes) to improve your budget accuracy.
+                </p>
+                <div class="alert alert-warning border-0 small d-flex align-items-center">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Existing manual strategy assignments will be overwritten.
+                </div>
+            </div>
+            <div class="modal-footer border-0 pb-4 justify-content-center">
+                <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Keep Current</button>
+                <button type="button" id="confirmAutoAssignBtn" class="btn btn-primary px-4 shadow-sm">
+                    Run Analysis
                 </button>
             </div>
         </div>

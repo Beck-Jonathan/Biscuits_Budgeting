@@ -9,6 +9,7 @@ package com.beck.beck_demos.budget_app.data;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
 import com.beck.beck_demos.budget_app.models.ParentCategory;
 import com.beck.beck_demos.budget_app.models.SubCategory;
+import com.beck.beck_demos.budget_app.models.User;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -115,8 +116,8 @@ public class CategoryDAO implements iCategoryDAO {
     SubCategory result = null;
     try(Connection connection = getConnection()) {
       try(CallableStatement statement = connection.prepareCall("{CALL sp_retrieve_by_pk_subcategory(?,?)}")) {
-        statement.setString(1, category.getCategory_ID().toString());
-        statement.setString(2, category.getUser_ID().toString());
+        statement.setString(1, category.getCategory_ID());
+        statement.setString(2, category.getUser_ID());
 
         try (ResultSet resultSet = statement.executeQuery()){
           if(resultSet.next()){
@@ -162,6 +163,26 @@ public class CategoryDAO implements iCategoryDAO {
       throw new RuntimeException("Could not retrieve parent_categorys. Try again later");
     }
     return result;
+  }
+
+  @Override
+  public int SmartAssignProjectionModel(User user) throws SQLException {
+    int rowsAffected = 0;
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try (CallableStatement statement = connection.prepareCall("{CALL auto_assign_projection_strategies( ?)}")) {
+          statement.setString(1, user.getUser_ID());
+
+          rowsAffected = statement.executeUpdate();
+          if (rowsAffected == 0) {
+            throw new RuntimeException("Could not Assign Projections. Try again later");
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not Assign Projections. Try again later");
+    }
+    return rowsAffected;
   }
 
 }

@@ -41,4 +41,22 @@ public interface iBudgetDAO {
    * @author Jonathan Beck
    */
   int deletebudget( String budget_id) throws SQLException;
+
+  /**
+   * DAO Method to delete budget objects
+   *
+   * @param budget the budget to be deactivated
+   * @return number of records deactivated
+   * @author Jonathan Beck
+   */
+  int deactivateBudget(Budget budget) throws SQLException;
+
+  /**
+   * DAO Method to undelete budget objects
+   *
+   * @param budget the budget to be undeleted
+   * @return number of records activated
+   * @author Jonathan Beck
+   */
+  int activateBudget(Budget budget) throws SQLException;
 }
