@@ -49,6 +49,7 @@
 
 <c:if test="${pageTitle eq 'Financial Analysis'}">
     <script src="js/budget/budget_analysis.js"></script>
+    <script src="${appURL}/js/budget/retirement.js"></script>
 </c:if>
 
 <%-- <c:if test="${pageTitle eq 'Pie Chart Month'}">

@@ -51,13 +51,11 @@
             <div id="forecastControlsContainer" class="budget-panel mb-3 p-3"
                  style="display:none; border-left: 4px solid #f39c12;">
                 <label class="small fw-bold text-uppercase text-muted mb-2 d-block">Forecast Settings</label>
-
                 <div class="mb-3">
                     <label class="small text-muted">History (Months Back)</label>
                     <input type="number" id="monthsBack" class="form-control form-control-sm border-0 bg-light"
                            value="24" min="6" max="60">
                 </div>
-
                 <div>
                     <label class="small text-muted">Projection (Months Forward)</label>
                     <input type="number" id="monthsForward" class="form-control form-control-sm border-0 bg-light"
@@ -74,8 +72,7 @@
                     </div>
                 </div>
                 <div class="panel-body p-0" style="overflow-y: auto; overflow-x: hidden; flex-grow: 1;">
-                    <ul class="category-list p-0 m-0 list-unstyled" id="categoryList">
-                    </ul>
+                    <ul class="category-list p-0 m-0 list-unstyled" id="categoryList"></ul>
                 </div>
             </div>
         </div>
@@ -87,27 +84,33 @@
                         <div id="chartContainer" style="height: 400px; width: 100%;"></div>
                     </div>
                 </div>
+
                 <div class="col-12">
                     <div class="budget-panel p-3">
                         <ul class="nav nav-tabs mb-3" id="analysisTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
+                            <li class="nav-item">
                                 <button class="nav-link active" id="pie-tab" data-bs-toggle="tab"
-                                        data-bs-target="#pieTabPane" type="button" role="tab">Distribution
+                                        data-bs-target="#pieTabPane" type="button">Distribution
                                 </button>
                             </li>
-                            <li class="nav-item" role="presentation">
+                            <li class="nav-item">
                                 <button class="nav-link" id="stats-tab" data-bs-toggle="tab"
-                                        data-bs-target="#statsTabPane" type="button" role="tab">Statistics
+                                        data-bs-target="#statsTabPane" type="button">Statistics
                                 </button>
                             </li>
-                            <li class="nav-item" role="presentation">
+                            <li class="nav-item">
                                 <button class="nav-link" id="goals-tab" data-bs-toggle="tab"
-                                        data-bs-target="#goalsTabPane" type="button" role="tab">Goals
+                                        data-bs-target="#goalsTabPane" type="button">Goals
                                 </button>
                             </li>
-                            <li class="nav-item" role="presentation">
+                            <li class="nav-item">
                                 <button class="nav-link" id="affordability-tab" data-bs-toggle="tab"
-                                        data-bs-target="#affordabilityTabPane" type="button" role="tab">Affordability
+                                        data-bs-target="#affordabilityTabPane" type="button">Affordability
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" id="retirement-tab" data-bs-toggle="tab"
+                                        data-bs-target="#retirementTabPane" type="button">Retirement 2030
                                 </button>
                             </li>
                         </ul>
@@ -118,56 +121,43 @@
                             </div>
 
                             <div class="tab-pane fade" id="statsTabPane" role="tabpanel">
-                                <div class="text-center p-5 text-muted">
-                                    Click a column in the main chart to see detailed stats.
+                                <div class="text-center p-5 text-muted">Click a column in the main chart to see detailed
+                                    stats.
                                 </div>
                             </div>
 
                             <div class="tab-pane fade p-4" id="goalsTabPane" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <h5 class="fw-bold mb-3" style="color: #2c3e50;">Surplus Allocation</h5>
-                                        <div class="row g-3 mb-4">
-                                            <div class="col-md-4">
-                                                <label class="small fw-bold text-primary">Savings: <span
-                                                        class="savingsDisp">50%</span></label>
-                                                <input type="range" class="form-range goal-input savingsPct" value="50"
-                                                       min="0" max="100">
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="small fw-bold text-info">Slush: <span class="slushDisp">30%</span></label>
-                                                <input type="range" class="form-range goal-input slushPct" value="30"
-                                                       min="0" max="100">
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="small fw-bold text-dark">Projects: <span class="bigDisp">20%</span></label>
-                                                <input type="range" class="form-range goal-input bigPct" value="20"
-                                                       min="0" max="100">
-                                            </div>
-                                        </div>
-
-                                        <div class="table-responsive mt-4">
-                                            <table class="table table-hover table-sm align-middle"
-                                                   style="font-size: 0.85rem;">
-                                                <thead class="table-light">
-                                                <tr>
-                                                    <th>Month</th>
-                                                    <th class="text-end">Proj. Balance</th>
-                                                    <th class="text-end text-success">Total Gain</th>
-                                                    <th class="text-end text-primary">Savings</th>
-                                                    <th class="text-end text-info">Slush</th>
-                                                    <th class="text-end text-dark">Projects</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody id="forecastAllocationBody">
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <button type="button" id="saveGoalsBtn"
-                                                class="btn btn-sm btn-primary px-4 rounded-pill mt-3">
-                                            Save Goal Percentages
-                                        </button>
+                                <h5 class="fw-bold mb-3" style="color: #2c3e50;">Surplus Allocation</h5>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-4">
+                                        <label class="small fw-bold text-primary">Savings: <span
+                                                class="savingsDisp">50%</span></label>
+                                        <input type="range" class="form-range goal-input savingsPct" value="50">
                                     </div>
+                                    <div class="col-md-4">
+                                        <label class="small fw-bold text-info">Slush: <span class="slushDisp">30%</span></label>
+                                        <input type="range" class="form-range goal-input slushPct" value="30">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="small fw-bold text-dark">Projects: <span
+                                                class="bigDisp">20%</span></label>
+                                        <input type="range" class="form-range goal-input bigPct" value="20">
+                                    </div>
+                                </div>
+                                <div class="table-responsive mt-4">
+                                    <table class="table table-hover table-sm align-middle" style="font-size: 0.85rem;">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th>Month</th>
+                                            <th class="text-end">Proj. Balance</th>
+                                            <th class="text-end text-success">Total Gain</th>
+                                            <th class="text-end text-primary">Savings</th>
+                                            <th class="text-end text-info">Slush</th>
+                                            <th class="text-end text-dark">Projects</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="forecastAllocationBody"></tbody>
+                                    </table>
                                 </div>
                             </div>
 
@@ -179,33 +169,70 @@
                                         <div class="col-md-4">
                                             <label class="small fw-bold text-primary">Savings: <span
                                                     class="savingsDisp">50%</span></label>
-                                            <input type="range" class="form-range goal-input savingsPct" value="50"
-                                                   min="0" max="100">
+                                            <input type="range" class="form-range goal-input savingsPct" value="50">
                                         </div>
                                         <div class="col-md-4">
                                             <label class="small fw-bold text-info">Slush: <span
                                                     class="slushDisp">30%</span></label>
-                                            <input type="range" class="form-range goal-input slushPct" value="30"
-                                                   min="0" max="100">
+                                            <input type="range" class="form-range goal-input slushPct" value="30">
                                         </div>
                                         <div class="col-md-4">
                                             <label class="small fw-bold text-dark">Projects: <span
                                                     class="bigDisp">20%</span></label>
-                                            <input type="range" class="form-range goal-input bigPct" value="20" min="0"
-                                                   max="100">
+                                            <input type="range" class="form-range goal-input bigPct" value="20">
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="alert alert-info border-0 shadow-sm d-flex align-items-center mb-4">
                                     <i class="bi bi-info-circle-fill fs-4 me-3"></i>
-                                    <div id="affordabilityHeader" class="w-100">
+                                    <div id="affordabilityHeader" class="w-100"></div>
+                                </div>
+                                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4"
+                                     id="budgetAffordabilityContainer"></div>
+                            </div>
+
+                            <div class="tab-pane fade p-4" id="retirementTabPane" role="tabpanel">
+                                <div class="row g-3 mb-4 bg-light p-3 rounded border">
+                                    <div class="col-md-2">
+                                        <label class="small fw-bold text-muted">Current Age</label>
+                                        <input type="number" id="currentAge" class="form-control form-control-sm"
+                                               value="28">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="small fw-bold text-muted">Annual 401k Contribution $</label>
+                                        <select id="annual401k" class="form-select form-select-sm">
+                                            <option value="0">$0</option>
+                                            <option value="5000">$5,000</option>
+                                            <option value="10000">$10,000</option>
+                                            <option value="15000">$15,000</option>
+                                            <option value="23000" selected>$23,000 (Max)</option>
+                                            <option value="30500">$30,500 (Catch-up)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="small fw-bold text-muted">Retire At Age</label>
+                                        <input type="number" id="retireAge" class="form-control form-control-sm"
+                                               value="32">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="small fw-bold text-muted">Robinhood (Liquid) $</label>
+                                        <input type="number" id="retireLiquid" class="form-control form-control-sm"
+                                               value="15000">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="small fw-bold text-muted">401k/IRA (Locked) $</label>
+                                        <input type="number" id="retireLocked" class="form-control form-control-sm"
+                                               value="45000">
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-end">
+                                        <button id="runRetirementCalc" class="btn btn-primary btn-sm w-100">Run Mighty
+                                            Analysis at 5% DJIA
+                                        </button>
                                     </div>
                                 </div>
-
-                                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4"
-                                     id="budgetAffordabilityContainer">
-                                </div>
+                                <div id="retirementChartContainer" style="height: 400px; width: 100%;"></div>
+                                <div class="mt-4 p-3 border-start border-4 border-info bg-white shadow-sm"
+                                     id="retirementSummary"></div>
                             </div>
                         </div>
                     </div>
@@ -214,7 +241,6 @@
         </div>
     </div>
 </div>
-
 <script>
     window.initialData = ${jsonBreakdown != null ? jsonBreakdown : '[]'};
 </script>

@@ -881,17 +881,18 @@ public class TransactionDAO implements iTransactionDAO {
   }
 
   @Override
-  public List<List<SubCategory_VM>> getForecastAnalysis(String user_ID, LocalDate startDate, int monthsBack, int monthsForward) {
+  public List<List<SubCategory_VM>> getForecastAnalysis(String user_ID, LocalDate startDate, int monthsBack, int monthsForward, int retirementOffset) {
     List<List<SubCategory_VM>> result = new ArrayList<>();
     // Map to group categories by their target_period (the 'columns' in your list of lists)
     Map<String, List<SubCategory_VM>> monthlyMap = new LinkedHashMap<>();
 
     try (Connection connection = getConnection()) {
-      try (CallableStatement statement = connection.prepareCall("{CALL get_category_forecast(?,?,?,?)}")) {
+      try (CallableStatement statement = connection.prepareCall("{CALL get_category_forecast(?,?,?,?,?)}")) {
         statement.setString(1, user_ID);
         statement.setInt(2, monthsBack);
         statement.setInt(3, monthsForward);
         statement.setDate(4, java.sql.Date.valueOf(startDate));
+        statement.setInt(5, retirementOffset);
 
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {

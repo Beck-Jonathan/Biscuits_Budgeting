@@ -1,8 +1,10 @@
 package com.beck.beck_demos.budget_app.data_fakes;
 
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-import com.beck.beck_demos.budget_app.models.*;
-//import software.amazon.awssdk.services.s3.endpoints.internal.Value;
+import com.beck.beck_demos.budget_app.models.Saved_Search_Order_Line;
+import com.beck.beck_demos.budget_app.models.SubCategory_VM;
+import com.beck.beck_demos.budget_app.models.Transaction;
+import com.beck.beck_demos.budget_app.models.Transaction_VM;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,12 +13,13 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 public class TransactionDAO_Fake implements iTransactionDAO {
-  private  List<Transaction_VM> transactionVMs;
+  private final List<Transaction_VM> transactionVMs;
   public TransactionDAO_Fake(){
     transactionVMs = new ArrayList<>();
     Transaction transaction0 = new Transaction("XxtdYmVMXxtdYmVMXxtdYmVMXxtdYmVMXxtd", "618052e9-c69b-4d9b-880e-e22e4a970bd6", "f47ac10b-58cc-4372-a567-0e02b2c3d479", "xAwAtNYh", new Date(103,4,4), 50, "Casey", 43.94, "VpNtaCaw", "ZPHFJIYd",false);
@@ -391,7 +394,7 @@ public class TransactionDAO_Fake implements iTransactionDAO {
     return List.of();
   }
 
-  public List<List<SubCategory_VM>> getForecastAnalysis(String user_ID, LocalDate startDate, int monthsBack, int monthsForward) {
+  public List<List<SubCategory_VM>> getForecastAnalysis(String user_ID, LocalDate startDate, int monthsBack, int monthsForward, int retirementOffset) {
 //    // 1. Group transactionVMs by Category to calculate historical averages
 //    Map<String, List<Transaction_VM>> categoryMap = transactionVMs.stream()
 //        .filter(t -> t.getUser_ID().equals(user_ID))

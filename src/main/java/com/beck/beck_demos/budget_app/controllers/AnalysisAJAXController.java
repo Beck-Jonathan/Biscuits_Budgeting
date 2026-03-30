@@ -7,7 +7,10 @@ import com.beck.beck_demos.budget_app.models.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -45,22 +48,25 @@ public class AnalysisAJAXController extends HttpServlet {
     }
     String monthsBackStr = req.getParameter("monthsBack");
     String monthsForwardStr = req.getParameter("monthsForward");
+    String retirementOffsetStr = req.getParameter("retirementOffset");
     int monthsBack = 24;
-    int monthsForward = 12;
+    int monthsForward = 840; // 70 years default
+    int retirementOffset = 360; // 30 years default (Age 28 to 58)
 
     try {
       if (monthsBackStr != null) {
-        monthsBack = Integer.parseInt(monthsBackStr);
-        // Clamp between 6 months (min for regression) and 60 months (5 years max)
-        monthsBack = Math.max(6, Math.min(60, monthsBack));
+        monthsBack = Math.max(6, Math.min(60, Integer.parseInt(monthsBackStr)));
       }
       if (monthsForwardStr != null) {
-        monthsForward = Integer.parseInt(monthsForwardStr);
-        // Clamp between 1 month and 36 months (3 years max)
-        monthsForward = Math.max(1, Math.min(36, monthsForward));
+        // Fix: Use the correct variable
+        monthsForward = Math.max(1, Math.min(1200, Integer.parseInt(monthsForwardStr)));
+      }
+      if (retirementOffsetStr != null) {
+        // Fix: Update retirementOffset, NOT monthsForward
+        retirementOffset = Math.max(0, Math.min(1200, Integer.parseInt(retirementOffsetStr)));
       }
     } catch (NumberFormatException e) {
-      // Log error and keep defaults
+      // Keep defaults
     }
     LocalDate start = LocalDate.now();
 
@@ -71,7 +77,7 @@ public class AnalysisAJAXController extends HttpServlet {
     try {
       if ("2".equals(mode)) {
         // FORECAST MODE
-        breakdown = transactionDAO.getForecastAnalysis(user.getUser_ID(), start, monthsBack, monthsForward);
+        breakdown = transactionDAO.getForecastAnalysis(user.getUser_ID(), start, monthsBack, monthsForward, retirementOffset);
       } else if ("1".equals(level)) {
         // SUPER CATEGORY LEVEL
         breakdown = "1".equals(mode)

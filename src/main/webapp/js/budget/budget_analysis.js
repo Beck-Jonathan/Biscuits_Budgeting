@@ -150,7 +150,6 @@ $(document).ready(function() {
 
         $('#forecastAllocationBody').html(allocationHtml);
 
-        // --- Restored 3-Bar Stack Logic ---
         selectedCats.forEach(name => {
             let stackGroup = 'Expense';
             const dataValues = currentData.map(period => {
@@ -184,14 +183,13 @@ $(document).ready(function() {
             chart: {zoomType: 'xy', backgroundColor: 'transparent'},
             title: {text: "Budget Analysis"},
             xAxis: {categories: xAxisLabels},
-            // Two Y-Axes: 0 is Flow (Left), 1 is Cash (Right)
             yAxis: [{
                 title: {text: 'Flow ($)'},
                 labels: {format: '${value}'}
             }, {
                 title: {text: 'Cash Balance ($)'},
                 labels: {format: '${value}'},
-                opposite: true // THIS MOVES IT TO THE RIGHT
+                opposite: true
             }],
             plotOptions: {
                 column: {
@@ -281,7 +279,7 @@ $(document).ready(function() {
         });
     };
 
-    // --- 5. Statistics View (Restored Investment Section) ---
+    // --- 5. Statistics View ---
     const updateSecondaryViews = (index) => {
         const periodData = currentData[index];
         if (!periodData) return;
@@ -369,8 +367,23 @@ $(document).ready(function() {
     $('#btnAnnual, #btnMonthly, #btnForecast').click(function () {
         mode = $(this).data('val').toString();
         $(this).addClass('active btn-primary').siblings().removeClass('active btn-primary').addClass('btn-outline-primary');
+
         $('#yearSelectorContainer').toggle(mode === "1");
         $('#forecastControlsContainer').toggle(mode === "2");
+
+        // --- FIXED TOGGLE LOGIC ---
+        const isForecast = (mode === "2");
+        // We select the parent 'li' to hide the entire tab item
+        $('#goals-tab, #affordability-tab').closest('.nav-item').toggle(isForecast);
+
+        // Safety: If user is on a hidden tab, jump back to Pie
+        if (!isForecast) {
+            const activeId = $('.nav-link.active').attr('id');
+            if (activeId === 'goals-tab' || activeId === 'affordability-tab') {
+                $('#pie-tab').tab('show');
+            }
+        }
+
         fetchAnalysisData();
     });
 
@@ -383,6 +396,9 @@ $(document).ready(function() {
     $(document).on('input', '.goal-input', handleSliderChange);
     $(document).on('change', '.cat-check', renderCharts);
     $('#openingBalance, #inputYear, #bankAccountSelect, #monthsBack, #monthsForward').on('change', fetchAnalysisData);
+
+    // Run visibility check on load (in case mode isn't forecast)
+    $('#goals-tab, #affordability-tab').closest('.nav-item').hide();
 
     fetchBudgets();
     fetchAnalysisData();
