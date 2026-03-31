@@ -235,34 +235,74 @@ const RetirementEngine = {
     },
 
     renderSummaryTable: function (timeline) {
-        let rows = timeline.map(d => `
-            <tr onclick="RetirementEngine.showAgeDetails(${d.x})" style="cursor:pointer">
-                <td><b>${d.x}</b></td>
-                <td>${d.year}</td>
-                <td class="text-success">$${d.totalInc.toLocaleString()}</td>
-                <td class="text-danger">$${d.totalExp.toLocaleString()}</td>
-                <td class="text-primary">$${d.val401k.toLocaleString()}</td>
-                <td class="text-primary">$${d.valSQL.toLocaleString()}</td>
-                <td class="text-primary">$${d.valFree.toLocaleString()}</td>
-                <td class="text-primary" style="font-weight:bold">$${d.valBonus.toLocaleString()}</td>
-                
-                <td class="text-info" style="opacity: 0.8">$${d.totalFun.toLocaleString()}</td>
-                <td class="text-secondary" style="opacity: 0.8">$${d.totalSlush.toLocaleString()}</td>
-                <td><b>$${(d.liq + d.lock).toLocaleString()}</b></td>
-                <td>${d.retired ? '<span class="badge bg-danger">Retired</span>' : '<span class="badge bg-success">Working</span>'}</td>
-            </tr>`).join('');
+        // Split the data
+        const workingData = timeline.filter(d => !d.retired);
+        const retiredData = timeline.filter(d => d.retired);
 
+        // Helper to build rows for Table 1 (Working)
+        let workingRows = workingData.map(d => `
+        <tr onclick="RetirementEngine.showAgeDetails(${d.x})" style="cursor:pointer">
+            <td><b>${d.x}</b></td>
+            <td>${d.year}</td>
+            <td class="text-success">$${d.totalInc.toLocaleString()}</td>
+            <td class="text-danger">$${d.totalExp.toLocaleString()}</td>
+            <td class="text-primary">$${d.val401k.toLocaleString()}</td>
+            <td class="text-primary">$${d.valSQL.toLocaleString()}</td>
+            <td class="fw-bold" style="background: rgba(0,0,0,0.03)">$${(d.valFree || 0).toLocaleString()}</td>
+            <td class="text-primary" style="font-weight:bold">$${d.valBonus.toLocaleString()}</td>
+            <td class="text-info" style="opacity: 0.8">$${d.totalFun.toLocaleString()}</td>
+            <td class="text-secondary" style="opacity: 0.8">$${d.totalSlush.toLocaleString()}</td>
+            <td><b>$${(d.liq + d.lock).toLocaleString()}</b></td>
+        </tr>`).join('');
+
+        // Helper to build rows for Table 2 (Retired - Simplified)
+        let retiredRows = retiredData.map(d => `
+        <tr onclick="RetirementEngine.showAgeDetails(${d.x})" style="cursor:pointer">
+            <td><b>${d.x}</b></td>
+            <td>${d.year}</td>
+            <td class="text-danger">$${d.totalExp.toLocaleString()}</td>
+            <td class="text-success">-$${d.liqDraw.toLocaleString()}</td>
+            <td class="text-warning">-$${d.lockDraw.toLocaleString()}</td>
+            <td><b>$${(d.liq + d.lock).toLocaleString()}</b></td>
+            <td><span class="badge bg-danger">Retired</span></td>
+        </tr>`).join('');
+
+        // Inject Tabs and Tab Panes
         $('#retirementTableContainer').html(`
-            <table class="table table-sm table-striped table-hover mt-3" style="font-size: 0.82rem;">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Age</th><th>Year</th><th>Income</th><th>Bills</th>
-                        <th>401k</th><th>Regress</th><th>Free</th> <th>Bonus</th>
-                        <th>Fun</th><th>Slush</th><th>Net Worth</th><th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>${rows}</tbody>
-            </table>`);
+        <ul class="nav nav-tabs" id="retirementTabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" id="working-tab" data-bs-toggle="tab" data-bs-target="#working-pane" type="button">Accumulation Phase</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="retired-tab" data-bs-toggle="tab" data-bs-target="#retired-pane" type="button">Distribution Phase</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="retirementTabContent">
+            <div class="tab-pane fade show active" id="working-pane" role="tabpanel">
+                <table class="table table-sm table-striped table-hover mt-2" style="font-size: 0.75rem;">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Age</th><th>Year</th><th>Income</th><th>Bills</th>
+                            <th>401k</th><th>Regress</th><th>Free</th><th>Bonus</th>
+                            <th>Fun</th><th>Slush</th><th>Net Worth</th>
+                        </tr>
+                    </thead>
+                    <tbody>${workingRows}</tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="retired-pane" role="tabpanel">
+                <table class="table table-sm table-striped table-hover mt-2" style="font-size: 0.85rem;">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Age</th><th>Year</th><th>Annual Bills</th>
+                            <th>Liq Draw</th><th>Locked Draw</th><th>Net Worth</th><th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>${retiredRows}</tbody>
+                </table>
+            </div>
+        </div>
+    `);
     },
 
     showAgeDetails: function (age) {
