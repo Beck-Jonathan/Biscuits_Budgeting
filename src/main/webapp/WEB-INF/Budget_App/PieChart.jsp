@@ -3,7 +3,7 @@
     <div class="row mb-4 text-center">
         <div class="col-12">
             <h1 class="fw-bold" style="color: #2c3e50;">Biscuit's Budget Analysis</h1>
-            <div class="badge bg-primary text-wrap" style="width: 6rem;">V 2.0</div>
+            <div class="badge bg-primary text-wrap" style="width: 6rem;">V 3.0</div>
         </div>
     </div>
 
@@ -29,6 +29,7 @@
                     <button id="btnAnnual" class="btn btn-outline-primary active" data-val="0">Yearly</button>
                     <button id="btnMonthly" class="btn btn-outline-primary" data-val="1">Monthly</button>
                     <button id="btnForecast" class="btn btn-outline-primary" data-val="2">Forecast</button>
+                    <button id="btnRetire" class="btn btn-outline-primary" data-val="3">Retire</button>
                 </div>
             </div>
 
@@ -39,13 +40,6 @@
                         <option value="${year}" ${year eq 2026 ? 'selected' : ''}>${year}</option>
                     </c:forEach>
                 </select>
-            </div>
-
-            <div class="budget-panel mb-3 p-3">
-                <label for="openingBalance" class="small fw-bold text-uppercase text-muted mb-2 d-block">Starting Cash
-                    ($)</label>
-                <input type="number" class="form-control form-control-sm border-0 bg-light" id="openingBalance"
-                       value="30000">
             </div>
 
             <div id="forecastControlsContainer" class="budget-panel mb-3 p-3"
@@ -63,7 +57,14 @@
                 </div>
             </div>
 
-            <div class="budget-panel shadow-sm d-flex flex-column" style="max-height: 500px;">
+            <div class="budget-panel mb-3 p-3" id="startingCashPanel">
+                <label for="openingBalance" class="small fw-bold text-uppercase text-muted mb-2 d-block">Starting Cash
+                    ($)</label>
+                <input type="number" class="form-control form-control-sm border-0 bg-light" id="openingBalance"
+                       value="30000">
+            </div>
+
+            <div class="budget-panel shadow-sm d-flex flex-column" id="categoryFilterPanel" style="max-height: 500px;">
                 <div class="panel-header d-flex justify-content-between align-items-center bg-primary text-white p-2">
                     <span class="small fw-bold text-uppercase">Filters</span>
                     <div class="d-flex gap-2">
@@ -81,11 +82,55 @@
             <div class="row g-4">
                 <div class="col-12">
                     <div class="budget-panel p-3">
-                        <div id="chartContainer" style="height: 400px; width: 100%;"></div>
+                        <div id="mainChartWrapper">
+                            <div id="chartContainer" style="height: 450px; width: 100%;"></div>
+                        </div>
+
+                        <div id="retirementChartWrapper" style="display:none;">
+                            <div class="row g-2 mb-3 bg-light p-3 rounded border align-items-end">
+                                <div class="col-md-1">
+                                    <label class="x-small fw-bold text-muted">Age</label>
+                                    <input type="number" id="currentAge" class="form-control form-control-sm"
+                                           value="28">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="x-small fw-bold text-muted">Retire Age</label>
+                                    <input type="number" id="retireAge" class="form-control form-control-sm" value="62">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="x-small fw-bold text-muted">Annual 401k</label>
+                                    <select id="annual401k" class="form-select form-select-sm">
+                                        <option value="0">$0</option>
+                                        <option value="5000">$5,000</option>
+                                        <option value="10000">$10,000</option>
+                                        <option value="15000">$15,000</option>
+                                        <option value="23000" selected>$23,000 (Max)</option>
+                                        <option value="30500">$30,500</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="x-small fw-bold text-muted">Liquid $</label>
+                                    <input type="number" id="retireLiquid" class="form-control form-control-sm"
+                                           value="15000">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="x-small fw-bold text-muted">Locked $</label>
+                                    <input type="number" id="retireLocked" class="form-control form-control-sm"
+                                           value="45000">
+                                </div>
+                                <div class="col-md-2">
+                                    <button id="runRetirementCalc" class="btn btn-primary btn-sm w-100">Simulate
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="retirementChartContainer" style="height: 450px; width: 100%;"></div>
+                            <div id="retirementSummary" class="mt-3"></div>
+                            <div id="retirementTableContainer"></div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="col-12">
+                <div class="col-12" id="bottomTabsContainer">
                     <div class="budget-panel p-3">
                         <ul class="nav nav-tabs mb-3" id="analysisTabs" role="tablist">
                             <li class="nav-item">
@@ -108,24 +153,17 @@
                                         data-bs-target="#affordabilityTabPane" type="button">Affordability
                                 </button>
                             </li>
-                            <li class="nav-item">
-                                <button class="nav-link" id="retirement-tab" data-bs-toggle="tab"
-                                        data-bs-target="#retirementTabPane" type="button">Retirement 2030
-                                </button>
-                            </li>
                         </ul>
 
                         <div class="tab-content" id="analysisTabsContent">
                             <div class="tab-pane fade show active" id="pieTabPane" role="tabpanel">
                                 <div id="pieContainer" style="height: 350px; width: 100%;"></div>
                             </div>
-
                             <div class="tab-pane fade" id="statsTabPane" role="tabpanel">
                                 <div class="text-center p-5 text-muted">Click a column in the main chart to see detailed
                                     stats.
                                 </div>
                             </div>
-
                             <div class="tab-pane fade p-4" id="goalsTabPane" role="tabpanel">
                                 <h5 class="fw-bold mb-3" style="color: #2c3e50;">Surplus Allocation</h5>
                                 <div class="row g-3 mb-4">
@@ -160,79 +198,12 @@
                                     </table>
                                 </div>
                             </div>
-
                             <div class="tab-pane fade p-4" id="affordabilityTabPane" role="tabpanel">
-                                <div class="bg-light p-3 rounded mb-4 border">
-                                    <h6 class="small fw-bold text-uppercase text-muted mb-3">Adjust Allocation
-                                        Priorities</h6>
-                                    <div class="row g-3">
-                                        <div class="col-md-4">
-                                            <label class="small fw-bold text-primary">Savings: <span
-                                                    class="savingsDisp">50%</span></label>
-                                            <input type="range" class="form-range goal-input savingsPct" value="50">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="small fw-bold text-info">Slush: <span
-                                                    class="slushDisp">30%</span></label>
-                                            <input type="range" class="form-range goal-input slushPct" value="30">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="small fw-bold text-dark">Projects: <span
-                                                    class="bigDisp">20%</span></label>
-                                            <input type="range" class="form-range goal-input bigPct" value="20">
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="alert alert-info border-0 shadow-sm d-flex align-items-center mb-4">
-                                    <i class="bi bi-info-circle-fill fs-4 me-3"></i>
                                     <div id="affordabilityHeader" class="w-100"></div>
                                 </div>
                                 <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4"
                                      id="budgetAffordabilityContainer"></div>
-                            </div>
-
-                            <div class="tab-pane fade p-4" id="retirementTabPane" role="tabpanel">
-                                <div class="row g-3 mb-4 bg-light p-3 rounded border">
-                                    <div class="col-md-2">
-                                        <label class="small fw-bold text-muted">Current Age</label>
-                                        <input type="number" id="currentAge" class="form-control form-control-sm"
-                                               value="28">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="small fw-bold text-muted">Annual 401k Contribution $</label>
-                                        <select id="annual401k" class="form-select form-select-sm">
-                                            <option value="0">$0</option>
-                                            <option value="5000">$5,000</option>
-                                            <option value="10000">$10,000</option>
-                                            <option value="15000">$15,000</option>
-                                            <option value="23000" selected>$23,000 (Max)</option>
-                                            <option value="30500">$30,500 (Catch-up)</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label class="small fw-bold text-muted">Retire At Age</label>
-                                        <input type="number" id="retireAge" class="form-control form-control-sm"
-                                               value="32">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="small fw-bold text-muted">Robinhood (Liquid) $</label>
-                                        <input type="number" id="retireLiquid" class="form-control form-control-sm"
-                                               value="15000">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="small fw-bold text-muted">401k/IRA (Locked) $</label>
-                                        <input type="number" id="retireLocked" class="form-control form-control-sm"
-                                               value="45000">
-                                    </div>
-                                    <div class="col-md-2 d-flex align-items-end">
-                                        <button id="runRetirementCalc" class="btn btn-primary btn-sm w-100">Run Mighty
-                                            Analysis at 5% DJIA
-                                        </button>
-                                    </div>
-                                </div>
-                                <div id="retirementChartContainer" style="height: 400px; width: 100%;"></div>
-                                <div class="mt-4 p-3 border-start border-4 border-info bg-white shadow-sm"
-                                     id="retirementSummary"></div>
                             </div>
                         </div>
                     </div>
@@ -241,7 +212,5 @@
         </div>
     </div>
 </div>
-<script>
-    window.initialData = ${jsonBreakdown != null ? jsonBreakdown : '[]'};
-</script>
+<script>window.initialData = ${jsonBreakdown != null ? jsonBreakdown : '[]'};</script>
 <%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>

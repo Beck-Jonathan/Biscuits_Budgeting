@@ -8,7 +8,6 @@ $(document).ready(function() {
     let colorMap = {};
     let selectedIndex = 0;
 
-    // Goal Percentages (State)
     let savingsPct = 50;
     let slushPct = 30;
     let bigPct = 20;
@@ -23,8 +22,8 @@ $(document).ready(function() {
         if (!currentData || currentData.length === 0) return;
         currentData.forEach(period => {
             period.forEach(cat => {
-                if (cat.category_Name && cat.color_id) {
-                    colorMap[cat.category_Name] = cat.color_id;
+                if (cat.category_Name && (cat.color_id || cat.color_ID)) {
+                    colorMap[cat.category_Name] = cat.color_id || cat.color_ID;
                 }
             });
         });
@@ -33,7 +32,9 @@ $(document).ready(function() {
     const updateSidebar = () => {
         const list = $('#categoryList').empty();
         if (!currentData || currentData.length === 0) return;
-        currentData[0].forEach(cat => {
+
+        const uniqueCats = currentData[0];
+        uniqueCats.forEach(cat => {
             const color = colorMap[cat.category_Name] || '#bdc3c7';
             list.append(`
                 <li class="category-item p-2 border-bottom">
@@ -47,7 +48,6 @@ $(document).ready(function() {
         });
     };
 
-    // --- 2. Multi-Tab Slider Sync Logic ---
     const handleSliderChange = (event) => {
         const $el = $(event.target);
         const $allS = $('.savingsPct'), $allL = $('.slushPct'), $allB = $('.bigPct');
@@ -84,9 +84,8 @@ $(document).ready(function() {
         renderCharts();
     };
 
-    // --- 3. Main Rendering Engine ---
     const renderCharts = () => {
-        if (!currentData || currentData.length === 0) return;
+        if (!currentData || currentData.length === 0 || mode === "3") return;
 
         const startingBalance = parseFloat($('#openingBalance').val()) || 0;
         const selectedCats = $('.cat-check:checked').map(function () {
@@ -102,7 +101,7 @@ $(document).ready(function() {
 
         xAxisLabels = currentData.map((period, index) => {
             const first = period[0];
-            let label = (mode === "1") ? getMonthName(first.year) : (first.year || "N/A");
+            let label = (mode === "0") ? (first.year || "N/A") : getMonthName(first.month || first.year);
 
             if (mode === "2") {
                 if (first.sign && first.sign.includes('-')) {
@@ -176,17 +175,11 @@ $(document).ready(function() {
             color: '#2c3e50', dashStyle: 'ShortDash'
         });
 
-        if (Highcharts.charts[0]) {
-            Highcharts.charts[0].destroy();
-        }
         Highcharts.chart('chartContainer', {
             chart: {zoomType: 'xy', backgroundColor: 'transparent'},
             title: {text: "Budget Analysis"},
             xAxis: {categories: xAxisLabels},
-            yAxis: [{
-                title: {text: 'Flow ($)'},
-                labels: {format: '${value}'}
-            }, {
+            yAxis: [{title: {text: 'Flow ($)'}, labels: {format: '${value}'}}, {
                 title: {text: 'Cash Balance ($)'},
                 labels: {format: '${value}'},
                 opposite: true
@@ -195,7 +188,6 @@ $(document).ready(function() {
                 column: {
                     stacking: 'normal',
                     cursor: 'pointer',
-                    grouping: true,
                     point: {
                         events: {
                             click: function () {
@@ -220,83 +212,19 @@ $(document).ready(function() {
         updateSecondaryViews(selectedIndex);
     };
 
-    // --- 4. Affordability Tab Logic ---
-    const fetchBudgets = () => {
-        $.get("BudgetAJAX", {action: "getActiveBudgets"}, (data) => {
-            activeBudgets = data;
-            renderBudgetCards(selectedIndex);
-        });
-    };
-
-    const renderBudgetCards = (forecastIndex) => {
-        const container = $('#budgetAffordabilityContainer');
-        if (!container.length) return;
-        container.empty();
-
-        if (activeBudgets.length === 0) return;
-
-        const fundData = forecastBigProjectFunds[forecastIndex] || {amount: 0, label: "Current"};
-
-        $('#affordabilityHeader').html(`
-            <div class="d-flex justify-content-between align-items-center w-100">
-                <span>Funding Status for <b>${fundData.label}</b></span>
-                <span class="badge bg-dark fs-6 px-3">Available Fund: $${Math.round(fundData.amount).toLocaleString()}</span>
-            </div>
-        `);
-
-        activeBudgets.forEach(b => {
-            const limit = b.limit_amount || 0;
-            const spent = b.totalSpent || 0;
-            const isAffordable = fundData.amount >= spent;
-            const progressPct = limit > 0 ? Math.min(100, (spent / limit) * 100) : 0;
-
-            container.append(`
-                <div class="col">
-                    <div class="card h-100 border-0 border-start border-4 ${isAffordable ? 'border-success' : 'border-warning'} shadow-sm">
-                        <div class="card-body p-3">
-                            <h6 class="fw-bold mb-1">${b.name}</h6>
-                            <div class="mb-2">
-                                <span class="badge ${isAffordable ? 'bg-success' : 'bg-warning text-dark'}">
-                                    ${isAffordable ? 'Fully Funded' : 'Underfunded'}
-                                </span>
-                            </div>
-                            <div class="progress mb-2" style="height: 10px; background-color: #eee;">
-                                <div class="progress-bar ${isAffordable ? 'bg-success' : 'bg-warning'}" style="width: ${progressPct}%"></div>
-                            </div>
-                            <div class="d-flex justify-content-between x-small fw-bold">
-                                <span>$${Math.round(spent).toLocaleString()} spent</span>
-                                <span class="text-muted">of $${Math.round(limit).toLocaleString()}</span>
-                            </div>
-                            <div class="mt-2 pt-2 border-top x-small">
-                                ${isAffordable ?
-                `<span class="text-success"><i class="bi bi-check-circle-fill"></i> Fund covers $${Math.round(spent)} spent</span>` :
-                `<span class="text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Fund is $${Math.round(spent - fundData.amount).toLocaleString()} short</span>`
-            }
-                            </div>
-                        </div>
-                    </div>
-                </div>`);
-        });
-    };
-
-    // --- 5. Statistics View ---
-    const updateSecondaryViews = (index) => {
-        const periodData = currentData[index];
-        if (!periodData) return;
+    const updateSecondaryViews = (index, overrideData = null) => {
+        // If overrideData exists, it's an array of items (like a year's subcategories)
+        const periodData = overrideData ? overrideData : (currentData[index] || []);
+        if (!periodData || periodData.length === 0) return;
 
         let incomeList = [], expenseList = [], investList = [];
         let inTotal = 0, outTotal = 0, investTotal = 0;
-        const selectedCats = $('.cat-check:checked').map(function () {
-            return this.value;
-        }).get()
-            .filter(name => !name.toLowerCase().includes("total"));
 
-        selectedCats.forEach(name => {
-            const match = periodData.find(c => c.category_Name === name);
-            if (match && Math.abs(match.amount) > 0) {
-                const val = Math.abs(match.amount);
+        periodData.forEach(match => {
+            const val = Math.abs(match.amount);
+            if (val > 0) {
                 const type = (match.transactionType || 'expense').toLowerCase();
-                const item = {name: name, val: val, color: colorMap[name] || '#bdc3c7'};
+                const item = {name: match.category_Name, val: val, color: colorMap[match.category_Name] || '#bdc3c7'};
                 if (type === 'income') {
                     inTotal += val;
                     incomeList.push(item);
@@ -317,13 +245,16 @@ $(document).ready(function() {
         const buildRows = (list) => list.map(p => `
             <div class="d-flex justify-content-between x-small mb-1">
                 <span><i class="bi bi-circle-fill me-1" style="color:${p.color}; font-size:8px;"></i>${p.name}</span>
-                <b>$${p.val.toLocaleString()}</b>
+                <b>$${p.val.toLocaleString(undefined, {maximumFractionDigits: 0})}</b>
             </div>`).join('');
 
         const net = inTotal - outTotal - investTotal;
+        // Use either the label passed via bridge or the xAxis label
+        const currentLabel = overrideData ? (window.simLabel || "Simulation") : (xAxisLabels[index] || "Selected Period");
+
         $('#statsTabPane').html(`
             <div class="p-3 bg-white border rounded shadow-sm">
-                <h6 class="border-bottom pb-2 fw-bold text-uppercase x-small">${xAxisLabels[index]} Summary</h6>
+                <h6 class="border-bottom pb-2 fw-bold text-uppercase x-small">${currentLabel} Summary</h6>
                 <div class="row">
                     <div class="col-md-4 border-end">
                         <div class="text-success fw-bold x-small mb-2">INCOME</div>
@@ -348,7 +279,69 @@ $(document).ready(function() {
             </div>`);
     };
 
-    // --- 6. Event Listeners ---
+    // --- CRITICAL BRIDGE ---
+    window.updateFromSimulation = (simData, label) => {
+        window.simLabel = label;
+
+        // 1. Manually update Stats
+        updateSecondaryViews(0, simData);
+
+        // 2. Manually update Pie
+        const pieData = simData
+            .filter(c => (c.transactionType || 'expense').toLowerCase() !== 'income')
+            .filter(c => Math.abs(c.amount) > 0)
+            .map(c => ({
+                name: c.category_Name,
+                y: Math.abs(c.amount),
+                color: colorMap[c.category_Name] || '#bdc3c7'
+            }));
+
+        Highcharts.chart('pieContainer', {
+            chart: {type: 'pie', backgroundColor: 'transparent'},
+            title: {text: `Breakdown: ${label}`},
+            tooltip: {pointFormat: '<b>{point.percentage:.1f}%</b> ($ {point.y:,.0f})'},
+            series: [{name: 'Annual Amount', data: pieData}]
+        });
+
+        // 3. Navigate to tab
+        $('#pie-tab').tab('show');
+    };
+
+    const fetchBudgets = () => {
+        $.get("BudgetAJAX", {action: "getActiveBudgets"}, (data) => {
+            activeBudgets = data;
+            renderBudgetCards(selectedIndex);
+        });
+    };
+
+    const renderBudgetCards = (forecastIndex) => {
+        const container = $('#budgetAffordabilityContainer');
+        if (!container.length) return;
+        container.empty();
+        const fundData = forecastBigProjectFunds[forecastIndex] || {amount: 0, label: "Current"};
+        $('#affordabilityHeader').html(`
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <span>Funding for <b>${fundData.label}</b></span>
+                <span class="badge bg-dark fs-6 px-3">Available Fund: $${Math.round(fundData.amount).toLocaleString()}</span>
+            </div>
+        `);
+
+        activeBudgets.forEach(b => {
+            const spent = b.totalSpent || 0;
+            const isAffordable = fundData.amount >= spent;
+            container.append(`
+                <div class="col">
+                    <div class="card h-100 border-0 border-start border-4 ${isAffordable ? 'border-success' : 'border-warning'} shadow-sm">
+                        <div class="card-body p-3">
+                            <h6 class="fw-bold mb-1">${b.name}</h6>
+                            <div class="mb-2"><span class="badge ${isAffordable ? 'bg-success' : 'bg-warning text-dark'}">${isAffordable ? 'Affordable' : 'Over Budget'}</span></div>
+                            <div class="d-flex justify-content-between x-small fw-bold"><span>Spent: $${Math.round(spent).toLocaleString()}</span></div>
+                        </div>
+                    </div>
+                </div>`);
+        });
+    };
+
     const fetchAnalysisData = () => {
         $.get("AnalysisAJAX", {
             mode, level,
@@ -364,27 +357,19 @@ $(document).ready(function() {
         });
     };
 
-    $('#btnAnnual, #btnMonthly, #btnForecast').click(function () {
+    $('#btnAnnual, #btnMonthly, #btnForecast, #btnRetire').click(function () {
         mode = $(this).data('val').toString();
         $(this).addClass('active btn-primary').siblings().removeClass('active btn-primary').addClass('btn-outline-primary');
-
-        $('#yearSelectorContainer').toggle(mode === "1");
-        $('#forecastControlsContainer').toggle(mode === "2");
-
-        // --- FIXED TOGGLE LOGIC ---
+        const isRetire = (mode === "3");
         const isForecast = (mode === "2");
-        // We select the parent 'li' to hide the entire tab item
+        $('#mainChartWrapper').toggle(!isRetire);
+        $('#retirementChartWrapper').toggle(isRetire);
+        $('#startingCashPanel, #categoryFilterPanel').toggle(!isRetire);
+        $('#yearSelectorContainer').toggle(mode === "1");
+        $('#forecastControlsContainer').toggle(isForecast);
         $('#goals-tab, #affordability-tab').closest('.nav-item').toggle(isForecast);
-
-        // Safety: If user is on a hidden tab, jump back to Pie
-        if (!isForecast) {
-            const activeId = $('.nav-link.active').attr('id');
-            if (activeId === 'goals-tab' || activeId === 'affordability-tab') {
-                $('#pie-tab').tab('show');
-            }
-        }
-
-        fetchAnalysisData();
+        if (isRetire) RetirementEngine.runMightyAnalysis();
+        else fetchAnalysisData();
     });
 
     $('#btnSub, #btnSuper').click(function () {
@@ -396,9 +381,6 @@ $(document).ready(function() {
     $(document).on('input', '.goal-input', handleSliderChange);
     $(document).on('change', '.cat-check', renderCharts);
     $('#openingBalance, #inputYear, #bankAccountSelect, #monthsBack, #monthsForward').on('change', fetchAnalysisData);
-
-    // Run visibility check on load (in case mode isn't forecast)
-    $('#goals-tab, #affordability-tab').closest('.nav-item').hide();
 
     fetchBudgets();
     fetchAnalysisData();
