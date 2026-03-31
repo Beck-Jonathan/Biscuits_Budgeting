@@ -44,7 +44,7 @@ const RetirementEngine = {
 
         let liq = parseFloat($('#retireLiquid').val()) || 0;
         let lock = parseFloat($('#retireLocked').val()) || 0;
-
+        let interest = 0;
         this.simulationCache = {};
         const monthlySubData = {};
 
@@ -80,6 +80,8 @@ const RetirementEngine = {
                 m401k = 0;
             }
             // 1. Growth
+            //FIX INTEREST
+            interest = (liq + lock) * (this.settings.growth) * 12
             liq *= (1 + this.settings.growth);
             lock *= (1 + this.settings.growth);
 
@@ -153,17 +155,31 @@ const RetirementEngine = {
                     yLiqDraw += deficit;
                 }
             } else {
-                // Retirement phase (mIn is Pensions/SS)
-                liq += mIn;
-                if (liq >= mOut) {
-                    liq -= mOut;
-                    yLiqDraw += mOut;
+                // 1. Apply Income (Pensions/SS) to the month first
+                // Note: mIn is already added to yInc globally
+
+                if ((mIn + liq) >= mOut) {
+                    // We have enough in Liquid + Monthly Income to cover bills
+                    let netChange = mIn - mOut;
+
+                    if (netChange < 0) {
+                        // We had to pull the difference from Liquid
+                        yLiqDraw += Math.abs(netChange);
+                    }
+
+                    liq += netChange; // Adjust balance (will go up or down)
                 } else {
-                    let remainingDeficit = mOut - liq;
+                    // Liquid is exhausted! We need the "Locked" 401k
+                    let deficit = mOut - (mIn + liq);
+
+                    // Everything left in Liquid is used up
                     yLiqDraw += liq;
                     liq = 0;
+
+                    // Calculate 401k hit with penalty if applicable
                     let pen = (curAge < 59.5) ? (1 + this.settings.penalty) : 1;
-                    let lockWithdrawal = remainingDeficit * pen;
+                    let lockWithdrawal = deficit * pen;
+
                     yLockDraw += lockWithdrawal;
                     lock -= lockWithdrawal;
                 }
@@ -189,7 +205,8 @@ const RetirementEngine = {
                     liqDraw: Math.round(yLiqDraw),
                     lockDraw: Math.round(yLockDraw),
                     surplus: Math.round(ySurplus),
-                    retired: isRetired
+                    retired: isRetired,
+                    interest: Math.round(interest)
                 });
 
                 this.simulationCache[ageKey] = {
@@ -261,8 +278,10 @@ const RetirementEngine = {
             <td><b>${d.x}</b></td>
             <td>${d.year}</td>
             <td class="text-danger">$${d.totalExp.toLocaleString()}</td>
+            <td class="text-success">$${d.totalInc.toLocaleString()}</td>
             <td class="text-success">-$${d.liqDraw.toLocaleString()}</td>
             <td class="text-warning">-$${d.lockDraw.toLocaleString()}</td>
+            <td class="text-success">$${d.interest.toLocaleString()}</td>
             <td><b>$${(d.liq + d.lock).toLocaleString()}</b></td>
             <td><span class="badge bg-danger">Retired</span></td>
         </tr>`).join('');
@@ -294,8 +313,8 @@ const RetirementEngine = {
                 <table class="table table-sm table-striped table-hover mt-2" style="font-size: 0.85rem;">
                     <thead class="table-dark">
                         <tr>
-                            <th>Age</th><th>Year</th><th>Annual Bills</th>
-                            <th>Liq Draw</th><th>Locked Draw</th><th>Net Worth</th><th>Status</th>
+                            <th>Age</th><th>Year</th><th>Annual Bills</th><th>Income</th>
+                            <th>Liq Draw</th><th>Locked Draw</th><th>Interest</th><th>Net Worth</th><th>Status</th>
                         </tr>
                     </thead>
                     <tbody>${retiredRows}</tbody>
@@ -319,13 +338,70 @@ const RetirementEngine = {
             title: {text: 'Wealth Architect (v52.0)'},
             xAxis: {
                 tickInterval: 5,
-                plotLines: [{color: '#e74c3c', width: 2, value: retireAge, zIndex: 5}]
+                plotLines: [{
+                    color: '#e74c3c',
+                    width: 2,
+                    value: retireAge,
+                    zIndex: 5,
+                    label: {text: 'Retirement', style: {color: '#e74c3c'}}
+                }]
             },
             yAxis: {title: {text: 'USD'}, labels: {format: '${value:,.0f}'}},
-            tooltip: {shared: true, useHTML: true},
+
+            // --- NEW ENHANCED TOOLTIP ---
+            tooltip: {
+                shared: true,
+                useHTML: true,
+                formatter: function () {
+                    const d = this.points[0].point; // Access the underlying data object
+                    const totalNet = d.liq + d.lock;
+                    const statusClass = d.retired ? 'text-danger' : 'text-success';
+
+                    let s = `<div style="padding: 10px; min-width: 200px;">
+                            <b style="font-size: 1.1rem;">Age ${d.x} (${d.year})</b><br/>
+                            <span class="${statusClass}" style="font-weight:bold">${d.retired ? 'RETIRED' : 'ACCUMULATING'}</span><hr/>`;
+
+                    // Balances Section
+                    s += `<b>Balances:</b><br/>
+                      <span style="color:#27ae60">●</span> Liquid: <b>$${d.liq.toLocaleString()}</b><br/>
+                      <span style="color:#2980b9">●</span> 401k: <b>$${d.lock.toLocaleString()}</b><br/>
+                      Total: <b>$${totalNet.toLocaleString()}</b><hr/>`;
+
+                    if (!d.retired) {
+                        // Growth Contributors Section
+                        s += `<b>Yearly Contributions:</b><br/>
+                          401k Dropdown: <span class="text-primary">$${d.val401k.toLocaleString()}</span><br/>
+                          SQL/Regression: <span class="text-primary">$${d.valSQL.toLocaleString()}</span><br/>
+                          50% Bonus: <span class="text-primary" style="font-weight:bold">$${d.valBonus.toLocaleString()}</span>`;
+                    } else {
+                        // UPDATED: Withdrawal Section with SS and Penalty logic
+                        const hasPenalty = d.x < 59.5 && d.lockDraw > 0;
+
+                        s += `<b>Yearly Burn & Income:</b><br/>
+                          Social Security/Pensions: <span class="text-success">+$${d.totalInc.toLocaleString()}</span><br/>
+                          Annual Bills: <span class="text-danger">-$${d.totalExp.toLocaleString()}</span><hr/>
+                          
+                          <b>Net Withdrawals:</b><br/>
+                          Liquid Draw: <span class="text-warning">-$${d.liqDraw.toLocaleString()}</span><br/>
+                          Locked Draw: <span class="text-warning">-$${d.lockDraw.toLocaleString()}</span>`;
+
+                        if (hasPenalty) {
+                            s += `<br/><span style="color: #e74c3c; font-size: 0.8rem; font-weight:bold;">
+                                ⚠️ Includes 10% Early Withdrawal Penalty
+                              </span>`;
+                        }
+                    }
+
+                    s += `</div>`;
+                    return s;
+                }
+            },
+
             plotOptions: {
                 series: {
-                    stacking: 'normal', marker: {enabled: false}, point: {
+                    stacking: 'normal',
+                    marker: {enabled: false},
+                    point: {
                         events: {
                             click: function () {
                                 self.showAgeDetails(this.x);
@@ -335,11 +411,13 @@ const RetirementEngine = {
                 }
             },
             series: [
+                // Note: We use the full data object 'd' in the map so the formatter can see all properties
                 {name: '401k', color: '#2980b9', data: data.map(d => ({...d, y: d.lock}))},
                 {name: 'Liquid', color: '#27ae60', data: data.map(d => ({...d, y: d.liq}))}
             ]
         });
     }
+
 };
 
 $(document).ready(function () {

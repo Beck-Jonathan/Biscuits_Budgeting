@@ -91,11 +91,11 @@
                                 <div class="col-md-1">
                                     <label class="x-small fw-bold text-muted">Age</label>
                                     <input type="number" id="currentAge" class="form-control form-control-sm"
-                                           value="28">
+                                           value="36">
                                 </div>
                                 <div class="col-md-2">
                                     <label class="x-small fw-bold text-muted">Retire Age</label>
-                                    <input type="number" id="retireAge" class="form-control form-control-sm" value="62">
+                                    <input type="number" id="retireAge" class="form-control form-control-sm" value="43">
                                 </div>
                                 <div class="col-md-3">
                                     <label class="x-small fw-bold text-muted">Annual 401k</label>
@@ -111,12 +111,12 @@
                                 <div class="col-md-2">
                                     <label class="x-small fw-bold text-muted">Liquid $</label>
                                     <input type="number" id="retireLiquid" class="form-control form-control-sm"
-                                           value="15000">
+                                           value="200000">
                                 </div>
                                 <div class="col-md-2">
                                     <label class="x-small fw-bold text-muted">Locked $</label>
                                     <input type="number" id="retireLocked" class="form-control form-control-sm"
-                                           value="45000">
+                                           value="800000">
                                 </div>
                                 <div class="col-md-2">
                                     <button id="runRetirementCalc" class="btn btn-primary btn-sm w-100">Simulate
