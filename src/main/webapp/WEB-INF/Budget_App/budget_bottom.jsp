@@ -59,6 +59,10 @@
 <c:if test="${pageTitle eq 'All Transactions'}">
     <script src="js/budget/categorize.js"></script>
 </c:if>
+
+<c:if test="${pageTitle eq 'All Planned Transactions'}">
+    <script src="js/budget/AllPlanned_Transaction.js"></script>
+</c:if>
 <c:if test="${pageTitle eq 'Search Transactions'}">
     <script src="js/budget/categorize.js"></script>
 </c:if>

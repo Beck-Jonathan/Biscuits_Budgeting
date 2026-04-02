@@ -282,10 +282,40 @@ return results;
     return results;
   }
 
+  @Override
+  public Budget getBudgetOverviewBy_ID(String budgetID, String userId) throws SQLException {
+    if (duplicateKey(budgetID)) {
+      return null;
+    }
+    if (exceptionKey(budgetID)) {
+      throw new SQLException();
+    }
+    Budget result = null;
+    for (Budget_VM budget : budgetVMs) {
+      if (budget.getuser_id().equals(userId) && budget.getbudget_id().equals(budgetID)) {
+        result = budget;
+        break;
+      }
+      if (result == null) {
+
+      }
+
+    }
+    return result;
+  }
+
   private boolean duplicateKey(Budget  _budget ){
     return _budget.getname().contains("DUPLICATE");
   }
   private boolean exceptionKey(Budget  _budget ){
     return _budget.getname().contains("EXCEPTION");
+  }
+
+  private boolean duplicateKey(String _budget) {
+    return _budget.contains("DUPLICATE");
+  }
+
+  private boolean exceptionKey(String _budget) {
+    return _budget.contains("EXCEPTION");
   }
 }

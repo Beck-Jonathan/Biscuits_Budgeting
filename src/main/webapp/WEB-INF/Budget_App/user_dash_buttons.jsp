@@ -8,7 +8,10 @@
                 <button type="button" id="search" class="modern-nav-btn">Search</button>
             </a>
             <a href="all-Transactions" class="text-decoration-none">
-                <button type="button" id="View" class="modern-nav-btn">Transactions</button>
+                <button type="button" id="View" class="modern-nav-btn">Historic Transactions</button>
+            </a>
+            <a href="all-planned_transactions" class="text-decoration-none">
+                <button type="button" id="Planned" class="modern-nav-btn">Planned Transactions</button>
             </a>
             <a href="all-Bank_Accounts" class="text-decoration-none">
                 <button type="button" id="Accounts" class="modern-nav-btn">Accounts</button>

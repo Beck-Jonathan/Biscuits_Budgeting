@@ -61,4 +61,6 @@ public interface iBudgetDAO {
   int activateBudget(Budget budget) throws SQLException;
 
   List<Budget_VM> getAllActiveBudgetsWithLines(String userId);
+
+  Budget getBudgetOverviewBy_ID(String budgetID, String userId) throws SQLException;
 }

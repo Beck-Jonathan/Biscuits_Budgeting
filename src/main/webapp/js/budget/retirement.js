@@ -66,9 +66,11 @@ const RetirementEngine = {
 // INITIALIZE ALL ANNUAL TRACKERS HERE
         let yExp = 0, yInc = 0, yLiqDraw = 0, yLockDraw = 0;
         let y401k = 0, ySQLInvest = 0, yBonusInvest = 0, yFun = 0, ySlush = 0, ySurplus = 0;
+        let yInterest = 0;
         let currentYearSubcategories = [];
 
         while (curAge < this.settings.maxAge) {
+            interest = 0;
             // FIX: Move these declarations to the top of the loop
             curAge = startAge + (m / 12);
             let yearsPassed = Math.floor(m / 12);
@@ -81,7 +83,7 @@ const RetirementEngine = {
             }
             // 1. Growth
             //FIX INTEREST
-            interest = (liq + lock) * (this.settings.growth) * 12
+            interest += (liq + lock) * (this.settings.growth)
             liq *= (1 + this.settings.growth);
             lock *= (1 + this.settings.growth);
 
@@ -129,6 +131,7 @@ const RetirementEngine = {
             yBonusInvest += bonusInvest;
             yFun += fun;
             ySlush += slush;
+            yInterest += interest;
 
             if (isRetired) {
                 bonusInvest = 0;
@@ -206,7 +209,7 @@ const RetirementEngine = {
                     lockDraw: Math.round(yLockDraw),
                     surplus: Math.round(ySurplus),
                     retired: isRetired,
-                    interest: Math.round(interest)
+                    interest: Math.round(yInterest)
                 });
 
                 this.simulationCache[ageKey] = {
@@ -226,6 +229,7 @@ const RetirementEngine = {
                 yFun = 0;
                 ySlush = 0;
                 currentYearSubcategories = [];
+                yInterest = 0;
             }
             if (isRetired && liq <= 0 && lock <= 0) break;
             m++;
@@ -379,6 +383,8 @@ const RetirementEngine = {
 
                         s += `<b>Yearly Burn & Income:</b><br/>
                           Social Security/Pensions: <span class="text-success">+$${d.totalInc.toLocaleString()}</span><br/>
+                          Interest: <span class="text-success">+$${d.interest.toLocaleString()}</span><br/>
+
                           Annual Bills: <span class="text-danger">-$${d.totalExp.toLocaleString()}</span><hr/>
                           
                           <b>Net Withdrawals:</b><br/>

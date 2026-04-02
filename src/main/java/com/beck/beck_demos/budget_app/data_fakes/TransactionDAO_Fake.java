@@ -1,25 +1,19 @@
 package com.beck.beck_demos.budget_app.data_fakes;
 
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-import com.beck.beck_demos.budget_app.models.Saved_Search_Order_Line;
-import com.beck.beck_demos.budget_app.models.SubCategory_VM;
-import com.beck.beck_demos.budget_app.models.Transaction;
-import com.beck.beck_demos.budget_app.models.Transaction_VM;
+import com.beck.beck_demos.budget_app.models.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class TransactionDAO_Fake implements iTransactionDAO {
   private final List<Transaction_VM> transactionVMs;
+  private List<Planned_Transaction> Planned_TransactionVMs;
   public TransactionDAO_Fake(){
     transactionVMs = new ArrayList<>();
     Transaction transaction0 = new Transaction("XxtdYmVMXxtdYmVMXxtdYmVMXxtdYmVMXxtd", "618052e9-c69b-4d9b-880e-e22e4a970bd6", "f47ac10b-58cc-4372-a567-0e02b2c3d479", "xAwAtNYh", new Date(103,4,4), 50, "Casey", 43.94, "VpNtaCaw", "ZPHFJIYd",false);

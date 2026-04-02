@@ -9,6 +9,7 @@ $(document).ready(function () {
 		"#Add": {label: "Upload", icon: "bi-cloud-arrow-up"},
 		"#search": {label: "Search", icon: "bi-search"},
 		"#View": {label: "Activity", icon: "bi-list-ul"},
+		"#Planned": {label: "Activity", icon: "bi-list-ul"},
 		"#Accounts": {label: "Accounts", icon: "bi-bank"},
 		"#Category": {label: "Categories", icon: "bi-tags"},
 		"#PieChart": {label: "Stats", icon: "bi-pie-chart"},
