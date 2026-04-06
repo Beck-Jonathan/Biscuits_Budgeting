@@ -2,6 +2,7 @@ package com.beck.beck_demos.budget_app.models;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 /// Since 12/5/2024
@@ -16,10 +17,12 @@ public class SubCategory implements Comparable<SubCategory> {
   private String projection_strategy_ID;
   private String User_ID;
   private String color_id;
+  private BigDecimal target_threshold;
+  private Boolean is_locked;
 
   public SubCategory(){}
 
-  public SubCategory(String Category_ID, String parent_category_id, String projection_strategy_ID, String User_ID, String Name, String Color_ID) {
+  public SubCategory(String Category_ID, String parent_category_id, String projection_strategy_ID, String User_ID, String Name, String Color_ID, BigDecimal target_threshold, boolean is_locked) {
 
     setCategory_ID(Category_ID);
     setParentCategoryId(parent_category_id);
@@ -27,6 +30,8 @@ public class SubCategory implements Comparable<SubCategory> {
     setCategory_Name(Name);
     setUser_ID(User_ID);
     setcolor_id(Color_ID);
+    setTarget_Threshold(target_threshold);
+    setIs_Locked(is_locked);
   }
 
   public SubCategory(String Category_ID, String Name) {
@@ -196,6 +201,56 @@ public class SubCategory implements Comparable<SubCategory> {
     this.color_id = color_id.toUpperCase();
   }
 
+  /**
+   * <p> Gets the target_threshold of the associated sub_category object </p>
+   *
+   * @return the target_threshold of this sub_category object.
+   */
+  public BigDecimal getTarget_Threshold() {
+    return target_threshold;
+  }
+
+  /**
+   * <p> Sets the target_threshold of the associated sub_category object </p>
+   *
+   * @param target_threshold the target_threshold of the sub_category,
+   *                         throws IllegalArgumentException if target_threshold is outside of a logical range
+   */
+  public void setTarget_Threshold(BigDecimal target_threshold) {
+    if (target_threshold == null) {
+      throw new IllegalArgumentException("Target threshold cannot be null");
+    }
+
+    if (target_threshold.compareTo(BigDecimal.ZERO) < 0) {
+      throw new IllegalArgumentException("Target threshold cannot be negative");
+    }
+
+    if (target_threshold.compareTo(new BigDecimal("1000000")) > 0) {
+      throw new IllegalArgumentException("Target threshold cannot exceed 1,000,000");
+    }
+
+    this.target_threshold = target_threshold;
+  }
+
+  /**
+   * <p> Gets the is_locked of the associated sub_category object </p>
+   *
+   * @return the is_locked of this sub_category object.
+   */
+  public boolean getIs_Locked() {
+    return is_locked;
+  }
+
+  /**
+   * <p> Sets the is_locked of the associated sub_category object </p>
+   *
+   * @param is_locked the is_locked of the sub_category,
+   *                  throws IllegalArgumentException if is_locked is outside of a logical range
+   */
+  public void setIs_Locked(boolean is_locked) {
+    this.is_locked = is_locked;
+  }
+
 
   @Override
   public int compareTo(@NotNull SubCategory o) {
@@ -225,7 +280,17 @@ public class SubCategory implements Comparable<SubCategory> {
     if (this.color_id.compareTo(o.color_id)<0){
       return -1;
     }
-    else if(this.color_id.compareTo(o.color_id) > 0){
+    else if (this.color_id.compareTo(o.color_id) > 0) {
+      return 1;
+    }
+    if (this.target_threshold.compareTo(o.target_threshold) < 0) {
+      return -1;
+    } else if (this.target_threshold.compareTo(o.target_threshold) > 0) {
+      return 1;
+    }
+    if (this.is_locked.compareTo(o.is_locked) < 0) {
+      return -1;
+    } else if(this.is_locked.compareTo(o.is_locked) > 0){
       return 1;
     }
     return 0;

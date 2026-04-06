@@ -7,10 +7,9 @@ package com.beck.beck_demos.budget_app.data;
 
 
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
-import com.beck.beck_demos.budget_app.models.ParentCategory;
-import com.beck.beck_demos.budget_app.models.SubCategory;
-import com.beck.beck_demos.budget_app.models.User;
+import com.beck.beck_demos.budget_app.models.*;
 
+import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -61,7 +60,9 @@ public class CategoryDAO implements iCategoryDAO {
             String User_ID = resultSet.getString("User_subCategory_User_ID");
 
             String Color_ID = resultSet.getString("subCategory_Color_ID");
-            SubCategory _category = new SubCategory(Category_ID, ParentCategory_ID, projectionStrategy, User_ID, Name, Color_ID);
+            BigDecimal threshhold = resultSet.getBigDecimal("subCategory_target_threshold");
+            boolean is_Active = resultSet.getBoolean("subCategory_is_locked");
+            SubCategory _category = new SubCategory(Category_ID, ParentCategory_ID, projectionStrategy, User_ID, Name, Color_ID, threshhold, is_Active);
             result.add(_category);
           }
         }
@@ -70,7 +71,8 @@ public class CategoryDAO implements iCategoryDAO {
     } catch (Exception e) {
       throw new RuntimeException("Could not retrieve subCategories. Try again later");
     }
-    return result;}
+    return result;
+  }
 
   public int deleteSubCategory(String categoryID, String User_ID) {
     int rowsAffected=0;
@@ -128,7 +130,9 @@ public class CategoryDAO implements iCategoryDAO {
 
             String user_id = resultSet.getString("sub_category_user_id");
             String color_id = resultSet.getString("sub_category_color_id");
-            result = new SubCategory(subcategory_id, parentCategory_ID, projectionStrategyId, user_id, category_name, color_id);
+            BigDecimal targetThreshold = resultSet.getBigDecimal("subCategory_target_threshold");
+            boolean isLocked = resultSet.getBoolean("subCategory_is_locked");
+            result = new SubCategory(subcategory_id, parentCategory_ID, projectionStrategyId, user_id, category_name, color_id, targetThreshold, isLocked);
           }
         }
       }
@@ -192,5 +196,141 @@ public class CategoryDAO implements iCategoryDAO {
     return rowsAffected;
   }
 
+  @Override
+  public List<ProjectionAnalysisDTO> getProjectionData(String userId, String subcatId, int histMonths, int projMonths) {
+    List<ProjectionAnalysisDTO> report = new ArrayList<>();
+    String query = "{CALL proc_get_projection_analysis(?, ?, ?, ?)}";
+
+    try (Connection conn = getConnection();
+         CallableStatement stmt = conn.prepareCall(query)) {
+
+      stmt.setString(1, userId);
+      stmt.setString(2, subcatId);
+      stmt.setInt(3, histMonths);
+      stmt.setInt(4, projMonths);
+
+      try (ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+          ProjectionAnalysisDTO row = new ProjectionAnalysisDTO();
+          row.setMonthDate(rs.getString("m_date"));
+
+          // Use getObject() and cast to handle SQL NULLs gracefully in Java
+
+          row.setHistoricalTruth(readDouble(rs, "historicalTruth"));
+          row.setRegression(readDouble(rs, "regression"));
+          row.setAvgStrict(readDouble(rs, "avgStrict"));
+          row.setLvcf(readDouble(rs, "lvcf"));
+          row.setInflation(readDouble(rs, "inflation"));
+          row.setAlphaSpike(readDouble(rs, "alphaSpike"));
+          row.setZeroSum(readDouble(rs, "zeroSum"));
+
+          report.add(row);
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      // Log error specifically for the jjbeck budget engine
+    }
+    return report;
+  }
+
+  @Override
+  public int lockSubCategory(SubCategory subCategory) throws SQLException {
+    int rowsAffected = 0;
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_lock_subcategory( ?,?)}")) {
+          statement.setString(1, subCategory.getCategory_ID());
+          statement.setString(2, subCategory.getUser_ID());
+          rowsAffected = statement.executeUpdate();
+          if (rowsAffected == 0) {
+            throw new RuntimeException("Could not lock subcategory. Try again later");
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not lock subcategory. Try again later");
+    }
+    return rowsAffected;
+  }
+
+  @Override
+  public int unlockSubCategory(SubCategory subCategory) throws SQLException {
+    int rowsAffected = 0;
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_unlock_subcategory( ?,?)}")) {
+          statement.setString(1, subCategory.getCategory_ID());
+          statement.setString(2, subCategory.getUser_ID());
+          rowsAffected = statement.executeUpdate();
+          if (rowsAffected == 0) {
+            throw new RuntimeException("Could not unlock subcategory. Try again later");
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not unlock subcategory. Try again later");
+    }
+    return rowsAffected;
+  }
+
+  @Override
+  public List<CategoryPerformanceDTO> getCategoryPerformance(String userId, String subcatId, int year) throws SQLException {
+    List<CategoryPerformanceDTO> result = new ArrayList<>();
+
+    // 1. Establish connection using your existing helper
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        // 2. Prepare the call to the performance stored procedure
+        // Parameters: UserID, SubCategoryID, TargetYear
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_retrieve_category_performance(?, ?, ?)}")) {
+          statement.setString(1, userId);
+          statement.setString(2, subcatId);
+          statement.setInt(3, year);
+
+          try (ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+              // 3. Map the DB columns to the DTO
+              // Assuming your SP returns columns named: "period", "budgeted", and "actual"
+              String period = resultSet.getString("period");
+              double budgeted = resultSet.getDouble("budgeted");
+              double actual = resultSet.getBigDecimal("actual").doubleValue();
+              double threshold = resultSet.getBigDecimal("threshold").doubleValue();
+
+              CategoryPerformanceDTO dto = new CategoryPerformanceDTO(period, budgeted, actual, threshold);
+              result.add(dto);
+            }
+          }
+        }
+      }
+    } catch (SQLException e) {
+      // Log the error and rethrow to be caught by the Servlet's -2 error handler
+      throw new SQLException("Error retrieving category performance for subcat: " + subcatId, e);
+    }
+
+    return result;
+  }
+
+  private Double readDouble(ResultSet rs, String columnLabel) throws SQLException {
+    // 1. Get the object from the result set
+    Object value = rs.getObject(columnLabel);
+
+    // 2. Check for SQL NULL
+    if (value == null) {
+      return null;
+    }
+
+    // 3. Handle BigDecimal to Double conversion
+    if (value instanceof java.math.BigDecimal) {
+      return ((java.math.BigDecimal) value).doubleValue();
+    }
+
+    // 4. Fallback for other numeric types (Long, Integer, etc.)
+    if (value instanceof Number) {
+      return ((Number) value).doubleValue();
+    }
+
+    return null;
+  }
 }
 

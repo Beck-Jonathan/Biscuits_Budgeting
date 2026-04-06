@@ -86,6 +86,134 @@
             </div>
         </div>
 
+        <div id="categoryAnalysisSection" class="row mb-4 animate__animated animate__fadeIn" style="display: none;">
+            <div class="col-lg-8 mb-3">
+                <div class="card shadow-sm border-0 h-100" style="border-radius: 15px;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="fw-bold mb-0">
+                                <i class="bi bi-graph-up text-primary me-2"></i>
+                                <span id="analysisChartTitle">Historical vs. Projected</span>
+                            </h5>
+                            <button class="btn btn-sm btn-light" onclick="$('#categoryAnalysisSection').slideUp()">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                        <div id="categoryAnalysisChart" style="width: 100%; height: 320px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 mb-3">
+                <div class="card-body p-3">
+                    <ul class="nav nav-pills nav-fill mb-3 small" id="categoryAnalysisTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active py-1" id="overview-tab" data-bs-toggle="pill"
+                                    data-bs-target="#tab-overview" type="button">Overview
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link py-1" id="forecast-tab" data-bs-toggle="pill"
+                                    data-bs-target="#tab-forecast" type="button">Forecast
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link py-1" id="regression-tab" data-bs-toggle="pill"
+                                    data-bs-target="#tab-regression" type="button">Regression
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link py-1" id="performance-tab" data-bs-toggle="pill"
+                                    data-bs-target="#tab-performance" type="button">Performance
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="analysisTabContent">
+                        <div class="tab-pane fade show active" id="tab-overview" role="tabpanel">
+                            <h5 class="fw-bold mb-1 text-primary" id="detailCatName">Category Name</h5>
+                            <div id="detailLockStatus" class="mb-2"></div>
+
+                            <div class="p-2 bg-light rounded mb-3 small">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-secondary">Current Strategy:</span>
+                                    <span class="badge bg-primary" id="detailStrategy">REGRESSION</span>
+                                </div>
+                            </div>
+                            <p class="small text-muted" id="detailInsights">
+                                Select a category gear to see engine insights for your budget.
+                            </p>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-forecast" role="tabpanel">
+                            <h6 class="fw-bold small text-uppercase text-secondary">Retirement Impact</h6>
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <i class="bi bi-calendar-check text-success fs-4"></i>
+                                <div>
+                                    <span class="d-block fw-bold" style="font-size: 0.8rem;">Burn at Age 65</span>
+                                    <span class="text-dark h6 mb-0" id="forecastAgeValue">$0.00 /mo</span>
+                                </div>
+                            </div>
+                            <div class="progress mb-2" style="height: 6px;">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: 70%"></div>
+                            </div>
+                            <p class="text-muted" style="font-size: 0.7rem;">
+                                Based on current inflation ($0.3\%$), this category accounts for <b
+                                    id="forecastPercent">0%</b> of your projected retirement expenses.
+                            </p>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-regression" role="tabpanel">
+                            <h6 class="fw-bold small text-uppercase text-secondary">Mathematical Fit</h6>
+                            <table class="table table-sm table-borderless small mb-0">
+                                <tbody>
+                                <tr>
+                                    <td class="text-secondary">Slope ($m$):</td>
+                                    <td class="text-end fw-bold" id="mathSlope">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-secondary">Intercept ($b$):</td>
+                                    <td class="text-end fw-bold" id="mathIntercept">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-secondary">R-Squared:</td>
+                                    <td class="text-end text-success fw-bold" id="mathRSquared">0.00</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <hr class="my-2">
+                            <div class="alert alert-info p-2 mb-0" style="font-size: 0.7rem;">
+                                <i class="bi bi-info-circle me-1"></i>
+                                A high R-Squared indicates this category is highly predictable.
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-performance" role="presentation">
+                            <h6 class="fw-bold small text-uppercase text-secondary mb-3">Budget Accuracy</h6>
+
+                            <div class="mb-3">
+                                <label class="small text-muted mb-1">Analysis Year</label>
+                                <select class="form-select form-select-sm" id="performanceMonthSelect">
+                                    <option value="null">Select...</option>
+                                    <option value="2026">2026</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2024"> 2024</option>
+                                    <option value="2023"> 2023</option>
+                                </select>
+                            </div>
+
+                            <div id="performanceResults" class="animate__animated animate__fadeIn">
+                                <div class="p-3 border rounded bg-light text-center">
+                                    <p class="small text-muted mb-0">Select a year to compare your engine's forecast
+                                        against actual spending.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4" id="category-grid"
              style="overflow: visible;">
@@ -121,9 +249,18 @@
                         </div>
 
                         <div class="card-body-content">
-                            <i class="bi bi-x delete-icon-modern"
-                               onclick="confirmDeleteCategory('${category.category_ID}', '${fn:escapeXml(category.category_Name)}')"></i>
+                            <div class="card-actions-modern">
+                                <i class="bi ${category.is_Locked ? 'bi-lock-fill text-warning' : 'bi-unlock'} action-icon-modern lock-trigger"
+                                   title="Toggle Projection Lock"
+                                   onclick="handleLockToggle(event, '${category.category_ID}')"></i>
 
+                                <i class="bi bi-gear action-icon-modern gear-trigger"
+                                   title="Advanced Settings"
+                                   onclick="handleGearClick(event, '${category.category_ID}')"></i>
+
+                                <i class="bi bi-x action-icon-modern delete-trigger"
+                                   onclick="confirmDeleteCategory('${category.category_ID}', '${fn:escapeXml(category.category_Name)}')"></i>
+                            </div>
                             <div class="category-name-row">
                                 <span class="category-text"
                                       contenteditable="true">${fn:escapeXml(category.category_Name)}</span>
@@ -250,7 +387,7 @@
                 </p>
                 <div class="alert alert-warning border-0 small d-flex align-items-center">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    Existing manual strategy assignments will be overwritten.
+                    Existing manual strategy assignments will be overwritten, unless locked.
                 </div>
             </div>
             <div class="modal-footer border-0 pb-4 justify-content-center">

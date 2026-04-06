@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 class SubCategoryTest {
   private SubCategory _subCategory;
   @BeforeEach
@@ -28,6 +30,8 @@ class SubCategoryTest {
     Assertions.assertNull(_category.getprojection_strategy_ID());
     Assertions.assertNull(_category.getParentCategoryId());
     Assertions.assertNull(_category.getcolor_id());
+    Assertions.assertNull(_category.getIs_Locked());
+    Assertions.assertNull(_category.getTarget_Threshold());
   }
 
   /**
@@ -41,7 +45,8 @@ class SubCategoryTest {
         "REGRESSION",
         "af735dfc-22a9-4214-a8e5-fb8de2305700",
         "Testing",
-        "#ffffff"
+        "#ffffff",
+        new BigDecimal("123.45"), false
     );
     Assertions.assertEquals("bf735dfc-22a9-4214-a8e5-fb8de2305700",_category.getCategory_ID());
     Assertions.assertEquals("01b9701b-c114-4036-a78a-18b43a991994",_category.getParentCategoryId());
@@ -50,6 +55,13 @@ class SubCategoryTest {
     Assertions.assertEquals("af735dfc-22a9-4214-a8e5-fb8de2305700",_category.getUser_ID());
     Assertions.assertEquals("Testing",_category.getCategory_Name());
     Assertions.assertEquals("#FFFFFF",_category.getcolor_id());
+    Assertions.assertTrue(
+        _category.getTarget_Threshold()
+            .subtract(new BigDecimal("123.45"))
+            .abs()
+            .compareTo(new BigDecimal("0.01")) < 0
+    );
+    Assertions.assertFalse(_category.getIs_Locked());
   }
 
   /**
@@ -242,6 +254,57 @@ class SubCategoryTest {
     Assertions.assertEquals(Name, _subCategory.getCategory_Name());
   }
 
+  @Test
+  public void testSetIsLockedUpdatesStatus() {
+    boolean locked = true;
+    _subCategory.setIs_Locked(locked);
+    Assertions.assertTrue(_subCategory.getIs_Locked());
+  }
+
+  @Test
+  public void testSetTargetThresholdSetsValidValue() {
+    BigDecimal threshold = new BigDecimal("500.50");
+    _subCategory.setTarget_Threshold(threshold);
+    Assertions.assertEquals(threshold, _subCategory.getTarget_Threshold());
+  }
+
+  @Test
+  public void testSetTargetThresholdAcceptsZeroBoundary() {
+    BigDecimal threshold = BigDecimal.ZERO;
+    _subCategory.setTarget_Threshold(threshold);
+    Assertions.assertEquals(threshold, _subCategory.getTarget_Threshold());
+  }
+
+  @Test
+  public void testSetTargetThresholdAcceptsMaxBoundary() {
+    BigDecimal threshold = new BigDecimal("10000.00");
+    _subCategory.setTarget_Threshold(threshold);
+    Assertions.assertEquals(threshold, _subCategory.getTarget_Threshold());
+  }
+
+  @Test
+  public void testCategoryThrowsIllegalArgumentExceptionIfThresholdNegative() {
+    BigDecimal threshold = new BigDecimal("-1.00");
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      _subCategory.setTarget_Threshold(threshold);
+    });
+  }
+
+  @Test
+  public void testCategoryThrowsIllegalArgumentExceptionIfThresholdTooHigh() {
+    BigDecimal threshold = new BigDecimal("100000000.01");
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      _subCategory.setTarget_Threshold(threshold);
+    });
+  }
+
+  @Test
+  public void testCategoryThrowsIllegalArgumentExceptionIfThresholdNull() {
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      _subCategory.setTarget_Threshold(null);
+    });
+  }
+
 
   /**
    <p> Tests That the CompareTo Method for the Category object works </p>
@@ -264,14 +327,13 @@ class SubCategoryTest {
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the User_ID as equal.
     smaller.setUser_ID("gec75744-130e-4bcb-8bbe-9bee18080428");
-    ;
     //to compare a smaller and larger projection_strategy_ID
     smaller.setprojection_strategy_ID("ALPHA_SPIKE");
     bigger.setprojection_strategy_ID("REGRESSION");
     Assertions.assertTrue(smaller.compareTo(bigger) < 0);
     Assertions.assertTrue(bigger.compareTo(smaller) > 0);
 //to set the projection_strategy_ID as equal.
-    smaller.setprojection_strategy_ID("REGRESSION");;
+    smaller.setprojection_strategy_ID("REGRESSION");
     //to compare a smaller and larger Name
     smaller.setCategory_Name("aaaa");
     bigger.setCategory_Name("bbbb");
@@ -286,8 +348,8 @@ class SubCategoryTest {
     Assertions.assertTrue(smaller.compareTo(bigger)<0);
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the User_ID as equal.
-    smaller.setcolor_id("#AABBCC");;
-    Assertions.assertTrue(bigger.compareTo(smaller)==0);
+    smaller.setcolor_id("#AABBCC");
+    Assertions.assertEquals(0, bigger.compareTo(smaller));
   }
 
 }

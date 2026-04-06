@@ -1,8 +1,6 @@
 package com.beck.beck_demos.budget_app.iData;
 
-import com.beck.beck_demos.budget_app.models.ParentCategory;
-import com.beck.beck_demos.budget_app.models.SubCategory;
-import com.beck.beck_demos.budget_app.models.User;
+import com.beck.beck_demos.budget_app.models.*;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -27,6 +25,27 @@ public interface iCategoryDAO {
 
   int SmartAssignProjectionModel(User user) throws SQLException;
 
+  List<ProjectionAnalysisDTO> getProjectionData(String userId, String subcatId, int histMonths, int projMonths) throws SQLException;
+
+  /**
+   * DAO Method to lock subCategory objects
+   *
+   * @param subCategory the subCategory to be deleted
+   * @return number of records deleted
+   * @author Jonathan Beck
+   */
+  int lockSubCategory(SubCategory subCategory) throws SQLException;
+
+  /**
+   * DAO Method to unlock subCategory objects
+   *
+   * @param subCategory the subCategory to be deleted
+   * @return number of records deleted
+   * @author Jonathan Beck
+   */
+  int unlockSubCategory(SubCategory subCategory) throws SQLException;
+
+  List<CategoryPerformanceDTO> getCategoryPerformance(String userId, String subcatId, int year) throws SQLException;
 }
 
 
