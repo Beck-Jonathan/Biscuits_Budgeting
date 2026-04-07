@@ -25,15 +25,12 @@ public interface iTransactionDAO {
 
     int addBatch(List<Transaction> _transactions, String user_id) throws SQLException;
 
-
-
-   List<Transaction_VM> getTransactionByUser(String userID, String category, String Bank_Account_ID, int year, int pagesize, int offset, String sortBy, int order,boolean findErrors) throws SQLException ;
+  List<Transaction_VM> getTransactionByUser(String userID, String category, String Bank_Account_ID, int year, int month, int pagesize, int offset, String sortBy, int order, boolean findErrors) throws SQLException;
 
 
     List<Transaction_VM> searchTransactionByUser(String userID, String query) throws SQLException;
 
-
-   int getTransactionCountByUser(String userID, String category, String Bank_Account_ID, int year, boolean findErrors) throws SQLException;
+  int getTransactionCountByUser(String userID, String category, String Bank_Account_ID, int year, int month, boolean findErrors) throws SQLException;
 
 
   Transaction_VM getTransactionByPrimaryKey(Transaction _transaction) throws SQLException;

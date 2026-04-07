@@ -14,7 +14,7 @@ import java.util.List;
 public class CategoryDAO_Fake implements iCategoryDAO {
   private final List<SubCategory> subCategories;
   private final List<ParentCategory> parent_categories;
-  List<ProjectionAnalysisDTO> projections;
+  private final List<ProjectionAnalysisDTO> projections;
   private final List<CategoryPerformanceDTO> performanceData;
   public CategoryDAO_Fake(){
     subCategories = new ArrayList<>();
@@ -126,10 +126,7 @@ public class CategoryDAO_Fake implements iCategoryDAO {
 
     performanceData = new ArrayList<>();
 
-// --- 2025 Budget Performance Data (Sample Set) ---
 
-// Q1: Heating costs high, but coming in under budget
-    List<CategoryPerformanceDTO> performanceData = new ArrayList<>();
 
 // --- 2025 Budget Performance Data (with Target Threshold) ---
 
@@ -355,7 +352,7 @@ public class CategoryDAO_Fake implements iCategoryDAO {
     Integer _year = year;
     List<CategoryPerformanceDTO> results = new ArrayList<>();
     for (CategoryPerformanceDTO dto : performanceData)
-      if (dto.getPeriod().startsWith(_year.toString())
+      if (dto.getPeriod().contains(_year.toString())
       ) {
         results.add(dto);
       }

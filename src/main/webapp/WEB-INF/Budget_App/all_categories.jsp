@@ -192,14 +192,21 @@
                             <h6 class="fw-bold small text-uppercase text-secondary mb-3">Budget Accuracy</h6>
 
                             <div class="mb-3">
-                                <label class="small text-muted mb-1">Analysis Year</label>
-                                <select class="form-select form-select-sm" id="performanceMonthSelect">
-                                    <option value="null">Select...</option>
-                                    <option value="2026">2026</option>
-                                    <option value="2025">2025</option>
-                                    <option value="2024"> 2024</option>
-                                    <option value="2023"> 2023</option>
-                                </select>
+                                <label class="small text-muted mb-1 d-block text-uppercase fw-bold"
+                                       style="font-size: 0.65rem; letter-spacing: 0.5px;">Analysis Year</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="flex-grow-1" style="max-width: 50%;">
+                                        <select class="form-select form-select-sm" id="performanceMonthSelect">
+                                            <option value="null" selected disabled>Select...</option>
+                                            <option value="2026">2026</option>
+                                            <option value="2025">2025</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2023">2023</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="annualReportContainer" class="row mb-4 d-none">
+                                </div>
                             </div>
 
                             <div id="performanceResults" class="animate__animated animate__fadeIn">

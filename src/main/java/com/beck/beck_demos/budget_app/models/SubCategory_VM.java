@@ -1,7 +1,6 @@
 package com.beck.beck_demos.budget_app.models;
 
 import jakarta.persistence.Entity;
-
 import jakarta.persistence.Id;
 
 @Entity
@@ -30,7 +29,7 @@ public class SubCategory_VM extends SubCategory {
   }
 
   public SubCategory_VM() {
-
+    this.setIs_Locked(true);
   }
 
   public double getAmount() {

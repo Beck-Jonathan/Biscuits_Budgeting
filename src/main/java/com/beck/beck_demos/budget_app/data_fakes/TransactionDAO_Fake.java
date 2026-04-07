@@ -218,13 +218,14 @@ public class TransactionDAO_Fake implements iTransactionDAO {
 
 
   @Override
-  public List<Transaction_VM> getTransactionByUser(String userID, String category, String Bank_Account_ID,int year, int pagesize, int offset, String sortBy, int order, boolean isError) throws SQLException {
+  public List<Transaction_VM> getTransactionByUser(String userID, String category, String Bank_Account_ID, int year, int month, int pagesize, int offset, String sortBy, int order, boolean isError) throws SQLException {
     List<Transaction_VM> results = new ArrayList<>();
     for (Transaction_VM t : transactionVMs) {
 
       if (t.getUser_ID().equals(userID)
           &&(category.equals("")||t.getCategory_ID().equals(category))
           && (year == 0 || (t.getPost_Date().getYear() + 1900) == year)
+          && (month == 0 || (t.getPost_Date().getMonth() == month))
           &&(Bank_Account_ID.equals("")||t.getBank_Account_ID().equals(Bank_Account_ID))
       ) {
         results.add(t);
@@ -251,11 +252,12 @@ public class TransactionDAO_Fake implements iTransactionDAO {
 
 
   @Override
-  public int getTransactionCountByUser(String userID, String category, String Bank_Account_ID,int year, boolean findErrors) throws SQLException {
+  public int getTransactionCountByUser(String userID, String category, String Bank_Account_ID, int year, int month, boolean findErrors) throws SQLException {
     int count = 0;
     for (Transaction t : transactionVMs) {
       if (t.getUser_ID().equals(userID)
           &&(year==0 || t.getPost_Date().getYear()==year)
+          && (month == 0 || t.getPost_Date().getMonth() == month)
           &&(Bank_Account_ID.equals("")||t.getBank_Account_ID().equals(Bank_Account_ID))
       ) {
         count++;

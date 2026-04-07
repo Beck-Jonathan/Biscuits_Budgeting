@@ -627,19 +627,20 @@ public class TransactionDAO implements iTransactionDAO {
   }
 
   @Override
-  public List<Transaction_VM> getTransactionByUser(String userID, String category, String Bank_Account_ID, int year, int pagesize, int offset, String sortBy, int order, boolean findErrors) throws SQLException {
+  public List<Transaction_VM> getTransactionByUser(String userID, String category, String Bank_Account_ID, int year, int month, int pagesize, int offset, String sortBy, int order, boolean findErrors) throws SQLException {
     List<Transaction_VM> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
-      try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User(?,?,?,?,?,?,?,?,?)}")) {
+      try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User(?,?,?,?,?,?,?,?,?,?)}")) {
         statement.setString(1, userID);
         statement.setString(2, category);
         statement.setString(3, Bank_Account_ID);
         statement.setInt(4, year);
-        statement.setInt(5, pagesize);
-        statement.setInt(6, offset);
-        statement.setString(7, sortBy);
-        statement.setInt(8, order);
-        statement.setBoolean(9, findErrors);
+        statement.setInt(5, month);
+        statement.setInt(6, pagesize);
+        statement.setInt(7, offset);
+        statement.setString(8, sortBy);
+        statement.setInt(9, order);
+        statement.setBoolean(10, findErrors);
 
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
@@ -701,15 +702,16 @@ public class TransactionDAO implements iTransactionDAO {
   }
 
   @Override
-  public int getTransactionCountByUser(String userID, String category, String Bank_Account_ID, int year, boolean findErrors) throws SQLException {
+  public int getTransactionCountByUser(String userID, String category, String Bank_Account_ID, int year, int month, boolean findErrors) throws SQLException {
     int result = 0;
     try (Connection connection = getConnection()) {
-      try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User_count(?,?,?,?,?)}")) {
+      try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User_count(?,?,?,?,?,?)}")) {
         statement.setString(1, userID);
         statement.setString(2, category);
         statement.setString(3, Bank_Account_ID);
         statement.setInt(4, year);
-        statement.setBoolean(5, findErrors);
+        statement.setInt(5, month);
+        statement.setBoolean(6, findErrors);
 
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
@@ -910,6 +912,7 @@ public class TransactionDAO implements iTransactionDAO {
             _vm.setSign(Target_Period); // Storing the period string ("2026-04")
             _vm.setYear(Month_Offset);  // Storing the step offset (1, 2, 3...)
             _vm.setTransactionType(category_type);
+            _vm.setIs_Locked(true);
 
             // Grouping logic to build the List of Lists
             if (!monthlyMap.containsKey(Target_Period)) {

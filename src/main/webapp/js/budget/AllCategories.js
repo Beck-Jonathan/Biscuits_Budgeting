@@ -34,11 +34,11 @@ $(document).ready(function() {
 
             // PHASE 3: Swap the Layout (Instantly or via CSS)
             if (targetId === '#tab-performance') {
-                $chartCol.removeClass('col-lg-8').addClass('col-lg-6');
-                $tabsCol.removeClass('col-lg-4').addClass('col-lg-6');
+                $chartCol.removeClass('col-lg-8').addClass('col-lg-4');
+                $tabsCol.removeClass('col-lg-4').addClass('col-lg-8');
             } else {
-                $chartCol.removeClass('col-lg-6').addClass('col-lg-8');
-                $tabsCol.removeClass('col-lg-6').addClass('col-lg-4');
+                $chartCol.removeClass('col-lg-4').addClass('col-lg-8');
+                $tabsCol.removeClass('col-lg-8').addClass('col-lg-4');
             }
 
             // PHASE 4: Recalculate while the user sees nothing but a blur
@@ -298,11 +298,12 @@ function handleStrategyClick(e, pickers) {
 
     // Find the lock icon within this specific card
     const lockIcon = $card.find('.lock-trigger');
-    console.log(lockIcon)
+    console.log(lockIcon[0])
     // If it's currently unlocked (bi-unlock), trigger the toggle
-    //if ($lockIcon.hasClass('bi-unlock')) {
+    if (lockIcon[0].classList.contains('bi-unlock')) {
+
     lockIcon[0].click();
-    // }
+    }
 
     // 4. Persistence
     const hex = getHexFromCard($card, pickers);
@@ -472,11 +473,22 @@ function handleLockToggle(e, id) {
  */
 function handleGearClick(e, id) {
     e.stopPropagation();
-
+    window.originalChartState = null;
     $('#categoryAnalysisSection').attr('data-current-id', id);
-
+    $('#annualReportContainer').addClass('d-none'); // Hide the annual report until a year is picked
 
     // CRITICAL: Store the ID so the sidebar knows which card to 'click' later
+    if ($('#analysisSubcatId').length === 0) {
+        $('body').append(`<input type="hidden" id="analysisSubcatId" value="${id}">`);
+    } else {
+        $('#analysisSubcatId').val(id);
+    }
+    // 1. RESET PERFORMANCE STATE
+    window.originalChartState = null; // Clear the chart backup
+    $('#performanceResults').html(''); // Clear old cards immediately
+    $('#performanceMonthSelect').val(''); // Reset dropdown to "Select Year"
+
+    // 2. Update the ID tracking
     if ($('#analysisSubcatId').length === 0) {
         $('body').append(`<input type="hidden" id="analysisSubcatId" value="${id}">`);
     } else {
@@ -991,57 +1003,47 @@ window.addNewCategory = async function () {
 };
 
 async function fetchPerformanceData(selectedYear) {
-    const categoryId = $('#categoryAnalysisSection').data('current-id') ||
-        $('#categoryAnalysisSection').attr('data-current-id');
-
+    // Ensure we have an ID
+    const categoryId = $('#analysisSubcatId').val();
+    $('#displayYear').text(selectedYear);
+    const newUrl = `/all-transactions?year=${selectedYear}&category_id=${categoryId}`;
+    $('#viewYearlyTransactions').attr('href', newUrl);
     if (!categoryId) {
-        console.error("No Category ID found! Make sure you clicked a Gear icon first.");
+        console.error("No Category ID found!");
         return;
     }
+
     const $resultsContainer = $('#performanceResults');
-    const $chart = $('#categoryAnalysisChart');
+    const $chartContainer = $('#categoryAnalysisChart');
 
-    // PHASE 1: "Store" the chart (The Workbench Blur)
-    $chart.removeClass('chart-ready').addClass('chart-reworking');
-    // --- 1. STATE BUFFERING (Save the old view) ---
-    if (!window.originalChartState && window.analysisChart) {
-        console.log("Buffering original chart state...");
-        window.originalChartState = {
-            series: window.analysisChart.series.map(s => ({
-                name: s.name,
-                data: s.options.data,
-                color: s.color,
-                type: s.type
-            })),
-            categories: window.analysisChart.xAxis[0].categories,
-            title: window.analysisChart.title.textStr
-        };
-    }
-
-    // PHASE 2: UI Loading State
-    $chart.removeClass('chart-ready').addClass('chart-reworking');
+    // 1. Enter Loading State (Blur the workbench)
+    $chartContainer.removeClass('chart-ready').addClass('chart-reworking');
     $resultsContainer.html(`
         <div class="text-center p-5">
             <div class="spinner-grow text-primary" role="status"></div>
             <p class="small text-muted mt-2">Analyzing ${selectedYear} Budget Accuracy...</p>
         </div>
     `);
-    console.log(categoryId);
+
 
     try {
         const response = await fetch(`getCategoryPerformance?id=${categoryId}&year=${selectedYear}`);
-        const data = await response.json(); // Array of PerformanceDTO
+        const data = await response.json();
 
-        // --- 3. PHASE 3: Update Highcharts with Performance Data ---
+        renderAnnualReportCard(data, selectedYear);
+        // 3. Update Highcharts (Switch to Bar Chart mode)
         if (window.analysisChart) {
             const periods = data.map(d => d.period);
             const budgeted = data.map(d => d.budgetedValue);
             const actuals = data.map(d => d.actualValue);
-            const threshholds = data.map(d => d.threshold)
+            const thresholds = data.map(d => d.threshold);
 
-            // Wipe existing series and load the "Focused" view
-            while (window.analysisChart.series.length > 0) window.analysisChart.series[0].remove(false);
+            // Clear series
+            while (window.analysisChart.series.length > 0) {
+                window.analysisChart.series[0].remove(false);
+            }
 
+            // Apply new Axis and Series
             window.analysisChart.update({
                 xAxis: {categories: periods},
                 title: {text: `Budget Performance: ${selectedYear}`}
@@ -1051,42 +1053,84 @@ async function fetchPerformanceData(selectedYear) {
                 name: 'Budgeted',
                 data: budgeted,
                 type: 'column',
-                color: '#6c757d', // Muted gray
-                opacity: 0.6
+                color: '#6c757d',
+                opacity: 0.4
             }, false);
 
             window.analysisChart.addSeries({
                 name: 'Actual Spending',
                 data: actuals,
                 type: 'column',
-                color: '#0d6efd' // Brand Blue
+                color: '#0d6efd'
+            }, false);
+
+            // ADD THE THRESHOLD: It's vital for your "Breach" logic
+            window.analysisChart.addSeries({
+                name: 'Hard Limit',
+                data: thresholds,
+                type: 'line',
+                color: '#dc3545',
+                dashStyle: 'Dot',
+                marker: {enabled: false}
             }, false);
 
             window.analysisChart.redraw();
         }
-        let html = `<div class="row g-2">`;
+        // 2. Buffer State (Only if not already buffered for THIS specific category)
+        // Note: We check window.analysisChart to make sure the object actually exists
+        let chart = window.analysisChart || Highcharts.charts.find(c => c && c.renderTo.id === 'categoryAnalysisChart');
+        if (chart) {
+            const periods = data.map(d => d.period);
+            const budgeted = data.map(d => d.budgetedValue);
+            const actuals = data.map(d => d.actualValue);
+            const thresholds = data.map(d => d.threshold);
 
+            // Wipe existing series
+            while (chart.series.length > 0) {
+                chart.series[0].remove(false);
+            }
+
+            // Update Axis and Title
+            chart.update({
+                xAxis: {categories: periods},
+                title: {text: `Budget Performance: ${selectedYear}`}
+            }, false);
+
+            // Add new series
+            chart.addSeries({name: 'Budgeted', data: budgeted, type: 'column', color: '#6c757d', opacity: 0.4}, false);
+            chart.addSeries({name: 'Actual Spending', data: actuals, type: 'column', color: '#0d6efd'}, false);
+            chart.addSeries({
+                name: 'Hard Limit',
+                data: thresholds,
+                type: 'line',
+                color: '#dc3545',
+                dashStyle: 'Dot',
+                marker: {enabled: false}
+            }, false);
+
+            chart.redraw();
+        } else {
+            console.warn("Highchart object not found. Ensure the chart is initialized before calling this.");
+        }
+
+        // 4. Render Cards
+        let html = `<div class="row g-2">`;
         data.forEach(item => {
             html += createPerformanceCard(item);
-        })
-
-
+        });
         html += `</div>`;
         $resultsContainer.html(html);
 
-        // PHASE 3: Update Highcharts (Next Step)
-        // updatePerformanceChart(data);
-
-        // PHASE 4: Reveal the Workbench
+        // 5. Reveal the Workbench
         setTimeout(() => {
             if (window.analysisChart) window.analysisChart.reflow();
-            $chart.removeClass('chart-reworking').addClass('chart-ready');
+            $chartContainer.removeClass('chart-reworking').addClass('chart-ready');
         }, 400);
 
     } catch (err) {
         console.error("Performance Fetch Error:", err);
         $resultsContainer.html('<div class="alert alert-danger small">Failed to load performance metrics.</div>');
-        $chart.removeClass('chart-reworking').addClass('chart-ready');
+        $chartContainer.removeClass('chart-reworking').addClass('chart-ready');
     }
 }
 
@@ -1095,77 +1139,173 @@ async function fetchPerformanceData(selectedYear) {
  * against both the Engine's Forecast and the User's Hard Limit.
  */
 function createPerformanceCard(item) {
-    // 1. Comparison Logic: Actual vs. Engine Forecast
+    // 1. Comparison Logic
     const budgetDiff = item.actualValue - item.budgetedValue;
     const isOverBudget = budgetDiff > 0;
-    const budgetStatusClass = isOverBudget ? 'text-danger' : 'text-success';
 
-    // 2. Comparison Logic: Actual vs. Hard Threshold
     const thresholdDiff = item.actualValue - item.threshold;
     const isOverThreshold = thresholdDiff > 0;
 
-    // UI State for Threshold
-    const thresholdStatusClass = isOverThreshold ? 'bg-danger text-white' : 'bg-light text-muted border';
+    // 2. UI State & Consistency
+    // Using a consistent color scheme: Red for over, Green for under
+    const statusClass = isOverThreshold ? 'text-danger' : 'text-success';
+    const progressBarClass = isOverThreshold ? 'bg-danger' : 'bg-success';
     const thresholdLabel = isOverThreshold ? 'BREACH' : 'SAFE';
-    const progressBarClass = isOverThreshold ? 'bg-danger' : 'bg-primary';
+    const thresholdBadgeClass = isOverThreshold ? 'bg-danger text-white' : 'bg-success-subtle text-success border border-success-subtle';
 
-    // 3. Calculate Progress Percentage (Cap at 100% for the bar width)
+    // 3. Progress Math
     const percentOfThreshold = item.threshold > 0
         ? Math.min((item.actualValue / item.threshold) * 100, 100)
         : 0;
 
-    return `
-    <div class="col-md-6 mb-3 animate__animated animate__fadeInUp">
-        <div class="card h-100 border-0 shadow-sm overflow-hidden">
-            <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center border-bottom-0">
-                <span class="fw-bold text-dark"><i class="bi bi-calendar3 me-2"></i>${item.period}</span>
-                <span class="badge ${thresholdStatusClass} rounded-pill small px-2" style="font-size: 0.7rem;">
-                    ${thresholdLabel}
-                </span>
-            </div>
+    // 4. Link Generation (Assumes period is "MM/YYYY")
+    const periodParts = item.period.split('/');
+    const linkUrl = `all-Transactions?month=${periodParts[0]}&year=${periodParts[1]}&category=${$('#analysisSubcatId').val()}`;
 
-            <div class="card-body p-3 pt-0">
-                <div class="row g-0 mt-2">
-                    <div class="col-6 border-end pe-2">
-                        <small class="text-uppercase text-muted d-block mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">Vs. Forecast</small>
-                        <div class="d-flex align-items-center">
-                            <span class="h6 mb-0 fw-bold ${budgetStatusClass}">
+    return `
+    <div class="col-md-3 mb-3 animate__animated animate__fadeInUp">
+        <a href="${linkUrl}" class="text-decoration-none">
+            <div class="card h-100 border-0 shadow-sm overflow-hidden performance-card-hover" style="transition: transform 0.2s;">
+                <div class="progress rounded-0" style="height: 8px; background-color: rgba(0,0,0,0.05);">
+                    <div class="progress-bar ${progressBarClass} progress-bar-striped" 
+                         role="progressbar" 
+                         style="width: ${percentOfThreshold}%"></div>
+                </div>
+
+                <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center border-bottom-0">
+                    <span class="fw-bold text-dark small"><i class="bi bi-calendar3 me-2"></i>${item.period}</span>
+                    <span class="badge ${thresholdBadgeClass} rounded-pill px-2" style="font-size: 0.65rem;">
+                        ${thresholdLabel}
+                    </span>
+                </div>
+
+                <div class="card-body p-3 pt-1">
+                    <div class="text-center mb-3">
+                        <small class="text-uppercase text-muted d-block" style="font-size: 0.65rem; letter-spacing: 1px;">Actual Spent</small>
+                        <h3 class="fw-black mb-0 ${statusClass}">
+                            $${item.actualValue.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    })}
+                        </h3>
+                    </div>
+
+                    <div class="row g-0 py-2 border-top">
+                        <div class="col-6 border-end pe-2">
+                            <small class="text-uppercase text-muted d-block mb-1" style="font-size: 0.6rem;">Vs. Forecast</small>
+                            <span class="fw-bold ${isOverBudget ? 'text-danger' : 'text-success'}">
                                 ${isOverBudget ? '+' : '-'}$${Math.abs(budgetDiff).toFixed(2)}
                             </span>
+                            <p class="small text-muted mb-0 mt-1" style="font-size: 0.65rem;">
+                                Model: $${item.budgetedValue.toFixed(0)}
+                            </p>
                         </div>
-                        <p class="small text-muted mb-0 mt-1" style="font-size: 0.7rem;">
-                            Model: $${item.budgetedValue.toFixed(0)}
+
+                        <div class="col-6 ps-3">
+                            <small class="text-uppercase text-muted d-block mb-1" style="font-size: 0.6rem;">Vs. Limit</small>
+                            <span class="fw-bold ${isOverThreshold ? 'text-danger' : 'text-success'}">
+                                ${isOverThreshold ? '+' : '-'}$${Math.abs(thresholdDiff).toFixed(2)}
+                            </span>
+                            <p class="small text-muted mb-0 mt-1" style="font-size: 0.65rem;">
+                                Cap: $${item.threshold.toFixed(0)}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </a>
+    </div>`;
+}
+
+function renderAnnualReportCard(data, year) {
+    const $container = $('#annualReportContainer');
+
+    // 1. Core Calculations
+    const totals = data.reduce((acc, m) => {
+        acc.actual += m.actualValue;
+        acc.budget += m.budgetedValue;
+        acc.threshold += m.threshold;
+        return acc;
+    }, {actual: 0, budget: 0, threshold: 0});
+
+    // 2. Identify "Spike" and "Lean" months
+    const sortedBySpend = [...data].sort((a, b) => b.actualValue - a.actualValue);
+    const spikeMonth = sortedBySpend[0];
+    const leanMonth = sortedBySpend[sortedBySpend.length - 1];
+
+    // 3. Efficiency Metric (How much of the total limit did you use?)
+    const usagePercent = ((totals.actual / totals.threshold) * 100).toFixed(1);
+    const isOverYearly = totals.actual > totals.threshold;
+    const statusColor = isOverYearly ? 'text-danger' : 'text-success';
+
+    const html = `
+    <div class="col-12 animate__animated animate__fadeIn">
+        <div class="card border-0 shadow-sm overflow-hidden" style="background: linear-gradient(to right, #ffffff, #f8f9fa);">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    
+                    <div class="col-md-4 border-end">
+                        <h6 class="text-uppercase text-muted fw-bold mb-3" style="font-size: 0.7rem;">${year} Annual Performance</h6>
+                        <h2 class="fw-black ${statusColor} mb-1">
+                            $${totals.actual.toLocaleString(undefined, {minimumFractionDigits: 2})}
+                        </h2>
+                        <p class="small text-muted mb-0">
+                            Total Year Spend vs. <span class="fw-bold">$${totals.threshold.toLocaleString()}</span> Limit
+                        </p>
+                        <div class="progress mt-3" style="height: 10px;">
+                            <div class="progress-bar ${isOverYearly ? 'bg-danger' : 'bg-success'}" 
+                                 role="progressbar" style="width: ${Math.min(usagePercent, 100)}%"></div>
+                        </div>
+                        <small class="mt-1 d-block text-muted" style="font-size: 0.65rem;">
+                            Utilized ${usagePercent}% of annual safety threshold
+                        </small>
+                    </div>
+
+                    <div class="col-md-5 px-4 border-end">
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <small class="text-muted d-block text-uppercase" style="font-size: 0.6rem;">Highest Spending</small>
+                                <span class="fw-bold text-dark">${spikeMonth.period}</span>
+                                <div class="text-danger fw-bold">$${spikeMonth.actualValue.toFixed(2)}</div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <small class="text-muted d-block text-uppercase" style="font-size: 0.6rem;">Lowest Spending</small>
+                                <span class="fw-bold text-dark">${leanMonth.period}</span>
+                                <div class="text-success fw-bold">$${leanMonth.actualValue.toFixed(2)}</div>
+                            </div>
+                            <div class="col-12">
+                                <div class="p-2 rounded bg-white border border-light">
+                                    <small class="d-block text-muted mb-1" style="font-size: 0.65rem;">Budget Accuracy Score</small>
+                                    <div class="d-flex align-items-center">
+                                        <div class="h5 mb-0 me-2 fw-bold text-primary">
+                                            ${((totals.budget / totals.actual) * 100).toFixed(0)}%
+                                        </div>
+                                        <div class="small text-muted" style="font-size: 0.7rem;">
+                                            Match between Forecast & Reality
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 text-center">
+                        <i class="bi bi-file-earmark-bar-graph text-primary-light mb-2 d-block" style="font-size: 2rem; opacity: 0.3;"></i>
+                        <a href="all-Transactions?year=${year}&category=${$('#analysisSubcatId').val()}" 
+                           class="btn btn-outline-primary btn-sm rounded-pill px-4 shadow-sm">
+                           Detailed Annual Log
+                        </a>
+                        <p class="mt-2 text-muted" style="font-size: 0.6rem;">
+                            Review all ${year} transactions<br>for this category.
                         </p>
                     </div>
 
-                    <div class="col-6 ps-3">
-                        <small class="text-uppercase text-muted d-block mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">Vs. Threshold</small>
-                        <div class="d-flex align-items-center">
-                            <span class="h6 mb-0 fw-bold ${isOverThreshold ? 'text-danger' : 'text-dark'}">
-                                ${isOverThreshold ? '+' : '-'}$${Math.abs(thresholdDiff).toFixed(2)}
-                            </span>
-                        </div>
-                        <p class="small text-muted mb-0 mt-1" style="font-size: 0.7rem;">
-                            Limit: $${item.threshold.toFixed(0)}
-                        </p>
-                    </div>
-                </div>
-                
-                <div class="mt-3 bg-light p-2 rounded">
-                    <div class="d-flex justify-content-between small mb-1">
-                        <span class="text-muted" style="font-size: 0.75rem;">Total Month Spending</span>
-                        <span class="fw-bold text-dark">$${item.actualValue.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
-                    </div>
-                    <div class="progress" style="height: 6px; background-color: rgba(0,0,0,0.05);">
-                        <div class="progress-bar ${progressBarClass} progress-bar-striped" 
-                             role="progressbar" 
-                             style="width: ${percentOfThreshold}%"
-                             aria-valuenow="${percentOfThreshold}" 
-                             aria-valuemin="0" 
-                             aria-valuemax="100"></div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>`;
+
+    $container.html(html).removeClass('d-none');
 }

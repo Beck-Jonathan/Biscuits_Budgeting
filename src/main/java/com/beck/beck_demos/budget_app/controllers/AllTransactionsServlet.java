@@ -4,13 +4,11 @@ package com.beck.beck_demos.budget_app.controllers; /******************
  ***************/
 
 import com.beck.beck_demos.budget_app.data.Bank_AccountDAO;
-import com.beck.beck_demos.budget_app.data.TransactionDAO;
 import com.beck.beck_demos.budget_app.data.CategoryDAO;
+import com.beck.beck_demos.budget_app.data.TransactionDAO;
 import com.beck.beck_demos.budget_app.iData.iBank_AccountDAO;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-import com.beck.beck_demos.budget_app.models.Bank_Account;
-import com.beck.beck_demos.budget_app.models.SubCategory;
 import com.beck.beck_demos.budget_app.models.Transaction_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.ServletException;
@@ -19,9 +17,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 
 @WebServlet("/all-Transactions")
@@ -59,7 +57,15 @@ public class AllTransactionsServlet extends HttpServlet {
     int year = 0;
     try {
       year = Integer.parseInt(req.getParameter("year"));
-    } catch (Exception e) { year = 0; }
+    } catch (Exception e) {
+      year = 0;
+    }
+    int month = 0;
+    try {
+      month = Integer.parseInt(req.getParameter("month"));
+    } catch (Exception e) {
+      month = 0;
+    }
 
     // 2. Get Sort & Direction
     String sort = req.getParameter("sort");
@@ -86,8 +92,8 @@ public class AllTransactionsServlet extends HttpServlet {
 
     // 4. Data Fetching
     try {
-      int transaction_count = transactionDAO.getTransactionCountByUser(user.getUser_ID(), category, bankAccountID, year, findErrors);
-      List<Transaction_VM> transactions = transactionDAO.getTransactionByUser(user.getUser_ID(), category, bankAccountID, year, page_size, offset, sort, direction, findErrors);
+      int transaction_count = transactionDAO.getTransactionCountByUser(user.getUser_ID(), category, bankAccountID, year, month, findErrors);
+      List<Transaction_VM> transactions = transactionDAO.getTransactionByUser(user.getUser_ID(), category, bankAccountID, year, month, page_size, offset, sort, direction, findErrors);
 
       req.setAttribute("Transactions", transactions);
       req.setAttribute("Categories", categoryDAO.getsubCategoryByUser(user.getUser_ID()));
