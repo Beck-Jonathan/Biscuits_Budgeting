@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.beck.beck_demos.budget_app.data.Database.getConnection;
@@ -293,11 +294,13 @@ public class CategoryDAO implements iCategoryDAO {
               // 3. Map the DB columns to the DTO
               // Assuming your SP returns columns named: "period", "budgeted", and "actual"
               String period = resultSet.getString("period");
+
               double budgeted = resultSet.getDouble("budgeted");
               double actual = resultSet.getBigDecimal("actual").doubleValue();
               double threshold = resultSet.getBigDecimal("threshold").doubleValue();
 
               CategoryPerformanceDTO dto = new CategoryPerformanceDTO(period, budgeted, actual, threshold);
+              dto.setTransactionType(resultSet.getString("transaction_type"));
               result.add(dto);
             }
           }
@@ -308,6 +311,58 @@ public class CategoryDAO implements iCategoryDAO {
       throw new SQLException("Error retrieving category performance for subcat: " + subcatId, e);
     }
 
+    return result;
+  }
+
+  @Override
+  public List<CategoryPerformanceDTO> getAllCategoryPerformanceByMonth(String userId, int year, int month) throws SQLException {
+    List<CategoryPerformanceDTO> result = new ArrayList<>();
+    int mode = 0;
+    // Handle the -1 (Annual) case by defaulting to January 1st
+    int effectiveMonth = (month == -1) ? 1 : month;
+    if (month == -1) {
+      mode = 1;
+    }
+    // Use LocalDate to avoid formatting headaches
+    java.time.LocalDate localDate = java.time.LocalDate.of(year, effectiveMonth, 1);
+    java.sql.Date targetDate = java.sql.Date.valueOf(localDate);
+
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        // Updated call: UserID, TargetDate, Mode (0 = Month)
+        try (CallableStatement statement = connection.prepareCall("{CALL proc_get_single_month_forecast_all_category(?, ?, ?)}")) {
+          statement.setString(1, userId);
+          statement.setDate(2, targetDate);
+          statement.setInt(3, mode); // Mode 0 for Single Month
+
+          try (ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+              CategoryPerformanceDTO dto = new CategoryPerformanceDTO();
+
+              // Map the specific columns returned by FinalUserForecast
+              dto.setCategoryID(resultSet.getString("subcategory_id"));
+              dto.setCategoryName(resultSet.getString("category_name"));
+              dto.setTransactionType(resultSet.getString("transaction_type"));
+              // In "All Category" mode, period is usually displayed as the month/year searched
+              dto.setPeriod(String.format("%02d/%d", effectiveMonth, year));
+
+              // Numeric mapping
+              dto.setBudgetedValue(resultSet.getDouble("projected_amount"));
+              dto.setActualValue(resultSet.getDouble("total_actual"));
+
+              // For the Global view, threshold is often treated as the projected_amount
+              // but you can adjust if your DB schema has a separate hard limit.
+              dto.setThreshold(resultSet.getDouble("projected_amount"));
+
+              result.add(dto);
+            }
+          }
+        }
+      }
+    } catch (Exception e) {
+      throw new SQLException("Error in Global Month Performance fetch for user: " + userId, e);
+    }
+    Collections.sort(result);
     return result;
   }
 

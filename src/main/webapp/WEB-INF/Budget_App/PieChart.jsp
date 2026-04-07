@@ -153,6 +153,11 @@
                                         data-bs-target="#affordabilityTabPane" type="button">Affordability
                                 </button>
                             </li>
+                            <li class="nav-item">
+                                <button class="nav-link" id="performance-tab" data-bs-toggle="tab"
+                                        data-bs-target="#performanceTabPane" type="button">Performance
+                                </button>
+                            </li>
                         </ul>
 
                         <div class="tab-content" id="analysisTabsContent">
@@ -199,11 +204,64 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade p-4" id="affordabilityTabPane" role="tabpanel">
-                                <div class="alert alert-info border-0 shadow-sm d-flex align-items-center mb-4">
-                                    <div id="affordabilityHeader" class="w-100"></div>
+                                <div class="alert alert-info border-0 shadow-sm mb-4">
+                                    <div id="affordabilityHeader" class="w-100">
+                                    </div>
                                 </div>
                                 <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4"
-                                     id="budgetAffordabilityContainer"></div>
+                                     id="budgetAffordabilityContainer">
+                                </div>
+                            </div>
+
+
+                            <div class="tab-pane fade p-4" id="performanceTabPane" role="tabpanel">
+                                <div class="row align-items-end mb-4 g-3 bg-light p-3 rounded border mx-0">
+                                    <div class="col-md-3">
+                                        <label class="small text-muted mb-1 d-block text-uppercase fw-bold"
+                                               style="font-size: 0.65rem; letter-spacing: 0.5px;">Performance
+                                            Year</label>
+                                        <select class="form-select form-select-sm" id="performanceYearSelect">
+                                            <option value="null" selected disabled>Select Year...</option>
+                                            <c:forEach items="${yearRange}" var="year">
+                                                <option value="${year}">${year}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="small text-muted mb-1 d-block text-uppercase fw-bold"
+                                               style="font-size: 0.65rem; letter-spacing: 0.5px;">Timeframe</label>
+                                        <select class="form-select form-select-sm" id="performanceMonthSelect">
+                                            <option value="-1" selected>Full Year (Annual)</option>
+                                            <option value="1">January</option>
+                                            <option value="2">February</option>
+                                            <option value="3">March</option>
+                                            <option value="4">April</option>
+                                            <option value="5">May</option>
+                                            <option value="6">June</option>
+                                            <option value="7">July</option>
+                                            <option value="8">August</option>
+                                            <option value="9">September</option>
+                                            <option value="10">October</option>
+                                            <option value="11">November</option>
+                                            <option value="12">December</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div id="performanceSummaryHeader"></div>
+                                </div>
+
+
+                                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3 mt-3"
+                                     id="performanceResultsGrid">
+                                    <div class="text-center p-5 text-muted w-100">
+                                        <i class="bi bi-graph-up-arrow d-block mb-2"
+                                           style="font-size: 2rem; opacity: 0.5;"></i>
+                                        Select a year to analyze historical budget accuracy.
+                                </div>
+                                </div>
                             </div>
                         </div>
                     </div>

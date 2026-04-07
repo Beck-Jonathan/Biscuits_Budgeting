@@ -28,6 +28,36 @@ $(document).ready(function() {
             });
         });
     };
+    $('#performanceMonthSelect, #performanceSpecificMonth').on('change', function () {
+        const selectedYear = $('#performanceYearSelect').val();
+        const selectedMonth = $('#performanceMonthSelect').val() || -1; // -1 for "All Year"
+
+        if (selectedYear && selectedYear !== 'null') {
+            loadGlobalPerformance(selectedYear, selectedMonth);
+        }
+    });
+    $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+        const targetId = $(e.target).attr('data-bs-target');
+
+        // If switching to Affordability, re-render the legacy budget cards
+        if (targetId === '#affordabilityTabPane') {
+            renderBudgetCards(selectedIndex);
+        }
+
+        // If switching to Goals, ensure the chart data has populated the table
+        if (targetId === '#goalsTabPane') {
+            renderCharts();
+        }
+
+        // If switching to Performance, trigger the new AJAX call
+        if (targetId === '#performanceTabPane') {
+            const year = $('#performanceYearSelect').val() || $('#inputYear').val();
+            const month = $('#performanceMonthSelect').val() || -1;
+            if (year && year !== 'null') {
+                loadGlobalPerformance(year, month);
+            }
+        }
+    });
 
     const updateSidebar = () => {
         const list = $('#categoryList').empty();
@@ -315,30 +345,35 @@ $(document).ready(function() {
     };
 
     const renderBudgetCards = (forecastIndex) => {
+        // 1. Ensure this points to the cards container in the Affordability Tab
         const container = $('#budgetAffordabilityContainer');
         if (!container.length) return;
         container.empty();
+
         const fundData = forecastBigProjectFunds[forecastIndex] || {amount: 0, label: "Current"};
+
+        // 2. Ensure this points to the header specifically in the Affordability Tab
+        // If you renamed this ID in the JSP, update it here!
         $('#affordabilityHeader').html(`
-            <div class="d-flex justify-content-between align-items-center w-100">
-                <span>Funding for <b>${fundData.label}</b></span>
-                <span class="badge bg-dark fs-6 px-3">Available Fund: $${Math.round(fundData.amount).toLocaleString()}</span>
-            </div>
-        `);
+        <div class="d-flex justify-content-between align-items-center w-100">
+            <span>Funding for <b>${fundData.label}</b></span>
+            <span class="badge bg-dark fs-6 px-3">Available Fund: $${Math.round(fundData.amount).toLocaleString()}</span>
+        </div>
+    `);
 
         activeBudgets.forEach(b => {
             const spent = b.totalSpent || 0;
             const isAffordable = fundData.amount >= spent;
             container.append(`
-                <div class="col">
-                    <div class="card h-100 border-0 border-start border-4 ${isAffordable ? 'border-success' : 'border-warning'} shadow-sm">
-                        <div class="card-body p-3">
-                            <h6 class="fw-bold mb-1">${b.name}</h6>
-                            <div class="mb-2"><span class="badge ${isAffordable ? 'bg-success' : 'bg-warning text-dark'}">${isAffordable ? 'Affordable' : 'Over Budget'}</span></div>
-                            <div class="d-flex justify-content-between x-small fw-bold"><span>Spent: $${Math.round(spent).toLocaleString()}</span></div>
-                        </div>
+            <div class="col">
+                <div class="card h-100 border-0 border-start border-4 ${isAffordable ? 'border-success' : 'border-warning'} shadow-sm">
+                    <div class="card-body p-3">
+                        <h6 class="fw-bold mb-1">${b.name}</h6>
+                        <div class="mb-2"><span class="badge ${isAffordable ? 'bg-success' : 'bg-warning text-dark'}">${isAffordable ? 'Affordable' : 'Over Budget'}</span></div>
+                        <div class="d-flex justify-content-between x-small fw-bold"><span>Spent: $${Math.round(spent).toLocaleString()}</span></div>
                     </div>
-                </div>`);
+                </div>
+            </div>`);
         });
     };
 
@@ -385,3 +420,160 @@ $(document).ready(function() {
     fetchBudgets();
     fetchAnalysisData();
 });
+
+function renderPerformanceHeader(data, year, month) {
+    const buckets = data.reduce((acc, cat) => {
+        const type = (cat.transaction_type || 'expense').toLowerCase();
+        if (!acc[type]) acc[type] = {act: 0, lim: 0};
+        acc[type].act += cat.actualValue;
+        acc[type].lim += cat.threshold;
+        return acc;
+    }, {income: {act: 0, lim: 0}, expense: {act: 0, lim: 0}, investment: {act: 0, lim: 0}});
+
+    const net = buckets.income.act - buckets.expense.act - buckets.investment.act;
+    const label = month > 0 ? `Month ${month}, ${year}` : `${year} Annual`;
+
+    const html = `
+    <div class="card border-0 bg-white shadow-sm mb-4">
+        <div class="card-body p-3">
+            <div class="row g-3">
+                <div class="col-md-3 border-end">
+                    <small class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size:0.7rem">Total Income</small>
+                    <h4 class="mb-0 text-success">$${buckets.income.act.toLocaleString()}</h4>
+                    <div class="small text-muted">Target: $${buckets.income.lim.toLocaleString()}</div>
+                </div>
+                <div class="col-md-3 border-end">
+                    <small class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size:0.7rem">Total Investment</small>
+                    <h4 class="mb-0 text-info">$${buckets.investment.act.toLocaleString()}</h4>
+                    <div class="small text-muted">Target: $${buckets.investment.lim.toLocaleString()}</div>
+                </div>
+                <div class="col-md-3 border-end">
+                    <small class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size:0.7rem">Total Expenses</small>
+                    <h4 class="mb-0 ${buckets.expense.act > buckets.expense.lim ? 'text-danger' : 'text-dark'}">$${buckets.expense.act.toLocaleString()}</h4>
+                    <div class="small text-muted">Limit: $${buckets.expense.lim.toLocaleString()}</div>
+                </div>
+                <div class="col-md-3 text-md-end">
+                    <small class="text-uppercase text-muted fw-bold d-block mb-1" style="font-size:0.7rem">Net Cashflow (${label})</small>
+                    <h3 class="mb-0 ${net >= 0 ? 'text-success' : 'text-danger'}">$${net.toLocaleString()}</h3>
+                    <span class="badge ${net >= 0 ? 'bg-success' : 'bg-danger'}">${net >= 0 ? 'SURPLUS' : 'DEFICIT'}</span>
+                </div>
+            </div>
+        </div>
+    </div>`;
+    $('#performanceSummaryHeader').html(html);
+}
+
+function buildGlobalCategoryCard(cat, year, month) {
+    const type = (cat.transaction_type || 'expense').toLowerCase();
+    const isRevenue = (type === 'income' || type === 'investment');
+    const diff = cat.actualValue - cat.threshold;
+    const isHealthy = isRevenue ? diff >= 0 : diff <= 0;
+
+    const progress = cat.threshold > 0 ? Math.min((cat.actualValue / cat.threshold) * 100, 100) : 0;
+
+    // High-contrast badge and text colors
+    const colorClass = isHealthy ? 'text-success' : 'text-danger';
+    const bgClass = isHealthy ? 'bg-success' : 'bg-danger';
+
+    const drillDownUrl = `all-Transactions?category=${cat.categoryID}&year=${year}&month=${month}`;
+
+    return `
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12  animate__animated animate__fadeIn">
+        <div class="card h-100 border-0 shadow-sm budget-card position-relative">
+            <div class="progress rounded-0" style="height: 6px; background: rgba(0,0,0,0.08);">
+                <div class="progress-bar ${bgClass}" style="width: ${progress}%"></div>
+            </div>
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h6 class="fw-bold mb-0 text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;" title="${cat.categoryName}">
+                        ${cat.categoryName}
+                    </h6>
+                    <span class="badge ${bgClass} shadow-sm px-2 py-1" style="font-size: 0.7rem;">
+                        ${progress.toFixed(0)}%
+                    </span>
+                </div>
+
+                <h2 class="fw-bold mb-3 ${colorClass}">$${cat.actualValue.toLocaleString()}</h2>
+                
+                <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="text-muted d-block" style="font-size: 0.65rem; text-uppercase fw-bold">Target</span>
+                        <span class="fw-bold text-dark" style="font-size: 0.9rem;">$${cat.threshold.toLocaleString()}</span>
+                    </div>
+                    <div class="text-end">
+                        <span class="text-muted d-block" style="font-size: 0.65rem; text-uppercase fw-bold">Variance</span>
+                        <span class="fw-bold ${colorClass}" style="font-size: 0.9rem;">
+                            ${diff >= 0 ? '+' : '-'}$${Math.abs(diff).toLocaleString()}
+                        </span>
+                    </div>
+                </div>
+                
+                <a href="${drillDownUrl}" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>`;
+}
+
+async function loadGlobalPerformance(year, month = -1) {
+    const $grid = $('#performanceResultsGrid');
+    const $header = $('#performanceSummaryHeader');
+
+    $grid.html('<div class="col-12 text-center p-5"><div class="spinner-border text-primary"></div></div>');
+
+    try {
+        const response = await fetch(`getCategoryPerformance?year=${year}&mode=1&month=${month}`);
+        const data = await response.json();
+
+        if (!data || data.length === 0) {
+            $grid.html('<div class="col-12 alert alert-warning text-center">No data found.</div>');
+            $header.empty();
+            return;
+        }
+
+        // 1. Render the Top Scoreboard
+        renderPerformanceHeader(data, year, month);
+
+        // 2. Initialize our 3 buckets
+        const sections = {
+            income: {label: 'Income Sources', html: '', count: 0},
+            investment: {label: 'Investments & Growth', html: '', count: 0},
+            expense: {label: 'Monthly Expenses', html: '', count: 0}
+        };
+
+        // 3. Sort and Distribute
+        data.sort((a, b) => b.actualValue - a.actualValue);
+
+        data.forEach(cat => {
+            const type = (cat.transaction_type || 'expense').toLowerCase();
+            if (sections[type]) {
+                sections[type].html += buildGlobalCategoryCard(cat, year, month);
+                sections[type].count++;
+            }
+        });
+
+        // 4. Combine the 6 bits (Header + Cards for each type)
+        let finalHtml = '';
+        ['income', 'investment', 'expense'].forEach(key => {
+            if (sections[key].count > 0) {
+                // Type Header
+                finalHtml += `
+                    <div class="col-12 mt-4 mb-2 animate__animated animate__fadeIn">
+                        <div class="d-flex align-items-center">
+                            <h5 class="fw-bold mb-0 text-uppercase text-muted" style="letter-spacing: 1px;">
+                                ${sections[key].label}
+                            </h5>
+                            <div class="flex-grow-1 ms-3 border-top" style="opacity: 0.1;"></div>
+                        </div>
+                    </div>`;
+                // Type Cards
+                finalHtml += sections[key].html;
+            }
+        });
+
+        $grid.html(finalHtml);
+
+    } catch (err) {
+        console.error(err);
+        $grid.html('<div class="col-12 alert alert-danger">Error fetching performance data.</div>');
+    }
+}

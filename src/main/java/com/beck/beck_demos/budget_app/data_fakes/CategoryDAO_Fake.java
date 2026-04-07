@@ -359,6 +359,11 @@ public class CategoryDAO_Fake implements iCategoryDAO {
     return results;
   }
 
+  @Override
+  public List<CategoryPerformanceDTO> getAllCategoryPerformanceByMonth(String userId, int year, int month) {
+    return List.of();
+  }
+
   private boolean duplicateKey(SubCategory _category){
     return (_category==null ||_category.getCategory_Name().contains("DUPLICATE"));
   }

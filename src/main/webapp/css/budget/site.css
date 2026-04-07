@@ -144,3 +144,33 @@ a.modern-nav-btn.ui-button.ui-widget.ui-state-hover {
 .modal-backdrop {
     z-index: 10040 !important;
 }
+
+/* Jonathan's Clean Budget Cards */
+.budget-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    cursor: pointer;
+    border-radius: 12px; /* Smoother corners */
+}
+
+.budget-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Change the background of the card slightly on hover to signal interactivity */
+.budget-card:hover {
+    background-color: #fdfdfd;
+}
+
+/* Ensure the title doesn't wrap awkwardly */
+.budget-card h6 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Subtle pulse for the progress bar on hover */
+.budget-card:hover .progress-bar {
+    opacity: 0.9;
+}

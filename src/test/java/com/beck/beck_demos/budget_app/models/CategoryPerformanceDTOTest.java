@@ -6,16 +6,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class CategoryPerformanceDTOTest {
-  private CategoryPerformanceDTO _CategoryPerformanceDTO;
+  private CategoryPerformanceDTO _categoryperformancedto;
 
   @BeforeEach
   public void setup() {
-    _CategoryPerformanceDTO = new CategoryPerformanceDTO();
+    _categoryperformancedto = new CategoryPerformanceDTO();
   }
 
   @AfterEach
   public void teardown() {
-    _CategoryPerformanceDTO = null;
+    _categoryperformancedto = null;
   }
 
   /**
@@ -49,59 +49,114 @@ class CategoryPerformanceDTOTest {
   public void testCategoryPerformanceDTOThrowsExceptionIfPeriodInvalid() {
     // Testing unparseable/invalid format
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
-      _CategoryPerformanceDTO.setPeriod("2026-03"); // Wrong format
+      _categoryperformancedto.setPeriod("2026-03"); // Wrong format
     });
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
-      _CategoryPerformanceDTO.setPeriod("13/2026"); // Invalid month
+      _categoryperformancedto.setPeriod("13/2026"); // Invalid month
     });
   }
 
   @Test
   public void testCategoryPerformanceDTOSetsPeriod() {
     String period = "04/2026";
-    _CategoryPerformanceDTO.setPeriod(period);
-    Assertions.assertEquals(period, _CategoryPerformanceDTO.getPeriod());
+    _categoryperformancedto.setPeriod(period);
+    Assertions.assertEquals(period, _categoryperformancedto.getPeriod());
   }
 
   /**
-   * Tests that BudgetedValue handles range validation.
+   <p> Tests That the Setters for the categoryperformancedto.budgetedValue field can throw exceptions with invalid inputs </p>
    */
   @Test
-  public void testCategoryPerformanceDTOThrowsExceptionIfBudgetedValueTooSmall() {
+  public void testcategoryperformancedtoThrowsIllegalArgumentExceptionIfbudgetedValueTooSmall() {
+    double budgetedValue = -1;
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
-      _CategoryPerformanceDTO.setBudgetedValue(-1.0);
+      _categoryperformancedto.setBudgetedValue(budgetedValue);
     });
-  }
-
-  @Test
-  public void testCategoryPerformanceDTOSetsBudgetedValue() {
-    double val = 500.25;
-    _CategoryPerformanceDTO.setBudgetedValue(val);
-    Assertions.assertEquals(val, _CategoryPerformanceDTO.getBudgetedValue());
   }
 
   /**
-   * Tests that ActualValue handles range validation.
+   * <p> Tests That the Setters for the categoryperformancedto.budgetedValue field can throw exceptions with invalid inputs </p>
    */
   @Test
-  public void testCategoryPerformanceDTOThrowsExceptionIfActualValueTooSmall() {
+  public void testcategoryperformancedtoThrowsIllegalArgumentExceptionIfbudgetedValueTooBig() {
+    double budgetedValue = 1000001.1;
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
-      _CategoryPerformanceDTO.setActualValue(-1.0);
+      _categoryperformancedto.setBudgetedValue(budgetedValue);
     });
   }
 
+  /**
+   <p> Tests That the Setters for the categoryperformancedto.budgetedValue field work </p>
+   */
   @Test
-  public void testCategoryPerformanceDTOSetsActualValue() {
-    double val = 480.00;
-    _CategoryPerformanceDTO.setActualValue(val);
-    Assertions.assertEquals(val, _CategoryPerformanceDTO.getActualValue());
+  public void testcategoryperformancedtoSetsbudgetedValue() {
+    double budgetedValue = 3505;
+    _categoryperformancedto.setBudgetedValue(budgetedValue);
+    Assertions.assertEquals(budgetedValue, _categoryperformancedto.getBudgetedValue());
   }
 
+  /**
+   * <p> Tests That the Setters for the categoryperformancedto.actualValue field can throw exceptions with invalid inputs </p>
+   */
   @Test
-  public void testCategoryPerformanceDTOSetsActualValueForThreshold() {
-    double val = 480.00;
-    _CategoryPerformanceDTO.setThreshold(val);
-    Assertions.assertEquals(val, _CategoryPerformanceDTO.getThreshold());
+  public void testcategoryperformancedtoThrowsIllegalArgumentExceptionIfactualValueTooSmall() {
+    double actualValue = -1;
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      _categoryperformancedto.setActualValue(actualValue);
+    });
+  }
+
+  /**
+   * <p> Tests That the Setters for the categoryperformancedto.actualValue field can throw exceptions with invalid inputs </p>
+   */
+  @Test
+  public void testcategoryperformancedtoThrowsIllegalArgumentExceptionIfactualValueTooBig() {
+    double actualValue = 100000.1;
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      _categoryperformancedto.setActualValue(actualValue);
+    });
+  }
+
+  /**
+   <p> Tests That the Setters for the categoryperformancedto.actualValue field work </p>
+   */
+  @Test
+  public void testcategoryperformancedtoSetsactualValue() {
+    double actualValue = 2348;
+    _categoryperformancedto.setActualValue(actualValue);
+    Assertions.assertEquals(actualValue, _categoryperformancedto.getActualValue());
+  }
+
+  /**
+   <p> Tests That the Setters for the categoryperformancedto.threshold field can throw exceptions with invalid inputs </p>
+   */
+  @Test
+  public void testcategoryperformancedtoThrowsIllegalArgumentExceptionIfthresholdTooSmall() {
+    double threshold = -1;
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      _categoryperformancedto.setThreshold(threshold);
+    });
+  }
+
+  /**
+   * <p> Tests That the Setters for the categoryperformancedto.threshold field can throw exceptions with invalid inputs </p>
+   */
+  @Test
+  public void testcategoryperformancedtoThrowsIllegalArgumentExceptionIfthresholdTooBig() {
+    double threshold = 100000.1;
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      _categoryperformancedto.setThreshold(threshold);
+    });
+  }
+
+  /**
+   * <p> Tests That the Setters for the categoryperformancedto.threshold field work </p>
+   */
+  @Test
+  public void testcategoryperformancedtoSetsthreshold() {
+    double threshold = 5460;
+    _categoryperformancedto.setThreshold(threshold);
+    Assertions.assertEquals(threshold, _categoryperformancedto.getThreshold());
   }
 
   /**
@@ -109,20 +164,36 @@ class CategoryPerformanceDTOTest {
    */
   @Test
   public void testCompareTo() {
-//    CategoryPerformanceDTO smaller = new CategoryPerformanceDTO("01/2026", 100.0, 100.0);
-//    CategoryPerformanceDTO bigger = new CategoryPerformanceDTO("02/2026", 100.0, 100.0);
-//
-//    // Compare periods
-//    Assertions.assertTrue(smaller.compareTo(bigger) < 0);
-//    Assertions.assertTrue(bigger.compareTo(smaller) > 0);
-//
-//    // Compare same period, different budget
-//    smaller.setPeriod("02/2026");
-//    smaller.setBudgetedValue(50.0);
-//    Assertions.assertTrue(smaller.compareTo(bigger) < 0);
-//
-//    // Compare same everything
-//    smaller.setBudgetedValue(100.0);
-//    Assertions.assertEquals(0, smaller.compareTo(bigger));
+    CategoryPerformanceDTO smaller = new CategoryPerformanceDTO();
+    CategoryPerformanceDTO bigger = new CategoryPerformanceDTO();
+//to compare a smaller and larger period
+    smaller.setPeriod("04/2025");
+    bigger.setPeriod("06/2025");
+    Assertions.assertTrue(smaller.compareTo(bigger) < 0);
+    Assertions.assertTrue(bigger.compareTo(smaller) > 0);
+//to set the period as equal.
+    smaller.setPeriod("06/2025");
+//to compare a smaller and larger budgetedValue
+    smaller.setBudgetedValue(10.23d);
+    bigger.setBudgetedValue(14.12d);
+    Assertions.assertTrue(smaller.compareTo(bigger) < 0);
+    Assertions.assertTrue(bigger.compareTo(smaller) > 0);
+//to set the budgetedValue as equal.
+    smaller.setBudgetedValue(14.12d);
+//to compare a smaller and larger actualValue
+    smaller.setActualValue(10.23d);
+    bigger.setActualValue(14.12d);
+    Assertions.assertTrue(smaller.compareTo(bigger) < 0);
+    Assertions.assertTrue(bigger.compareTo(smaller) > 0);
+//to set the actualValue as equal.
+    smaller.setActualValue(14.12d);
+//to compare a smaller and larger threshold
+    smaller.setThreshold(10.23d);
+    bigger.setThreshold(14.12d);
+    Assertions.assertTrue(smaller.compareTo(bigger) < 0);
+    Assertions.assertTrue(bigger.compareTo(smaller) > 0);
+//to set the threshold as equal.
+    smaller.setThreshold(14.12d);
+    Assertions.assertEquals(0, bigger.compareTo(smaller));
   }
 }

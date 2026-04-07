@@ -46,6 +46,8 @@ public interface iCategoryDAO {
   int unlockSubCategory(SubCategory subCategory) throws SQLException;
 
   List<CategoryPerformanceDTO> getCategoryPerformance(String userId, String subcatId, int year) throws SQLException;
+
+  List<CategoryPerformanceDTO> getAllCategoryPerformanceByMonth(String userId, int year, int month) throws SQLException;
 }
 
 

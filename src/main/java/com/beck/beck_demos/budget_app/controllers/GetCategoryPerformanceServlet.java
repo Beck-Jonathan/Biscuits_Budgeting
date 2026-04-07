@@ -38,7 +38,21 @@ public class GetCategoryPerformanceServlet extends HttpServlet {
     // 1. Inputs
     String subcatId = request.getParameter("id");
     String yearStr = request.getParameter("year");
+    String mode = request.getParameter("mode");
+    String month = request.getParameter("month");
+    int _mode = 0;
+    try {
+      _mode = Integer.parseInt(mode);
+    } catch (Exception e) {
 
+    }
+    int _month = -1;
+
+    try {
+      _month = Integer.parseInt(month);
+    } catch (Exception e) {
+
+    }
     HttpSession session = request.getSession();
     User user = (User) session.getAttribute("User_B");
 
@@ -62,8 +76,15 @@ public class GetCategoryPerformanceServlet extends HttpServlet {
     // 3. Data Fetch
     List<CategoryPerformanceDTO> performanceData;
     try {
-      // Logic assumes categoryDAO now has this method to call your new stored procedure
-      performanceData = categoryDAO.getCategoryPerformance(user.getUser_ID(), subcatId, year);
+      if (_mode == 0) {
+        // Logic assumes categoryDAO now has this method to call your new stored procedure
+        performanceData = categoryDAO.getCategoryPerformance(user.getUser_ID(), subcatId, year);
+      } else if (_mode == 1) {
+        performanceData = categoryDAO.getAllCategoryPerformanceByMonth(user.getUser_ID(), year, _month);
+      } else {
+        response.getWriter().write("[]");
+        return;
+      }
     } catch (SQLException e) {
       // Return -2 to match your error handling pattern in JS
       response.getWriter().write("-2");
@@ -82,9 +103,13 @@ public class GetCategoryPerformanceServlet extends HttpServlet {
       CategoryPerformanceDTO item = performanceData.get(i);
 
       json.append("{")
+          .append("\"categoryID\":\"").append(escapeJson(item.getCategoryID())).append("\",")
+          .append("\"categoryName\":\"").append(escapeJson(item.getCategoryName())).append("\",")
           .append("\"period\":\"").append(escapeJson(item.getPeriod())).append("\",")
           .append("\"budgetedValue\":").append(item.getBudgetedValue()).append(",")
           .append("\"actualValue\":").append(item.getActualValue()).append(",")
+          // FIX: Added quotes and changed to snake_case to match JS
+          .append("\"transaction_type\":\"").append(escapeJson(item.getTransactionType())).append("\",")
           .append("\"threshold\":").append(item.getThreshold())
           .append("}");
 

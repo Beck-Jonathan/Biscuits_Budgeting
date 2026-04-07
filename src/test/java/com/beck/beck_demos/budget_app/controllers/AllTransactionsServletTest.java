@@ -1,7 +1,5 @@
 package com.beck.beck_demos.budget_app.controllers;
 
-import java.io.IOException;
-import java.util.*;
 import com.beck.beck_demos.budget_app.data_fakes.Bank_AccountDAO_Fake;
 import com.beck.beck_demos.budget_app.data_fakes.CategoryDAO_Fake;
 import com.beck.beck_demos.budget_app.data_fakes.TransactionDAO_Fake;
@@ -9,12 +7,21 @@ import com.beck.beck_demos.budget_app.models.Transaction;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.web.*;
-import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockRequestDispatcher;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class AllTransactionsServletTest {
 
@@ -98,6 +105,17 @@ class AllTransactionsServletTest {
     List<Transaction> transactions = (List<Transaction>) request.getAttribute("Transactions");
     assertNotNull(transactions);
     assertEquals(7, transactions.size());
+  }
+
+  @Test
+  public void testLoggedInUserCanFilterTransactionsByYearAndMonth() throws ServletException, IOException {
+    setupUserSession("User", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc");
+    request.setParameter("year", "2004");
+    request.setParameter("month", "4");
+    servlet.doGet(request, response);
+    List<Transaction> transactions = (List<Transaction>) request.getAttribute("Transactions");
+    assertNotNull(transactions);
+    assertEquals(5, transactions.size());
   }
 
   /**
