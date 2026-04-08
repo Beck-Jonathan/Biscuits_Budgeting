@@ -296,9 +296,7 @@ return results;
         result = budget;
         break;
       }
-      if (result == null) {
 
-      }
 
     }
     return result;

@@ -238,6 +238,9 @@ public class SubCategory implements Comparable<SubCategory> {
    * @return the is_locked of this sub_category object.
    */
   public boolean getIs_Locked() {
+    if (is_locked == null) {
+      return false;
+    }
     return is_locked;
   }
 
@@ -293,6 +296,7 @@ public class SubCategory implements Comparable<SubCategory> {
     } else if(this.is_locked.compareTo(o.is_locked) > 0){
       return 1;
     }
+
     return 0;
   }
 

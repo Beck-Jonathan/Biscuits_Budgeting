@@ -47,7 +47,10 @@ public class AnalyzeCategoryAjaxServlet extends HttpServlet {
       response.getWriter().write("-1");
       return;
     }
-
+    if (subcatId == null) {
+      response.getWriter().write("[]");
+      return;
+    }
     // 2. Data Fetch
     List<ProjectionAnalysisDTO> data;
     try {

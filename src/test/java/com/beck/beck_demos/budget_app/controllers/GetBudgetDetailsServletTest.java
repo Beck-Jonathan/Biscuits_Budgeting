@@ -74,13 +74,14 @@ public class GetBudgetDetailsServletTest {
   @Test
   public void TestValidIDReturnsJson() throws ServletException, IOException {
     setupValidUser("User");
+
     // Assuming 'VALID_ID' is configured in your BudgetDAO_Fake to return a Budget
-    request.setParameter("budget_id", "OVfSlZsItrrpYeHcmxiLVsYqAwPYQqpSuKIv");
+    request.setParameter("budget_id", "DLpfWxZUBCbqtdngpApNUBMxKxgaVkEondmy");
 
     servlet.doGet(request, response);
 
     String result = response.getContentAsString();
-    assertEquals("text/plain", response.getContentType());
+    assertEquals("application/json;charset=UTF-8", response.getContentType());
     // Checking for JSON structure and formatted date
     assertTrue(result.contains("\"amount\":"));
     assertTrue(result.contains("\"start_date\":"));
@@ -120,7 +121,7 @@ public class GetBudgetDetailsServletTest {
    */
   private void setupValidUser(String Role) {
     User user = new User();
-    user.setUser_ID("ElVWkHdfvxKPrukwGMJSROpPgnMRqatVBkkT");
+    user.setUser_ID("WaqPhqiekuhbwKdHIuYvMoNGAnAPfBlwTWKG");
     List<String> roles = new ArrayList<>();
     roles.add(Role);
     user.setRoles(roles);

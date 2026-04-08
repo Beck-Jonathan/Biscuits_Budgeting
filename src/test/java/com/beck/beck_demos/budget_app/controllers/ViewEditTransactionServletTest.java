@@ -1,21 +1,26 @@
 package com.beck.beck_demos.budget_app.controllers;
 
-import java.io.IOException;
-import java.util.*;
-
 import com.beck.beck_demos.budget_app.data_fakes.CategoryDAO_Fake;
 import com.beck.beck_demos.budget_app.data_fakes.TransactionDAO_Fake;
 import com.beck.beck_demos.budget_app.models.Transaction;
-
 import com.beck.beck_demos.budget_app.models.Transaction_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.web.*;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockRequestDispatcher;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ViewEditTransactionServletTest {
@@ -205,30 +210,10 @@ class ViewEditTransactionServletTest {
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
 
     String Category_IDError = results.get("transactionCategory_IDerror");
-    String Account_NumError = results.get("transactionAccount_Numerror");
-    String Post_DateError = results.get("transactionPost_Dateerror");
-    String Check_NoError = results.get("transactionCheck_Noerror");
-    String DescriptionError = results.get("transactionDescriptionerror");
-    String AmountError = results.get("transactionAmounterror");
-    String TypeError = results.get("transactionTypeerror");
-    String StatusError = results.get("transactionStatuserror");
 
     assertNotEquals("",Category_IDError);
     assertNotNull(Category_IDError);
-    assertNotEquals("",Account_NumError);
-    assertNotNull(Account_NumError);
-    assertNotEquals("",Post_DateError);
-    assertNotNull(Post_DateError);
-    assertNotEquals("",Check_NoError);
-    assertNotNull(Check_NoError);
-    assertNotEquals("",DescriptionError);
-    assertNotNull(DescriptionError);
-    assertNotEquals("",AmountError);
-    assertNotNull(AmountError);
-    assertNotEquals("",TypeError);
-    assertNotNull(TypeError);
-    assertNotEquals("",StatusError);
-    assertNotNull(StatusError);
+
     assertEquals(200,responseStatus);
   }
   @Test

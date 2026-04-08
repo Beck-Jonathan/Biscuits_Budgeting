@@ -30,7 +30,7 @@ class SubCategoryTest {
     Assertions.assertNull(_category.getprojection_strategy_ID());
     Assertions.assertNull(_category.getParentCategoryId());
     Assertions.assertNull(_category.getcolor_id());
-    Assertions.assertNull(_category.getIs_Locked());
+    Assertions.assertFalse(_category.getIs_Locked());
     Assertions.assertNull(_category.getTarget_Threshold());
   }
 
@@ -349,6 +349,24 @@ class SubCategoryTest {
     Assertions.assertTrue(bigger.compareTo(smaller)>0);
 //to set the User_ID as equal.
     smaller.setcolor_id("#AABBCC");
+//to compare a smaller and larger target_threshold
+    smaller.setTarget_Threshold(new BigDecimal("1.23"));
+    bigger.setTarget_Threshold(new BigDecimal("14.33"));
+    Assertions.assertTrue(smaller.compareTo(bigger) < 0);
+    Assertions.assertTrue(bigger.compareTo(smaller) > 0);
+//to set the target_threshold as equal.
+    smaller.setTarget_Threshold(new BigDecimal("14.33"));
+//to compare a smaller and larger is_locked
+    smaller.setIs_Locked(false);
+    bigger.setIs_Locked(true);
+    Assertions.assertTrue(smaller.compareTo(bigger) < 0);
+    Assertions.assertTrue(bigger.compareTo(smaller) > 0);
+//to set the is_locked as equal.
+    smaller.setIs_Locked(true);
+
+
+
+
     Assertions.assertEquals(0, bigger.compareTo(smaller));
   }
 

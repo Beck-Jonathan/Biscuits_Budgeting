@@ -132,13 +132,13 @@ public class AddPlanned_TransactionServletTest {
   }
 
   @Test
-  public void TestSuccessfulAddReturns1() throws ServletException, IOException {
+  public void TestSuccessfulAddReturnsUUID() throws ServletException, IOException {
     setupValidUser("User");
     setValidRequiredParams();
     // Assuming DAO.add returns > 0 on success
     servlet.doPost(request, response);
 
-    assertEquals("36", response.getContentAsString().length());
+    assertEquals(36, response.getContentAsString().length());
   }
 
   @Test

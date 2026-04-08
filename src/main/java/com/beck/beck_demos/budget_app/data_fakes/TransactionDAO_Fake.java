@@ -297,6 +297,7 @@ public class TransactionDAO_Fake implements iTransactionDAO {
         break;
       }
     }
+    newTransaction.setBank_Account_ID(oldTransaction.getBank_Account_ID());
     Transaction_VM _newTransaction = new Transaction_VM(newTransaction);
     transactionVMs.set(location, _newTransaction);
     return result;
