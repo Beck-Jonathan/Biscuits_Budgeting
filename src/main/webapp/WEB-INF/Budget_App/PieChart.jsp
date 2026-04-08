@@ -222,8 +222,11 @@
                                             Year</label>
                                         <select class="form-select form-select-sm" id="performanceYearSelect">
                                             <option value="null" selected disabled>Select Year...</option>
-                                            <c:forEach items="${yearRange}" var="year">
-                                                <option value="${year}">${year}</option>
+                                            <c:forEach var="i" begin="0" end="${yearRange.size() - 1}">
+                                                <c:set var="revYear" value="${yearRange[yearRange.size() - 1 - i]}"/>
+                                                <option value="${revYear}">
+                                                        ${revYear}
+                                                </option>
                                             </c:forEach>
                                         </select>
                                     </div>

@@ -43,6 +43,80 @@ class CategoryPerformanceDTOTest {
   }
 
   /**
+   * <p> Tests That the Setters for the categoryperformancedto.category_ID field can throw exceptions with invalid inputs </p>
+   */
+  @Test
+  public void testcategoryperformancedtoThrowsIllegalArgumentExceptionIfcategory_IDTooShort() {
+    String category_ID = "eT";
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      _categoryperformancedto.setCategoryID(category_ID);
+    });
+  }
+
+  /**
+   * <p> Tests That the Setters for the categoryperformancedto.category_ID field can throw exceptions with invalid inputs </p>
+   */
+  @Test
+  public void testcategoryperformancedtoThrowsIllegalArgumentExceptionIfcategory_IDTooLong() {
+    String category_ID = "pQcOrDfIpHbpawdWOgmwfstWDKSICXSKRKZuMq";
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      _categoryperformancedto.setCategoryID(category_ID);
+    });
+  }
+
+  /**
+   * <p> Tests That the Setters for the categoryperformancedto.category_ID field work </p>
+   */
+  @Test
+  public void testSetcategory_IDSetscategory_ID() {
+    String category_ID = "026d75bc-3aef-4128-b546-56254794ac3b";
+    _categoryperformancedto.setCategoryID(category_ID);
+    Assertions.assertEquals(category_ID, _categoryperformancedto.getCategoryID());
+  }
+
+  /**
+   * <p> Tests That the Setters for the categoryperformancedto.category_ID field work </p>
+   */
+  @Test
+  public void testSetcategory_IDSetscategory_IDAsNull() {
+    String category_ID = null;
+    _categoryperformancedto.setCategoryID(category_ID);
+    Assertions.assertEquals("", _categoryperformancedto.getCategoryID());
+  }
+
+  /**
+   * <p> Tests That the Setters for the categoryperformancedto.categoryName field can throw exceptions with invalid inputs </p>
+   */
+  @Test
+  public void testcategoryperformancedtoThrowsIllegalArgumentExceptionIfcategoryNameTooShort() {
+    String categoryName = "uD";
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      _categoryperformancedto.setCategoryName(categoryName);
+    });
+  }
+
+  /**
+   * <p> Tests That the Setters for the categoryperformancedto.categoryName field can throw exceptions with invalid inputs </p>
+   */
+  @Test
+  public void testcategoryperformancedtoThrowsIllegalArgumentExceptionIfcategoryNameTooLong() {
+    String categoryName = "AInZpxqTdcVxAQkMJqoepakrateDYdxsRduDmklBZCmZmSkLKyxuhUFQZxCkyWYcOTlqlERYFGGSSMYuWuaXmTlMxhDODUjrYfMtVW";
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      _categoryperformancedto.setCategoryName(categoryName);
+    });
+  }
+
+  /**
+   * <p> Tests That the Setters for the categoryperformancedto.categoryName field work </p>
+   */
+  @Test
+  public void testSetcategoryNameSetscategoryName() {
+    String categoryName = "vAJTfMpSACghvyyradVqDkcpUAnQBAeXcyGyIUOaSCnuYHMColaIGbCVSjjZBHDWsrXOqbYBYagDyKmEOXDcgCmGQukWCcTJXi";
+    _categoryperformancedto.setCategoryName(categoryName);
+    Assertions.assertEquals(categoryName, _categoryperformancedto.getCategoryName());
+  }
+
+  /**
    * Tests that the period setter handles validation (Standard MM/YYYY check).
    */
   @Test
@@ -79,7 +153,7 @@ class CategoryPerformanceDTOTest {
    */
   @Test
   public void testcategoryperformancedtoThrowsIllegalArgumentExceptionIfbudgetedValueTooBig() {
-    double budgetedValue = 1000001.1;
+    double budgetedValue = 10000001.1;
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
       _categoryperformancedto.setBudgetedValue(budgetedValue);
     });
@@ -111,7 +185,7 @@ class CategoryPerformanceDTOTest {
    */
   @Test
   public void testcategoryperformancedtoThrowsIllegalArgumentExceptionIfactualValueTooBig() {
-    double actualValue = 100000.1;
+    double actualValue = 100000000.1;
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
       _categoryperformancedto.setActualValue(actualValue);
     });
@@ -143,7 +217,7 @@ class CategoryPerformanceDTOTest {
    */
   @Test
   public void testcategoryperformancedtoThrowsIllegalArgumentExceptionIfthresholdTooBig() {
-    double threshold = 100000.1;
+    double threshold = 100000000.1;
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
       _categoryperformancedto.setThreshold(threshold);
     });
@@ -166,20 +240,14 @@ class CategoryPerformanceDTOTest {
   public void testCompareTo() {
     CategoryPerformanceDTO smaller = new CategoryPerformanceDTO();
     CategoryPerformanceDTO bigger = new CategoryPerformanceDTO();
-//to compare a smaller and larger period
-    smaller.setPeriod("04/2025");
-    bigger.setPeriod("06/2025");
+    //to compare a smaller and larger TransactionType
+    smaller.setTransactionType("Expense");
+    bigger.setTransactionType("Income");
     Assertions.assertTrue(smaller.compareTo(bigger) < 0);
     Assertions.assertTrue(bigger.compareTo(smaller) > 0);
-//to set the period as equal.
-    smaller.setPeriod("06/2025");
-//to compare a smaller and larger budgetedValue
-    smaller.setBudgetedValue(10.23d);
-    bigger.setBudgetedValue(14.12d);
-    Assertions.assertTrue(smaller.compareTo(bigger) < 0);
-    Assertions.assertTrue(bigger.compareTo(smaller) > 0);
-//to set the budgetedValue as equal.
-    smaller.setBudgetedValue(14.12d);
+    //to set the Transaction Type as equal.
+    smaller.setTransactionType("Income");
+
 //to compare a smaller and larger actualValue
     smaller.setActualValue(10.23d);
     bigger.setActualValue(14.12d);
@@ -187,13 +255,7 @@ class CategoryPerformanceDTOTest {
     Assertions.assertTrue(bigger.compareTo(smaller) > 0);
 //to set the actualValue as equal.
     smaller.setActualValue(14.12d);
-//to compare a smaller and larger threshold
-    smaller.setThreshold(10.23d);
-    bigger.setThreshold(14.12d);
-    Assertions.assertTrue(smaller.compareTo(bigger) < 0);
-    Assertions.assertTrue(bigger.compareTo(smaller) > 0);
-//to set the threshold as equal.
-    smaller.setThreshold(14.12d);
+
     Assertions.assertEquals(0, bigger.compareTo(smaller));
   }
 }

@@ -1,5 +1,6 @@
 $(document).ready(function() {
 
+
     // --- 0. State Variables ---
     let currentData = window.initialData || [];
     let xAxisLabels = [];
@@ -28,7 +29,7 @@ $(document).ready(function() {
             });
         });
     };
-    $('#performanceMonthSelect, #performanceSpecificMonth').on('change', function () {
+    $('#performanceYearSelect, #performanceMonthSelect').on('change', function () {
         const selectedYear = $('#performanceYearSelect').val();
         const selectedMonth = $('#performanceMonthSelect').val() || -1; // -1 for "All Year"
 
@@ -51,6 +52,7 @@ $(document).ready(function() {
 
         // If switching to Performance, trigger the new AJAX call
         if (targetId === '#performanceTabPane') {
+            setDefaultDate()
             const year = $('#performanceYearSelect').val() || $('#inputYear').val();
             const month = $('#performanceMonthSelect').val() || -1;
             if (year && year !== 'null') {
@@ -254,7 +256,11 @@ $(document).ready(function() {
             const val = Math.abs(match.amount);
             if (val > 0) {
                 const type = (match.transactionType || 'expense').toLowerCase();
-                const item = {name: match.category_Name, val: val, color: colorMap[match.category_Name] || '#bdc3c7'};
+                const item = {
+                    name: match.category_Name,
+                    val: val,
+                    color: colorMap[match.category_Name] || '#bdc3c7'
+                };
                 if (type === 'income') {
                     inTotal += val;
                     incomeList.push(item);
@@ -419,7 +425,8 @@ $(document).ready(function() {
 
     fetchBudgets();
     fetchAnalysisData();
-});
+})
+
 
 function renderPerformanceHeader(data, year, month) {
     const buckets = data.reduce((acc, cat) => {
@@ -576,4 +583,16 @@ async function loadGlobalPerformance(year, month = -1) {
         console.error(err);
         $grid.html('<div class="col-12 alert alert-danger">Error fetching performance data.</div>');
     }
+    }
+
+function setDefaultDate() {
+    const now = new Date();
+    let currentYear = now.getFullYear();
+    let lastMonth = now.getMonth();
+    if (lastMonth === 0) {
+        lastMonth = 12;
+        currentYear -= 1;
+    }
+    $('#performanceYearSelect').val(currentYear);
+    $('#performanceMonthSelect').val(lastMonth);
 }
