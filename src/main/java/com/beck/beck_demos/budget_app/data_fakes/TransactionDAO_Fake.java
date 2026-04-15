@@ -49,9 +49,9 @@ public class TransactionDAO_Fake implements iTransactionDAO {
     Transaction transaction30 = new Transaction("ksNNnAZwXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "16637841-4c15-4674-8d48-31298c9287c9", "oVCqqbNw", new Date(104,4,4), 37, "xFGaBHtP", 35.88, "IKMruqpM", "hKKsnEyP",false);
     Transaction transaction31 = new Transaction("tcbQFVKXXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "490f8983-4a15-4e76-80d5-316270929729", "flwLGtKf", new Date(104, 3, 4), 47, "IKuAlAlm", 26.51, "FQCalMRw", "yTmAoDPF", false);
     Transaction transaction32 = new Transaction("UGjhbEcXXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "a34360e2-886d-473d-9051-409170248559", "sBbQihPX", new Date(104, 3, 4), 20, "rcTGftry", 21.19, "aXAeMecU", "OKcgUtVa", false);
-    Transaction transaction33 = new Transaction("hhKFllcCXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "e6c68360-1216-4c12-8831-294146908356", "sBbQihPX", new Date(126, 3, 4), 19, "oVyJkvhy", 50.41, "kkVXnVvu", "GZrsahnI", false);
-    Transaction transaction34 = new Transaction("lhFEQTlSXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "e6c68360-1216-4c12-8831-294146908356", "sBbQihPX", new Date(126, 3, 4), 18, "QhuGKUZx", 52.52, "vXvmuRag", "LNBeJFUL", false);
-    Transaction transaction35 = new Transaction("kPhlBQapXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "e6c68360-1216-4c12-8831-294146908356", "sBbQihPX", new Date(126, 3, 4), 43, "mVuKEsOC", 55.51, "BoJhhBJH", "tXSEjfwF", false);
+    Transaction transaction33 = new Transaction("hhKFllcCXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "e6c68360-1216-4c12-8831-294146908356", "sBbQihPX", new Date(126, 3, 4), 19, "oVyJkvhy", 50.41, "kkVXnVvu", "GZrsahnI", true);
+    Transaction transaction34 = new Transaction("lhFEQTlSXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "e6c68360-1216-4c12-8831-294146908356", "sBbQihPX", new Date(126, 3, 4), 18, "QhuGKUZx", 52.52, "vXvmuRag", "LNBeJFUL", true);
+    Transaction transaction35 = new Transaction("kPhlBQapXxtdYmVMXxtdYmVMXxtdYmVMXxtm", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc", "e6c68360-1216-4c12-8831-294146908356", "sBbQihPX", new Date(126, 3, 4), 43, "mVuKEsOC", 55.51, "BoJhhBJH", "tXSEjfwF", true);
     Transaction_VM transaction_VM0= new Transaction_VM(transaction0);
     Transaction_VM transaction_VM1= new Transaction_VM(transaction1);
     Transaction_VM transaction_VM2= new Transaction_VM(transaction2);
@@ -218,7 +218,7 @@ public class TransactionDAO_Fake implements iTransactionDAO {
 
 
   @Override
-  public List<Transaction_VM> getTransactionByUser(String userID, String category, String Bank_Account_ID, int year, int month, int pagesize, int offset, String sortBy, int order, boolean isError) throws SQLException {
+  public List<Transaction_VM> getTransactionByUser(String userID, String category, String Bank_Account_ID, int year, int month, int pagesize, int offset, String sortBy, int order, boolean isError, boolean showLocked) throws SQLException {
     List<Transaction_VM> results = new ArrayList<>();
     for (Transaction_VM t : transactionVMs) {
 
@@ -227,6 +227,7 @@ public class TransactionDAO_Fake implements iTransactionDAO {
           && (year == 0 || (t.getPost_Date().getYear() + 1900) == year)
           && (month == 0 || (t.getPost_Date().getMonth() == month))
           &&(Bank_Account_ID.equals("")||t.getBank_Account_ID().equals(Bank_Account_ID))
+          && (!showLocked || t.getIs_Locked() == showLocked)
       ) {
         results.add(t);
       }
@@ -252,13 +253,14 @@ public class TransactionDAO_Fake implements iTransactionDAO {
 
 
   @Override
-  public int getTransactionCountByUser(String userID, String category, String Bank_Account_ID, int year, int month, boolean findErrors) throws SQLException {
+  public int getTransactionCountByUser(String userID, String category, String Bank_Account_ID, int year, int month, boolean findErrors, boolean showLocked) throws SQLException {
     int count = 0;
     for (Transaction t : transactionVMs) {
       if (t.getUser_ID().equals(userID)
           &&(year==0 || t.getPost_Date().getYear()==year)
           && (month == 0 || t.getPost_Date().getMonth() == month)
           &&(Bank_Account_ID.equals("")||t.getBank_Account_ID().equals(Bank_Account_ID))
+          && (!showLocked || t.getIs_Locked() == showLocked)
       ) {
         count++;
       }
@@ -291,7 +293,9 @@ public class TransactionDAO_Fake implements iTransactionDAO {
     int result = 0;
     int location = -1;
     for (int i=0;i<transactionVMs.size();i++) {
-      if (transactionVMs.get(i).getUser_ID().equals(oldTransaction.getUser_ID())&&transactionVMs.get(i).getTransaction_ID().equals(oldTransaction.getTransaction_ID())&&!transactionVMs.get(i).getIs_Locked()){
+      if (transactionVMs.get(i).getUser_ID().equals(oldTransaction.getUser_ID())
+          && transactionVMs.get(i).getTransaction_ID().equals(oldTransaction.getTransaction_ID())
+          && !transactionVMs.get(i).getIs_Locked()) {
         location = i;
         result = 1;
         break;

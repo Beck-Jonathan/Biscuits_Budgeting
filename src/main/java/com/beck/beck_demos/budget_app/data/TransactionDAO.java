@@ -627,10 +627,10 @@ public class TransactionDAO implements iTransactionDAO {
   }
 
   @Override
-  public List<Transaction_VM> getTransactionByUser(String userID, String category, String Bank_Account_ID, int year, int month, int pagesize, int offset, String sortBy, int order, boolean findErrors) throws SQLException {
+  public List<Transaction_VM> getTransactionByUser(String userID, String category, String Bank_Account_ID, int year, int month, int pagesize, int offset, String sortBy, int order, boolean findErrors, boolean showLocked) throws SQLException {
     List<Transaction_VM> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
-      try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User(?,?,?,?,?,?,?,?,?,?)}")) {
+      try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User(?,?,?,?,?,?,?,?,?,?,?)}")) {
         statement.setString(1, userID);
         statement.setString(2, category);
         statement.setString(3, Bank_Account_ID);
@@ -641,6 +641,7 @@ public class TransactionDAO implements iTransactionDAO {
         statement.setString(8, sortBy);
         statement.setInt(9, order);
         statement.setBoolean(10, findErrors);
+        statement.setBoolean(11, showLocked);
 
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
@@ -702,16 +703,17 @@ public class TransactionDAO implements iTransactionDAO {
   }
 
   @Override
-  public int getTransactionCountByUser(String userID, String category, String Bank_Account_ID, int year, int month, boolean findErrors) throws SQLException {
+  public int getTransactionCountByUser(String userID, String category, String Bank_Account_ID, int year, int month, boolean findErrors, boolean showLocked) throws SQLException {
     int result = 0;
     try (Connection connection = getConnection()) {
-      try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User_count(?,?,?,?,?,?)}")) {
+      try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_Transaction_by_User_count(?,?,?,?,?,?,?)}")) {
         statement.setString(1, userID);
         statement.setString(2, category);
         statement.setString(3, Bank_Account_ID);
         statement.setInt(4, year);
         statement.setInt(5, month);
         statement.setBoolean(6, findErrors);
+        statement.setBoolean(7, showLocked);
 
         try (ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {

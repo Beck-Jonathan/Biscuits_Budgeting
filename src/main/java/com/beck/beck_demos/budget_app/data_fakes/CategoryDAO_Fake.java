@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 //since 1/27/2025
 //Jonathan Beck
@@ -155,9 +156,9 @@ public class CategoryDAO_Fake implements iCategoryDAO {
    * @return number of rows effected
    */
   @Override
-  public int add(SubCategory _category) throws SQLException {
+  public String add(SubCategory _category) throws SQLException {
     if (duplicateKey(_category)){
-      return 0;
+      return "";
     }
     if (exceptionKey(_category)){
       throw new SQLException("error");
@@ -166,7 +167,11 @@ public class CategoryDAO_Fake implements iCategoryDAO {
 
     subCategories.add(_category);
     int newsize = subCategories.size();
-    return newsize-size;
+    if (newsize - size > 0) {
+      return UUID.randomUUID().toString();
+    } else {
+      return "";
+    }
   }
 
   @Override

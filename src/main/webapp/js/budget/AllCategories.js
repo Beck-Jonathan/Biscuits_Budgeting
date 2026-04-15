@@ -24,6 +24,8 @@ $(document).ready(function() {
     // Global Popover Management
     $(document).on('click', handleGlobalClick);
     $(document).on('click', '.picker-popover', (e) => e.stopPropagation());
+
+
 });
 
 // --- 2. Tab & Chart UI Functions ---
@@ -172,11 +174,14 @@ function handleAutoAssign() {
  * Handles iro.js Color Picker initialization and toggling
  */
 function handleColorPickerToggle(e, pickers) {
+    console.log("hi")
     e.stopPropagation();
     const $this = $(e.currentTarget);
+    console.log("this:" + $this)
     const $card = $this.closest('.modern-cat-card');
+    console.log("card:" + $card)
     const id = $card.data('id');
-
+    console.log("id:" + id)
     if (!id) return;
 
     const $popover = $this.siblings('.picker-popover');
@@ -379,9 +384,66 @@ window.confirmDeleteCategory = function (id, name) {
 
 window.updateParentCategory = function (id, parentId) {
     const $card = $(`.modern-cat-card[data-id="${id}"]`);
+    const $column = $card.closest('.col');
+    const $oldCollapse = $card.closest('.collapse');
+    const $newCollapse = $(`#collapse-${parentId}`);
+    const $newGrid = $(`#category-grid-${parentId}`);
+
     const type = $card.find('select option:selected').data('type') || '';
-    $card.removeClass('border-income border-investment border-expense border-transfer').addClass('border-' + type);
-    sendUpdate($card, getHexFromCard($card, {}), {});
+
+    // Step 1: Fade Out
+    $column.css({
+        'transition': 'all 0.4s ease-in',
+        'opacity': '0',
+        'transform': 'scale(0.8) translateY(10px)'
+    });
+
+    setTimeout(() => {
+        // Step 2: Move DOM position while hidden
+        $newGrid.append($column);
+
+        // Reset Styles for Entrance
+        $column.css({
+            'transition': 'none', // Disable transition temporarily for the "teleport"
+            'opacity': '0',
+            'transform': 'scale(0.9) translateY(-10px)'
+        });
+
+        // FORCE REFLOW - This is the secret sauce for smooth animations
+        $column[0].offsetHeight;
+
+        // Update Class
+        $card.removeClass('border-income border-investment border-expense border-transfer')
+            .addClass('border-' + type);
+
+        // Step 3: Handle Panel Transitions
+        if ($oldCollapse.find('.modern-cat-card').length === 0) {
+            bootstrap.Collapse.getOrCreateInstance($oldCollapse[0]).hide();
+        }
+
+        const destCollapse = bootstrap.Collapse.getOrCreateInstance($newCollapse[0]);
+
+        // Function to run the "In" animation
+        const runEntrance = () => {
+            $column.css({
+                'transition': 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)', // Bouncy entrance
+                'opacity': '1',
+                'transform': 'scale(1) translateY(0)'
+            });
+            $card.addClass('card-just-dropped');
+            setTimeout(() => $card.removeClass('card-just-dropped'), 1000);
+        };
+
+        if (!$newCollapse.hasClass('show')) {
+            $newCollapse.one('shown.bs.collapse', runEntrance);
+            destCollapse.show();
+        } else {
+            // Already open, run immediately
+            runEntrance();
+        }
+
+        sendUpdate($card, getHexFromCard($card, {}), {});
+    }, 400);
 };
 
 function handleAutoAssignExecution() {
@@ -923,10 +985,20 @@ function anchorProjections(data) {
 window.addNewCategory = async function () {
     const $nameInput = $('#new-category-name');
     const name = $nameInput.val().trim();
-    const color = $('#new-category-color').val() || '#FFFFFF';
-    const parentId = $('#new-category-parent').val();
+    const $colorInput = $('#new-category-color');
+    const color = $colorInput.val() || '#FFFFFF';
+    const $parentSelect = $('#new-category-parent');
+    const parentId = $parentSelect.val();
+    const $errorDisplay = $('#new-category-error');
 
-    if (!name) return;
+    // Reset error state
+    $errorDisplay.addClass('d-none').text('');
+    $nameInput.removeClass('is-invalid');
+
+    if (!name) {
+        $nameInput.addClass('is-invalid');
+        return;
+    }
 
     try {
         const response = await fetch('addTransactionCategory', {
@@ -939,18 +1011,22 @@ window.addNewCategory = async function () {
             })
         });
 
-        if (response.ok) {
-            // Option A: Quick Reload (Simplest, ensures all IDs match DB)
-            // location.reload();
+        const resultText = (await response.text()).trim();
 
-            // Option B: Vanilla JS Injection (Faster UX, matches your JSP structure)
-            const newId = await response.text(); // Assuming your Servlet returns the new UUID
-            const parentOption = $(`#new-category-parent option[value="${parentId}"]`);
-            const type = parentOption.data('type') || 'expense';
-            const parentName = parentOption.text().trim();
+        // 1. REGEX to check for valid 36-char UUID
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+        if (uuidRegex.test(resultText)) {
+            const newId = resultText;
+            const $selectedOption = $parentSelect.find('option:selected');
+            const type = $selectedOption.data('type') || 'expense';
+
+            // ... (Your existing Grid and HTML logic) ...
+            const $targetGrid = $(`#category-grid-${parentId}`);
+            const $targetCollapse = $(`#collapse-${parentId}`);
 
             const newCardHtml = `
-                <div class="col animate__animated animate__fadeIn">
+                <div class="col animate__animated animate__zoomIn">
                     <div class="modern-cat-card border-${type}" data-id="${newId}" data-strategy="AVG_STRICT">
                         <div class="card-accent" style="background-color: ${color};">
                             <div class="swatch-container">
@@ -963,43 +1039,64 @@ window.addNewCategory = async function () {
                         <div class="card-body-content">
                             <div class="card-actions-modern">
                                 <i class="bi bi-lock-fill text-warning action-icon-modern lock-trigger" 
-                                   title="Toggle Projection Lock" 
                                    onclick="handleLockToggle(event, '${newId}')"></i>
                                 <i class="bi bi-gear action-icon-modern gear-trigger" 
-                                   title="Advanced Settings" 
                                    onclick="handleGearClick(event, '${newId}')"></i>
                                 <i class="bi bi-x action-icon-modern delete-trigger" 
-                                   onclick="confirmDeleteCategory('${newId}', '${name}')"></i>
+                                   onclick="confirmDeleteCategory('${newId}', '${name.replace(/'/g, "\\'")}')"></i>
                             </div>
                             <div class="category-name-row">
                                 <span class="category-text" contenteditable="true">${name}</span>
                             </div>
                             <div class="strategy-row">
-                                <i class="bi bi-graph-up-arrow strategy-icon" title="Regression" data-val="REGRESSION"></i>
-                                <i class="bi bi-lightning-fill strategy-icon" title="Alpha Spike" data-val="ALPHA_SPIKE"></i>
-                                <i class="bi bi-pause-fill strategy-icon" title="Last Value" data-val="LVCF"></i>
-                                <i class="bi bi-list-stars strategy-icon active-strategy" title="Strict Average" data-val="AVG_STRICT" style="color: #198754; font-weight: bold; opacity: 1;"></i>
-                                <i class="bi bi-percent strategy-icon" title="Inflation Only" data-val="INFLATION_ONLY"></i>
-                                <i class="bi bi-x-circle strategy-icon" title="Zero Out" data-val="ZERO_SUM"></i>
+                                <i class="bi bi-graph-up-arrow strategy-icon" data-val="REGRESSION"></i>
+                                <i class="bi bi-lightning-fill strategy-icon" data-val="ALPHA_SPIKE"></i>
+                                <i class="bi bi-pause-fill strategy-icon" data-val="LVCF"></i>
+                                <i class="bi bi-list-stars strategy-icon active-strategy" data-val="AVG_STRICT" style="color: #198754; opacity: 1;"></i>
+                                <i class="bi bi-percent strategy-icon" data-val="INFLATION_ONLY"></i>
+                                <i class="bi bi-x-circle strategy-icon" data-val="ZERO_SUM"></i>
                             </div>
                             <div class="parent-row">
                                 <select class="modern-select" onchange="updateParentCategory('${newId}', this.value)">
-                                    ${$('#new-category-parent').html()}
+                                    ${$parentSelect.html()}
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>`;
 
-            // Append to your container (adjust selector as needed)
-            $('.category-grid-container').append(newCardHtml);
+            const bsCollapse = bootstrap.Collapse.getOrCreateInstance($targetCollapse[0]);
+            bsCollapse.show();
+            const $newElement = $(newCardHtml);
+            $targetGrid.append($newElement);
 
-            // Clean up UI
+            if (typeof initColorPickerForCard === "function") {
+                initColorPickerForCard($newElement.find('.modern-cat-card'));
+            }
+
+            // Success Reset
             $nameInput.val('');
-            bootstrap.Modal.getInstance(document.getElementById('addCategoryModal')).hide();
+            updateAddPillColor('#0d6efd');
+
+        } else {
+            // 2. Error Code Mapping
+            const errorMap = {
+                "-1": "Session expired. Please log in.",
+                "-2": "Invalid category name.",
+                "-3": "Invalid color selection.",
+                "-4": "Parent category required.",
+                "-5": "Invalid strategy selected.",
+                "-10": "Database error. Try again later.",
+                "0": "Could not save category."
+            };
+
+            const msg = errorMap[resultText] || "An unexpected error occurred.";
+            $errorDisplay.text(msg).removeClass('d-none');
+            $nameInput.addClass('is-invalid');
         }
     } catch (err) {
         console.error("Failed to add category:", err);
+        $errorDisplay.text("Network error. Check connection.").removeClass('d-none');
     }
 };
 
@@ -1309,4 +1406,23 @@ function renderAnnualReportCard(data, year) {
     </div>`;
 
     $container.html(html).removeClass('d-none');
+}
+
+// Updates the background color of the 'Add' pill preview
+window.updateAddPillColor = function (hex) {
+    $('#new-card-accent').css('background-color', hex);
+    $('#new-color-preview').css('background-color', hex);
+};
+
+// Updates the border class (income/expense/etc) of the 'Add' pill based on the selected parent
+window.updateAddPillIndicator = function (selectEl) {
+    const $pill = $('#new-pill-container');
+    const type = $(selectEl).find('option:selected').data('type') || 'expense';
+
+    $pill.removeClass('border-income border-investment border-expense border-transfer')
+        .addClass('border-' + type);
+};
+
+function initializeNewPill() {
+
 }

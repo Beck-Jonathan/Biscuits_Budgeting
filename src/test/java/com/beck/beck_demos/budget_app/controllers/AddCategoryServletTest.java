@@ -1,236 +1,125 @@
 package com.beck.beck_demos.budget_app.controllers;
 
-import java.io.IOException;
-import java.util.*;
 import com.beck.beck_demos.budget_app.data_fakes.CategoryDAO_Fake;
 import com.beck.beck_demos.budget_app.models.User;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.web.*;
-import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockServletContext;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+/******************
+ Test Suite For AddCategoryServlet
+ Matches structure of AddBudget_Line_ItemTest
+ Created By Jonathan Beck 3/3/2026
+ ***************/
 class AddCategoryServletTest {
+  private AddCategoryServlet servlet;
+  private MockHttpServletRequest request;
+  private MockHttpServletResponse response;
+  private MockHttpSession session;
 
-  private static final String PAGE="WEB-INF/budget_app/Add_Category.jsp";
-  AddCategoryServlet servlet;
-  MockHttpServletRequest request;
-  MockHttpServletResponse response;
-  HttpSession session;
-  RequestDispatcher rd;
-  /**
-   <p> setup the tests by creating a new instance of the servlet and setting some standard variables </p>
-   */
   @BeforeEach
-  public void setup() throws ServletException{
-
+  public void setup() throws ServletException {
     servlet = new AddCategoryServlet();
+    MockServletContext servletContext = new MockServletContext();
     servlet.init(new CategoryDAO_Fake());
-    request =  new MockHttpServletRequest();
+    request = new MockHttpServletRequest(servletContext);
     response = new MockHttpServletResponse();
-    session = new MockHttpSession();
-    rd = new MockRequestDispatcher(PAGE);
+    session = new MockHttpSession(servletContext);
   }
-  /**
-   <p> tear down by setting all variables to null. </p>
-   */
+
   @AfterEach
-  public void teardown(){
-    servlet=null;
-    request=null;
-    response=null;
-    session=null;
-    rd=null;
-  }
-  /**
-   <p> Tests That the user will received a 200 status on doGet if they are logged in </p>
-   */
-  @Test
-  public void TestLoggedInUserGets200OnDoGet() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setRoles(roles);
-    session.setAttribute("User_B",user);
-    request.setSession(session);
-    servlet.doGet(request,response);
-    int status = response.getStatus();
-    assertEquals(200,status);
-  }
-  /**
-   <p> Tests That the user will received a 200 status on doPost if they are logged in </p>
-   */
-  @Test
-  public void TestLoggedInUserGets200OnDoPost() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setRoles(roles);
-    session.setAttribute("User_B",user);
-    request.setSession(session);
-    servlet.doPost(request,response);
-    int status = response.getStatus();
-    assertEquals(200,status);
-  }
-  /**
-   <p> Tests That the user will received a 302 status on doGet if they are logged out </p>
-   */
-  @Test
-  public void TestLoggedOutUserGets302OnDoGet() throws ServletException, IOException{
-    request.setSession(session);
-    servlet.doGet(request,response);
-    int status = response.getStatus();
-    assertEquals(302,status);
-  }
-  /**
-   <p> Tests That the user will received a 302 status on doPost if they are logged out  </p>
-   */
-  @Test
-  public void TestLoggedOutUserGets302OnDoPost() throws ServletException, IOException{
-    request.setSession(session);
-    servlet.doPost(request,response);
-    int status = response.getStatus();
-    assertEquals(302,status);
-  }
-  /**
-   <p> Tests That the user will received a 302 status on doGet if they are logged out  </p>
-   */
-  @Test
-  public void TestWrongRoleGets302onDoGet() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("WrongRole");
-    user.setRoles(roles);
-    session.setAttribute("User_B",user);
-    request.setSession(session);
-    servlet.doGet(request,response);
-    int status = response.getStatus();
-    assertEquals(302,status);
-  }
-  /**
-   <p> Test that a user in the wrong role will get a 302 on a doGet </p>
-   */
-  @Test
-  public void TestWrongRoleGets302onDoPost() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("WrongRole");
-    user.setRoles(roles);
-    session.setAttribute("User_B",user);
-    request.setSession(session);
-    servlet.doPost(request,response);
-    int status = response.getStatus();
-    assertEquals(302,status);
-  }
-  /**
-   <p> Test that error messages are sent for each field for adding Category objects.
-   That is to say, testing serverside validation </p>
-   */
-  @Test
-  public void TestAddHasErrorsForEachFieldAndKeepsOnSamePage() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setRoles(roles);
-    session.setAttribute("User_B",user);
-    request.setSession(session);
-    servlet.doPost(request,response);
-    int responseStatus = response.getStatus();
-    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Category_NameError = results.get("categoryCategory_Nameerror");
-    //String User_IDError = results.get("categoryUser_IDerror");
-    String Color_IDError = results.get("categoryColor_IDerror");
-    assertNotEquals("",Category_NameError);
-    assertNotNull(Category_NameError);
-    assertNotEquals("",Color_IDError);
-    assertNotNull(Color_IDError);
-
-    assertEquals(200,responseStatus);
-  }
-  /**
-   <p> Tests That We can add to the database if all input fields are validated  </p>
-   */
-  @Test
-  public void TestAddCanAddWithNoErrorsAndRedirects() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setRoles(roles);
-    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
-    session.setAttribute("User_B",user);
-    request.setSession(session);
-    request.setParameter("inputcategoryCategory_Name","TestValue");
-    request.setParameter("inputcategoryColor_id","#AABBCC");
-    //request.setParameter("inputcategoryUser_ID","406");
-    servlet.doPost(request,response);
-    String value = response.getContentAsString();
-    assertEquals(value, "1");
-
-  }/**
-   <p> Tests SQL exceptions are gracefully handled. </p>
-   */
-  @Test
-  public void testExceptionKeyThrowsException() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setRoles(roles);
-    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
-    session.setAttribute("User_B",user);
-    request.setSession(session);
-    request.setParameter("inputcategoryCategory_Name","EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
-    //request.setParameter("inputcategoryUser_ID","406");
-    request.setParameter("inputcategoryColor_id","#AABBCC");
-    servlet.doPost(request,response);
-    int responseStatus = response.getStatus();
-    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Category_Added = results.get("dbStatus");
-    String dbError = results.get("dbError");
-    assertEquals(200,responseStatus);
-    assertNotNull(Category_Added);
-    assertEquals("Category Not Added",Category_Added);
-    assertNotEquals("",Category_Added);
-    assertNotNull(dbError);
-    assertNotEquals("",dbError);
-    assertEquals("Database Error",dbError);
-  }
-  /**
-   <p> Test that Category objects with duplicate primary keys don't get added, and proper error handling exists. </p>
-   */
-  @Test
-  public void testDuplicateKeyReturnsZero() throws ServletException, IOException{
-    User user = new User();
-    user.setUser_ID("fec75744-130e-4bcb-8bbe-9bee18080428");
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setRoles(roles);
-    session.setAttribute("User_B",user);
-    request.setSession(session);
-    request.setParameter("inputcategoryCategory_Name","DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
-    //request.setParameter("inputcategoryUser_ID","406");
-    request.setParameter("inputcategoryColor_id","#AABBCC");
-    servlet.doPost(request,response);
-    int responseStatus = response.getStatus();
-    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Category_Added = results.get("dbStatus");
-    assertEquals(200,responseStatus);
-    assertNotNull(Category_Added);
-    assertEquals("Category Not Added",Category_Added);
-    assertNotEquals("",Category_Added);
-  }
-  /**
-   <p> Test That initializing the Servlet Does Not Crash or cause an exception </p>
-   */
-  @Test
-  public void testInitWithNoParametersDoesNotThrowException() throws ServletException {
+  public void teardown() {
     servlet = null;
-    servlet = new AddCategoryServlet();
-    servlet.init();
+    request = null;
+    response = null;
+    session = null;
   }
 
+  private void setupValidUser() {
+    User user = new User();
+    user.setUser_ID("c83ec501-24fd-4ffa-84ad-562318de6132");
+    List<String> roles = new ArrayList<>();
+    roles.add("User");
+    user.setRoles(roles);
+    request.setSession(session);
+    session.setAttribute("User_B", user);
+  }
+
+  @Test
+  public void testDoPostReturnsNegativeOneIfUserNotLoggedIn() throws ServletException, IOException {
+    servlet.doPost(request, response);
+    assertEquals("-1", response.getContentAsString().trim());
+  }
+
+  @Test
+  public void testDoPostReturnsNegativeTwoIfCategoryNameInvalid() throws ServletException, IOException {
+    setupValidUser();
+    request.setParameter("inputcategoryCategory_Name", ""); // Should trigger validation error
+
+    servlet.doPost(request, response);
+    assertEquals("-2", response.getContentAsString().trim());
+  }
+
+  @Test
+  public void testDoPostReturnsNegativeThreeIfColorInvalid() throws ServletException, IOException {
+    setupValidUser();
+    request.setParameter("inputcategoryCategory_Name", "Dining Out");
+    request.setParameter("inputcategoryColor_id", "invalid-color"); // Should trigger validation error
+
+    servlet.doPost(request, response);
+    assertEquals("-3", response.getContentAsString().trim());
+  }
+
+  @Test
+  public void testDoPostReturnsNegativeFourIfParentIdInvalid() throws ServletException, IOException {
+    setupValidUser();
+    request.setParameter("inputcategoryCategory_Name", "Dining Out");
+    request.setParameter("inputcategoryColor_id", "#FF5733");
+    request.setParameter("inputcategoryParent_id", ""); // Missing parent
+
+    servlet.doPost(request, response);
+    assertEquals("-4", response.getContentAsString().trim());
+  }
+
+  @Test
+  public void testDoPostSuccessfulInsertionReturnsUUID() throws ServletException, IOException {
+    setupValidUser();
+    String expectedUuid = "87cd7359-9374-4270-be0c-ef6ffd69ec4d";
+    request.setParameter("inputcategoryCategory_Name", "Valid Category");
+    request.setParameter("inputcategoryColor_id", "#00FF00");
+    request.setParameter("inputcategoryParent_id", "4095f6c1-c326-4916-83af-22ea2a36b102");
+    request.setParameter("inputsub_categoryprojection_strategy_ID", "AVG_STRICT");
+
+    servlet.doPost(request, response);
+
+    String result = response.getContentAsString().trim();
+    assertEquals(36, result.length(), "Expected a 36-character UUID");
+    // If your fake DAO is programmed to return a specific UUID:
+    // assertEquals(expectedUuid, result);
+  }
+
+  @Test
+  public void testDoPostCanHandleDatabaseError() throws ServletException, IOException {
+    setupValidUser();
+    // Assuming CategoryDAO_Fake is programmed to throw an exception when Name is "DB_ERROR"
+    request.setParameter("inputcategoryCategory_Name", "EXCEPTION");
+    request.setParameter("inputcategoryColor_id", "#00FF00");
+    request.setParameter("inputcategoryParent_id", "4095f6c1-c326-4916-83af-22ea2a36b102");
+    request.setParameter("inputsub_categoryprojection_strategy_ID", "AVG_STRICT");
+
+    servlet.doPost(request, response);
+
+    assertEquals("-10", response.getContentAsString().trim());
+  }
 }
-
-

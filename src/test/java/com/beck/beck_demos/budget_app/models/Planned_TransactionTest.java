@@ -66,7 +66,7 @@ class Planned_TransactionTest {
     Assertions.assertEquals("iXuHllDBHyRbxbUZGNOjEnoLByovrdTLoHxYrBIxsTipbcceNAySGRajDSbHhNmmMuaoVhvpvqSJsLSMWTMAMWoUSiapLFuCVh", _planned_transaction.getnickname());
 
     Assertions.assertEquals(8.75, _planned_transaction.getamount());
-    Assertions.assertEquals(new Date(), _planned_transaction.getstart_date());
+    Assertions.assertEquals(testDate, _planned_transaction.getstart_date());
     Assertions.assertEquals(2988, _planned_transaction.gettimes_per_year());
     Assertions.assertEquals(4012, _planned_transaction.getoccurrences());
     Assertions.assertTrue(_planned_transaction.getis_active());

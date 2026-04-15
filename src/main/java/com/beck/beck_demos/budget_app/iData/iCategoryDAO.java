@@ -11,7 +11,7 @@ public interface iCategoryDAO {
    * @param _category The category to be added to the database
    * @return number of rows effected
    */
-  int add(SubCategory _category) throws SQLException;
+  String add(SubCategory _category) throws SQLException;
 
    List<SubCategory> getsubCategoryByUser(String userID);
 

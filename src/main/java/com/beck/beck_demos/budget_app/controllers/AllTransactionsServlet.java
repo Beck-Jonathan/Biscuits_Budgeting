@@ -54,6 +54,7 @@ public class AllTransactionsServlet extends HttpServlet {
     String bankAccountID = req.getParameter("bankAccountID") == null ? "" : req.getParameter("bankAccountID");
     boolean findErrors = "true".equals(req.getParameter("showErrors"));
 
+    boolean showLocked = "true".equals(req.getParameter("showLocked"));
     int year = 0;
     try {
       year = Integer.parseInt(req.getParameter("year"));
@@ -92,8 +93,8 @@ public class AllTransactionsServlet extends HttpServlet {
 
     // 4. Data Fetching
     try {
-      int transaction_count = transactionDAO.getTransactionCountByUser(user.getUser_ID(), category, bankAccountID, year, month, findErrors);
-      List<Transaction_VM> transactions = transactionDAO.getTransactionByUser(user.getUser_ID(), category, bankAccountID, year, month, page_size, offset, sort, direction, findErrors);
+      int transaction_count = transactionDAO.getTransactionCountByUser(user.getUser_ID(), category, bankAccountID, year, month, findErrors, showLocked);
+      List<Transaction_VM> transactions = transactionDAO.getTransactionByUser(user.getUser_ID(), category, bankAccountID, year, month, page_size, offset, sort, direction, findErrors, showLocked);
 
       req.setAttribute("Transactions", transactions);
       req.setAttribute("Categories", categoryDAO.getsubCategoryByUser(user.getUser_ID()));
@@ -101,7 +102,7 @@ public class AllTransactionsServlet extends HttpServlet {
       req.setAttribute("transaction_count", transaction_count);
       req.setAttribute("noOfPages", (int) Math.ceil((double) transaction_count / page_size));
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      resp.sendRedirect("budget_home");
     }
 
     // 5. Attributes for JSP
@@ -109,6 +110,7 @@ public class AllTransactionsServlet extends HttpServlet {
     req.setAttribute("category", category);
     req.setAttribute("bankAccountID", bankAccountID);
     req.setAttribute("showErrors", findErrors);
+    req.setAttribute("showLocked", showLocked);
     req.setAttribute("sort", sort);
     req.setAttribute("direction", direction);
     req.setAttribute("year", year);

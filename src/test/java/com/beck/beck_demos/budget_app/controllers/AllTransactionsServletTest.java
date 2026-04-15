@@ -118,6 +118,17 @@ class AllTransactionsServletTest {
     assertEquals(5, transactions.size());
   }
 
+  @Test
+  public void testLoggedInUserCanFilterTransactionsByLocked() throws ServletException, IOException {
+    setupUserSession("User", "4f88f943-c3b8-4b32-9136-9e7c2a2ddbfc");
+    request.setParameter("showLocked", "true");
+
+    servlet.doGet(request, response);
+    List<Transaction> transactions = (List<Transaction>) request.getAttribute("Transactions");
+    assertNotNull(transactions);
+    assertEquals(3, transactions.size());
+  }
+
   /**
    * New test to ensure the servlet correctly identifies Investment-related
    * transactions for the new chart stack.

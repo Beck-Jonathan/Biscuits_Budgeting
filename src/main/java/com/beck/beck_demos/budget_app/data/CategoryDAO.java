@@ -24,24 +24,38 @@ public class CategoryDAO implements iCategoryDAO {
    * @param _category The category to be added to the database
    * @return number of rows effected
    */
-  public int add(SubCategory _category) {
-    int numRowsAffected=0;try (Connection connection = getConnection()) {
+  public String add(SubCategory _category) {
+    String newUUID = "0"; // Default failure state
+
+    try (Connection connection = getConnection()) {
       if (connection != null) {
-        try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_sub_category( ?,?,?,?)}")){
-          statement.setString(1,_category.getParentCategoryId());
-          statement.setString(2,_category.getCategory_Name());
-          statement.setString(3,_category.getUser_ID());
-          statement.setString(4,_category.getcolor_id());
-          numRowsAffected = statement.executeUpdate();
-          if (numRowsAffected == 0) {
-            throw new RuntimeException("Could not add SubCategory. Try again later");
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_sub_category(?,?,?,?,?)}")) {
+          statement.setString(1, _category.getParentCategoryId());
+          statement.setString(2, _category.getCategory_Name());
+          statement.setString(3, _category.getUser_ID());
+          statement.setString(4, _category.getcolor_id());
+          statement.setString(5, _category.getprojection_strategy_ID());
+
+          // We use executeQuery because the SP returns a result set containing the UUID
+          try (ResultSet rs = statement.executeQuery()) {
+            if (rs.next()) {
+              newUUID = rs.getString(1);
+              // Also update the model object just in case it's needed elsewhere
+              try {
+                _category.setCategory_ID(newUUID);
+              } catch (Exception e) {
+                return "-10"; // Return the Database Error code directly
+              }
+            }
           }
         }
       }
-    } catch (SQLException e) {
-      throw new RuntimeException("Could not add SubCategory. Try again later");
+    } catch (Exception e) {
+      System.err.println("SQL Error in SubCategory.add: " + e.getMessage());
+      return "-10"; // Return the Database Error code directly
     }
-    return numRowsAffected;
+
+    return newUUID;
   }
 
   public List<SubCategory> getsubCategoryByUser(String userID) {

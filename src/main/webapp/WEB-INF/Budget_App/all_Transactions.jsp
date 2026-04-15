@@ -52,14 +52,22 @@
                             </select>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-check form-switch mb-2">
                                 <input class="form-check-input" type="checkbox" name="showErrors" id="showErrors" value="true" ${showErrors ? 'checked' : ''}>
                                 <label class="form-check-label small fw-bold text-danger" for="showErrors">Potential Errors</label>
                             </div>
                         </div>
+                        <div class="col-md-2">
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" name="showLocked" id="showLocked"
+                                       value="true" ${showLocked ? 'checked' : ''}>
+                                <label class="form-check-label small fw-bold text-danger" for="showLocked">Show
+                                    Locked</label>
+                            </div>
+                        </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <button type="submit" class="btn btn-primary w-100 rounded-pill shadow-sm">Filter Results</button>
                         </div>
                     </div>
@@ -165,12 +173,13 @@
                 <input type="hidden" name="category" value="${category}">
                 <input type="hidden" name="bankAccountID" value="${bankAccountID}">
                 <input type="hidden" name="showErrors" value="${showErrors}">
+                <input type="hidden" name="showLocked" value="${showLocked}">
 
                 <nav aria-label="Page navigation">
                     <ul class="pagination pagination-sm mb-0 me-3">
                         <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
                             <a class="page-link"
-                               href="?page=${currentPage - 1}&sort=${sort}&direction=${direction}&category=${category}&bankAccountID=${bankAccountID}&showErrors=${showErrors}">Prev</a>
+                               href="?page=${currentPage - 1}&sort=${sort}&direction=${direction}&category=${category}&bankAccountID=${bankAccountID}&showErrors=${showErrors}&showLocked=${showLocked}">Prev</a>
                         </li>
                         <li class="page-item mx-2">
                             <select name="page" class="form-select form-select-sm" style="width: auto;"
@@ -182,7 +191,7 @@
                         </li>
                         <li class="page-item ${currentPage == noOfPages ? 'disabled' : ''}">
                             <a class="page-link"
-                               href="?page=${currentPage + 1}&sort=${sort}&direction=${direction}&category=${category}&bankAccountID=${bankAccountID}&showErrors=${showErrors}">Next</a>
+                               href="?page=${currentPage + 1}&sort=${sort}&direction=${direction}&category=${category}&bankAccountID=${bankAccountID}&showErrors=${showErrors}&showLocked=${showLocked}">Next</a>
                         </li>
                     </ul>
                 </nav>

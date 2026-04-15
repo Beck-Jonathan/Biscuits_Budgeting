@@ -222,97 +222,136 @@
         </div>
 
 
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4" id="category-grid"
-             style="overflow: visible;">
-            <c:forEach items="${Categories}" var="category">
-                <c:set var="typeClass" value="" />
-                <c:forEach items="${ParentCategories}" var="p">
-                    <c:if test="${p.parent_category_id == category.parentCategoryId}">
-                        <c:choose>
-                            <c:when test="${fn:toLowerCase(p.transaction_type) == 'income'}"><c:set var="typeClass"
-                                                                                                    value="border-income"/></c:when>
-                            <c:when test="${fn:toLowerCase(p.transaction_type) == 'investment'}"><c:set var="typeClass"
-                                                                                                        value="border-investment"/></c:when>
-                            <c:when test="${fn:toLowerCase(p.transaction_type) == 'expense'}"><c:set var="typeClass"
-                                                                                                     value="border-expense"/></c:when>
-                            <c:when test="${fn:toLowerCase(p.transaction_type) == 'transfer'}"><c:set var="typeClass"
-                                                                                                      value="border-transfer"/></c:when>
-                        </c:choose>
-                    </c:if>
-                </c:forEach>
+        <c:forEach items="${ParentCategories}" var="parent">
+        <c:set var="groupColor" value="${parent.color_id}"/>
 
-                <div class="col">
-                    <div class="modern-cat-card ${typeClass}"
-                         data-id="${category.category_ID}"
-                         data-strategy="${category.projection_strategy_ID}">
+        <div class="super-category-wrapper mb-4">
+            <div class="super-category-header p-3 d-flex align-items-center justify-content-between"
+                 style="background: #f8f9fa; border-left: 5px solid ${groupColor}; border-bottom: 1px solid #dee2e6; cursor: pointer;"
+                 data-bs-toggle="collapse"
+                 data-bs-target="#collapse-${parent.parent_category_id}">
 
-                        <div class="card-accent" style="background-color: ${category.color_id};">
-                            <div class="swatch-container">
-                                <div class="color-swatch-trigger" style="background-color: ${category.color_id};"></div>
-                                <div class="picker-popover d-none shadow-lg">
-                                    <div class="wheel-canvas"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card-body-content">
-                            <div class="card-actions-modern">
-                                <i class="bi ${category.is_Locked ? 'bi-lock-fill text-warning' : 'bi-unlock'} action-icon-modern lock-trigger"
-                                   title="Toggle Projection Lock"
-                                   onclick="handleLockToggle(event, '${category.category_ID}')"></i>
-
-                                <i class="bi bi-gear action-icon-modern gear-trigger"
-                                   title="Advanced Settings"
-                                   onclick="handleGearClick(event, '${category.category_ID}')"></i>
-
-                                <i class="bi bi-x action-icon-modern delete-trigger"
-                                   onclick="confirmDeleteCategory('${category.category_ID}', '${fn:escapeXml(category.category_Name)}')"></i>
-                            </div>
-                            <div class="category-name-row">
-                                <span class="category-text"
-                                      contenteditable="true">${fn:escapeXml(category.category_Name)}</span>
-                            </div>
-
-                            <div class="strategy-row">
-                                <i class="bi bi-graph-up-arrow strategy-icon" title="Regression"
-                                   data-val="REGRESSION"></i>
-                                <i class="bi bi-lightning-fill strategy-icon" title="Alpha Spike"
-                                   data-val="ALPHA_SPIKE"></i>
-                                <i class="bi bi-pause-fill strategy-icon" title="Last Value" data-val="LVCF"></i>
-                                <i class="bi bi-list-stars strategy-icon" title="Strict Average"
-                                   data-val="AVG_STRICT"></i>
-                                <i class="bi bi-percent strategy-icon" title="Inflation Only"
-                                   data-val="INFLATION_ONLY"></i>
-                                <i class="bi bi-x-circle strategy-icon" title="Zero Out" data-val="ZERO_SUM"></i>
-                            </div>
-
-                            <div class="parent-row">
-                                <select class="modern-select"
-                                        onchange="updateParentCategory('${category.category_ID}', this.value)">
-                                    <c:forEach items="${ParentCategories}" var="parent">
-                                        <option value="${parent.parent_category_id}"
-                                                data-type="${fn:toLowerCase(parent.transaction_type)}"
-                                                <c:if test="${parent.parent_category_id == category.parentCategoryId}">selected</c:if>>
-                                                ${fn:escapeXml(parent.super_category_name)}
-                                        </option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                        </div>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-chevron-down me-3 toggle-arrow transition-icon"></i>
+                    <div>
+                        <h5 class="mb-0 fw-bold text-uppercase" style="letter-spacing: 1px; color: #495057;">
+                                ${fn:escapeXml(parent.super_category_name)}
+                        </h5>
+                        <span class="badge text-dark"
+                              style="background-color: ${groupColor}33; border: 1px solid ${groupColor}">
+                                ${parent.transaction_type}
+                        </span>
                     </div>
                 </div>
+
+                <div class="analysis-snippet text-muted small text-end">
+                    <div><strong>Quick Stats:</strong> 4 Categories</div>
+                    <div>Avg. Monthly: $1,200.00</div>
+                </div>
+            </div>
+
+            <div class="collapse show" id="collapse-${parent.parent_category_id}">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4 p-4 border-start border-top-0 ms-2"
+                     id="category-grid-${parent.parent_category_id}"
+                     style="border-left: 3px solid ${groupColor}55 !important; background-color: rgba(0,0,0,0.01);">
+
+                    <c:forEach items="${Categories}" var="category">
+                        <c:if test="${category.parentCategoryId == parent.parent_category_id}">
+
+                            <c:set var="typeClass" value=""/>
+                            <c:choose>
+                                <c:when test="${fn:toLowerCase(parent.transaction_type) == 'income'}"><c:set
+                                        var="typeClass" value="border-income"/></c:when>
+                                <c:when test="${fn:toLowerCase(parent.transaction_type) == 'investment'}"><c:set
+                                        var="typeClass" value="border-investment"/></c:when>
+                                <c:when test="${fn:toLowerCase(parent.transaction_type) == 'expense'}"><c:set
+                                        var="typeClass" value="border-expense"/></c:when>
+                                <c:when test="${fn:toLowerCase(parent.transaction_type) == 'transfer'}"><c:set
+                                        var="typeClass" value="border-transfer"/></c:when>
+                            </c:choose>
+
+                            <div class="col">
+                                <div class="modern-cat-card ${typeClass}"
+                                     data-id="${category.category_ID}"
+                                     data-strategy="${category.projection_strategy_ID}">
+
+                                    <div class="card-accent" style="background-color: ${category.color_id};">
+                                        <div class="swatch-container">
+                                            <div class="color-swatch-trigger"
+                                                 style="background-color: ${category.color_id};"></div>
+                                            <div class="picker-popover d-none shadow-lg">
+                                                <div class="wheel-canvas"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body-content">
+                                        <div class="card-actions-modern">
+                                            <i class="bi ${category.is_Locked ? 'bi-lock-fill text-warning' : 'bi-unlock'} action-icon-modern lock-trigger"
+                                               title="Toggle Projection Lock"
+                                               onclick="handleLockToggle(event, '${category.category_ID}')"></i>
+
+                                            <i class="bi bi-gear action-icon-modern gear-trigger"
+                                               title="Advanced Settings"
+                                               onclick="handleGearClick(event, '${category.category_ID}')"></i>
+
+                                            <i class="bi bi-x action-icon-modern delete-trigger"
+                                               onclick="confirmDeleteCategory('${category.category_ID}', '${fn:escapeXml(category.category_Name)}')"></i>
+                                        </div>
+                                        <div class="category-name-row">
+                                    <span class="category-text"
+                                          contenteditable="true">${fn:escapeXml(category.category_Name)}</span>
+                                        </div>
+
+                                        <div class="strategy-row">
+                                            <i class="bi bi-graph-up-arrow strategy-icon" title="Regression"
+                                               data-val="REGRESSION"></i>
+                                            <i class="bi bi-lightning-fill strategy-icon" title="Alpha Spike"
+                                               data-val="ALPHA_SPIKE"></i>
+                                            <i class="bi bi-pause-fill strategy-icon" title="Last Value"
+                                               data-val="LVCF"></i>
+                                            <i class="bi bi-list-stars strategy-icon" title="Strict Average"
+                                               data-val="AVG_STRICT"></i>
+                                            <i class="bi bi-percent strategy-icon" title="Inflation Only"
+                                               data-val="INFLATION_ONLY"></i>
+                                            <i class="bi bi-x-circle strategy-icon" title="Zero Out"
+                                               data-val="ZERO_SUM"></i>
+                                        </div>
+
+                                        <div class="parent-row">
+                                            <select class="modern-select"
+                                                    onchange="updateParentCategory('${category.category_ID}', this.value)">
+                                                <c:forEach items="${ParentCategories}" var="pOption">
+                                                    <option value="${pOption.parent_category_id}"
+                                                            data-type="${fn:toLowerCase(pOption.transaction_type)}"
+                                                            <c:if test="${pOption.parent_category_id == category.parentCategoryId}">selected</c:if>>
+                                                            ${fn:escapeXml(pOption.super_category_name)}
+                                                    </option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:if>
+                    </c:forEach>
+                </div>
+            </div>
             </c:forEach>
 
             <div class="col" id="add-pill-wrapper">
-                <div id="new-pill-container" class="modern-cat-card border-dashed">
+                <div id="new-pill-container" class="modern-cat-card border-dashed"
+                     data-id="NEWCARD">
 
-                    <div class="card-accent" id="new-card-accent" style="background-color: #0d6efd;">
-                        <div class="swatch-container">
-                            <label for="new-category-color" id="new-color-preview" class="color-swatch-trigger"
-                                   style="background-color: #0d6efd; display: block; border: 2px solid #fff;"></label>
-                            <input type="color" id="new-category-color" class="d-none" value="#0d6efd"
-                                   oninput="updateAddPillColor(this.value)">
+                    <div class="card-accent " id="new-card-accent" style="background-color: #0d6efd;">
+                        <div class="swatch-container color-swatch-trigger">
+                            <div class="color-swatch-trigger" style="background-color: #0d6efd;"></div>
+
+                            <div class="picker-popover d-none shadow-lg">
+                                <div class="wheel-canvas"></div>
+                            </div>
                         </div>
+                        <input type="hidden" id="new-category-color" value="#0d6efd">
                     </div>
 
                     <div class="card-body-content">
@@ -322,16 +361,18 @@
                                    placeholder="New Category Name..."
                                    style="box-shadow: none; font-size: 0.9rem;"
                                    onkeydown="if(event.key==='Enter') addNewCategory()">
+                            <div id="new-category-error" class="text-danger mt-1 d-none"
+                                 style="font-size: 0.7rem; font-weight: bold;"></div>
                         </div>
 
                         <div class="strategy-row">
                 <span class="text-muted" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;">
-                    Model: AVG_STRICT
+                    Model: <span class="fw-bold text-primary">AVG_STRICT</span>
                 </span>
                         </div>
 
                         <div class="parent-row d-flex align-items-center gap-2">
-                            <select id="new-category-parent" class="modern-select"
+                            <select id="new-category-parent" class="modern-select flex-grow-1"
                                     onchange="updateAddPillIndicator(this)">
                                 <c:forEach items="${ParentCategories}" var="parent">
                                     <option value="${parent.parent_category_id}"
@@ -342,7 +383,7 @@
                             </select>
                             <button onclick="addNewCategory()"
                                     class="btn btn-primary btn-sm rounded-circle flex-shrink-0"
-                                    style="width: 24px; height: 24px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                                    style="width: 26px; height: 26px; padding: 0;">
                                 <i class="bi bi-plus"></i>
                             </button>
                         </div>
