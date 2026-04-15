@@ -1,6 +1,6 @@
 package com.beck.beck_demos.budget_app.iData;
 
-import com.beck.beck_demos.budget_app.models.Saved_Search_Order_Line;
+import com.beck.beck_demos.budget_app.models.Saved_Search_Order_VM;
 import com.beck.beck_demos.budget_app.models.SubCategory_VM;
 import com.beck.beck_demos.budget_app.models.Transaction;
 import com.beck.beck_demos.budget_app.models.Transaction_VM;
@@ -53,7 +53,7 @@ public interface iTransactionDAO {
   int writeTransactionToFile(List<Transaction> transactions, String path) throws IOException;
   List<Transaction> getDistinctTransactionForDropdown(String user_ID) throws SQLException;
 
-  int applyAllLines(String userId, List<Saved_Search_Order_Line> savedSearchOrderLines) throws SQLException;
+  int applyAllLines(String userId, Saved_Search_Order_VM savedSearchOrderLines) throws SQLException;
    List<List<SubCategory_VM>> getMonthlyAnalysis(String user_ID , String BankAccountID, int year) ;
   List<List<SubCategory_VM>> getAnnualAnalysis(String user_ID, String BankAccountID);
   List<List<SubCategory_VM>> getSuperAnnualAnalysis(String user_ID, String BankAccountID);

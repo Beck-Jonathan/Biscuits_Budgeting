@@ -229,29 +229,17 @@ public class TransactionDAO implements iTransactionDAO {
   }
 
   @Override
-  public int applyAllLines(String userId, List<Saved_Search_Order_Line> savedSearchOrderLines) throws SQLException {
+  public int applyAllLines(String userId, Saved_Search_Order_VM savedSearchOrder) throws SQLException {
     int result = 0;
     try (Connection connection = getConnection()) {
       if (connection != null) {
-        try (CallableStatement statement = connection.prepareCall("{CALL sp_assign_categories(?,?,?)}")) {
-          for (Saved_Search_Order_Line line : savedSearchOrderLines) {
-            statement.setString(1, userId);
-            statement.setString(2, line.getCategory_ID());
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_assign_SavedSearchOrder(?,?)}")) {
 
-            statement.setString(3, line.getSearch_Phrase());
-            statement.addBatch();
-          }
-          int[] results = statement.executeBatch();
-          for (int res : results) {
-            // SUCCESS_NO_INFO (-2) or rows affected > 0
-            if (res > 0 || res == CallableStatement.SUCCESS_NO_INFO) {
-              result += res;
-            }
-          }
-        } catch (SQLException e) {
-
+          statement.setString(1, userId);
+          statement.setString(2, savedSearchOrder.getSaved_Search_Order_ID());
         }
       }
+
     }
 
     return result;

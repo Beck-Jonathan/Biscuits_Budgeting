@@ -367,9 +367,9 @@ public class TransactionDAO_Fake implements iTransactionDAO {
   }
 
   @Override
-  public int applyAllLines(String userId, List<Saved_Search_Order_Line> savedSearchOrderLines) throws SQLException {
+  public int applyAllLines(String userId, Saved_Search_Order_VM savedSearchOrderLines) throws SQLException {
     int result = 0;
-    for(Saved_Search_Order_Line order : savedSearchOrderLines){
+    for (Saved_Search_Order_Line order : savedSearchOrderLines.getSaved_Search_Order_Lines()) {
       result +=bulkUpdateCategory(userId,order.getCategory_ID(),order.getSearch_Phrase());
     }
     return result;

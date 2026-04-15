@@ -4,7 +4,9 @@ import com.beck.beck_demos.budget_app.data.Saved_Search_OrderDAO;
 import com.beck.beck_demos.budget_app.data.TransactionDAO;
 import com.beck.beck_demos.budget_app.iData.iSaved_Search_OrderDAO;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-import com.beck.beck_demos.budget_app.models.*;
+import com.beck.beck_demos.budget_app.models.Saved_Search_Order;
+import com.beck.beck_demos.budget_app.models.Saved_Search_Order_VM;
+import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -65,7 +67,7 @@ public class ApplySaved_Search_Order extends HttpServlet {
 
       try {
         //result += transactionDAO.bulkUpdateCategory(user.getUser_ID(), line.getCategory_ID(), line.getSearch_Phrase());
-        result += transactionDAO.applyAllLines(user.getUser_ID(),saved_search_order.getSaved_Search_Order_Lines());
+        result += transactionDAO.applyAllLines(user.getUser_ID(), saved_search_order);
       } catch (SQLException e) {
         throw new RuntimeException(e);
       }
