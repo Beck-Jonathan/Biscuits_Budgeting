@@ -1,133 +1,134 @@
+// --- 1. Global State & Scoped Objects ---
+const pickers = {};
+let categoryIdToDelete = null;
+
 $(document).ready(function() {
+    // Tab/Chart Layout Management
+    $('button[data-bs-toggle="pill"]').on('show.bs.tab', handleTabTransition);
 
+    // General UI Listeners
+    $("#btnAutoAssign").on("click", showAutoAssignModal);
+    $("#confirmAutoAssignBtn").on("click", handleAutoAssignExecution);
 
-    $('button[data-bs-toggle="pill"]').on('show.bs.tab', function (e) {
-        const targetId = $(e.target).attr('data-bs-target');
-        const $chart = $('#categoryAnalysisChart');
-        const $chartCol = $('#categoryAnalysisSection > div:first-child');
-        const $tabsCol = $('#categoryAnalysisSection > div:last-child');
-
-        if (targetId !== '#tab-performance' && window.originalChartState && window.analysisChart) {
-            console.log("Restoring original engine view...");
-
-            window.analysisChart.update({
-                xAxis: {categories: window.originalChartState.categories},
-                title: {text: window.originalChartState.title}
-            }, false);
-
-            while (window.analysisChart.series.length > 0) window.analysisChart.series[0].remove(false);
-
-            window.originalChartState.series.forEach(s => {
-                window.analysisChart.addSeries(s, false);
-            });
-
-            window.analysisChart.redraw();
-
-            // Clear the buffer so we can capture it again if they change categories
-            window.originalChartState = null;
-        }
-        // PHASE 1: "Store" the chart
-        $chart.removeClass('chart-ready').addClass('chart-reworking');
-
-        // PHASE 2: Wait for the blur/fade to finish (300ms)
-        setTimeout(() => {
-
-            // PHASE 3: Swap the Layout (Instantly or via CSS)
-            if (targetId === '#tab-performance') {
-                $chartCol.removeClass('col-lg-8').addClass('col-lg-4');
-                $tabsCol.removeClass('col-lg-4').addClass('col-lg-8');
-            } else {
-                $chartCol.removeClass('col-lg-4').addClass('col-lg-8');
-                $tabsCol.removeClass('col-lg-8').addClass('col-lg-4');
-            }
-
-            // PHASE 4: Recalculate while the user sees nothing but a blur
-            if (window.analysisChart) {
-                window.analysisChart.reflow();
-            }
-
-            // PHASE 5: "Reveal" the chart in its new home
-            // We wait an extra 200ms to let the Bootstrap columns settle
-            setTimeout(() => {
-                $chart.removeClass('chart-reworking').addClass('chart-ready');
-            }, 600);
-
-        }, 300);
-    });
-
-
-
-
-
-    // 1. Scope definition
-    const pickers = {};
-    let categoryIdToDelete = null;
-
-    // 2. Event Listeners (Calling named functions)
-    $("#btnAutoAssign").on("click", function () {
-        const modalEl = document.getElementById('autoAssignModal');
-        const autoModal = new bootstrap.Modal(modalEl);
-        autoModal.show();
-    });
+    // Dynamic Element Listeners
     $(document).on('click', '.color-swatch-trigger', (e) => handleColorPickerToggle(e, pickers));
     $(document).on('click', '#confirmDeleteBtn', handleConfirmDelete);
     $(document).on('click', '.strategy-icon', (e) => handleStrategyClick(e, pickers));
     $(document).on('blur', '.category-text', (e) => handleNameBlur(e, pickers));
 
-    // Global clicks to close popovers
+    // Forecast Chart Highlighting
+    $(document).on('mouseenter', '.forecast-row', handleForecastHover);
+    $(document).on('mouseleave', '.forecast-row', resetForecastHover);
+    $(document).on('click', '.forecast-row', handleForecastRowClick);
+
+    // Global Popover Management
     $(document).on('click', handleGlobalClick);
     $(document).on('click', '.picker-popover', (e) => e.stopPropagation());
-    $("#confirmAutoAssignBtn").on("click", handleAutoAssignExecution);
-
-    // 3. Initial UI Setup
-    // Any logic that needs to run on load goes here
-
-
-    // 1. Mouse Enter: Highlight the line on the chart
-    $(document).on('mouseenter', '.forecast-row', function () {
-        const methodKey = $(this).data('series'); // e.g., 'regression'
-        const chart = Highcharts.charts.find(c => c && c.renderTo.id === 'categoryAnalysisChart');
-
-        if (chart) {
-            chart.series.forEach(s => {
-                if (s.options.id === methodKey) {
-                    s.setState('hover');
-                    s.group.toFront();
-                } else if (s.options.id !== 'historicalTruth') {
-                    // Dim everything except the historical data and the hovered line
-                    s.setState('inactive');
-                }
-            });
-        }
-    });
-
-// 2. Mouse Leave: Reset the chart to show all lines normally
-    $(document).on('mouseleave', '.forecast-row', function () {
-        const chart = Highcharts.charts.find(c => c && c.renderTo.id === 'categoryAnalysisChart');
-        if (chart) {
-            chart.series.forEach(s => s.setState(''));
-        }
-    });
-
-    // ADD THIS HERE:
-    $(document).on('click', '.forecast-row', function (e) {
-        const methodKey = $(this).data('series');
-        const currentId = $('#analysisSubcatId').val();
-        const mapping = {
-            'regression': 'REGRESSION', 'alphaSpike': 'ALPHA_SPIKE',
-            'lvcf': 'LVCF', 'avgStrict': 'AVG_STRICT',
-            'inflation': 'INFLATION_ONLY', 'zeroSum': 'ZERO_SUM'
-        };
-        const $targetIcon = $(`.modern-cat-card[data-id="${currentId}"] .strategy-icon[data-val="${mapping[methodKey]}"]`);
-
-        if ($targetIcon.length > 0) {
-            handleStrategyClick({
-                currentTarget: $targetIcon[0], stopPropagation: () => {
-                }
-            }, pickers);
-        }
-    });
 });
+
+// --- 2. Tab & Chart UI Functions ---
+
+function handleTabTransition(e) {
+    const targetId = $(e.target).attr('data-bs-target');
+    const $chart = $('#categoryAnalysisChart');
+    const $chartCol = $('#categoryAnalysisSection > div:first-child');
+    const $tabsCol = $('#categoryAnalysisSection > div:last-child');
+
+    // Restore original chart state if leaving Performance tab
+    if (targetId !== '#tab-performance' && window.originalChartState && window.analysisChart) {
+        restoreOriginalChart();
+    }
+
+    // Phase 1: Visual Blur
+    $chart.removeClass('chart-ready').addClass('chart-reworking');
+
+    // Phase 2: Timing the transition
+    setTimeout(() => {
+        // Swap Layout
+        const isPerformance = targetId === '#tab-performance';
+        $chartCol.toggleClass('col-lg-8', !isPerformance).toggleClass('col-lg-4', isPerformance);
+        $tabsCol.toggleClass('col-lg-4', !isPerformance).toggleClass('col-lg-8', isPerformance);
+
+        if (window.analysisChart) {
+            window.analysisChart.reflow();
+        }
+
+        setTimeout(() => {
+            $chart.removeClass('chart-reworking').addClass('chart-ready');
+        }, 600);
+    }, 300);
+}
+
+function restoreOriginalChart() {
+    console.log("Restoring original engine view...");
+    const chart = window.analysisChart;
+    const state = window.originalChartState;
+
+    chart.update({
+        xAxis: {categories: state.categories},
+        title: {text: state.title}
+    }, false);
+
+    while (chart.series.length > 0) chart.series[0].remove(false);
+
+    state.series.forEach(s => chart.addSeries(s, false));
+    chart.redraw();
+    window.originalChartState = null;
+}
+
+// --- 3. Forecast Interaction Functions ---
+
+function handleForecastHover() {
+    const methodKey = $(this).data('series');
+    const chart = Highcharts.charts.find(c => c && c.renderTo.id === 'categoryAnalysisChart');
+
+    if (chart) {
+        chart.series.forEach(s => {
+            if (s.options.id === methodKey) {
+                s.setState('hover');
+                s.group.toFront();
+            } else if (s.options.id !== 'historicalTruth') {
+                s.setState('inactive');
+            }
+        });
+    }
+}
+
+function resetForecastHover() {
+    const chart = Highcharts.charts.find(c => c && c.renderTo.id === 'categoryAnalysisChart');
+    if (chart) {
+        chart.series.forEach(s => s.setState(''));
+    }
+}
+
+function handleForecastRowClick() {
+    const methodKey = $(this).data('series');
+    const currentId = $('#analysisSubcatId').val();
+    const mapping = {
+        'regression': 'REGRESSION', 'alphaSpike': 'ALPHA_SPIKE',
+        'lvcf': 'LVCF', 'avgStrict': 'AVG_STRICT',
+        'inflation': 'INFLATION_ONLY', 'zeroSum': 'ZERO_SUM'
+    };
+
+    const $targetIcon = $(`.modern-cat-card[data-id="${currentId}"] .strategy-icon[data-val="${mapping[methodKey]}"]`);
+
+    if ($targetIcon.length > 0) {
+        handleStrategyClick({
+            currentTarget: $targetIcon[0],
+            stopPropagation: () => {
+            }
+        }, pickers);
+    }
+}
+
+// --- 4. General Helper Functions ---
+
+function showAutoAssignModal() {
+    const modalEl = document.getElementById('autoAssignModal');
+    new bootstrap.Modal(modalEl).show();
+}
+
+
 
 // --- FUNCTION DEFINITIONS (Implementation) ---
 
