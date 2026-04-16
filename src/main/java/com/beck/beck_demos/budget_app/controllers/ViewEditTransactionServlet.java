@@ -1,20 +1,18 @@
 package com.beck.beck_demos.budget_app.controllers;
-import com.beck.beck_demos.budget_app.data.TransactionDAO;
-
 
 import com.beck.beck_demos.budget_app.data.CategoryDAO;
-import com.beck.beck_demos.budget_app.models.*;
-import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-
+import com.beck.beck_demos.budget_app.data.TransactionDAO;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
+import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
+import com.beck.beck_demos.budget_app.models.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,11 +88,11 @@ public class ViewEditTransactionServlet extends HttpServlet{
     req.setAttribute("mode",mode);
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Edit Transaction");
-    List<SubCategory> allCategories = null;
+    List<SubCategory_VM> allCategories = null;
     try{
       allCategories = categoryDAO.getsubCategoryByUser(user.getUser_ID());
     }catch(Exception e){
-      allCategories = new ArrayList<SubCategory>();
+      allCategories = new ArrayList<SubCategory_VM>();
     }
 
     req.setAttribute("Categorys", allCategories);
@@ -169,11 +167,11 @@ public class ViewEditTransactionServlet extends HttpServlet{
         results.put("dbStatus","Transaction Not Updated");
       }
     }
-    List<SubCategory> allCategories = null;
+    List<SubCategory_VM> allCategories = null;
     try{
       allCategories = categoryDAO.getsubCategoryByUser(user.getUser_ID());
     }catch(Exception e){
-      allCategories = new ArrayList<SubCategory>();
+      allCategories = new ArrayList<>();
     }
 
     req.setAttribute("Categorys", allCategories);

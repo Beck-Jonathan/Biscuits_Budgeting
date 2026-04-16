@@ -1,13 +1,38 @@
 package com.beck.beck_demos.budget_app.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-
-@Entity
+/**
+ * @author Jonathan Beck
+ * @version 1.0
+ * @since 1.0
+ */
 public class SubCategory_VM extends SubCategory {
-  @Id
-  private Long id;
 
+  // 1. Private Variables
+  private int year;
+  private String transactionType;
+  private double amount;
+  private int count;
+  private String sign;
+
+  // 2. Constructors
+  public SubCategory_VM() {
+    this.setIs_Locked(true);
+  }
+
+  public SubCategory_VM(String category_ID, double amount) {
+    this.setCategory_ID(category_ID);
+    this.amount = amount;
+    this.sign = "";
+  }
+
+  public SubCategory_VM(SubCategory category) {
+    super(category.getCategory_ID(), category.getParentCategoryId(),
+        category.getprojection_strategy_ID(), category.getUser_ID(),
+        category.getCategory_Name(), category.getcolor_id(),
+        category.getTarget_Threshold(), category.getIs_Locked());
+  }
+
+  // 3. Getters and Setters
   public int getYear() {
     return year;
   }
@@ -16,20 +41,12 @@ public class SubCategory_VM extends SubCategory {
     this.year = year;
   }
 
-  private int year;
-
-  private String transactionType; // <--- NEW FIELD
-
   public String getTransactionType() {
     return transactionType;
   }
 
   public void setTransactionType(String transactionType) {
     this.transactionType = transactionType;
-  }
-
-  public SubCategory_VM() {
-    this.setIs_Locked(true);
   }
 
   public double getAmount() {
@@ -40,41 +57,20 @@ public class SubCategory_VM extends SubCategory {
     this.amount = amount;
   }
 
-  private double amount;
-  private int count;
-  private String sign;
-  public void setCount(int count){
-    this.count=count;
-  }
-  public int getCount(){
+  public int getCount() {
     return this.count;
   }
-  public void setSign (String sign) {this.sign = sign;}
-  public String getSign (){return this.sign;}
 
-  public SubCategory_VM(String category_ID, double amount) {
-    this.setCategory_ID(category_ID);
-    this.amount = amount;
-    this.sign="";
-  }
-  public SubCategory_VM(String category_ID, double amount, String sign) {
-    this.setCategory_ID(category_ID);
-    this.amount = amount;
-    this.sign=sign;
+  public void setCount(int count) {
+    this.count = count;
   }
 
-  public SubCategory_VM(String category_ID, double amount, int count, int year) {
-    this.setCategory_ID(category_ID);
-    this.amount = amount;
-    this.count=count;
-    this.year=year;
+  public String getSign() {
+    return this.sign;
   }
 
-  public void setId(Long id) {
-    this.id = id;
+  public void setSign(String sign) {
+    this.sign = sign;
   }
 
-  public Long getId() {
-    return id;
-  }
 }

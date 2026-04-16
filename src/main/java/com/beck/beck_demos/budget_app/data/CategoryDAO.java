@@ -58,8 +58,8 @@ public class CategoryDAO implements iCategoryDAO {
     return newUUID;
   }
 
-  public List<SubCategory> getsubCategoryByUser(String userID) {
-    List<SubCategory> result = new ArrayList<>();
+  public List<SubCategory_VM> getsubCategoryByUser(String userID) {
+    List<SubCategory_VM> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_user_subCategory(?)}")) {
@@ -78,7 +78,10 @@ public class CategoryDAO implements iCategoryDAO {
             BigDecimal threshhold = resultSet.getBigDecimal("subCategory_target_threshold");
             boolean is_Active = resultSet.getBoolean("subCategory_is_locked");
             SubCategory _category = new SubCategory(Category_ID, ParentCategory_ID, projectionStrategy, User_ID, Name, Color_ID, threshhold, is_Active);
-            result.add(_category);
+            SubCategory_VM vm = new SubCategory_VM(_category);
+            vm.setAmount(resultSet.getDouble("current_month_spent"));
+            vm.setTransactionType(resultSet.getString("parent_Category_transaction_type"));
+            result.add(vm);
           }
         }
         }
@@ -158,30 +161,42 @@ public class CategoryDAO implements iCategoryDAO {
   }
 
   @Override
-  public List<ParentCategory> getParentCategoryByUser(String userID) throws SQLException {
-    List<ParentCategory> result = new ArrayList<>();
-    try (Connection connection = getConnection()) {
-      if (connection != null) {
-        try(CallableStatement statement = connection.prepareCall("{CALL sp_retrieve_by_all_parent_category(?)}")) {
+  public List<ParentCategory_VM> getParentCategoryByUser(String userID) throws SQLException {
+    List<ParentCategory_VM> summaries = new ArrayList<>();
+    String query = "{call GetParentCategorySummaries(?)}";
 
-          statement.setString(1,userID);
-          try(ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {
-              String parent_category_id = resultSet.getString("parent_category_parent_category_id");
-              String super_category_name = resultSet.getString("parent_category_super_category_name");
-              String user_id = resultSet.getString("parent_category_user_id");
-              String color_id = resultSet.getString("parent_category_color_id");
-              String transaction_type = resultSet.getString("parent_category_transaction_type");
-              ParentCategory _parent_category = new ParentCategory( parent_category_id, super_category_name, user_id, color_id,transaction_type);
-              result.add(_parent_category);
-            }
-          }
+    try (Connection conn = getConnection();
+         CallableStatement cs = conn.prepareCall(query)) {
+
+      cs.setString(1, userID);
+
+      try (ResultSet rs = cs.executeQuery()) {
+        while (rs.next()) {
+          // Instantiate the VM
+          ParentCategory_VM vm = new ParentCategory_VM();
+
+          // 1. Populate Inherited fields from ParentCategory
+          // Note: Using the exact setter names from your ParentCategory model
+          vm.setparent_category_id(rs.getString("parent_category_id"));
+          vm.setsuper_category_name(rs.getString("super_category_name"));
+          vm.setuser_id(userID);
+          vm.setcolor_id(rs.getString("color_id"));
+          vm.setTransaction_type(rs.getString("transaction_type"));
+
+          // 2. Populate VM-specific "Insight" fields
+          vm.setSubcategoryCount(rs.getInt("subcategory_count"));
+          vm.setTotalMonthlyTarget(rs.getDouble("total_monthly_target"));
+          vm.setCurrentMonthSpent(rs.getDouble("current_month_spent"));
+
+          summaries.add(vm);
         }
       }
     } catch (SQLException e) {
-      throw new RuntimeException("Could not retrieve parent_categorys. Try again later");
+      // Logging specifically for the Biscuit budget environment
+      System.err.println("Error in getParentCategorySummaries: " + e.getMessage());
     }
-    return result;
+
+    return summaries;
   }
 
   @Override
@@ -378,6 +393,47 @@ public class CategoryDAO implements iCategoryDAO {
     }
     Collections.sort(result);
     return result;
+  }
+
+  @Override
+  public Integer updateThreshold(SubCategory toChenge) throws SQLException {
+    int rowsAffected = 0;
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_update_subcategory_threshold( ?,?,?)}")) {
+          statement.setString(1, toChenge.getCategory_ID());
+          statement.setString(2, toChenge.getUser_ID());
+          statement.setObject(3, toChenge.getTarget_Threshold());
+          rowsAffected = statement.executeUpdate();
+
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not update subcategory. Try again later");
+    }
+    return rowsAffected;
+  }
+
+  @Override
+  public Integer SmartAssignColor(User user) throws SQLException {
+    int rowsAffected = 0;
+    // Use a string for the SQL call
+    String query = "{CALL sp_AlignSubcategoryColors(?)}";
+
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try (CallableStatement statement = connection.prepareCall(query)) {
+          statement.setString(1, user.getUser_ID());
+
+          rowsAffected = statement.executeUpdate();
+
+        }
+      }
+    } catch (SQLException e) {
+      // Log the actual error internally before throwing the user-friendly one
+      throw new SQLException("Can not Updated Projections");
+    }
+    return rowsAffected;
   }
 
   private Double readDouble(ResultSet rs, String columnLabel) throws SQLException {

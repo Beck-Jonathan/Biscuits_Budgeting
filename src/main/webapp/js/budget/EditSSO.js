@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     const tableBody = document.getElementById('searchLineTable');
+    tableBody.addEventListener('change', (e) => handleAutoUpdate(e));
+    tableBody.addEventListener('blur', (e) => {
+        if (e.target.tagName === 'INPUT') handleAutoUpdate(e);
+    }, true);
 
     tableBody.addEventListener('submit', function(e) {
         if (e.target.id.startsWith('editSaved_Search_Order_Line')) {
@@ -78,61 +82,64 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         function addNewRowToTable(formData, lineNo) {
-            // 1. Get the Add Row - find it relative to the form
-            const addRow = addForm.closest('tr');
-            const tableBody = addRow.closest('tbody') || addRow.parentNode;
+            const tableBody = document.getElementById('searchLineTable');
+            const addRow = document.getElementById('addSaved_Search_Order_Line').closest('tr');
 
-            // 2. Extract values safely from the formData object (most reliable)
             const categoryId = formData.get('inputsaved_search_order_lineCategory_ID');
             const searchPhrase = formData.get('inputsaved_search_order_lineSearch_Phrase');
             const orderId = formData.get('inputsaved_search_order_lineSaved_Search_Order_ID');
 
-            // Get the text label for the category from the actual select element
-            const categorySelect = addRow.querySelector('select[name="inputsaved_search_order_lineCategory_ID"]');
+            // Get the category name from the select list
+            const categorySelect = document.querySelector('#addSaved_Search_Order_Line select');
             const categoryText = categorySelect.options[categorySelect.selectedIndex].text;
 
-            // 3. Create the new row HTML
             const row = document.createElement('tr');
             row.innerHTML = `
-        <td>
-        <form method="post" action="editSaved_Search_Order_Line" id="editSaved_Search_Order_Line${lineNo}">
+        <td class="ps-3 fw-bold text-muted">${lineNo}</td>
+        <td colspan="3" class="p-0">
+            <form method="post" action="editSaved_Search_Order_Line" id="editSaved_Search_Order_Line${lineNo}" class="row g-0 align-items-center w-100 py-2">
                 <input type="hidden" name="inputsaved_search_order_lineSaved_Search_Order_ID" value="${orderId}">
-                <input type="hidden" name="inputsaved_search_order_lineLine_No" value="${lineNo}"> 
-                ${lineNo}
-               
-            </td>
-            <td>
+                <input type="hidden" name="inputsaved_search_order_lineLine_No" value="${lineNo}">
                 <input type="hidden" name="oldCategory" value="${categoryId}">
-                <div class="input-group input-group-lg">
-                    <select class="form-control border-0 bg-light rounded-end ps-1" name="inputsaved_search_order_lineCategory_ID">
+                <input type="hidden" name="oldPhrase" value="${searchPhrase}">
+
+                <div class="col-md-5 px-2">
+                    <select class="form-select form-select-sm border-0 bg-light" name="inputsaved_search_order_lineCategory_ID">
                         <option value="${categoryId}" selected>${categoryText}</option>
+                        ${categorySelect.innerHTML} 
                     </select>
                 </div>
-            </td>
-            <td>
-                <input type="hidden" name="oldPhrase" value="${searchPhrase}">
-                <div class="input-group input-group-lg">
-                    <input type="text" class="form-control border-0 bg-light rounded-end ps-1" name="inputsaved_search_order_lineSearch_Phrase" value="${searchPhrase}">
+                <div class="col-md-5 px-2">
+                    <input type="text" class="form-control form-control-sm border-0 bg-light" name="inputsaved_search_order_lineSearch_Phrase" value="${searchPhrase}">
                 </div>
-            </td>
-            <td>
-                <div class="d-grid"><button class="btn btn-orange mb-0" type="submit">Edit Line</button></div>
+                <div class="col-md-2 text-end pe-3">
+                    <button class="btn btn-sm btn-outline-primary" type="submit">Update</button>
+                </div>
             </form>
         </td>
     `;
 
-            // 4. Insert the new row before the "Add" row
+            // Insert before the add row
             tableBody.insertBefore(row, addRow);
 
-            // 5. Update the "Add" row line number for the next entry
-            // We search for the input by name instead of using :first-child
+            // Increment for next time
             const nextLineNo = parseInt(lineNo) + 1;
-            const addRowLineNoInput = addRow.querySelector('input[name="inputsaved_search_order_lineLine_No"]');
-            if (addRowLineNoInput) {
-                addRowLineNoInput.value = nextLineNo;
-                // Update the visible text next to the hidden input
-                addRowLineNoInput.parentElement.lastChild.textContent = nextLineNo;
-            }
+            document.querySelector('input[name="inputsaved_search_order_lineLine_No"]').value = nextLineNo;
+            document.getElementById('nextLineNoDisplay').textContent = nextLineNo;
         }
+
+
     }
 );
+
+function handleAutoUpdate(e) {
+    const el = e.target;
+    const row = el.closest('tr'); // This is usually the "parent" you want to manipulate
+    const form = el.closest('form');
+    if (!form || form.id === 'addSaved_Search_Order_Line') return;
+    const submitBtn = row.querySelector('button[type="submit"]');
+    if (submitBtn) {
+        submitBtn.click();
+    }
+    console.log("Saving row for line:", row.querySelector('.fw-bold').innerText);
+}

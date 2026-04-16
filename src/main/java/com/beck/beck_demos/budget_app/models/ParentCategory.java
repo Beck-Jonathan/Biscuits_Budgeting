@@ -153,7 +153,9 @@ public class ParentCategory implements Comparable<ParentCategory> {
     // 2. Validate against your specific keywords
     if (cleanType.equals("income") ||
         cleanType.equals("expense") ||
-        cleanType.equals("investment")) {
+        cleanType.equals("investment") ||
+        cleanType.equals("transfer")
+    ) {
 
       this.transaction_type = cleanType;
     } else {

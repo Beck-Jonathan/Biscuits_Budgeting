@@ -7,8 +7,8 @@ package com.beck.beck_demos.budget_app.controllers;
 
 import com.beck.beck_demos.budget_app.data.CategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
-import com.beck.beck_demos.budget_app.models.ParentCategory;
-import com.beck.beck_demos.budget_app.models.SubCategory;
+import com.beck.beck_demos.budget_app.models.ParentCategory_VM;
+import com.beck.beck_demos.budget_app.models.SubCategory_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -46,8 +46,8 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
     }
 
   session.setAttribute("currentPage",req.getRequestURL());
-  List<SubCategory> categories = null;
-    List<ParentCategory> allparent_categorys = null;
+    List<SubCategory_VM> categories = null;
+    List<ParentCategory_VM> allparent_categorys = null;
   try {
     categories =categoryDAO.getsubCategoryByUser(user.getUser_ID());
     allparent_categorys = categoryDAO.getParentCategoryByUser(user.getUser_ID());

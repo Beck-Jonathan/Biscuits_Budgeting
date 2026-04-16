@@ -5,10 +5,7 @@ import com.beck.beck_demos.budget_app.models.*;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 //since 1/27/2025
 //Jonathan Beck
@@ -175,11 +172,12 @@ public class CategoryDAO_Fake implements iCategoryDAO {
   }
 
   @Override
-  public List<SubCategory> getsubCategoryByUser(String User_ID){
-    List<SubCategory> results = new ArrayList<>();
+  public List<SubCategory_VM> getsubCategoryByUser(String User_ID) {
+    List<SubCategory_VM> results = new ArrayList<>();
     for (SubCategory category : subCategories){
       if (category.getUser_ID().equals(User_ID)){
-        results.add(category);
+        SubCategory_VM vm = new SubCategory_VM(category);
+        results.add(vm);
       }
     }
     return results;
@@ -243,11 +241,11 @@ public class CategoryDAO_Fake implements iCategoryDAO {
   }
 
   @Override
-  public List<ParentCategory> getParentCategoryByUser(String userID) throws SQLException {
-    List<ParentCategory> results = new ArrayList<>();
+  public List<ParentCategory_VM> getParentCategoryByUser(String userID) throws SQLException {
+    List<ParentCategory_VM> results = new ArrayList<>();
     for (ParentCategory parent_category : parent_categories){
       if (parent_category.getuser_id().equals(userID)){
-        results.add(parent_category);
+        results.add(new ParentCategory_VM(parent_category));
       }
     }
     return results;
@@ -367,6 +365,39 @@ public class CategoryDAO_Fake implements iCategoryDAO {
   @Override
   public List<CategoryPerformanceDTO> getAllCategoryPerformanceByMonth(String userId, int year, int month) {
     return List.of();
+  }
+
+  @Override
+  public Integer updateThreshold(SubCategory toChenge) throws SQLException {
+    if (exceptionKey(toChenge.getCategory_ID())) {
+      throw new SQLException("Exception");
+    }
+
+    for (int i = 0; i < subCategories.size(); i++) {
+      if (subCategories.get(i).getCategory_ID().equals(toChenge.getCategory_ID())) {
+        if (Objects.equals(subCategories.get(i).getTarget_Threshold(), toChenge.getTarget_Threshold())) {
+          return 0;
+        } else {
+          subCategories.get(i).setTarget_Threshold(toChenge.getTarget_Threshold());
+          return 1;
+        }
+      }
+    }
+    return -1;
+  }
+
+  @Override
+  public Integer SmartAssignColor(User user) throws SQLException {
+    int result = 0;
+    if (exceptionKey(user)) {
+      throw new SQLException("error");
+    }
+    for (SubCategory subCategory : subCategories) {
+      if (subCategory.getUser_ID().equals(user.getUser_ID())) {
+        result++;
+      }
+    }
+    return result;
   }
 
   private boolean duplicateKey(SubCategory _category){

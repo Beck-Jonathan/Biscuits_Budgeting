@@ -1,19 +1,19 @@
 package com.beck.beck_demos.budget_app.controllers;
 
-
 import com.beck.beck_demos.budget_app.data.BudgetDAO;
 import com.beck.beck_demos.budget_app.data.Budget_Line_ItemDAO;
 import com.beck.beck_demos.budget_app.data.CategoryDAO;
+import com.beck.beck_demos.budget_app.iData.iBudgetDAO;
 import com.beck.beck_demos.budget_app.iData.iBudget_Line_ItemDAO;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
 import com.beck.beck_demos.budget_app.models.*;
-import com.beck.beck_demos.budget_app.iData.iBudgetDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -109,7 +109,7 @@ public class EditBudgetServlet extends HttpServlet{
       resp.sendRedirect("all-budgets");
       return;
     }
-    List<SubCategory> allCategories = null;
+    List<SubCategory_VM> allCategories = null;
     List<String> allbudget_line_types = null;
     List<String> allbudget_line_statuss = null;
     List<String> allcurrency_codes = null;

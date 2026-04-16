@@ -7,7 +7,7 @@ package com.beck.beck_demos.budget_app.controllers;
 
 import com.beck.beck_demos.budget_app.data.CategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
-import com.beck.beck_demos.budget_app.models.SubCategory;
+import com.beck.beck_demos.budget_app.models.SubCategory_VM;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -69,7 +69,7 @@ public class DeleteCategoryServlet extends HttpServlet {
 
 
     req.setAttribute("result", result);
-    List<SubCategory> categories = null;
+    List<SubCategory_VM> categories = null;
     categories = categoryDAO.getsubCategoryByUser(user.getUser_ID());
     req.setAttribute("results",results);
     req.setAttribute("Categories", categories);

@@ -13,7 +13,7 @@ public interface iCategoryDAO {
    */
   String add(SubCategory _category) throws SQLException;
 
-   List<SubCategory> getsubCategoryByUser(String userID);
+  List<SubCategory_VM> getsubCategoryByUser(String userID);
 
    int deleteSubCategory(String categoryID, String User_ID) throws SQLException;
 
@@ -21,7 +21,7 @@ public interface iCategoryDAO {
 
   SubCategory getCategoryByPrimaryKey(SubCategory category) throws SQLException;
 
-   List<ParentCategory> getParentCategoryByUser(String userID) throws SQLException;
+  List<ParentCategory_VM> getParentCategoryByUser(String userID) throws SQLException;
 
   int SmartAssignProjectionModel(User user) throws SQLException;
 
@@ -48,6 +48,10 @@ public interface iCategoryDAO {
   List<CategoryPerformanceDTO> getCategoryPerformance(String userId, String subcatId, int year) throws SQLException;
 
   List<CategoryPerformanceDTO> getAllCategoryPerformanceByMonth(String userId, int year, int month) throws SQLException;
+
+  Integer updateThreshold(SubCategory toChenge) throws SQLException;
+
+  Integer SmartAssignColor(User user) throws SQLException;
 }
 
 

@@ -8,7 +8,9 @@ $(document).ready(function() {
 
     // General UI Listeners
     $("#btnAutoAssign").on("click", showAutoAssignModal);
+    $("#btnAutoColor").on("click", showAutoAssignColorModal);
     $("#confirmAutoAssignBtn").on("click", handleAutoAssignExecution);
+    $("#confirmAutoAssignColorBtn").on("click", handleAutoAssignColorExecution);
 
     // Dynamic Element Listeners
     $(document).on('click', '.color-swatch-trigger', (e) => handleColorPickerToggle(e, pickers));
@@ -26,35 +28,61 @@ $(document).ready(function() {
     $(document).on('click', '.picker-popover', (e) => e.stopPropagation());
 
 
+    $(document).on('blur', '#setBudgetedAmount', (e) => handleThresholdBlur(e));
+    $(document).on('focus', '#setBudgetedAmount', (e) => handleThresholdFocus(e));
+
+
 });
 
 // --- 2. Tab & Chart UI Functions ---
 
+/**
+ * Handles the transition between analysis tabs, including layout swapping
+ * and restoring the engine chart when leaving the performance view.
+ */
 function handleTabTransition(e) {
+    // targetId = the tab being opened (e.g., #tab-performance)
     const targetId = $(e.target).attr('data-bs-target');
+    // relatedTarget = the tab being left (e.g., #tab-overview)
+    const leavingTabId = $(e.relatedTarget).attr('data-bs-target');
+
     const $chart = $('#categoryAnalysisChart');
     const $chartCol = $('#categoryAnalysisSection > div:first-child');
     const $tabsCol = $('#categoryAnalysisSection > div:last-child');
 
-    // Restore original chart state if leaving Performance tab
-    if (targetId !== '#tab-performance' && window.originalChartState && window.analysisChart) {
-        restoreOriginalChart();
+    // --- 1. State Restoration Logic ---
+    // If leaving Performance and moving to any other tab, restore the original Spline chart
+    if (leavingTabId === '#tab-performance' && targetId !== '#tab-performance') {
+        if (window.originalChartState && window.analysisChart) {
+            restoreOriginalChart();
+        }
     }
 
-    // Phase 1: Visual Blur
+    // --- 2. Visual Transition: Phase 1 (Blur/Fade) ---
     $chart.removeClass('chart-ready').addClass('chart-reworking');
 
-    // Phase 2: Timing the transition
+    // --- 3. Visual Transition: Phase 2 (Layout Swap) ---
     setTimeout(() => {
-        // Swap Layout
         const isPerformance = targetId === '#tab-performance';
+
+        // Swap Column Widths: Performance needs more space for the table/year picker
+        // col-lg-8 becomes col-lg-4 for the chart, and vice versa for tabs
         $chartCol.toggleClass('col-lg-8', !isPerformance).toggleClass('col-lg-4', isPerformance);
         $tabsCol.toggleClass('col-lg-4', !isPerformance).toggleClass('col-lg-8', isPerformance);
 
+        // Update Chart Titles based on context
+        if (isPerformance) {
+            $('#analysisChartTitle').text('Budget Accuracy (Annual Performance)');
+        } else {
+            $('#analysisChartTitle').text('Historical vs. Projected');
+        }
+
+        // Force Highcharts to resize to its new container dimensions
         if (window.analysisChart) {
             window.analysisChart.reflow();
         }
 
+        // --- 4. Visual Transition: Phase 3 (Focus) ---
         setTimeout(() => {
             $chart.removeClass('chart-reworking').addClass('chart-ready');
         }, 600);
@@ -130,7 +158,11 @@ function showAutoAssignModal() {
     new bootstrap.Modal(modalEl).show();
 }
 
+function showAutoAssignColorModal() {
+    const modalColor = document.getElementById('autoAssignColorModal');
 
+    new bootstrap.Modal(modalColor).show();
+}
 
 // --- FUNCTION DEFINITIONS (Implementation) ---
 
@@ -486,6 +518,46 @@ function handleAutoAssignExecution() {
     });
 }
 
+function handleAutoAssignColorExecution() {
+    const $btn = $(this);
+    const $modal = $('#autoAssignColorModal');
+    const originalHtml = $btn.html();
+
+    $.ajax({
+        url: 'autoAssignColors',
+        type: 'POST',
+        beforeSend: function () {
+            // Disable interactions to prevent double-submits
+            $btn.prop("disabled", true);
+            $modal.find('.btn-close, .btn-light').addClass('d-none');
+            $btn.html('<span class="spinner-border spinner-border-sm me-2"></span> Running Optimization...');
+        },
+        success: function (response) {
+            // parse as int just in case it comes back as a string
+            const result = parseInt(response);
+
+            if (result >= 0) {
+                // Success State
+                $btn.removeClass('btn-primary').addClass('btn-success')
+                    .html('<i class="bi bi-check-lg me-2"></i> Finished, ' + result + ' updates!');
+
+                // Short delay so the user sees the "Success" state before the flash
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            } else {
+                // Negative response = Error Code
+                alert("The engine returned an error code: " + result);
+                resetAutoModal($btn, originalHtml);
+            }
+        },
+        error: function () {
+            alert("The Color Assignment Engine is temporarily unavailable.");
+            resetAutoModal($btn, originalHtml);
+        }
+    });
+}
+
 /**
  * Toggles the "Locked" status of a category projection.
  * If locked, the Projection Engine should ignore this category during Auto-Assign.
@@ -559,7 +631,11 @@ function handleGearClick(e, id) {
     }
 
     const $card = $(`.modern-cat-card[data-id="${id}"]`);
-
+    const currentColor = $card.find('.card-accent').css('background-color');
+    const $section = $('#categoryAnalysisSection');
+    $section.css('--theme-color', currentColor);
+    window.themeColor = currentColor;
+    const currentThreshold = $card.find('.target-text-label').text().replace(/[^0-9.]/g, '');
     // 1. Basic Data Extraction from the clicked card
     const name = $card.find('.category-text').text().trim();
     const strategy = $card.attr('data-strategy'); // e.g. "REGRESSION"
@@ -573,6 +649,7 @@ function handleGearClick(e, id) {
         '<span class="badge bg-light text-muted border"><i class="bi bi-unlock"></i> Mutable</span>'
     );
 
+
     // 3. UI Transitions: Open section and scroll
     $('#analysisChartTitle').html(`<span class="spinner-border spinner-border-sm me-2"></span> Analyzing ${name}...`);
 
@@ -580,6 +657,9 @@ function handleGearClick(e, id) {
         // PASS STRATEGY HERE: This ensures updateAnalysisTabs knows which row to highlight
         fetchProjectionData(id, name, strategy);
     });
+    const $budgetInput = $('#setBudgetedAmount');
+    $budgetInput.val(currentThreshold);
+    $budgetInput.attr('data-focus-color', currentColor);
 
     // Force reset to first tab on every click
     $('#overview-tab').tab('show');
@@ -597,14 +677,15 @@ function fetchProjectionData(subcatId, name, strategy) {
         dataType: 'json',
         success: function (rawData) {
             if (rawData === "-1" || rawData === "-2") {
-                console.error("Budget Engine Error: " + data);
+                console.error("Budget Engine Error: " + rawData);
                 return;
             }
-            const data = anchorProjections(rawData);
 
+            // 1. Process and Align Data
+            const data = anchorProjections(rawData);
             const categories = data.map(d => (d.monthDate ? d.monthDate.substring(0, 7) : "???"));
 
-            // Build the series array with IDs for interaction logic
+            // 2. Define the Series configuration
             const seriesData = [
                 {
                     id: 'historicalTruth',
@@ -628,7 +709,13 @@ function fetchProjectionData(subcatId, name, strategy) {
                     color: '#198754',
                     dashStyle: 'Dot'
                 },
-                {id: 'lvcf', name: 'LVCF', data: data.map(d => d.lvcf), color: '#6f42c1', dashStyle: 'ShortDot'},
+                {
+                    id: 'lvcf',
+                    name: 'LVCF',
+                    data: data.map(d => d.lvcf),
+                    color: '#6f42c1',
+                    dashStyle: 'ShortDot'
+                },
                 {
                     id: 'inflation',
                     name: 'Inflation (0.3%)',
@@ -653,8 +740,8 @@ function fetchProjectionData(subcatId, name, strategy) {
                 }
             ];
 
-            // Re-initialize the chart
-            Highcharts.chart('categoryAnalysisChart', {
+            // 3. Instantiate the Global Chart Object
+            window.analysisChart = Highcharts.chart('categoryAnalysisChart', {
                 chart: {type: 'line', backgroundColor: 'transparent'},
                 title: {text: null},
                 xAxis: {categories: categories, crosshair: true, tickInterval: 6},
@@ -673,10 +760,26 @@ function fetchProjectionData(subcatId, name, strategy) {
                 series: seriesData
             });
 
+            // 4. --- STATE CAPTURE (The Restore Hook) ---
+            // Save this configuration so handleTabTransition can revert to it later
+            window.originalChartState = {
+                categories: categories,
+                title: "Historical vs. Projected",
+                series: seriesData.map(s => ({
+                    id: s.id,
+                    name: s.name,
+                    data: [...s.data], // Clone array to prevent reference issues
+                    color: s.color,
+                    type: s.type || 'line',
+                    dashStyle: s.dashStyle,
+                    fillOpacity: s.fillOpacity
+                }))
+            };
+
+            // 5. Update UI Components
             $('#analysisChartTitle').text("Analysis: " + name);
             $('#detailCatName').text(name);
 
-            // Update the math and the sidebar tabs
             updateAnalysisTabs(data, strategy);
             updateGrowthImpactUI(data);
         },
@@ -1423,6 +1526,128 @@ window.updateAddPillIndicator = function (selectEl) {
         .addClass('border-' + type);
 };
 
-function initializeNewPill() {
+function handleThresholdFocus(e) {
+    const focusColor = $(this).attr('data-focus-color') || '#0d6efd';
+    $(this).css({
+        'border-bottom-color': focusColor,
+        'background-color': 'rgba(0, 0, 0, 0.02)' // Subtle highlight
+    });
+}
 
+/**
+ * Handles AJAX update when the budgeted amount input loses focus
+ * @param {Event} e - The blur event
+ */
+function handleThresholdBlur(e) {
+    const $input = $(e.target);
+    const newAmount = parseFloat($input.val().trim());
+    const subcategoryId = $('#categoryAnalysisSection').attr('data-current-id');
+
+    // Reset styles immediately
+    $input.css({
+        'border-bottom-color': '#dee2e6',
+        'background-color': 'transparent'
+    });
+
+    if (!subcategoryId || isNaN(newAmount)) return;
+
+    $.ajax({
+        url: 'updateThreshold',
+        type: 'POST',
+        data: {
+            subcategoryid: subcategoryId,
+            amount: newAmount
+        },
+        success: function (response) {
+            const $feedback = $('#budgetUpdateFeedback');
+            $feedback.removeClass('d-none alert-success alert-danger bg-success-subtle text-success bg-danger-subtle text-danger');
+
+            if (response === "1") {
+                // SUCCESS Case
+                $feedback.addClass('bg-success-subtle text-success')
+                    .text('Threshold updated successfully!')
+                    .fadeIn();
+
+                // Auto-hide success after 3 seconds
+                setTimeout(() => $feedback.fadeOut(() => $feedback.addClass('d-none')), 3000);
+            } else {
+                // ERROR Case (Mapping your servlet result codes)
+                const errorMap = {
+                    "-1": "Session expired. Please log in.",
+                    "-2": "Invalid category ID.",
+                    "-3": "User authorization error.",
+                    "-4": "Database connection error.",
+                    "-5": "Invalid amount format."
+                };
+                const errorMsg = errorMap[response] || "An unknown error occurred.";
+
+                $feedback.addClass('bg-danger-subtle text-danger')
+                    .text(errorMsg)
+                    .show(); // Keep errors visible until they click again
+                return;
+            }
+            // Visual feedback on the input itself
+            $input.css('border-bottom-color', '#198754');
+            setTimeout(() => $input.css('border-bottom-color', ''), 1500);
+
+            // Find the specific card to update the "Mini Analysis"
+            const $card = $(`.modern-cat-card[data-id="${subcategoryId}"]`);
+            if ($card.length) {
+                const $bar = $card.find('.progress-bar-fill');
+                const spentAmount = parseFloat($bar.attr('data-amount') || 0);
+                const isExpense = $card.hasClass('border-expense');
+
+                // Calculate new percentage
+                const newPercent = (newAmount > 0) ? (spentAmount / newAmount) * 100 : 0;
+
+                // Update the "of $X.XX" label
+                $card.find('.target-text-label').text('$' + newAmount.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }));
+
+                // Update Progress Bar
+                $bar.css('width', (newPercent > 100 ? 100 : newPercent) + '%');
+                $bar.attr('aria-valuenow', newPercent);
+
+                // Update Colors (Red for over-expense, Green for over-income)
+                const isOver = spentAmount > newAmount;
+                let color = $card.find('.card-accent').css('background-color');
+
+                if (isOver) {
+                    color = isExpense ? '#dc3545' : '#198754';
+                    $card.find('.fw-bold').first()
+                        .addClass(isExpense ? 'text-danger' : 'text-success')
+                        .removeClass('text-dark');
+                } else {
+                    $card.find('.fw-bold').first()
+                        .addClass('text-dark')
+                        .removeClass('text-danger text-success');
+                }
+                $bar.css('background-color', color);
+            }
+        },
+        error: function () {
+            $input.css('border-bottom-color', '#dc3545');
+        }
+    });
+}
+
+function captureChartState() {
+    if (!window.analysisChart) return;
+
+    const chart = window.analysisChart;
+    window.originalChartState = {
+        categories: chart.xAxis[0].categories,
+        title: $('#analysisChartTitle').text(),
+        // Map the series to clean objects so Highcharts can re-add them later
+        series: chart.series.map(s => ({
+            id: s.options.id,
+            name: s.name,
+            type: s.type,
+            data: s.options.data,
+            color: s.color,
+            fillOpacity: s.options.fillOpacity
+        }))
+    };
 }

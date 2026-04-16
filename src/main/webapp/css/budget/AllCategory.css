@@ -420,3 +420,50 @@
     padding: 10px;
     border-radius: 8px;
 }
+
+.modern-budget-input {
+    width: 80px;
+    border: none;
+    border-bottom: 2px solid #dee2e6;
+    background: transparent;
+    text-align: right;
+    font-weight: 700;
+    color: #2c3e50;
+    padding: 2px 5px;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.modern-budget-input:focus {
+    border-bottom-color: #0d6efd; /* Or use your ${groupColor} variable if inline */
+    color: #000;
+    background-color: rgba(13, 110, 253, 0.05);
+    border-radius: 4px 4px 0 0;
+}
+
+.modern-budget-input::placeholder {
+    color: #adb5bd;
+    font-weight: 400;
+}
+
+#categoryAnalysisSection {
+    --theme-color: #0d6efd; /* Default fallback */
+}
+
+/* Make the active pill match the category color */
+#categoryAnalysisSection .nav-pills .nav-link.active {
+    background-color: var(--theme-color) !important;
+    color: white !important;
+}
+
+/* Style the modern budget input using the theme color */
+.modern-budget-input:focus {
+    border-bottom-color: var(--theme-color) !important;
+    outline: none;
+}
+
+/* Optional: Subtle tint for the tab content area */
+#analysisTabContent {
+    border-left: 3px solid var(--theme-color);
+    padding-left: 15px;
+}

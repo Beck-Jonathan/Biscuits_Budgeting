@@ -6,17 +6,29 @@
         <div class="col-12 text-center mb-4">
             <h1 class="fw-bold" style="color: #2c3e50;">Category Manager</h1>
             <p class="text-muted">Total Categories: <span class="fw-bold">${Categories.size()}</span></p>
+
         </div>
         <div class="row mb-4">
             <div class="col-12">
                 <div class="budget-logic-legend p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="fw-bold m-0"><i class="bi bi-cpu me-2"></i>Projection Engine Logic</h5>
+                        <h5 class="fw-bold m-0">
+                            <i class="bi bi-cpu me-2"></i>Projection Engine Logic
+                        </h5>
+                        <span class="badge rounded-pill bg-dark-subtle text-dark px-3 me-2">Active Models</span>
 
-                        <span class="badge rounded-pill bg-dark-subtle text-dark px-3">Active Models</span>
-                        <button id="btnAutoAssign" class="btn btn-primary btn-sm shadow-sm d-flex align-items-center">
-                            <i class="bi bi-magic me-2"></i> Smart Assign Models
-                        </button>
+                        <div class="d-flex align-items-center gap-2">
+
+                            <button id="btnAutoAssign"
+                                    class="btn btn-primary btn-sm shadow-sm d-flex align-items-center">
+                                <i class="bi bi-magic me-1"></i> Smart Assign Models
+                            </button>
+
+                            <button id="btnAutoColor"
+                                    class="btn btn-primary btn-sm shadow-sm d-flex align-items-center">
+                                <i class="bi bi-palette me-1"></i> Smart Assign Colors
+                            </button>
+                        </div>
                     </div>
 
                     <div class="row g-4">
@@ -139,6 +151,27 @@
                                     <span class="text-secondary">Current Strategy:</span>
                                     <span class="badge bg-primary" id="detailStrategy">REGRESSION</span>
                                 </div>
+                                <div class="d-flex justify-content-between align-items-center mt-3 p-2 bg-light rounded"
+                                     style="border: 1px solid #eee;">
+    <span class="small fw-bold text-uppercase text-secondary" style="letter-spacing: 0.5px; font-size: 0.7rem;">
+        Budgeted Amount
+    </span>
+
+                                    <div class="d-flex align-items-center">
+                                        <span class="text-muted me-1 small">$</span>
+                                        <input
+                                                id="setBudgetedAmount"
+                                                type="number"
+                                                step="0.01"
+                                                class="modern-budget-input"
+                                                placeholder="0.00"
+                                                data-focus-color="#0d6efd">
+                                    </div>
+                                    <div id="budgetUpdateFeedback"
+                                         class="d-none mt-2 p-1 px-2 rounded small text-center fw-bold"
+                                         style="font-size: 0.65rem;">
+                                    </div>
+                                </div>
                             </div>
                             <p class="small text-muted" id="detailInsights">
                                 Select a category gear to see engine insights for your budget.
@@ -223,30 +256,73 @@
 
 
         <c:forEach items="${ParentCategories}" var="parent">
-        <c:set var="groupColor" value="${parent.color_id}"/>
+            <c:set var="groupColor" value="${parent.color_id}"/>
+            <%-- Logical Flags --%>
+            <c:set var="isExpense" value="${fn:toLowerCase(parent.transaction_type) == 'expense'}"/>
+            <c:set var="isOverTarget" value="${parent.percentUsed > 100}"/>
 
-        <div class="super-category-wrapper mb-4">
-            <div class="super-category-header p-3 d-flex align-items-center justify-content-between"
-                 style="background: #f8f9fa; border-left: 5px solid ${groupColor}; border-bottom: 1px solid #dee2e6; cursor: pointer;"
-                 data-bs-toggle="collapse"
-                 data-bs-target="#collapse-${parent.parent_category_id}">
+            <div class="super-category-wrapper mb-4">
+                <div class="super-category-header p-3 d-flex align-items-center justify-content-between"
+                     style="background: #f8f9fa; border-left: 5px solid ${groupColor}; border-bottom: 1px solid #dee2e6; cursor: pointer;"
+                     data-bs-toggle="collapse"
+                     data-bs-target="#collapse-${parent.parent_category_id}">
 
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-chevron-down me-3 toggle-arrow transition-icon"></i>
-                    <div>
-                        <h5 class="mb-0 fw-bold text-uppercase" style="letter-spacing: 1px; color: #495057;">
-                                ${fn:escapeXml(parent.super_category_name)}
-                        </h5>
-                        <span class="badge text-dark"
-                              style="background-color: ${groupColor}33; border: 1px solid ${groupColor}">
-                                ${parent.transaction_type}
-                        </span>
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-chevron-down me-3 toggle-arrow transition-icon"></i>
+                        <div>
+                            <h5 class="mb-0 fw-bold text-uppercase" style="letter-spacing: 1px; color: #495057;">
+                                    ${fn:escapeXml(parent.super_category_name)}
+                            </h5>
+                            <span class="badge text-dark"
+                                  style="background-color: ${groupColor}33; border: 1px solid ${groupColor}">
+                                    ${parent.transaction_type}
+                            </span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="analysis-snippet text-muted small text-end">
-                    <div><strong>Quick Stats:</strong> 4 Categories</div>
-                    <div>Avg. Monthly: $1,200.00</div>
+                    <div class="analysis-snippet text-end" style="min-width: 200px;">
+                        <div class="small text-muted mb-1">
+                            <strong>${parent.subcategoryCount}</strong> Categories |
+                            Target: <strong><fmt:formatNumber value="${parent.totalMonthlyTarget}"
+                                                              type="currency"/></strong>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-end">
+                            <div class="me-2 small fw-bold">
+                                <fmt:formatNumber value="${parent.currentMonthSpent}" type="currency"/>
+                            </div>
+                            <div class="progress" style="height: 8px; width: 100px; background-color: #e9ecef;">
+                                    <%-- Logic: If over target, use Red for Expenses, Green for Income/Investments. Otherwise use groupColor. --%>
+                                <c:set var="barDisplayColor" value="${groupColor}"/>
+                                <c:if test="${isOverTarget}">
+                                    <c:set var="barDisplayColor" value="${isExpense ? '#dc3545' : '#198754'}"/>
+                                </c:if>
+
+                                <div class="progress-bar" role="progressbar"
+                                     style="width: ${parent.percentUsed > 100 ? 100 : parent.percentUsed}%; background-color: ${barDisplayColor};"
+                                     aria-valuenow="${parent.percentUsed}" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+
+                            <%-- Status Message Logic --%>
+                        <c:choose>
+                            <c:when test="${parent.remainingBudget < 0 && isExpense}">
+                                <div class="text-danger x-small fw-bold mt-1" style="font-size: 0.7rem;">
+                                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                                    EXCEEDED BY <fmt:formatNumber value="${fn:replace(parent.remainingBudget, '-', '')}"
+                                                                  type="currency"/>
+                                </div>
+                            </c:when>
+                            <c:when test="${parent.remainingBudget < 0 && !isExpense}">
+                                <div class="text-success x-small fw-bold mt-1" style="font-size: 0.7rem;">
+                                    <i class="bi bi-arrow-up-circle-fill me-1"></i>
+                                    SURPLUS OF <fmt:formatNumber value="${fn:replace(parent.remainingBudget, '-', '')}"
+                                                                 type="currency"/>
+                                </div>
+                            </c:when>
+                        </c:choose>
+                    </div>
                 </div>
             </div>
 
@@ -256,6 +332,8 @@
                      style="border-left: 3px solid ${groupColor}55 !important; background-color: rgba(0,0,0,0.01);">
 
                     <c:forEach items="${Categories}" var="category">
+                        <c:set var="isExpense" value="${fn:toLowerCase(parent.transaction_type) == 'expense'}"/>
+                        <c:set var="isOverBudget" value="${category.amount > category.target_Threshold}"/>
                         <c:if test="${category.parentCategoryId == parent.parent_category_id}">
 
                             <c:set var="typeClass" value=""/>
@@ -302,6 +380,44 @@
                                     <span class="category-text"
                                           contenteditable="true">${fn:escapeXml(category.category_Name)}</span>
                                         </div>
+                                        <div class="subcategory-mini-analysis mb-2 mt-1">
+                                            <div class="d-flex justify-content-between align-items-center mb-1"
+                                                 style="font-size: 0.75rem;">
+                                                    <%-- Text Color Logic: Red for over-expenses, Green for over-income --%>
+                                                <span class="fw-bold
+            <c:choose>
+                <c:when test="${isOverBudget && isExpense}">text-danger</c:when>
+                <c:when test="${isOverBudget && !isExpense}">text-success</c:when>
+                <c:otherwise>text-dark</c:otherwise>
+            </c:choose>">
+            <fmt:formatNumber value="${category.amount}" type="currency"/>
+        </span>
+                                                <span class="text-muted">
+                                of <span class="target-text-label"><fmt:formatNumber
+                                                        value="${category.target_Threshold}" type="currency"/></span>
+                                    </span>
+                                            </div>
+
+                                            <div class="progress" style="height: 4px; background-color: #e9ecef;">
+                                                <c:set var="percentUsed"
+                                                       value="${(category.target_Threshold > 0) ? (category.amount / category.target_Threshold) * 100 : 0}"/>
+
+                                                    <%-- Bar Color Logic --%>
+                                                <c:set var="barColor" value="${category.color_id}"/>
+                                                <c:if test="${isOverBudget}">
+                                                    <c:set var="barColor" value="${isExpense ? '#dc3545' : '#198754'}"/>
+                                                </c:if>
+
+                                                <div class="progress-bar progress-bar-fill" role="progressbar"
+                                                     data-amount="${category.amount}" <%-- Store actual spent for JS math --%>
+                                                     style="width: ${percentUsed > 100 ? 100 : percentUsed}%;
+                                                             background-color: ${barColor};"
+                                                     aria-valuenow="${percentUsed}" aria-valuemin="0"
+                                                     aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                        </div>
+
 
                                         <div class="strategy-row">
                                             <i class="bi bi-graph-up-arrow strategy-icon" title="Regression"
@@ -337,61 +453,62 @@
                     </c:forEach>
                 </div>
             </div>
-            </c:forEach>
+        </c:forEach>
 
-            <div class="col" id="add-pill-wrapper">
-                <div id="new-pill-container" class="modern-cat-card border-dashed"
-                     data-id="NEWCARD">
+        <div class="col" id="add-pill-wrapper">
+            <div id="new-pill-container" class="modern-cat-card border-dashed"
+                 data-id="NEWCARD">
 
-                    <div class="card-accent " id="new-card-accent" style="background-color: #0d6efd;">
-                        <div class="swatch-container color-swatch-trigger">
-                            <div class="color-swatch-trigger" style="background-color: #0d6efd;"></div>
+                <div class="card-accent " id="new-card-accent" style="background-color: #0d6efd;">
+                    <div class="swatch-container color-swatch-trigger">
+                        <div class="color-swatch-trigger" style="background-color: #0d6efd;"></div>
 
-                            <div class="picker-popover d-none shadow-lg">
-                                <div class="wheel-canvas"></div>
-                            </div>
+                        <div class="picker-popover d-none shadow-lg">
+                            <div class="wheel-canvas"></div>
                         </div>
-                        <input type="hidden" id="new-category-color" value="#0d6efd">
+                    </div>
+                    <input type="hidden" id="new-category-color" value="#0d6efd">
+                </div>
+
+                <div class="card-body-content">
+                    <div class="category-name-row">
+                        <input type="text" id="new-category-name"
+                               class="form-control form-control-sm border-0 bg-transparent fw-bold p-0"
+                               placeholder="New Category Name..."
+                               style="box-shadow: none; font-size: 0.9rem;"
+                               onkeydown="if(event.key==='Enter') addNewCategory()">
+                        <div id="new-category-error" class="text-danger mt-1 d-none"
+                             style="font-size: 0.7rem; font-weight: bold;"></div>
                     </div>
 
-                    <div class="card-body-content">
-                        <div class="category-name-row">
-                            <input type="text" id="new-category-name"
-                                   class="form-control form-control-sm border-0 bg-transparent fw-bold p-0"
-                                   placeholder="New Category Name..."
-                                   style="box-shadow: none; font-size: 0.9rem;"
-                                   onkeydown="if(event.key==='Enter') addNewCategory()">
-                            <div id="new-category-error" class="text-danger mt-1 d-none"
-                                 style="font-size: 0.7rem; font-weight: bold;"></div>
-                        </div>
 
-                        <div class="strategy-row">
+                    <div class="strategy-row">
                 <span class="text-muted" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;">
                     Model: <span class="fw-bold text-primary">AVG_STRICT</span>
                 </span>
-                        </div>
+                    </div>
 
-                        <div class="parent-row d-flex align-items-center gap-2">
-                            <select id="new-category-parent" class="modern-select flex-grow-1"
-                                    onchange="updateAddPillIndicator(this)">
-                                <c:forEach items="${ParentCategories}" var="parent">
-                                    <option value="${parent.parent_category_id}"
-                                            data-type="${fn:toLowerCase(parent.transaction_type)}">
-                                            ${fn:escapeXml(parent.super_category_name)}
-                                    </option>
-                                </c:forEach>
-                            </select>
-                            <button onclick="addNewCategory()"
-                                    class="btn btn-primary btn-sm rounded-circle flex-shrink-0"
-                                    style="width: 26px; height: 26px; padding: 0;">
-                                <i class="bi bi-plus"></i>
-                            </button>
-                        </div>
+                    <div class="parent-row d-flex align-items-center gap-2">
+                        <select id="new-category-parent" class="modern-select flex-grow-1"
+                                onchange="updateAddPillIndicator(this)">
+                            <c:forEach items="${ParentCategories}" var="parent">
+                                <option value="${parent.parent_category_id}"
+                                        data-type="${fn:toLowerCase(parent.transaction_type)}">
+                                        ${fn:escapeXml(parent.super_category_name)}
+                                </option>
+                            </c:forEach>
+                        </select>
+                        <button onclick="addNewCategory()"
+                                class="btn btn-primary btn-sm rounded-circle flex-shrink-0"
+                                style="width: 26px; height: 26px; padding: 0;">
+                            <i class="bi bi-plus"></i>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 <div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -448,6 +565,37 @@
     </div>
 </div>
 
-
+<div class="modal fade" id="autoAssignColorModal" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-info text-white border-0">
+                <h5 class="modal-title fw-bold"><i class="bi bi-palette-fill me-2"></i>Design Engine</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <div class="mb-3">
+                    <i class="bi bi-paint-bucket text-info" style="font-size: 3rem;"></i>
+                </div>
+                <h4 class="fw-bold">Sync Category Colors?</h4>
+                <p class="text-muted">
+                    This will automatically update all subcategory accent colors to match
+                    the brand colors of their Parent Categories.
+                </p>
+                <div class="alert alert-info border-0 small d-flex align-items-center text-start">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    This helps maintain visual consistency across your dashboard and
+                    spending reports.
+                </div>
+            </div>
+            <div class="modal-footer border-0 pb-4 justify-content-center">
+                <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="confirmAutoAssignColorBtn" class="btn btn-info text-white px-4 shadow-sm">
+                    Apply Colors
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>

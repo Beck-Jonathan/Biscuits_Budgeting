@@ -116,7 +116,7 @@ public class AllPlanned_TransactionsServlet extends HttpServlet {
     List<Planned_Transaction_VM> planned_transactions = null;
     try {
 
-      List<SubCategory> allCategories = subcategoryDAO.getsubCategoryByUser(user.getUser_ID());
+      List<SubCategory_VM> allCategories = subcategoryDAO.getsubCategoryByUser(user.getUser_ID());
 
       List<Budget_VM> allBudgets = budgetDAO.getAllActiveBudgetsWithLines(user.getUser_ID());
 
