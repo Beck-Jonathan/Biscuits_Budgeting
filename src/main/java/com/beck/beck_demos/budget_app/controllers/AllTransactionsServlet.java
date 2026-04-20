@@ -114,6 +114,7 @@ public class AllTransactionsServlet extends HttpServlet {
     req.setAttribute("sort", sort);
     req.setAttribute("direction", direction);
     req.setAttribute("year", year);
+    req.setAttribute("month", month);
     req.setAttribute("pageTitle", "All Transactions");
 
     req.getRequestDispatcher("WEB-INF/Budget_App/all_Transactions.jsp").forward(req, resp);

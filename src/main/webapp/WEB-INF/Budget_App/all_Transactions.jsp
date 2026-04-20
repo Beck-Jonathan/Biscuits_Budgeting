@@ -19,16 +19,53 @@
     </div>
 
     <%-- Filter Toolbar --%>
+    <%-- Filter Toolbar --%>
     <div class="row">
         <div class="col-12">
             <div class="filter-toolbar mb-4 p-3 bg-light rounded border shadow-sm">
                 <form method="get" action="all-Transactions">
                     <input type="hidden" name="sort" value="${sort}">
                     <input type="hidden" name="direction" value="${direction}">
-                    <input type="hidden" name="year" value="${year}">
 
                     <div class="row g-3 align-items-end">
                         <div class="col-md-3">
+                            <label class="small fw-bold text-muted">DATE RANGE</label>
+                            <div class="input-group">
+
+                                <%-- Month Dropdown --%>
+                                <select name="month" class="form-select shadow-sm rounded-start-pill"
+                                        style="border-right: 0;">
+                                    <option value="">**Any**</option>
+                                    <option value="1" ${month == 1 ? 'selected' : ''}>January</option>
+                                    <option value="2" ${month == 2 ? 'selected' : ''}>February</option>
+                                    <option value="3" ${month == 3 ? 'selected' : ''}>March</option>
+                                    <option value="4" ${month == 4 ? 'selected' : ''}>April</option>
+                                    <option value="5" ${month == 5 ? 'selected' : ''}>May</option>
+                                    <option value="6" ${month == 6 ? 'selected' : ''}>June</option>
+                                    <option value="7" ${month == 7 ? 'selected' : ''}>July</option>
+                                    <option value="8" ${month == 8 ? 'selected' : ''}>August</option>
+                                    <option value="9" ${month == 9 ? 'selected' : ''}>September</option>
+                                    <option value="10" ${month == 10 ? 'selected' : ''}>October</option>
+                                    <option value="11" ${month == 11 ? 'selected' : ''}>November</option>
+                                    <option value="12" ${month == 12 ? 'selected' : ''}>December</option>
+                                </select>
+
+                                <%-- Separator --%>
+                                <span class="input-group-text bg-white border-start-0 border-end-0">/</span>
+
+                                <%-- Year Dropdown --%>
+                                <select name="year" class="form-select shadow-sm rounded-end-pill"
+                                        style="border-left: 0;">
+                                    <option value="">**Any**</option>
+                                    <c:forEach var="i" begin="2020" end="2030">
+                                        <option value="${i}" ${year == i ? 'selected' : ''}>${i}</option>
+                                    </c:forEach>
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
                             <label class="small fw-bold text-muted">CATEGORY</label>
                             <select name="category" class="form-select rounded-pill shadow-sm">
                                 <option value="">All Categories</option>
@@ -40,7 +77,7 @@
                             </select>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="small fw-bold text-muted">BANK ACCOUNT</label>
                             <select name="bankAccountID" class="form-select rounded-pill shadow-sm">
                                 <option value="">Any Account</option>
@@ -57,9 +94,7 @@
                                 <input class="form-check-input" type="checkbox" name="showErrors" id="showErrors" value="true" ${showErrors ? 'checked' : ''}>
                                 <label class="form-check-label small fw-bold text-danger" for="showErrors">Potential Errors</label>
                             </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-check form-switch mb-2">
+                            <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" name="showLocked" id="showLocked"
                                        value="true" ${showLocked ? 'checked' : ''}>
                                 <label class="form-check-label small fw-bold text-danger" for="showLocked">Show
@@ -174,12 +209,14 @@
                 <input type="hidden" name="bankAccountID" value="${bankAccountID}">
                 <input type="hidden" name="showErrors" value="${showErrors}">
                 <input type="hidden" name="showLocked" value="${showLocked}">
+                <input type="hidden" name="year" value="${year}">
+                <input type="hidden" name="month" value="${month}">
 
                 <nav aria-label="Page navigation">
                     <ul class="pagination pagination-sm mb-0 me-3">
                         <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
                             <a class="page-link"
-                               href="?page=${currentPage - 1}&sort=${sort}&direction=${direction}&category=${category}&bankAccountID=${bankAccountID}&showErrors=${showErrors}&showLocked=${showLocked}">Prev</a>
+                               href="?page=${currentPage - 1}&sort=${sort}&direction=${direction}&category=${category}&bankAccountID=${bankAccountID}&showErrors=${showErrors}&showLocked=${showLocked}&year=${year}&month=${month}">Prev</a>
                         </li>
                         <li class="page-item mx-2">
                             <select name="page" class="form-select form-select-sm" style="width: auto;"
@@ -191,7 +228,7 @@
                         </li>
                         <li class="page-item ${currentPage == noOfPages ? 'disabled' : ''}">
                             <a class="page-link"
-                               href="?page=${currentPage + 1}&sort=${sort}&direction=${direction}&category=${category}&bankAccountID=${bankAccountID}&showErrors=${showErrors}&showLocked=${showLocked}">Next</a>
+                               href="?page=${currentPage + 1}&sort=${sort}&direction=${direction}&category=${category}&bankAccountID=${bankAccountID}&showErrors=${showErrors}&showLocked=${showLocked}&year=${year}&month=${month}">Next</a>
                         </li>
                     </ul>
                 </nav>

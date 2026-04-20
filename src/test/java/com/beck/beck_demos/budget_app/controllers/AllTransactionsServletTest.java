@@ -152,6 +152,49 @@ class AllTransactionsServletTest {
     servlet.init();
   }
 
+  @Test
+  public void testAllFilterParametersAreCapturedInRequestAttributes() throws ServletException, IOException {
+    setupUserSession("User", "618052e9-c69b-4d9b-880e-e22e4a970bd6");
+
+    // Set all filter parameters
+    request.setParameter("category", "cat-123");
+    request.setParameter("bankAccountID", "bank-456");
+    request.setParameter("year", "2026");
+    request.setParameter("month", "6");
+    request.setParameter("sort", "Amount");
+    request.setParameter("direction", "1");
+    request.setParameter("showErrors", "true");
+    request.setParameter("showLocked", "true");
+
+    servlet.doGet(request, response);
+
+    // Verify attributes match parameters
+    assertEquals("cat-123", request.getAttribute("category"));
+    assertEquals("bank-456", request.getAttribute("bankAccountID"));
+    assertEquals(2026, request.getAttribute("year"));
+    assertEquals(6, request.getAttribute("month"));
+    assertEquals("Amount", request.getAttribute("sort"));
+    assertEquals(1, request.getAttribute("direction"));
+    assertEquals(true, request.getAttribute("showErrors"));
+    assertEquals(true, request.getAttribute("showLocked"));
+  }
+
+  @Test
+  public void testDefaultValuesAreSetWhenParametersAreMissing() throws ServletException, IOException {
+    setupUserSession("User", "618052e9-c69b-4d9b-880e-e22e4a970bd6");
+
+    // No parameters set (simulating empty state)
+    servlet.doGet(request, response);
+
+    // Verify default values
+    assertEquals(0, request.getAttribute("year"));
+    assertEquals(0, request.getAttribute("month"));
+    assertEquals("Date", request.getAttribute("sort")); // Default sort
+    assertEquals(0, request.getAttribute("direction")); // Default direction
+    assertEquals(false, request.getAttribute("showErrors"));
+    assertEquals(false, request.getAttribute("showLocked"));
+  }
+
   // --- HELPER ---
   private void setupUserSession(String role, String userId) {
     User user = new User();
