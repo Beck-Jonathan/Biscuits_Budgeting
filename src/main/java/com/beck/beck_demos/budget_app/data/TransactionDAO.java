@@ -237,6 +237,10 @@ public class TransactionDAO implements iTransactionDAO {
 
           statement.setString(1, userId);
           statement.setString(2, savedSearchOrder.getSaved_Search_Order_ID());
+          boolean success = statement.execute();
+
+          // If the procedure runs without error, we return 1 (success)
+          result = 1;
         }
       }
 
