@@ -44,13 +44,41 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
       resp.sendRedirect("budget_home");
       return;
     }
+    java.time.LocalDate lastMonth = java.time.LocalDate.now().minusMonths(1);
+    int month = lastMonth.getMonthValue();
+    int year = lastMonth.getYear();
+    String _year = req.getParameter("year");
+    if (_year != null) {
+      try {
+        year = Integer.parseInt(_year);
+      } catch (Exception e) {
+        year = lastMonth.getYear();
+      }
+    }
+    String _month = req.getParameter("month");
+    if (_month != null) {
+      try {
+        month = Integer.parseInt(_month);
+      } catch (Exception e) {
+        month = lastMonth.getMonthValue();
+      }
+    }
+    boolean refresh = false;
+    String _refresh = req.getParameter("refresh");
+    if (_refresh != null) {
+      try {
+        refresh = Boolean.parseBoolean(_refresh);
+      } catch (Exception e) {
+        refresh = false;
+      }
+    }
 
   session.setAttribute("currentPage",req.getRequestURL());
     List<SubCategory_VM> categories = null;
     List<ParentCategory_VM> allparent_categorys = null;
   try {
-    categories =categoryDAO.getsubCategoryByUser(user.getUser_ID());
-    allparent_categorys = categoryDAO.getParentCategoryByUser(user.getUser_ID());
+    categories = categoryDAO.getsubCategoryByUser(user.getUser_ID(), month, year);
+    allparent_categorys = categoryDAO.getParentCategoryByUser(user.getUser_ID(), month, year);
   } catch (Exception e) {
      categories = null;
      allparent_categorys = null;
@@ -62,7 +90,12 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
   req.setAttribute("Categories", categories);
     req.setAttribute("ParentCategories", allparent_categorys);
   req.setAttribute("pageTitle", "All Categories");
-  req.getRequestDispatcher("WEB-INF/Budget_App/all_categories.jsp").forward(req,resp);
+    if (!refresh) {
+      req.getRequestDispatcher("WEB-INF/Budget_App/all_categories.jsp").forward(req, resp);
+    }
+    if (refresh) {
+      req.getRequestDispatcher("WEB-INF/Budget_App/all_categories_Partial.jsp").forward(req, resp);
+    }
 
 }
 }

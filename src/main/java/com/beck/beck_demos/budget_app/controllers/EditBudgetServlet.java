@@ -109,13 +109,13 @@ public class EditBudgetServlet extends HttpServlet{
       resp.sendRedirect("all-budgets");
       return;
     }
-    List<SubCategory_VM> allCategories = null;
+    List<SubCategory> allCategories = null;
     List<String> allbudget_line_types = null;
     List<String> allbudget_line_statuss = null;
     List<String> allcurrency_codes = null;
     try{
 
-      allCategories = categoryDAO.getsubCategoryByUser(user.getUser_ID());
+      allCategories = categoryDAO.getsubCategoryByUserForDropdown(user);
       allbudget_line_types = budgetLineItemDAO.getDistinctbudget_line_typeForDropdown();
       allbudget_line_statuss = budgetLineItemDAO.getDistinctbudget_line_statusForDropdown();
       allcurrency_codes = budgetDAO.getDistinctcurrency_codeForDropdown();

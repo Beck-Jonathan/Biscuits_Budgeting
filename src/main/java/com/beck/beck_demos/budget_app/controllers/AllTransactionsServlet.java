@@ -97,7 +97,7 @@ public class AllTransactionsServlet extends HttpServlet {
       List<Transaction_VM> transactions = transactionDAO.getTransactionByUser(user.getUser_ID(), category, bankAccountID, year, month, page_size, offset, sort, direction, findErrors, showLocked);
 
       req.setAttribute("Transactions", transactions);
-      req.setAttribute("Categories", categoryDAO.getsubCategoryByUser(user.getUser_ID()));
+      req.setAttribute("Categories", categoryDAO.getsubCategoryByUserForDropdown(user));
       req.setAttribute("BankAccounts", bankAccountDAO.getDistinctBank_AccountForDropdown(user.getUser_ID()));
       req.setAttribute("transaction_count", transaction_count);
       req.setAttribute("noOfPages", (int) Math.ceil((double) transaction_count / page_size));

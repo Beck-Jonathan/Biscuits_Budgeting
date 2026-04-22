@@ -3,7 +3,7 @@ package com.beck.beck_demos.budget_app.controllers;
 import com.beck.beck_demos.budget_app.data.TransactionDAO;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iTransactionDAO;
-import com.beck.beck_demos.budget_app.models.SubCategory_VM;
+import com.beck.beck_demos.budget_app.models.SubCategory;
 import com.beck.beck_demos.budget_app.models.Transaction;
 import com.beck.beck_demos.budget_app.models.Transaction_VM;
 import com.beck.beck_demos.budget_app.models.User;
@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,13 @@ public class SearchAndCategorizeServlet extends HttpServlet {
       resp.sendRedirect("budget_home");
       return;
     }
-    List<SubCategory_VM> allCategories = categoryDAO.getsubCategoryByUser(user.getUser_ID());
+    List<SubCategory> allCategories;
+    try {
+      allCategories = categoryDAO.getsubCategoryByUserForDropdown(user);
+    } catch (Exception e) {
+      allCategories = new ArrayList<>();
+    }
+
     req.setAttribute("Categories", allCategories);
 
     session.setAttribute("currentPage",req.getRequestURL());

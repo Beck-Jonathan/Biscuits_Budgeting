@@ -1,46 +1,75 @@
-<%--************
-Create the JSP  For Viewing All of The  Bank_Account table
- Created By Jonathan Beck 1/22/2025
-**********--%>
 <%@include file="/WEB-INF/Budget_App/budget_top.jsp"%>
-<div class = "container">
+
+<div class="container-fluid mt-3 px-4">
+    <%-- Header Section --%>
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-1">Bank Accounts</h1>
+                <span class="badge bg-dark">${Bank_Accounts.size()} Total Records</span>
+            </div>
+            <div class="btn-group">
+                <a href="addBank_Account" class="btn btn-sm btn-outline-primary">+ Add New Account</a>
+            </div>
+        </div>
+    </div>
+
+    <%-- Data Table --%>
     <div class="row">
         <div class="col-12">
-            <h1>All Biscuit Bank_Accounts</h1>
-            <p>There ${Bank_Accounts.size() eq 1 ? "is" : "are"}&nbsp;${Bank_Accounts.size()} Bank_Account${Bank_Accounts.size() ne 1 ? "s" : ""}</p>
-            Add Bank_Account   <a href="addBank_Account">Add</a>
-            <c:if test="${Bank_Accounts.size() > 0}">
-                <div class="table-responsive"><table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col">Bank_Account_ID</th>
-                        <th scope="col">User_ID</th>
-                        <th scope="col">Account_Nickname</th>
-                        <th scope="col">Balance</th>
-                        <th scope="col">Balance_Date</th>
-                        <th scope="col">Edit</th>
-                        <th scope="col">Delete</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach items="${Bank_Accounts}" var="bank_account">
+            <c:if test="${not empty Bank_Accounts}">
+                <div class="table-responsive shadow-sm bg-white rounded border">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-dark">
                         <tr>
-                            <td><a href = "editBank_Account?bank_accountid=${bank_account.bank_Account_ID}&mode=view">${fn:escapeXml(bank_account.bank_Account_ID)}</a></td>
-                            <td>${fn:escapeXml(bank_account.user_ID)}</td>
-                            <td>${fn:escapeXml(bank_account.account_Nickname)}</td>
-                            <td>${fn:escapeXml(bank_account.balance)}</td>
-                            <td>${fn:escapeXml(bank_account.balance_Date)}</td>
-                            <td><a href = "editBank_Account?bank_accountid=${bank_account.bank_Account_ID}&mode=edit" > Edit </a></td>
-                            <td><a href = "deletebank_account?bank_accountid=${bank_account.bank_Account_ID}&mode=0"> Delete </a></td>
+                            <th>ID</th>
+                            <th>Account Nickname</th>
+                            <th class="text-end">Balance</th>
+                            <th>Balance Date</th>
+                            <th class="text-center">Actions</th>
                         </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        <c:forEach items="${Bank_Accounts}" var="bank_account">
+                            <tr>
+                                <td>
+                                    <a href="editBank_Account?bank_accountid=${bank_account.bank_Account_ID}&mode=view"
+                                       class="fw-bold text-decoration-none">
+                                            ${fn:escapeXml(bank_account.bank_Account_ID)}
+                                    </a>
+                                </td>
+                                <td>${fn:escapeXml(bank_account.account_Nickname)}</td>
+                                <td class="text-end fw-bold">
+                                    <fmt:formatNumber value="${bank_account.balance}" type="currency"/>
+                                </td>
+                                <td>${fn:escapeXml(bank_account.balance_Date)}</td>
+                                <td class="text-center">
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <a href="editBank_Account?bank_accountid=${bank_account.bank_Account_ID}&mode=edit"
+                                           class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </a>
+                                        <a href="deletebank_account?bank_accountid=${bank_account.bank_Account_ID}"
+                                           class="btn btn-sm btn-outline-danger"
+                                           onclick="return confirm('Are you sure you want to delete this bank account?');">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </c:if>
+
+            <c:if test="${empty Bank_Accounts}">
+                <div class="alert alert-info">
+                    No bank accounts found.
                 </div>
             </c:if>
         </div>
     </div>
 </div>
-</main>
-<%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>
 
+<%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>

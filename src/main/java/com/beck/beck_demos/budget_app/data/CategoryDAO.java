@@ -58,12 +58,14 @@ public class CategoryDAO implements iCategoryDAO {
     return newUUID;
   }
 
-  public List<SubCategory_VM> getsubCategoryByUser(String userID) {
+  public List<SubCategory_VM> getsubCategoryByUser(String userID, int month, int year) {
     List<SubCategory_VM> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       if (connection != null) {
-        try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_user_subCategory(?)}")) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_user_subCategory(?,?,?)}")) {
           statement.setString(1,userID);
+          statement.setInt(2, month);
+          statement.setInt(3, year);
           try(ResultSet resultSet = statement.executeQuery()) {
           while (resultSet.next()) {
             String Category_ID = resultSet.getString("subcategory_category_id");
@@ -161,14 +163,16 @@ public class CategoryDAO implements iCategoryDAO {
   }
 
   @Override
-  public List<ParentCategory_VM> getParentCategoryByUser(String userID) throws SQLException {
+  public List<ParentCategory_VM> getParentCategoryByUser(String userID, int month, int year) throws SQLException {
     List<ParentCategory_VM> summaries = new ArrayList<>();
-    String query = "{call GetParentCategorySummaries(?)}";
+    String query = "{call GetParentCategorySummaries(?,?,?)}";
 
     try (Connection conn = getConnection();
          CallableStatement cs = conn.prepareCall(query)) {
 
       cs.setString(1, userID);
+      cs.setInt(2, month);
+      cs.setInt(3, year);
 
       try (ResultSet rs = cs.executeQuery()) {
         while (rs.next()) {
@@ -434,6 +438,33 @@ public class CategoryDAO implements iCategoryDAO {
       throw new SQLException("Can not Updated Projections");
     }
     return rowsAffected;
+  }
+
+  @Override
+  public List<SubCategory> getsubCategoryByUserForDropdown(User user) {
+    List<SubCategory> result = new ArrayList<>();
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_retrieve_distinct_sub_category_by_user_for_dropdown(?)}")) {
+          statement.setString(1, user.getUser_ID());
+          try (ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+              String sub_category_id = resultSet.getString("sub_category_sub_category_id");
+              String category_Name = resultSet.getString("sub_category_category_name");
+              String colorID = resultSet.getString("sub_category_color_id");
+              SubCategory _sub_category = new SubCategory();
+              _sub_category.setCategory_ID(sub_category_id);
+              _sub_category.setCategory_Name(category_Name);
+              _sub_category.setcolor_id(colorID);
+              result.add(_sub_category);
+            }
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not retrieve sub_categorys. Try again later");
+    }
+    return result;
   }
 
   private Double readDouble(ResultSet rs, String columnLabel) throws SQLException {

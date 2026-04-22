@@ -9,6 +9,27 @@
     transition: all 0.25s ease;
     border-bottom: 4px solid transparent;
     min-height: 100px;
+
+}
+
+/* 1. Parent card gets pointer */
+.card-body-content {
+    cursor: pointer;
+}
+
+/* 2. Override for the editable text span */
+.category-text {
+    cursor: text;
+}
+
+/* 3. Override for dropdowns (use 'default' arrow cursor) */
+.modern-select {
+    cursor: default;
+}
+
+/* 4. Ensure icons are clickable */
+.card-actions-modern i {
+    cursor: pointer;
 }
 
 .modern-cat-card:hover {

@@ -172,7 +172,7 @@ public class CategoryDAO_Fake implements iCategoryDAO {
   }
 
   @Override
-  public List<SubCategory_VM> getsubCategoryByUser(String User_ID) {
+  public List<SubCategory_VM> getsubCategoryByUser(String User_ID, int month, int year) {
     List<SubCategory_VM> results = new ArrayList<>();
     for (SubCategory category : subCategories){
       if (category.getUser_ID().equals(User_ID)){
@@ -241,7 +241,7 @@ public class CategoryDAO_Fake implements iCategoryDAO {
   }
 
   @Override
-  public List<ParentCategory_VM> getParentCategoryByUser(String userID) throws SQLException {
+  public List<ParentCategory_VM> getParentCategoryByUser(String userID, int month, int year) throws SQLException {
     List<ParentCategory_VM> results = new ArrayList<>();
     for (ParentCategory parent_category : parent_categories){
       if (parent_category.getuser_id().equals(userID)){
@@ -398,6 +398,17 @@ public class CategoryDAO_Fake implements iCategoryDAO {
       }
     }
     return result;
+  }
+
+  @Override
+  public List<SubCategory> getsubCategoryByUserForDropdown(User user) {
+    List<SubCategory> results = new ArrayList<>();
+    for (SubCategory subCategory : subCategories) {
+      if (subCategory.getUser_ID().equals(user.getUser_ID())) {
+        results.add(subCategory);
+      }
+    }
+    return results;
   }
 
   private boolean duplicateKey(SubCategory _category){

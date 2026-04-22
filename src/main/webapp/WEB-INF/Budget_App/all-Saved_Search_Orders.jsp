@@ -1,49 +1,84 @@
-<%--************
-Create the JSP  For Viewing All of The  Saved_Search_Order table
- Created By Jonathan Beck 2/4/2025
-**********--%>
 <%@include file="/WEB-INF/Budget_App/budget_top.jsp"%>
-<div class = "container">
+
+<div class="container-fluid mt-3 px-4">
+    <%-- Header Section --%>
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-1">Saved Search Orders</h1>
+                <span class="badge bg-dark">${Saved_Search_Orders.size()} Total Records</span>
+            </div>
+            <div class="btn-group">
+                <a href="addSaved_Search_Order" class="btn btn-sm btn-outline-primary">+ Add New Order</a>
+            </div>
+        </div>
+    </div>
+
+    <%-- Data Table --%>
     <div class="row">
         <div class="col-12">
-            <h1>All Biscuit Saved_Search_Orders</h1>
-            <p>There ${Saved_Search_Orders.size() eq 1 ? "is" : "are"}&nbsp;${Saved_Search_Orders.size()} Saved_Search_Order${Saved_Search_Orders.size() ne 1 ? "s" : ""}</p>
-            Add Saved_Search_Order   <a href="addSaved_Search_Order">Add</a>
-            <c:if test="${Saved_Search_Orders.size() > 0}">
-                <div class="table-responsive"><table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col">Saved_Search_Order_ID</th>
-                        <th scope="col">Owned_User</th>
-                        <th scope="col">Nickname</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Last_Used</th>
-                        <th scope="col">Last_Updated</th>
-                        <th scope="col">Times_Ran</th>
-
-                        <th scope="col">Delete</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach items="${Saved_Search_Orders}" var="saved_search_order">
+            <c:if test="${not empty Saved_Search_Orders}">
+                <div class="table-responsive shadow-sm bg-white rounded border">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-dark">
                         <tr>
-                            <td><a href = "editSaved_Search_Order?saved_search_orderid=${saved_search_order.saved_Search_Order_ID}&mode=view">${fn:escapeXml(saved_search_order.saved_Search_Order_ID)}</a></td>
-                            <td>${fn:escapeXml(saved_search_order.owned_User)}</td>
-                            <td>${fn:escapeXml(saved_search_order.nickname)}</td>
-                            <td>${fn:escapeXml(saved_search_order.description)}</td>
-                            <td>${fn:escapeXml(saved_search_order.last_Used)}</td>
-                            <td>${fn:escapeXml(saved_search_order.last_Updated)}</td>
-                            <td>${fn:escapeXml(saved_search_order.times_Ran)}</td>
-                            <td><a href = "deletesaved_search_order?saved_search_orderid=${saved_search_order.saved_Search_Order_ID}"> Delete </a></td>
+                            <th>View</th>
+
+                            <th>Nickname</th>
+                            <th>Description</th>
+                            <th>Last Used</th>
+                            <th>Last Updated</th>
+                            <th>Times Ran</th>
+                            <th class="text-center">Actions</th>
                         </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        <c:forEach items="${Saved_Search_Orders}" var="saved_search_order">
+                            <tr>
+                                <td>
+                                    <a href="editSaved_Search_Order?saved_search_orderid=${saved_search_order.saved_Search_Order_ID}&mode=view"
+                                       class="btn btn-sm btn-outline-info">
+                                        View
+                                    </a>
+                                </td>
+
+                                <td>${fn:escapeXml(saved_search_order.nickname)}</td>
+                                <td class="text-truncate" style="max-width: 200px;"
+                                    title="${fn:escapeXml(saved_search_order.description)}">
+                                        ${fn:escapeXml(saved_search_order.description)}
+                                </td>
+                                <td>${fn:escapeXml(saved_search_order.last_Used)}</td>
+                                <td>${fn:escapeXml(saved_search_order.last_Updated)}</td>
+                                <td><span class="badge bg-light text-dark border">${saved_search_order.times_Ran}</span>
+                                </td>
+                                <td class="text-center">
+                                    <!-- <a href="deletesaved_search_order?saved_search_orderid=${saved_search_order.saved_Search_Order_ID}"
+                                       class="btn btn-sm btn-outline-danger"
+                                       onclick="return confirm('Are you sure you want to delete this order?');">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </a> -->
+                                    <form method="post" action="${appURL}/apply-Saved_Search_Order">
+                                        <input type="hidden" name="saved_search_orderid"
+                                               value="${saved_search_order.saved_Search_Order_ID}">
+                                        <button class="btn btn-success shadow-sm" type="submit">
+                                            <i class="bi bi-play-fill"></i> Apply Sorting Now
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </c:if>
+
+            <c:if test="${empty Saved_Search_Orders}">
+                <div class="alert alert-info">
+                    No saved search orders found.
                 </div>
             </c:if>
         </div>
     </div>
 </div>
-</main>
-<%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>
 
+<%@include file="/WEB-INF/Budget_App/budget_bottom.jsp"%>

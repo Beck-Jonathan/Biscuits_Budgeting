@@ -5,7 +5,7 @@ import com.beck.beck_demos.budget_app.data.Saved_Search_OrderDAO;
 import com.beck.beck_demos.budget_app.iData.iCategoryDAO;
 import com.beck.beck_demos.budget_app.iData.iSaved_Search_OrderDAO;
 import com.beck.beck_demos.budget_app.models.Saved_Search_Order;
-import com.beck.beck_demos.budget_app.models.SubCategory_VM;
+import com.beck.beck_demos.budget_app.models.SubCategory;
 import com.beck.beck_demos.budget_app.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -63,7 +63,7 @@ public class EditSaved_Search_OrderServlet extends HttpServlet{
       req.setAttribute("dbStatus",e.getMessage());
     }
     Saved_Search_Order saved_search_order= new Saved_Search_Order();
-    List<SubCategory_VM> allCategorys = new ArrayList<>();
+    List<SubCategory> allCategories = new ArrayList<>();
     try{
       saved_search_order.setSaved_Search_Order_ID(primaryKey);
       saved_search_order.setOwned_User(user.getUser_ID());
@@ -72,14 +72,14 @@ public class EditSaved_Search_OrderServlet extends HttpServlet{
     }
     try{
       saved_search_order=saved_search_orderDAO.getSaved_Search_OrderByPrimaryKey(saved_search_order);
-      allCategorys = categoryDAO.getsubCategoryByUser(user.getUser_ID());
+      allCategories = categoryDAO.getsubCategoryByUserForDropdown(user);
     } catch (Exception e) {
       req.setAttribute("dbStatus",e.getMessage());
 
       resp.sendRedirect(req.getContextPath()+"/budget_home");
       return;
     }
-    req.setAttribute("Categorys", allCategorys);
+    req.setAttribute("Categorys", allCategories);
     session.setAttribute("saved_search_order",saved_search_order);
     req.setAttribute("mode",mode);
     session.setAttribute("currentPage",req.getRequestURL());

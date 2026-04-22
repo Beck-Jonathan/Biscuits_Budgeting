@@ -1,6 +1,8 @@
 // --- 1. Global State & Scoped Objects ---
 const pickers = {};
 let categoryIdToDelete = null;
+let selectedMonth = "";
+let selectedYyear = "";
 
 $(document).ready(function() {
     // Tab/Chart Layout Management
@@ -30,6 +32,9 @@ $(document).ready(function() {
 
     $(document).on('blur', '#setBudgetedAmount', (e) => handleThresholdBlur(e));
     $(document).on('focus', '#setBudgetedAmount', (e) => handleThresholdFocus(e));
+    $(document).on('change', '#yearSelect', (e) => handleMonthChange(e));
+    $(document).on('change', '#monthSelect', (e) => handleMonthChange(e));
+
 
 
 });
@@ -1115,8 +1120,6 @@ window.addNewCategory = async function () {
         });
 
         const resultText = (await response.text()).trim();
-
-        // 1. REGEX to check for valid 36-char UUID
         const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
         if (uuidRegex.test(resultText)) {
@@ -1124,7 +1127,6 @@ window.addNewCategory = async function () {
             const $selectedOption = $parentSelect.find('option:selected');
             const type = $selectedOption.data('type') || 'expense';
 
-            // ... (Your existing Grid and HTML logic) ...
             const $targetGrid = $(`#category-grid-${parentId}`);
             const $targetCollapse = $(`#collapse-${parentId}`);
 
@@ -1141,16 +1143,30 @@ window.addNewCategory = async function () {
                         </div>
                         <div class="card-body-content">
                             <div class="card-actions-modern">
-                                <i class="bi bi-lock-fill text-warning action-icon-modern lock-trigger" 
-                                   onclick="handleLockToggle(event, '${newId}')"></i>
-                                <i class="bi bi-gear action-icon-modern gear-trigger" 
-                                   onclick="handleGearClick(event, '${newId}')"></i>
-                                <i class="bi bi-x action-icon-modern delete-trigger" 
-                                   onclick="confirmDeleteCategory('${newId}', '${name.replace(/'/g, "\\'")}')"></i>
+                                <i class="bi bi-search action-icon-modern search-trigger" title="View Transactions" onclick="handleMagnifyClick(event, '${newId}')"></i>
+                                <i class="bi bi-unlock action-icon-modern lock-trigger" title="Toggle Projection Lock" onclick="handleLockToggle(event, '${newId}')"></i>
+                                <i class="bi bi-gear action-icon-modern gear-trigger" title="Advanced Settings" onclick="handleGearClick(event, '${newId}')"></i>
+                                <i class="bi bi-x action-icon-modern delete-trigger" onclick="confirmDeleteCategory('${newId}', '${name.replace(/'/g, "\\'")}')"></i>
                             </div>
+                            
                             <div class="category-name-row">
                                 <span class="category-text" contenteditable="true">${name}</span>
                             </div>
+
+                            <div class="subcategory-mini-analysis mb-2 mt-1">
+                                <div class="d-flex justify-content-between align-items-center mb-1" style="font-size: 0.75rem;">
+                                    <span class="fw-bold text-dark">$0.00</span>
+                                    <span class="text-muted">of <span class="target-text-label">$0.00</span></span>
+                                </div>
+                                <div class="progress" style="height: 4px; background-color: #e9ecef;">
+                                    <div class="progress-bar progress-bar-fill" role="progressbar" 
+                                         data-amount="0"
+                                         style="width: 0%; background-color: ${color};" 
+                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="strategy-row">
                                 <i class="bi bi-graph-up-arrow strategy-icon" data-val="REGRESSION"></i>
                                 <i class="bi bi-lightning-fill strategy-icon" data-val="ALPHA_SPIKE"></i>
@@ -1159,6 +1175,7 @@ window.addNewCategory = async function () {
                                 <i class="bi bi-percent strategy-icon" data-val="INFLATION_ONLY"></i>
                                 <i class="bi bi-x-circle strategy-icon" data-val="ZERO_SUM"></i>
                             </div>
+                            
                             <div class="parent-row">
                                 <select class="modern-select" onchange="updateParentCategory('${newId}', this.value)">
                                     ${$parentSelect.html()}
@@ -1173,33 +1190,26 @@ window.addNewCategory = async function () {
             const $newElement = $(newCardHtml);
             $targetGrid.append($newElement);
 
+            // Re-sync parent select value for the new card
+            $newElement.find('select').val(parentId);
+
             if (typeof initColorPickerForCard === "function") {
                 initColorPickerForCard($newElement.find('.modern-cat-card'));
             }
 
-            // Success Reset
             $nameInput.val('');
             updateAddPillColor('#0d6efd');
 
         } else {
-            // 2. Error Code Mapping
             const errorMap = {
-                "-1": "Session expired. Please log in.",
-                "-2": "Invalid category name.",
-                "-3": "Invalid color selection.",
-                "-4": "Parent category required.",
-                "-5": "Invalid strategy selected.",
-                "-10": "Database error. Try again later.",
-                "0": "Could not save category."
+                "-1": "Session expired.", "-2": "Invalid name.", "-3": "Invalid color.",
+                "-4": "Parent required.", "-5": "Invalid strategy.", "-10": "DB Error.", "0": "Save failed."
             };
-
-            const msg = errorMap[resultText] || "An unexpected error occurred.";
-            $errorDisplay.text(msg).removeClass('d-none');
+            $errorDisplay.text(errorMap[resultText] || "Error occurred.").removeClass('d-none');
             $nameInput.addClass('is-invalid');
         }
     } catch (err) {
-        console.error("Failed to add category:", err);
-        $errorDisplay.text("Network error. Check connection.").removeClass('d-none');
+        $errorDisplay.text("Network error.").removeClass('d-none');
     }
 };
 
@@ -1650,4 +1660,35 @@ function captureChartState() {
             fillOpacity: s.options.fillOpacity
         }))
     };
+}
+
+function handleMonthChange(e) {
+    console.log("hi");
+    selectedMonth = $('#monthSelect').val();
+    selectedYyear = $('#yearSelect').val();
+
+    let categoryDiv = $("#allSuperCategories");
+
+    categoryDiv.slideUp()
+    $.ajax({
+            url: 'all-Categories',
+            type: 'GET',
+            data: {
+                year: selectedYyear,
+                month: selectedMonth,
+                refresh: true
+            },
+            success: function (response) {
+                categoryDiv.html(response);
+                categoryDiv.slideDown();
+            }
+        }
+    )
+    //categoryDiv.slideDown()
+}
+
+function handleMagnifyClick(e, category) {
+    //console.log("category" + category)
+    window.location.href = 'all-Transactions?category=' + category + "&year=" + selectedYyear + "&month=" + selectedMonth
+
 }
