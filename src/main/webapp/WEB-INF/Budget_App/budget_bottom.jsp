@@ -4,9 +4,9 @@
 </div> <!-- end row-->
 
 
-
-
+<%@include file="/WEB-INF/Budget_App/toast.jsp" %>
 <footer>
+
     <div class="row">
         <div class="hidden-sm col-md-2" id="bottomleftblack" ></div>
         <div class="col-md-2 col-sm-2" id="howtoplay"></div>
@@ -119,7 +119,7 @@
     <script src="js/budget/EditSSO.js"></script>
 </c:if>
 
-
+<script src="js/budget/toast.js"></script>
 
 
 

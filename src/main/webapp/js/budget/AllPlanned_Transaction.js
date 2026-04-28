@@ -281,18 +281,7 @@ function setNewIndefinite(btn) {
     }
 }
 
-function showToast(message, isError = false) {
-    const toastEl = document.getElementById('statusToast');
-    const toastBody = document.getElementById('toastMessage');
-    if (!toastEl) return;
 
-    toastEl.classList.remove('bg-success', 'bg-danger');
-    toastEl.classList.add(isError ? 'bg-danger' : 'bg-success');
-    toastBody.innerText = message;
-
-    const toast = new bootstrap.Toast(toastEl);
-    toast.show();
-}
 
 /**
  * Core Logic for Row Updates - Orchestrates UI state before saving
@@ -357,28 +346,13 @@ function sendUpdateToServer($row) {
         type: 'POST',
         data: rowData,
         success: function (response) {
-            const errorMap = {
-                "-1": "Session expired.",
-                "-2": "Invalid ID.",
-                "-3": "User Error.",
-                "-4": "Invalid Subcategory.",
-                "-5": "Invalid Budget.",
-                "-6": "Nickname required.",
-                "-7": "Invalid Amount.",
-                "-8": "Invalid Date.",
-                "-9": "Invalid Frequency.",
-                "-10": "Invalid Occurrences.",
-                "-11": "Status Error.",
-                "-12": "Database Error.",
-                "0": "No changes saved."
-            };
 
-            if (errorMap[response]) {
-                showToast(errorMap[response], true);
+
+            showToast("updatePlannedTransaction", response);
                 $row.css('background-color', 'rgba(220, 53, 69, 0.2)');
                 setTimeout(() => $row.css('background-color', ''), 1000);
                 return;
-            }
+
 
             if (response === "1") {
                 $row.css('background-color', 'rgba(25, 135, 84, 0.1)');
@@ -386,7 +360,7 @@ function sendUpdateToServer($row) {
             }
         },
         error: function () {
-            showToast("Server Communication Error.", true);
+            showToast("updatePlannedTransaction", -12);
         }
     });
 }
@@ -400,18 +374,19 @@ function togglePlannedActive(element, uuid) {
         url: 'update-planned-status',
         type: 'POST',
         data: {planned_transactionid: uuid, mode: statusValue},
-        success: function () {
+        success: function (response) {
+
             if (statusValue === 0) {
                 $row.addClass('row-inactive').css('opacity', '0.5');
-                showToast("Transaction deactivated.");
+                showToast("updatePlannedStatus", response);
             } else {
                 $row.removeClass('row-inactive').css('opacity', '1');
-                showToast("Transaction activated.");
+                showToast("updatePlannedStatus", response);
             }
         },
         error: function () {
             $(element).prop('checked', !isChecked);
-            showToast("Failed to update status.", true);
+            showToast("updatePlannedStatus", -6);
         }
     });
 }
@@ -561,10 +536,10 @@ $(document).ready(function () {
                     $('#new_start_date').val(data.start_date);
                     $('#new_frequency').val("0").change();
                     $('#new_amount, #new_start_date, #new_frequency').prop('disabled', true);
-                    showToast("Budget details applied.");
+                    showToast("shared", 1);
                 },
                 error: function () {
-                    showToast("Could not retrieve budget details.", true);
+                    showToast("shared", -6);
                 }
             });
         } else {
@@ -596,15 +571,15 @@ $(document).ready(function () {
             url: 'delete-planned_transaction',
             type: 'POST',
             data: {Planned_Transaction_ID: uuidToDelete},
-            success: function () {
+            success: function (response) {
                 bootstrap.Modal.getInstance(document.getElementById('deleteConfirmModal')).hide();
                 rowToDelete.fadeOut(400, function () {
                     $(this).remove();
-                    showToast("Transaction deleted.");
+                    showToast("deletePlannedTransaction", response);
                 });
             },
             error: function () {
-                showToast("Error deleting transaction.", true);
+                showToast("deletePlannedTransaction", -6);
             }
         });
     });
@@ -624,7 +599,7 @@ $(document).ready(function () {
         };
         $('#new_amount, #new_start_date, #new_frequency').prop('disabled', true);
         if (!newData.inputplanned_transactionnickname || !newData.inputplanned_transactionamount) {
-            showToast("Please enter a nickname and amount.", true);
+            showToast("addPlannedTransaction", -5);
             return;
         }
 
@@ -633,23 +608,16 @@ $(document).ready(function () {
             type: 'POST',
             data: newData,
             success: function (response) {
-                const addErrorMap = {
-                    "-2": "Session Error: User ID not found.",
-                    "-4": "Invalid Subcategory selection.",
-                    "-5": "Invalid Budget selection.",
-                    "-6": "Nickname is required.",
-                    "-7": "Invalid Amount. Please enter a number.",
-                    "-8": "Invalid Date format.",
-                    "-9": "Invalid Frequency selection.",
-                    "-10": "Invalid Occurrences value.",
-                    "-12": "Database Error: Could not save.",
-                    "0": "Transaction could not be added."
-                };
 
-                if (addErrorMap[response]) {
-                    showToast(addErrorMap[response], true);
+                if (response.length === 36) {
+                    console.log("new uuid, maybe" + response);
+                    showToast("addPlannedTransaction", "1")
+                } else {
+                    console.log("error, maybe" + response);
+                    showToast("addPlannedTransaction", response);
                     return;
                 }
+
 
                 // If success, response is the new UUID
                 const newRowHtml = createNewRow(response, newData);
@@ -674,10 +642,9 @@ $(document).ready(function () {
                 $('#new_occurrence_infinite_container').addClass('d-none');
 
 
-                showToast("Transaction added!");
             },
             error: function () {
-                showToast("Error adding transaction.", true);
+                showToast("addPlannedTransaction", -12);
             }
         });
     });

@@ -33,7 +33,7 @@
     <c:if test="${pageTitle eq 'All Categories'}">
     <link rel="stylesheet" href="${appURL}/css/budget/AllCategory.css">
     </c:if>
-
+    <link rel="stylesheet" href="${appURL}/css/budget/toast.css">
 
 
 

@@ -13,8 +13,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.SQLException;
 
 @WebServlet("/update-planned-status")
 public class ActivatePlanned_TransactionServlet extends HttpServlet {
@@ -31,79 +30,67 @@ public class ActivatePlanned_TransactionServlet extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-//To restrict this page based on privilege level
-    Map<String, String> results = new HashMap<>();
-
-//To restrict this page based on privilege level
     HttpSession session = req.getSession();
-    String Role = "User";
-    Integer result = 0;
     User user = (User) session.getAttribute("User_B");
+
+    // 1. Authorization Check (-1)
     if (user == null || !user.getRoles().contains("User")) {
-      result = -1;
-      sendResponse(resp, result);
+      sendResponse(resp, -1);
       return;
     }
 
-    session.setAttribute("currentPage", req.getRequestURL());
-    req.setAttribute("pageTitle", "Delete planned_transaction");
     String planned_transactionID = req.getParameter("planned_transactionid");
-    int mode = Integer.parseInt(req.getParameter("mode"));
-    Planned_Transaction toChenge = new Planned_Transaction();
+    String modeStr = req.getParameter("mode");
+
+    // Input Validation (-2, -3)
+    Planned_Transaction toChange = new Planned_Transaction();
     try {
-      toChenge.setplanned_transaction_ID(planned_transactionID);
+      toChange.setplanned_transaction_ID(planned_transactionID);
+      toChange.setuser_ID(user.getUser_ID());
     } catch (Exception e) {
-      result = -2;
-      sendResponse(resp, result);
-      return;
-    }
-    try {
-      toChenge.setuser_ID(user.getUser_ID());
-    } catch (Exception e) {
-      result = -3;
-      sendResponse(resp, result);
+      sendResponse(resp, -2); // Mapping to Invalid ID/Format
       return;
     }
 
-    if (mode == 0) {
-      try {
-        result = planned_transactionDAO.deactivatePlanned_transaction(toChenge);
+    // Mode Logic
+    try {
+      int mode = Integer.parseInt(modeStr);
+      int result;
 
-        sendResponse(resp, result);
-      } catch (Exception ex) {
-        result = -4;
-        sendResponse(resp, result);
+      if (mode == 0) {
+        // Deactivate (-4)
+        result = planned_transactionDAO.deactivatePlanned_transaction(toChange);
+      } else if (mode == 1) {
+        // Reactivate (-5)
+        result = planned_transactionDAO.reactivatePlanned_transaction(toChange);
+      } else {
+        result = -6; // Invalid Mode
       }
-    } else if (mode == 1) {
-      try {
-        result = planned_transactionDAO.reactivatePlanned_transaction(toChenge);
-        sendResponse(resp, result);
-      } catch (Exception ex) {
-        result = -5;
-        sendResponse(resp, result);
-      }
+
+      sendResponse(resp, result);
+
+    } catch (NumberFormatException nfe) {
+      sendResponse(resp, -2);
+
+    } catch (SQLException ex) {
+      // General failure fallback
+      sendResponse(resp, -4);
+    } catch (Exception ex) {
+      // General failure fallback
+      sendResponse(resp, 0);
     }
-
   }
 
-  private void sendResponse(HttpServletResponse response, Integer Result) {
+  private void sendResponse(HttpServletResponse response, Integer result) {
     try {
-      // 1. Set the status and headers before getting the writer
       response.setStatus(200);
       response.setContentType("text/plain");
       response.setCharacterEncoding("UTF-8");
-
-      // 2. Use try-with-resources if you want to be safe,
-      // though Tomcat generally manages the response writer for you.
       PrintWriter out = response.getWriter();
-      out.print(Result.toString());
+      out.print(result.toString());
       out.flush();
-
     } catch (IOException e) {
-      // Log the error if the connection was closed before we could write
       System.err.println("Error writing response: " + e.getMessage());
     }
   }
 }
-

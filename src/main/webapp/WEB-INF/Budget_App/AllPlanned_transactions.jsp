@@ -176,7 +176,8 @@ Created By Jonathan Beck 4/02/2026
                                         <input type="number" step="0.01"
                                                class="form-control form-control-sm border-0 bg-transparent fw-bold"
                                                value="${item.amount}"
-                                               onblur="updatePlannedItem($(this).closest('tr'))">
+                                               onblur="updatePlannedItem($(this).closest('tr'))"
+                                               onchange="updatePlannedItem($(this).closest('tr'))">
                                     </div>
                                 </td>
 
@@ -210,7 +211,9 @@ Created By Jonathan Beck 4/02/2026
                                             <input type="number" class="form-control border-0 bg-transparent"
                                                    value="${item.occurrences}"
                                                 ${item.times_per_year == 0 ? 'disabled' : ''}
-                                                   onblur="updatePlannedItem($(this).closest('tr'))">
+                                                   onblur="updatePlannedItem($(this).closest('tr'))"
+                                                   onchange="updatePlannedItem($(this).closest('tr'))">
+
                                             <button class="btn btn-outline-secondary border-0 p-1" type="button"
                                                     onclick="setIndefinite(this)" title="Make Indefinite">
                                                 <i class="bi bi-arrow-repeat"></i>
@@ -251,7 +254,9 @@ Created By Jonathan Beck 4/02/2026
                         </c:forEach>
 
                         <%-- Quick Add Row --%>
+
                         <tr id="plannedInputRow" class="table-info">
+                            <td></td>
                             <td><input type="text" id="new_nickname" class="form-control form-control-sm"
                                        placeholder="e.g. Netflix"></td>
                             <%-- Quick Add Row - Subcategory Cell --%>
@@ -361,16 +366,7 @@ Created By Jonathan Beck 4/02/2026
 </div>
 
 <%-- Modals and Toasts --%>
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="statusToast" class="toast align-items-center text-white bg-success border-0" role="alert"
-         aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body" id="toastMessage">Action completed successfully.</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                    aria-label="Close"></button>
-        </div>
-    </div>
-</div>
+
 
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -30,75 +31,77 @@ public class AnalysisAJAXController extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User) session.getAttribute("User_B");
 
+    // 1. Auth Check
     if (user == null || !user.getRoles().contains("User")) {
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      sendResponse(resp, -1);
       return;
     }
 
-    // Parameters:
-    // mode: 0 = Annual, 1 = Monthly
-    // level: 0 = Sub-Category, 1 = Super-Category
-    // year: The year to filter by for monthly view
+    // 2. Parameters
     String mode = req.getParameter("mode");
     String level = req.getParameter("level");
     String yearStr = req.getParameter("year");
-    String BankAccountID= req.getParameter("bankAccountSelect");
-    if (BankAccountID == null ) {
-      BankAccountID = "";
-    }
+    String BankAccountID = req.getParameter("bankAccountSelect");
+    if (BankAccountID == null) BankAccountID = "";
+
     String monthsBackStr = req.getParameter("monthsBack");
     String monthsForwardStr = req.getParameter("monthsForward");
     String retirementOffsetStr = req.getParameter("retirementOffset");
+
     int monthsBack = 24;
-    int monthsForward = 840; // 70 years default
-    int retirementOffset = 360; // 30 years default (Age 28 to 58)
+    int monthsForward = 840;
+    int retirementOffset = 360;
 
     try {
-      if (monthsBackStr != null) {
-        monthsBack = Math.max(6, Math.min(60, Integer.parseInt(monthsBackStr)));
-      }
-      if (monthsForwardStr != null) {
-        // Fix: Use the correct variable
-        monthsForward = Math.max(1, Math.min(1200, Integer.parseInt(monthsForwardStr)));
-      }
-      if (retirementOffsetStr != null) {
-        // Fix: Update retirementOffset, NOT monthsForward
+      if (monthsBackStr != null) monthsBack = Math.max(6, Math.min(60, Integer.parseInt(monthsBackStr)));
+      if (monthsForwardStr != null) monthsForward = Math.max(1, Math.min(1200, Integer.parseInt(monthsForwardStr)));
+      if (retirementOffsetStr != null)
         retirementOffset = Math.max(0, Math.min(1200, Integer.parseInt(retirementOffsetStr)));
-      }
     } catch (NumberFormatException e) {
-      // Keep defaults
+      // Defaults kept
     }
-    LocalDate start = LocalDate.now();
 
+    LocalDate start = LocalDate.now();
     int year = (yearStr != null && !yearStr.isEmpty()) ? Integer.parseInt(yearStr) : 2026;
 
-    List<List<SubCategory_VM>> breakdown;
-
+    // 3. Logic and Execution
     try {
+      List<List<SubCategory_VM>> breakdown;
+
       if ("2".equals(mode)) {
-        // FORECAST MODE
         breakdown = transactionDAO.getForecastAnalysis(user.getUser_ID(), start, monthsBack, monthsForward, retirementOffset);
       } else if ("1".equals(level)) {
-        // SUPER CATEGORY LEVEL
         breakdown = "1".equals(mode)
-            ? transactionDAO.getSuperMonthlyAnalysis(user.getUser_ID(),BankAccountID ,year)
-            : transactionDAO.getSuperAnnualAnalysis(user.getUser_ID(),BankAccountID);
+            ? transactionDAO.getSuperMonthlyAnalysis(user.getUser_ID(), BankAccountID, year)
+            : transactionDAO.getSuperAnnualAnalysis(user.getUser_ID(), BankAccountID);
       } else {
-        // SUB CATEGORY LEVEL (Default)
         breakdown = "1".equals(mode)
-            ? transactionDAO.getMonthlyAnalysis(user.getUser_ID() ,BankAccountID, year)
-            : transactionDAO.getAnnualAnalysis(user.getUser_ID() ,BankAccountID);
+            ? transactionDAO.getMonthlyAnalysis(user.getUser_ID(), BankAccountID, year)
+            : transactionDAO.getAnnualAnalysis(user.getUser_ID(), BankAccountID);
       }
 
+      // Success path
       resp.setContentType("application/json");
       resp.setCharacterEncoding("UTF-8");
-
       ObjectMapper mapper = new ObjectMapper();
       resp.getWriter().print(mapper.writeValueAsString(breakdown));
 
     } catch (Exception e) {
       e.printStackTrace();
-      resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "AJAX Data Retrieval Failed");
+      sendResponse(resp, -3);
+    }
+  }
+
+  private void sendResponse(HttpServletResponse response, Integer Result) {
+    try {
+      response.setStatus(200);
+      response.setContentType("text/plain");
+      response.setCharacterEncoding("UTF-8");
+      PrintWriter out = response.getWriter();
+      out.print(Result.toString());
+      out.flush();
+    } catch (IOException e) {
+      System.err.println("Error writing response: " + e.getMessage());
     }
   }
 }

@@ -1,164 +1,123 @@
-$(document).ready(function() {
+$(document).ready(function () {
     // 1. Initial UI Setup
     normalizeHeight();
     tooltips();
-    // 4. Toggle Active/Inactive Status
-    $(".status-badge").on("click", function () {
-        var $badge = $(this);
-        var budgetId = $badge.data("id");
-        var isCurrentlyActive = $badge.data("active");
-        var targetMode = isCurrentlyActive ? 0 : 1;
 
-        // Store the original text to restore it if there's an error
-        var originalText = $badge.text().trim();
+    // 2. Toggle Active/Inactive Status
+    $(".status-badge").on("click", function () {
+        const $badge = $(this);
+        const budgetId = $badge.data("id");
+        const isCurrentlyActive = $badge.data("active");
+        const targetMode = isCurrentlyActive ? 0 : 1;
 
         $.ajax({
             url: 'activateBudget',
             type: 'POST',
-            data: {
-                budgetid: budgetId,
-                mode: targetMode
+            data: {budgetid: budgetId, mode: targetMode},
+            beforeSend: () => {
+                $badge.css("pointer-events", "none")
+                    .html('<span class="spinner-border spinner-border-sm"></span>');
             },
-            beforeSend: function () {
-                // Disable clicks and show spinner
-                $badge.css("pointer-events", "none");
-                $badge.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
-            },
-            success: function (response) {
-                if (response == "1" || response == 1) {
-                    // Update state based on targetMode
-                    if (targetMode === 1) {
-                        $badge.removeClass("bg-secondary").addClass("bg-success").text("Active");
-                        $badge.data("active", true);
-                    } else {
-                        $badge.removeClass("bg-success").addClass("bg-secondary").text("Inactive");
-                        $badge.data("active", false);
-                    }
+            success: (response) => {
+                if (response == "1") {
+                    // Success: Update UI state
+                    const isActive = (targetMode === 1);
+                    $badge.removeClass(isActive ? "bg-secondary" : "bg-success")
+                        .addClass(isActive ? "bg-success" : "bg-secondary")
+                        .text(isActive ? "Active" : "Inactive")
+                        .data("active", isActive);
                 } else {
-                    // Restore original state on logical error
-                    $badge.text(originalText);
-                    alert("Server Error: " + response);
+                    // Logic Error (e.g. Database failure)
+                    showToast('activateBudget', response);
+                    // Reset to original text (if needed, or handle via specific error response)
+                    $badge.text(isCurrentlyActive ? "Active" : "Inactive");
                 }
             },
-            error: function () {
-                $badge.text(originalText);
-                alert("Connection failed.");
+            error: () => {
+                showToast('activateBudget', '-5'); // Generic system error
+                $badge.text(isCurrentlyActive ? "Active" : "Inactive");
             },
-            complete: function () {
-                // Re-enable clicks
+            complete: () => {
                 $badge.css("pointer-events", "auto");
             }
         });
     });
 
-    // 2. Pre-initialize the dialog container (hidden by default)
-    $("#dialog").dialog({
-        autoOpen: false,
-        modal: true,
-        width: 450,
-        height: "auto", // Responsive height based on content
-        resizable: false
-    });
+    // 3. Delete Button Logic (using jQuery UI Dialog)
+    $("#dialog").dialog({autoOpen: false, modal: true, width: 450, resizable: false});
 
-    // 3. Delete Button Logic
     $(".delButton").on("click", function(e) {
         e.preventDefault();
 
-        // Get ID and DOM references
-        var budgetId = $(this).data("id");
-        var $cardContainer = $("#" + budgetId + "Card");
-        var $card = $(this).closest('.budget_card');
+        const $card = $(this).closest('.budget_card');
+        const budgetId = $(this).data("id");
+        const budgetName = $card.find('.card-title').text().trim();
+        const budgetLimit = $card.find('.progress').prev().find('span:last').text().trim();
 
-        // Extract data for the confirmation popup
-        var budgetName = $card.find('.card-title').text().trim();
-        // Grabs the text from the "Limit" span
-        var budgetLimit = $card.find('.progress').prev().find('span:last').text().trim();
-
-        // Construct the confirmation message
-        var confirmationHtml = `
-            <div class="p-2">
-                <p>Are you sure you want to delete this budget?</p>
-                <ul class="list-unstyled">
-                    <li><strong>Name:</strong> ${budgetName}</li>
-                    <li><strong>Amount:</strong> ${budgetLimit}</li>
-                </ul>
-                <p class="text-danger small"><i class="bi bi-exclamation-triangle"></i> This action cannot be undone.</p>
-            </div>`;
-
-        var $dialog = $("#dialog");
-        $dialog.html(confirmationHtml);
-
-        // Configure and open the dialog
-        $dialog.dialog({
-            title: "Confirm Deletion",
-            hide: { effect: "explode", duration: 300 },
-            show: { effect: "fade", duration: 200 },
-            buttons: {
-                "Delete For Real": function() {
-                    var dialogSelf = this;
-
-                    $.ajax({
-                        url: 'deleteBudget',
-                        data: { budgetid: budgetId },
-                        type: 'GET',
-                        success: function(response) {
-                            // Assuming '1' is success from your backend
-                            if (response == 1 || response == "1") {
-                                $cardContainer.slideUp(400, function() {
-                                    $(this).remove();
-                                    normalizeHeight(); // Recalculate heights after one disappears
-                                });
-                            } else {
-                                $cardContainer.addClass("border border-danger animate__animated animate__shakeX");
-                                alert("Server could not delete this item.");
+        $("#dialog")
+            .html(`
+                <div class="p-2">
+                    <p>Are you sure you want to delete this budget?</p>
+                    <ul class="list-unstyled">
+                        <li><strong>Name:</strong> ${budgetName}</li>
+                        <li><strong>Amount:</strong> ${budgetLimit}</li>
+                    </ul>
+                    <p class="text-danger small"><i class="bi bi-exclamation-triangle"></i> This action cannot be undone.</p>
+                </div>`)
+            .dialog({
+                title: "Confirm Deletion",
+                hide: {effect: "explode", duration: 300},
+                show: {effect: "fade", duration: 200},
+                buttons: {
+                    "Delete For Real": function () {
+                        const dialogSelf = $(this);
+                        $.ajax({
+                            url: 'deleteBudget',
+                            data: {budgetid: budgetId},
+                            type: 'GET',
+                            success: (response) => {
+                                if (response == "1") {
+                                    $card.slideUp(400, () => {
+                                        $card.remove();
+                                        normalizeHeight();
+                                    });
+                                    dialogSelf.dialog("close");
+                                } else {
+                                    showToast('deleteBudget', response);
+                                    dialogSelf.dialog("close");
+                                }
+                            },
+                            error: () => {
+                                showToast('deleteBudget', '-2');
+                                dialogSelf.dialog("close");
                             }
-                        },
-                        error: function() {
-                            alert("Connection error. Please try again.");
-                        },
-                        complete: function() {
-                            $(dialogSelf).dialog("close");
-                        }
-                    });
-                },
-                "Let It Stay": function() {
-                    $(this).dialog("close");
+                        });
+                    },
+                    "Let It Stay": function () {
+                        $(this).dialog("close");
+                    }
                 }
-            }
-        });
-
-        $dialog.dialog("open");
+            }).dialog("open");
     });
 });
 
 /**
- * Ensures all budget cards in a row have equal height for a clean UI.
+ * Normalizes heights of cards.
+ * Note: If using Bootstrap 5, consider using flexbox classes
+ * (e.g., 'd-flex align-items-stretch') on your row container instead.
  */
 function normalizeHeight() {
-    var $cards = $(".budget_card");
-    $cards.css("height", "auto"); // Reset heights first
+    const $cards = $(".budget_card");
+    $cards.css("height", "auto");
 
-    var maxHeight = 0;
+    let maxHeight = 0;
     $cards.each(function() {
-        var thisHeight = $(this).outerHeight();
-        if (thisHeight > maxHeight) {
-            maxHeight = thisHeight;
-        }
+        maxHeight = Math.max(maxHeight, $(this).outerHeight());
     });
-
     $cards.css("height", maxHeight + "px");
 }
 
-/**
- * Initializes Bootstrap 5 Tooltips for the progress bars.
- */
 function tooltips() {
-    if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-    } else {
-        console.warn("Bootstrap Tooltip library not found.");
-    }
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    [...tooltipTriggerList].map(el => new bootstrap.Tooltip(el));
 }

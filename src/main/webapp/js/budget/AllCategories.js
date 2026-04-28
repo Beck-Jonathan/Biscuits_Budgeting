@@ -190,11 +190,13 @@ function handleAutoAssign() {
             $btn.html('<span class="spinner-border spinner-border-sm me-2"></span> Analyzing Data...');
         },
         success: function (response) {
+
             if (response == "1" || response == 1) {
                 alert("Success! Your categories have been optimized based on historical trends.");
                 location.reload();
             } else {
-                alert("Analysis complete, but no changes were made. (Code: " + response + ")");
+                showToast("autoAssignProjections", response)
+                alert("Analysis complete, but no changes were made. ");
             }
         },
         error: function () {
@@ -286,7 +288,7 @@ async function handleConfirmDelete() {
 /**
  * Handles Strategy Icon Selection
  */
-function handleStrategyClick(e, pickers) {
+async function handleStrategyClick(e, pickers) {
     e.stopPropagation();
     const $icon = $(e.currentTarget);
     const $card = $icon.closest('.modern-cat-card');
@@ -339,18 +341,18 @@ function handleStrategyClick(e, pickers) {
             .css('background-color', 'rgba(13, 110, 253, 0.05)');
     }
 
+
+    // 4. Persistence
+    const hex = getHexFromCard($card, pickers);
+    await sendUpdate($card, hex, pickers);
     // Find the lock icon within this specific card
     const lockIcon = $card.find('.lock-trigger');
     console.log(lockIcon[0])
     // If it's currently unlocked (bi-unlock), trigger the toggle
     if (lockIcon[0].classList.contains('bi-unlock')) {
 
-    lockIcon[0].click();
+        lockIcon[0].click();
     }
-
-    // 4. Persistence
-    const hex = getHexFromCard($card, pickers);
-    sendUpdate($card, hex, pickers);
 }
 
 /**
@@ -378,15 +380,17 @@ function getHexFromCard($card, pickers) {
 }
 
 async function sendUpdate($card, hexColor, pickers) {
+    console.log("hi");
     const id = $card.data('id');
     const name = $card.find('.category-text').text().trim();
     const parentId = $card.find('select').val();
     const strategyId = $card.attr('data-strategy') || 'AVG_STRICT';
 
+    // Ensure hex format
     if (!hexColor.startsWith('#')) hexColor = '#' + hexColor;
 
     try {
-        await fetch('editCategory', {
+        const response = await fetch('editCategory', {
             method: 'POST',
             body: new URLSearchParams({
                 category_ID: id,
@@ -396,8 +400,20 @@ async function sendUpdate($card, hexColor, pickers) {
                 inputsub_categoryprojection_strategy_ID: strategyId
             })
         });
+
+
+        const resultCode = await response.text();
+
+
+        showToast('editCategory', resultCode.trim());
+        return resultCode;
+
+
+
     } catch (err) {
-        console.error("Update failed:", err);
+        // Handle network failures (e.g., server down)
+        console.error("Critical AJAX failure:", err);
+        showToast('editCategory', '-1');
     }
 }
 
@@ -500,6 +516,7 @@ function handleAutoAssignExecution() {
         success: function (response) {
             // parse as int just in case it comes back as a string
             const result = parseInt(response);
+            showToast("autoAssignProjections", response)
 
             if (result >= 0) {
                 // Success State
@@ -540,6 +557,7 @@ function handleAutoAssignColorExecution() {
         success: function (response) {
             // parse as int just in case it comes back as a string
             const result = parseInt(response);
+            showToast("autoAssignProjections", autoAssignColors)
 
             if (result >= 0) {
                 // Success State
@@ -584,6 +602,7 @@ function handleLockToggle(e, id) {
             $icon.css('opacity', '0.2'); // Visual pending state
         },
         success: function (response) {
+            showToast("lockSubcategory", response)
             if (response == "1" || response == 1) {
                 // Toggle the icon classes
                 $icon.toggleClass('bi-unlock bi-lock-fill text-warning');
@@ -675,6 +694,7 @@ function handleGearClick(e, id) {
  * Helper to fetch the 60-month data array and update the Highchart + Tabs
  */
 function fetchProjectionData(subcatId, name, strategy) {
+    showToast("shared", 2)
     $.ajax({
         url: 'AnalyzeCategoryAJAX',
         type: 'GET',
@@ -682,8 +702,7 @@ function fetchProjectionData(subcatId, name, strategy) {
         dataType: 'json',
         success: function (rawData) {
             if (rawData === "-1" || rawData === "-2") {
-                console.error("Budget Engine Error: " + rawData);
-                return;
+                showToast("budgetAjax", rawData)
             }
 
             // 1. Process and Align Data
@@ -789,7 +808,7 @@ function fetchProjectionData(subcatId, name, strategy) {
             updateGrowthImpactUI(data);
         },
         error: function (xhr, status, error) {
-            console.error("AJAX Failure: ", error);
+            showToast("budgetAjax", -2)
         }
     });
 }
@@ -1569,31 +1588,12 @@ function handleThresholdBlur(e) {
             amount: newAmount
         },
         success: function (response) {
-            const $feedback = $('#budgetUpdateFeedback');
-            $feedback.removeClass('d-none alert-success alert-danger bg-success-subtle text-success bg-danger-subtle text-danger');
+            showToast("updateThreshold", response);
 
             if (response === "1") {
-                // SUCCESS Case
-                $feedback.addClass('bg-success-subtle text-success')
-                    .text('Threshold updated successfully!')
-                    .fadeIn();
 
-                // Auto-hide success after 3 seconds
-                setTimeout(() => $feedback.fadeOut(() => $feedback.addClass('d-none')), 3000);
             } else {
-                // ERROR Case (Mapping your servlet result codes)
-                const errorMap = {
-                    "-1": "Session expired. Please log in.",
-                    "-2": "Invalid category ID.",
-                    "-3": "User authorization error.",
-                    "-4": "Database connection error.",
-                    "-5": "Invalid amount format."
-                };
-                const errorMsg = errorMap[response] || "An unknown error occurred.";
 
-                $feedback.addClass('bg-danger-subtle text-danger')
-                    .text(errorMsg)
-                    .show(); // Keep errors visible until they click again
                 return;
             }
             // Visual feedback on the input itself
@@ -1663,7 +1663,7 @@ function captureChartState() {
 }
 
 function handleMonthChange(e) {
-    console.log("hi");
+    showToast("shared", 2)
     selectedMonth = $('#monthSelect').val();
     selectedYyear = $('#yearSelect').val();
 

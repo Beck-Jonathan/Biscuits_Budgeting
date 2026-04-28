@@ -31,7 +31,9 @@ public class BudgetAJAXServlet extends HttpServlet {
     User user = (User) session.getAttribute("User_B");
 
     if (user == null || !user.getRoles().contains("User")) {
-      resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      PrintWriter out = resp.getWriter();
+      out.print(("-1"));
+      out.flush();
       return;
     }
 
@@ -47,7 +49,9 @@ public class BudgetAJAXServlet extends HttpServlet {
         out.print(convertToManualJson(activeBudgets));
         out.flush();
       } catch (Exception e) {
-        resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error: " + e.getMessage());
+        PrintWriter out = resp.getWriter();
+        out.print(("-2"));
+        out.flush();
       }
     }
   }

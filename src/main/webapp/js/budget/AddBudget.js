@@ -227,11 +227,12 @@ function recalcTotal() {
             .then(response => response.text())
             .then(newUuid => {
                 if (parseInt(newUuid) <= 0) {
-                    handleError(parseInt(newUuid));
+                    showToast('addBudgetLineItem', newUuid);
                     $(`tr[data-id="${tempId}"]`).remove();
                     recalcTotal();
                     return;
                 }
+                showToast('addBudgetLineItem', '1');
                 const $row = $(`tr[data-id="${tempId}"]`);
                 $row.attr("data-id", newUuid);
                 $row.find("button").attr("onclick", `deleteLineItem(this, '${newUuid}')`);
@@ -251,6 +252,11 @@ function recalcTotal() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: params
+            }).then(response => {
+                // Assuming your servlet returns '1' on success
+                showToast('deleteBudgetLineItem', response);
+            }).catch(err => {
+                showToast('deleteBudgetLineItem', '-3'); // System error
             });
         }
     };
@@ -291,9 +297,12 @@ function recalcTotal() {
         }).then(response => {
             if (response.ok) {
                 recalcTotal();
+                showToast('editBudgetLineItem', '1');
                 // Optional: Provide a small visual "saved" flash
                 row.css('background-color', '#f0fff0');
                 setTimeout(() => row.css('background-color', ''), 500);
+            } else {
+                showToast('editBudgetLineItem', '-10');
             }
         })}
 
@@ -392,8 +401,7 @@ function recalcTotal() {
     }
 
     function handleError(code) {
-        const errors = { "-1": "Session expired.", "-2": "Invalid Budget ID.", "-10": "Database error." };
-        alert("Error (" + code + "): " + (errors[code] || "Request failed."));
+        showToast('addBudgetLineItem', code);
     }
 
 function addTableHeaders() {
@@ -567,11 +575,13 @@ window.saveTheRest = function() {
             .then(newUuid => {
                 // Check for servlet error codes (matching your handleError logic)
                 if (parseInt(newUuid) <= 0) {
+                    showToast('addBudgetLineItem', newUuid);
                     handleError(parseInt(newUuid));
                     $(`tr[data-id="${tempId}"]`).remove();
                     recalcTotal();
                     return;
                 }
+                showToast('addBudgetLineItem', newUuid);
 
                 // Update the temporary row with the real UUID from the DB
                 const $row = $(`tr[data-id="${tempId}"]`);

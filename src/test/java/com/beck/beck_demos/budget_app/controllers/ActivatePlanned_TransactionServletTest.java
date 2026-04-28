@@ -122,14 +122,14 @@ public class ActivatePlanned_TransactionServletTest {
   }
 
   @Test
-  public void TestReactivateExceptionReturnsNeg5() throws ServletException, IOException {
+  public void TestReactivateExceptionReturnsNeg4() throws ServletException, IOException {
     setupValidUser("User");
     request.setParameter("planned_transactionid", "EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
     request.setParameter("mode", "1");
 
     servlet.doPost(request, response);
 
-    assertEquals("-5", response.getContentAsString());
+    assertEquals("-4", response.getContentAsString());
   }
 
   @Test
