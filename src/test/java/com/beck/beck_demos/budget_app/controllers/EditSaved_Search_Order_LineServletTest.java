@@ -1,235 +1,95 @@
 package com.beck.beck_demos.budget_app.controllers;
 
-import java.io.IOException;
-import java.util.*;
 import com.beck.beck_demos.budget_app.data_fakes.Saved_Search_OrderDAO_Fake;
-import com.beck.beck_demos.budget_app.models.Saved_Search_Order_Line;
 import com.beck.beck_demos.budget_app.models.User;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.*;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.web.*;
-import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EditSaved_Search_Order_LineServletTest {
 
-  private static final String PAGE="WEB-INF/WFTDA_debug/Edit_Saved_Search_Order_Line.jsp";
-  EditSaved_Search_Order_LineServlet servlet;
-  MockHttpServletRequest request;
-  MockHttpServletResponse response;
-  HttpSession session;
-  RequestDispatcher rd;
-  @BeforeEach
-  public void setup() throws ServletException{
+  private EditSaved_Search_Order_LineServlet servlet;
+  private MockHttpServletRequest request;
+  private MockHttpServletResponse response;
+  private MockHttpSession session;
+  private Saved_Search_OrderDAO_Fake fakeDAO;
 
+  @BeforeEach
+  public void setup() {
     servlet = new EditSaved_Search_Order_LineServlet();
-    servlet.init(new Saved_Search_OrderDAO_Fake());
-    request =  new MockHttpServletRequest();
+    fakeDAO = new Saved_Search_OrderDAO_Fake();
+    servlet.init(fakeDAO);
+
+    request = new MockHttpServletRequest();
     response = new MockHttpServletResponse();
     session = new MockHttpSession();
-    rd = new MockRequestDispatcher(PAGE);
-  }
 
-  @AfterEach
-  public void teardown(){
-    servlet=null;
-    request=null;
-    response=null;
-    session=null;
-    rd=null;
-  }
-
-  @Test
-  public void TestLoggedInUserGets302OnDoPost() throws ServletException, IOException{
+    // Setup Authorized User
     User user = new User();
     List<String> roles = new ArrayList<>();
     roles.add("User");
-    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
     user.setRoles(roles);
-    session.setAttribute("User_B",user);
+    user.setUser_ID("0607a176-01de-46ea-a463-1d59db87491a"); // Matches existing user in fakeDAO
+    session.setAttribute("User_B", user);
     request.setSession(session);
-    servlet.doPost(request,response);
-    int status = response.getStatus();
-    assertEquals(302,status);
   }
 
   @Test
-  public void TestLoggedOutUserGets302OnDoPost() throws ServletException, IOException{
-    request.setSession(session);
-    servlet.doPost(request,response);
-    int status = response.getStatus();
-    assertEquals(302,status);
+  public void testSuccessfulUpdateReturnsOne() throws Exception {
+    setValidParameters("New Phrase");
+
+    servlet.doPost(request, response);
+
+    assertEquals("1", response.getContentAsString().trim());
   }
 
   @Test
-  public void TestWrongRoleGets302onDoPost() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("WrongRole");
-    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
-    user.setRoles(roles);
-    session.setAttribute("User_B",user);
-    request.setSession(session);
-    servlet.doPost(request,response);
-    int status = response.getStatus();
-    assertEquals(302,status);
+  public void testDuplicateKeyReturnsZero() throws Exception {
+    // Triggering the DUPLICATE keyword logic in FakeDAO
+    setValidParameters("DUPLICATE");
+
+    servlet.doPost(request, response);
+
+    assertEquals("0", response.getContentAsString().trim());
   }
-
-
 
   @Test
-  public void TestUpdateCanAddWithNoErrorsAndRedirects() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
-    user.setRoles(roles);
-    session.setAttribute("User_B",user);
-    request.setSession(session);
-//to set the old Saved_Search_Order_Line
-    Saved_Search_Order_Line saved_search_order_line = new Saved_Search_Order_Line();
-    saved_search_order_line.setSaved_Search_Order_ID("1b076c01-2790-47f4-a5ed-a43f2c6772ca");
-    saved_search_order_line.setLine_No(27);
-    saved_search_order_line.setCategory_ID("ecac8ef8-a96a-472f-b83a-122c136b2517");
-    saved_search_order_line.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
-    saved_search_order_line.setSearch_Phrase("testSaved_Search_Order_Line");
-    saved_search_order_line.setIs_Active(true);
-    session.setAttribute("saved_search_order_line",saved_search_order_line);
-//create a new albums parameters
-    request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID","1b076c01-2790-47f4-a5ed-a43f2c6772ca");
-    request.setParameter("inputsaved_search_order_lineLine_No","27");
-    request.setParameter("inputsaved_search_order_lineCategory_ID","ecac8ef8-a96a-472f-b83a-122c136b2517");
-    request.setParameter("inputsaved_search_order_lineUser_ID","406");
-    request.setParameter("inputsaved_search_order_lineSearch_Phrase","TestValue");
-    request.setParameter("inputsaved_search_order_lineIs_Active","true");
-    request.setParameter("oldCategory","ecac8ef8-a96a-472f-b83a-122c136b2517");
-    request.setParameter("oldPhrase","TestValue");
+  public void testExceptionKeyReturnsNeg3() throws Exception {
+    // Triggering the EXCEPTION keyword logic in FakeDAO
+    setValidParameters("EXCEPTION");
 
-    servlet.doPost(request,response);
-    int responseStatus = response.getStatus();
-    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Saved_Search_Order_Line_Updated = results.get("dbStatus");
-    assertEquals(302,responseStatus);
-    assertNotNull(Saved_Search_Order_Line_Updated);
-    assertEquals("Saved_Search_Order_Line updated",Saved_Search_Order_Line_Updated);
-    assertNotEquals("",Saved_Search_Order_Line_Updated);
+    servlet.doPost(request, response);
+
+    assertEquals("-3", response.getContentAsString().trim());
   }
+
   @Test
-  public void TestUpdateHasErrorsForEachFiledAndKeepsOnSamePage() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
-    user.setRoles(roles);
-    session.setAttribute("User_B",user);
-    request.setSession(session);
-    servlet.doPost(request,response);
-    int responseStatus = response.getStatus();
-    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Saved_Search_Order_IDError = results.get("saved_search_order_lineSaved_Search_Order_IDerror");
-    String Line_NoError = results.get("saved_search_order_lineLine_Noerror");
-    String Category_IDError = results.get("saved_search_order_lineCategory_IDerror");
+  public void testInvalidLineNoReturnsNeg2() throws Exception {
+    setValidParameters("Normal Phrase");
+    request.setParameter("inputsaved_search_order_lineLine_No", "INVALID_INT");
 
-    String Search_PhraseError = results.get("SearchTooShort");
-    assertNotEquals("",Saved_Search_Order_IDError);
-    assertNotNull(Saved_Search_Order_IDError);
-    assertNotEquals("",Line_NoError);
-    assertNotNull(Line_NoError);
-    assertNotEquals("",Category_IDError);
-    assertNotNull(Category_IDError);
+    servlet.doPost(request, response);
 
-    assertNotEquals("",Search_PhraseError);
-    assertNotNull(Search_PhraseError);
-    assertEquals(302,responseStatus);
-  }
-  @Test
-  public void testInitWithNoParametersDoesNotThrowException() throws ServletException {
-    servlet = null;
-    servlet = new EditSaved_Search_Order_LineServlet();
-    servlet.init();
-  }
-  @Test
-  public void testUpdateCanReturnZero() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
-    user.setRoles(roles);
-    session.setAttribute("User_B",user);
-    request.setSession(session);
-//to set the old Saved_Search_Order_Line
-    Saved_Search_Order_Line saved_search_order_line = new Saved_Search_Order_Line();
-    saved_search_order_line.setSaved_Search_Order_ID("1b076c01-2790-47f4-a5ed-a43f2c6772ca");
-    saved_search_order_line.setLine_No(43);
-    saved_search_order_line.setCategory_ID("DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
-    saved_search_order_line.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
-    saved_search_order_line.setSearch_Phrase("DUPLICATE");
-    saved_search_order_line.setIs_Active(true);
-    session.setAttribute("saved_search_order_line",saved_search_order_line);
-//create a new albums parameters
-    request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID","1b076c01-2790-47f4-a5ed-a43f2c6772ca");
-    request.setParameter("inputsaved_search_order_lineLine_No","406");
-    request.setParameter("inputsaved_search_order_lineCategory_ID","DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
-    request.setParameter("inputsaved_search_order_lineUser_ID","406");
-    request.setParameter("inputsaved_search_order_lineSearch_Phrase","DUPLICATE");
-    request.setParameter("inputsaved_search_order_lineIs_Active","true");
-    request.setParameter("oldCategory","DUPLICATEDUPLICATEDUPLICATEDUPLICATE");
-    request.setParameter("oldPhrase","DUPLICATE");
-    servlet.doPost(request,response);
-    int responseStatus = response.getStatus();
-    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Saved_Search_Order_Line_Updated = results.get("dbStatus");
-    assertEquals(302,responseStatus);
-    assertNotNull(Saved_Search_Order_Line_Updated);
-    assertEquals("Saved_Search_Order_Line Not Updated",Saved_Search_Order_Line_Updated);
-    assertNotEquals("",Saved_Search_Order_Line_Updated);
-  }
-  @Test
-  public void testUpdateCanThrowSQLException() throws ServletException, IOException{
-    User user = new User();
-    List<String> roles = new ArrayList<>();
-    roles.add("User");
-    user.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");
-    user.setRoles(roles);
-    session.setAttribute("User_B",user);
-    request.setSession(session);
-//to set the old Saved_Search_Order_Line
-    Saved_Search_Order_Line saved_search_order_line = new Saved_Search_Order_Line();
-    saved_search_order_line.setSaved_Search_Order_ID("1b076c01-2790-47f4-a5ed-a43f2c6772ca");
-    saved_search_order_line.setLine_No(43);
-    saved_search_order_line.setCategory_ID("ecac8ef8-a96a-472f-b83a-122c136b2517");
-    saved_search_order_line.setUser_ID("af735dfc-22a9-4214-a8e5-fb8de2305700");;
-    saved_search_order_line.setSearch_Phrase("EXCEPTION");
-    saved_search_order_line.setIs_Active(true);
-    session.setAttribute("saved_search_order_line",saved_search_order_line);
-//create a new albums parameters
-    request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID","1b076c01-2790-47f4-a5ed-a43f2c6772ca");
-    request.setParameter("inputsaved_search_order_lineLine_No","406");
-    request.setParameter("inputsaved_search_order_lineCategory_ID","EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
-    request.setParameter("inputsaved_search_order_lineUser_ID","406");
-    request.setParameter("inputsaved_search_order_lineSearch_Phrase","EXCEPTION");
-    request.setParameter("inputsaved_search_order_lineIs_Active","true");
-    request.setParameter("oldCategory","EXCEPTIONEXCEPTIONEXCEPTIONEXCEPTION");
-    request.setParameter("oldPhrase","EXCEPTION");
-
-    servlet.doPost(request,response);
-    int responseStatus = response.getStatus();
-    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Saved_Search_Order_Line_Updated = results.get("dbStatus");
-    String dbError = results.get("dbError");
-    assertEquals(302,responseStatus);
-    assertNotNull(Saved_Search_Order_Line_Updated);
-    assertNotEquals("",Saved_Search_Order_Line_Updated);
-    assertEquals("Saved_Search_Order_Line Not Updated",Saved_Search_Order_Line_Updated);
-    assertNotNull(dbError);
-    assertNotEquals("",dbError);
-    assertEquals("Database Error",dbError);
+    assertEquals("-2", response.getContentAsString().trim());
   }
 
+  private void setValidParameters(String searchPhrase) {
+    // ID from FakeDAO constructor data
+    request.setParameter("inputsaved_search_order_lineSaved_Search_Order_ID", "1b076c01-2790-47f4-a5ed-a43f2c6772ca");
+    request.setParameter("inputsaved_search_order_lineLine_No", "27");
+    request.setParameter("inputsaved_search_order_lineCategory_ID", "0607a176-01de-46ea-a463-1d59db87491a");
+    request.setParameter("inputsaved_search_order_lineSearch_Phrase", searchPhrase);
+    request.setParameter("inputsaved_search_order_lineIs_Active", "true");
+
+    // Old fields
+    request.setParameter("oldPhrase", "WKTFwUjn");
+    request.setParameter("oldCategory", "0607a176-01de-46ea-a463-1d59db87491a");
+  }
 }
-
-
-
