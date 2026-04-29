@@ -3,6 +3,7 @@ const TOAST_CONFIG = {
     category: {success: "Category updated!", error: "Failed to update category."},
     lock: {success: "Transaction locked.", error: "Could not lock transaction."}
 };
+let lockBoxSkip = false;
 
 $(document).ready(function() {
     const baseUrl = $("#addr").attr("addr");
@@ -10,6 +11,7 @@ $(document).ready(function() {
 
     // 1. Category Change Listener
     $(document).on('change', '.category', async function () {
+        lockBoxSkip = true;
 
         showToast("shared", 2);
         const transactionId = $(this).attr("id");
@@ -17,9 +19,9 @@ $(document).ready(function() {
 
         if (transactionId && categoryValue) {
             // Await the category update
-            console.log("here")
+
             const success = await updateCategory(transactionId, categoryValue, baseUrl);
-            console.log("there " + success)
+
             if (success) {
                 // Auto-lock logic
                 let lockBox = document.getElementById(transactionId + "_lock");
@@ -29,6 +31,7 @@ $(document).ready(function() {
                 }
             }
         }
+        lockBoxSkip = false;
     });
 
     // 2. Lock Toggle Listener
@@ -54,7 +57,7 @@ $(document).ready(function() {
 
             // Get the response code (e.g., "1" or "-1") directly from the servlet
             const responseCode = await response.text();
-            console.log("resp code" + responseCode)
+
             // --- INTEGRATION POINT ---
             showToast('editTransaction', responseCode.trim());
 
@@ -72,7 +75,14 @@ $(document).ready(function() {
      * Toggles lock status via POST
      */
     async function toggleLock(id, url) {
-        showToast("shared", 2);
+        var thisLock = 0;
+        if (lockBoxSkip) {
+            thisLock = 1;
+        }
+        if (thisLock !== 1) {
+            showToast("shared", 2);
+        }
+
         try {
             const response = await fetch(`${url}/LockTransaction`, {
                 method: 'POST',
@@ -82,8 +92,10 @@ $(document).ready(function() {
 
             const responseCode = await response.text();
 
-            // --- INTEGRATION POINT ---
-            showToast('lockTransaction', responseCode.trim());
+
+            if (thisLock !== 1) {
+                showToast('lockTransaction', responseCode.trim());
+            }
 
         } catch (err) {
             showToast('lockTransaction', '-1');
