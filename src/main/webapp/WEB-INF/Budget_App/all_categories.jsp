@@ -142,11 +142,15 @@
                     </ul>
 
                     <div class="tab-content" id="analysisTabContent">
-                        <div class="tab-pane fade show active" id="tab-overview" role="tabpanel">
-                            <h5 class="fw-bold mb-1 text-primary" id="detailCatName">Category Name</h5>
-                            <div id="detailLockStatus" class="mb-2"></div>
+                        <div class="row">
+                            <h5 class="fw-bold mb-1 text-primary col-md-10" id="detailCatName">Category Name</h5>
+                            <div id="detailLockStatus" class="mb-2 col-md-2 topLock"></div>
+                        </div>
 
-                            <div class="p-2 bg-light rounded mb-3 small">
+                        <div class="tab-pane fade show active" id="tab-overview" role="tabpanel">
+
+
+                        <div class="p-2 bg-light rounded mb-3 small">
                                 <div class="d-flex justify-content-between">
                                     <span class="text-secondary">Current Strategy:</span>
                                     <span class="badge bg-primary" id="detailStrategy">REGRESSION</span>

@@ -117,7 +117,8 @@
                 <div class="table-responsive shadow-sm bg-white rounded border">
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-dark">
-                        <c:set var="urlBase" value="category=${category}&bankAccountID=${bankAccountID}&showErrors=${showErrors}&year=${year}&page=${currentPage}" />
+                        <c:set var="urlBase"
+                               value="category=${category}&bankAccountID=${bankAccountID}&showErrors=${showErrors}&month=${month}&year=${year}&page=${currentPage}"/>
                         <tr>
                             <th class="text-white">Account</th>
                             <th>

@@ -258,7 +258,8 @@ const ResponseRegistry = {
         "-3": "System Error: Database error, please contact support.",
         "-4": "Error: Item not found.",
         "-5": "Warning: Operation prohibited in current state.",
-        "-6": "System Error: System unavailable."
+        "-6": "System Error: System unavailable.",
+        "-7": "Warning: Object Locked."
     },
     "editSaved_Search_Order_Line": {
         "1": "Success: Search order line updated.",

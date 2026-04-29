@@ -95,6 +95,7 @@
                         <div class="col">
                             <div class="modern-cat-card ${typeClass}"
                                  data-id="${category.category_ID}"
+                                 id="${category.category_ID}_card"
                                  data-strategy="${category.projection_strategy_ID}">
 
                                 <div class="card-accent" style="background-color: ${category.color_id};">
@@ -115,7 +116,8 @@
                                            title="View Transactions"
                                            onclick="handleMagnifyClick(event, '${category.category_ID}')"></i>
 
-                                        <i class="bi ${category.is_Locked ? 'bi-lock-fill text-warning' : 'bi-unlock'} action-icon-modern lock-trigger"
+                                        <i id="${category.category_ID}_lockIcon"
+                                           class="bi ${category.is_Locked ? 'bi-lock-fill text-warning' : 'bi-unlock'} action-icon-modern lock-trigger bottomLock"
                                            title="Toggle Projection Lock"
                                            onclick="handleLockToggle(event, '${category.category_ID}')"></i>
 
@@ -170,22 +172,29 @@
 
 
                                     <div class="strategy-row">
-                                        <i class="bi bi-graph-up-arrow strategy-icon" title="Regression"
-                                           data-val="REGRESSION"></i>
-                                        <i class="bi bi-lightning-fill strategy-icon" title="Alpha Spike"
+
+                                        <i class="bi bi-graph-up-arrow strategy-icon ${category.is_Locked ? ' disabled ' :'' }"
+                                           title="Regression"
+                                           data-val="REGRESSION" ${category.is_Locked ? 'disabled' :'' }></i>
+                                        <i class="bi bi-lightning-fill strategy-icon ${category.is_Locked ? ' disabled ' :'' }"
+                                           title="Alpha Spike"
                                            data-val="ALPHA_SPIKE"></i>
-                                        <i class="bi bi-pause-fill strategy-icon" title="Last Value"
+                                        <i class="bi bi-pause-fill strategy-icon ${category.is_Locked ? ' disabled ' :'' }"
+                                           title="Last Value"
                                            data-val="LVCF"></i>
-                                        <i class="bi bi-list-stars strategy-icon" title="Strict Average"
+                                        <i class="bi bi-list-stars strategy-icon ${category.is_Locked ? ' disabled ' :'' }"
+                                           title="Strict Average"
                                            data-val="AVG_STRICT"></i>
-                                        <i class="bi bi-percent strategy-icon" title="Inflation Only"
+                                        <i class="bi bi-percent strategy-icon${category.is_Locked ? ' disabled ' :'' }"
+                                           title="Inflation Only"
                                            data-val="INFLATION_ONLY"></i>
-                                        <i class="bi bi-x-circle strategy-icon" title="Zero Out"
+                                        <i class="bi bi-x-circle strategy-icon ${category.is_Locked ? ' disabled ' :'' }"
+                                           title="Zero Out"
                                            data-val="ZERO_SUM"></i>
                                     </div>
 
                                     <div class="parent-row">
-                                        <select class="modern-select"
+                                        <select class="modern-select" ${category.is_Locked ? 'disabled' :'' }
                                                 onchange="updateParentCategory('${category.category_ID}', this.value)">
                                             <c:forEach items="${ParentCategories}" var="pOption">
                                                 <option value="${pOption.parent_category_id}"

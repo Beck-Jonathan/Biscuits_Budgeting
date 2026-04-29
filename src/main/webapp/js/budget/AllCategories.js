@@ -3,6 +3,7 @@ const pickers = {};
 let categoryIdToDelete = null;
 let selectedMonth = "";
 let selectedYyear = "";
+let lockBoxSkip = false;
 
 $(document).ready(function() {
     // Tab/Chart Layout Management
@@ -137,6 +138,7 @@ function resetForecastHover() {
 }
 
 function handleForecastRowClick() {
+    lockBoxSkip = true;
     const methodKey = $(this).data('series');
     const currentId = $('#analysisSubcatId').val();
     const mapping = {
@@ -146,7 +148,7 @@ function handleForecastRowClick() {
     };
 
     const $targetIcon = $(`.modern-cat-card[data-id="${currentId}"] .strategy-icon[data-val="${mapping[methodKey]}"]`);
-
+    console.log(lockBoxSkip);
     if ($targetIcon.length > 0) {
         handleStrategyClick({
             currentTarget: $targetIcon[0],
@@ -154,6 +156,8 @@ function handleForecastRowClick() {
             }
         }, pickers);
     }
+
+
 }
 
 // --- 4. General Helper Functions ---
@@ -213,14 +217,14 @@ function handleAutoAssign() {
  * Handles iro.js Color Picker initialization and toggling
  */
 function handleColorPickerToggle(e, pickers) {
-    console.log("hi")
+
     e.stopPropagation();
     const $this = $(e.currentTarget);
-    console.log("this:" + $this)
+
     const $card = $this.closest('.modern-cat-card');
-    console.log("card:" + $card)
+
     const id = $card.data('id');
-    console.log("id:" + id)
+
     if (!id) return;
 
     const $popover = $this.siblings('.picker-popover');
@@ -291,6 +295,11 @@ async function handleConfirmDelete() {
 async function handleStrategyClick(e, pickers) {
     e.stopPropagation();
     const $icon = $(e.currentTarget);
+
+    if ($icon[0].classList.contains('disabled')) {
+        showToast("shared", "-7");
+        return;
+    }
     const $card = $icon.closest('.modern-cat-card');
     const newVal = $icon.data('val');
 
@@ -347,12 +356,13 @@ async function handleStrategyClick(e, pickers) {
     await sendUpdate($card, hex, pickers);
     // Find the lock icon within this specific card
     const lockIcon = $card.find('.lock-trigger');
-    console.log(lockIcon[0])
+
     // If it's currently unlocked (bi-unlock), trigger the toggle
     if (lockIcon[0].classList.contains('bi-unlock')) {
 
         lockIcon[0].click();
     }
+    lockBoxSkip = false;
 }
 
 /**
@@ -380,7 +390,8 @@ function getHexFromCard($card, pickers) {
 }
 
 async function sendUpdate($card, hexColor, pickers) {
-    console.log("hi");
+
+
     const id = $card.data('id');
     const name = $card.find('.category-text').text().trim();
     const parentId = $card.find('select').val();
@@ -586,9 +597,24 @@ function handleAutoAssignColorExecution() {
  * If locked, the Projection Engine should ignore this category during Auto-Assign.
  */
 function handleLockToggle(e, id) {
+    let skipThisToast = 0;
+    if (lockBoxSkip) {
+        skipThisToast = 1;
+    }
+    if (skipThisToast !== 1) {
+        showToast("shared", "2")
+    }
     e.stopPropagation();
     const $icon = $(e.currentTarget);
+    let $bottomCard = null;
     const isLocking = $icon.hasClass('bi-unlock');
+    const isTop = $icon.hasClass('topLock');
+
+    if (isTop) {
+
+        $bottomCard = $('#' + id + '_card');
+
+    }
     let mode = 0;
     if (isLocking) {
         mode = 1;
@@ -602,21 +628,55 @@ function handleLockToggle(e, id) {
             $icon.css('opacity', '0.2'); // Visual pending state
         },
         success: function (response) {
-            showToast("lockSubcategory", response)
+            if (skipThisToast !== 1) {
+                showToast("lockSubcategory", response)
+            }
             if (response == "1" || response == 1) {
-                // Toggle the icon classes
+
                 $icon.toggleClass('bi-unlock bi-lock-fill text-warning');
-                // Optional: Add a visual cue to the card
+
                 $icon.closest('.modern-cat-card').toggleClass('is-locked-visual');
+                const isDisabled = $icon.hasClass('bi-lock-fill');
+                let $card = null;
+                if (isTop) {
+                    $card = $bottomCard;
+                    var bottomLock = document.getElementById(id + "_lockIcon");
+                    $(bottomLock).toggleClass('bi-unlock bi-lock-fill text-warning');
+                    const $budgetInput = $('#setBudgetedAmount');
+                    $budgetInput.prop("disabled", isLocking);
+                } else {
+                    $card = $icon.closest('.modern-cat-card');
+                }
+
+
+                $card.find('.modern-select').prop('disabled', isDisabled);
+                const $strategyIcons = $card.find('.strategy-icon');
+                if (isDisabled) {
+                    $strategyIcons.addClass('disabled').attr('disabled', 'disabled');
+                } else {
+                    $strategyIcons.removeClass('disabled').removeAttr('disabled');
+                }
+                if (isTop) {
+                    // Select all elements with the class (replace "your-class-name" with the actual class)
+                    const $regressionCards = $('.forecastButton');
+
+                    // .prop() applies to every element in the collection automatically
+                    $regressionCards.prop('disabled', isLocking);
+
+
+                }
             } else {
-                alert("Failed to update lock status.");
+                showToast("shared", "-4")
             }
         },
         error: function () {
-            alert("Connection error while toggling lock.");
+            showToast("shared", "-6")
         },
         complete: function () {
             $icon.css('opacity', '');
+            if (!isTop) {
+                handleGearClick(e, id)
+            }
         }
     });
 }
@@ -668,10 +728,12 @@ function handleGearClick(e, id) {
     // 2. Populate Tab 1 (Overview) - Immediate UI feedback
     $('#detailCatName').text(name);
     $('#detailStrategy').text(strategy);
-    $('#detailLockStatus').html(isLocked ?
-        '<span class="badge bg-warning-subtle text-warning border border-warning"><i class="bi bi-lock-fill"></i> Locked</span>' :
-        '<span class="badge bg-light text-muted border"><i class="bi bi-unlock"></i> Mutable</span>'
-    );
+    const lockIconHtml = `
+    <i class="bi ${isLocked ? 'bi-lock-fill text-warning' : 'bi-unlock'} action-icon-modern lock-trigger topLock"
+       title="Toggle Projection Lock"
+       onclick="handleLockToggle(event, '${id}')"></i>`;
+
+    $('#detailLockStatus').html(lockIconHtml);
 
 
     // 3. UI Transitions: Open section and scroll
@@ -679,11 +741,13 @@ function handleGearClick(e, id) {
 
     $('#categoryAnalysisSection').slideDown(400, function () {
         // PASS STRATEGY HERE: This ensures updateAnalysisTabs knows which row to highlight
-        fetchProjectionData(id, name, strategy);
+        fetchProjectionData(id, name, strategy, isLocked);
     });
     const $budgetInput = $('#setBudgetedAmount');
     $budgetInput.val(currentThreshold);
     $budgetInput.attr('data-focus-color', currentColor);
+    $budgetInput.prop("disabled", isLocked);
+
 
     // Force reset to first tab on every click
     $('#overview-tab').tab('show');
@@ -693,7 +757,7 @@ function handleGearClick(e, id) {
 /**
  * Helper to fetch the 60-month data array and update the Highchart + Tabs
  */
-function fetchProjectionData(subcatId, name, strategy) {
+function fetchProjectionData(subcatId, name, strategy, locked) {
     showToast("shared", 2)
     $.ajax({
         url: 'AnalyzeCategoryAJAX',
@@ -804,7 +868,7 @@ function fetchProjectionData(subcatId, name, strategy) {
             $('#analysisChartTitle').text("Analysis: " + name);
             $('#detailCatName').text(name);
 
-            updateAnalysisTabs(data, strategy);
+            updateAnalysisTabs(data, strategy, locked);
             updateGrowthImpactUI(data);
         },
         error: function (xhr, status, error) {
@@ -819,7 +883,7 @@ function fetchProjectionData(subcatId, name, strategy) {
 /**
  * Calculates Regression math and populates the sidebar tabs with Growth Impact
  */
-function updateAnalysisTabs(data, strategy) {
+function updateAnalysisTabs(data, strategy, locked) {
     const history = data.filter(d => d.historicalTruth !== null && d.historicalTruth !== undefined);
     const forecast = data.filter(d => d.historicalTruth === null || d.historicalTruth === undefined);
     const n = history.length;
@@ -885,6 +949,10 @@ function updateAnalysisTabs(data, strategy) {
         'ZERO_SUM': 'zeroSum'
     };
     Object.entries(totals).forEach(([key, val]) => {
+        var lockText = "";
+        if (locked) {
+            lockText = " disabled ";
+        }
         const seriesId = reverseMapping[key] || key.toLowerCase(); // Ensure it matches Highcharts IDs
         const modelMonthlyAvg = val / 36;
         const monthlyVariance = modelMonthlyAvg - histAvg;
@@ -900,8 +968,8 @@ function updateAnalysisTabs(data, strategy) {
         const activeBg = isActive ? 'style="background-color: rgba(13, 110, 253, 0.05);"' : '';
 
         forecastHtml += `
-            <button type="button" 
-            class="list-group-item list-group-item-action forecast-row p-1 border-0 border-bottom d-flex align-items-center" data-series="${key}"
+            <button type="button" ${lockText}
+            class="list-group-item list-group-item-action forecast-row p-1 border-0 border-bottom d-flex align-items-center forecastButton" data-series="${key}"
             data-series="${seriesId}" ${activeBg}>
                 <div class="flex-grow-1 text-start">
                     <div class="fw-bold text-dark text-capitalize mb-1" style="font-size: 0.95rem;">${label}</div>
@@ -953,7 +1021,7 @@ function updateAnalysisTabs(data, strategy) {
     // --- 4. PERFORMANCE TAB INITIALIZATION ---
     // This part ensures the dropdown trigger works
     $('#performanceMonthSelect').off('change').on('change', function () {
-        console.log("test")
+
         const selectedMonth = $(this).val();
         fetchPerformanceData(selectedMonth);
     });
@@ -1688,7 +1756,7 @@ function handleMonthChange(e) {
 }
 
 function handleMagnifyClick(e, category) {
-    //console.log("category" + category)
+
     window.location.href = 'all-Transactions?category=' + category + "&year=" + selectedYyear + "&month=" + selectedMonth
 
 }
