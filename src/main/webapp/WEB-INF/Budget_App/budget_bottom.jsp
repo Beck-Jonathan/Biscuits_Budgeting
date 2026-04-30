@@ -81,10 +81,15 @@
 </c:if>
 
 <c:if test="${pageTitle eq 'All Categories' }">
-    <%-- <script src="js/budget/AllCategories.js"></script> --%>
+    <%-- <script src="js/budget/AllCategoriesMain.js"></script> --%>
+    <script src="js/budget/allCategories/AllCategoriesMain.js"></script>
     <script src="js/budget/allCategories/allCategories_database.js"></script>
     <script src="js/budget/allCategories/allCategories_listeners.js"></script>
     <script src="js/budget/allCategories/allCategories_ui.js"></script>
+    <script src="js/budget/allCategories/allCategories_highChart.js"></script>
+    <script src="js/budget/allCategories/allCategories_utils.js"></script>
+
+    <script src="js/budget/allCategories/allCategory_template.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
 </c:if>
 

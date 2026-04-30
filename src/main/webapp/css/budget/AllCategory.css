@@ -288,9 +288,9 @@
 }
 
 /* Optional: Add a subtle lift on hover to match the chart interaction */
-.forecast-row:hover {
+.forecast-row.is-hoverable:hover {
     background-color: #f8f9fa;
-    transform: translateX(5px);
+    transform: translateX(20px);
     transition: all 0.2s ease;
 }
 
